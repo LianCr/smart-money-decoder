@@ -1,0 +1,263 @@
+"""
+fetcher/news.py
+
+职责：给定市场标题和建仓时间，返回相关新闻列表。
+流程：AI 提取关键词 → Tavily 搜新闻 → 本地文件缓存
+"""
+
+import hashlib
+import json
+import os
+from datetime import datetime, timezone, timedelta
+from email.utils import parsedate_to_datetime
+from pathlib import Path
+
+import requests
+from dotenv import load_dotenv
+from tavily import TavilyClient
+
+load_dotenv()
+
+# ── 启动时检查 key，缺失立即报错，不要等到运行时才崩 ─────────────────────────
+TAVILY_API_KEY    = os.environ.get("TAVILY_API_KEY")
+CLASSROOM_API_KEY = os.environ.get("CLASSROOM_API_KEY")
+
+if not TAVILY_API_KEY:
+    raise RuntimeError("缺少 TAVILY_API_KEY，请在 .env 文件里配置")
+if not CLASSROOM_API_KEY:
+    raise RuntimeError("缺少 CLASSROOM_API_KEY，请在 .env 文件里配置")
+
+# ── 配置项 ────────────────────────────────────────────────────────────────────
+CLASSROOM_API_URL = "https://4dm65e698a.execute-api.us-west-2.amazonaws.com/prod/invoke"
+# True = 跳过真实网关，用占位关键词；等课堂 key approve 后改回 False
+FAKE_MODE = os.environ.get("USE_FAKE_KEYWORDS", "false").lower() == "true"
+CACHE_DIR         = Path(".cache/news")
+MAX_RESULTS       = 5
+MAX_DAYS_BACK     = 180   # Tavily 实测支持的最大天数
+REQUEST_TIMEOUT   = 15    # 秒
+
+_tavily = TavilyClient(api_key=TAVILY_API_KEY)
+
+
+# ── 自定义异常 ────────────────────────────────────────────────────────────────
+class NewsError(Exception):
+    """新闻获取失败时统一抛这个，携带机器读的 reason 和人读的 message"""
+    def __init__(self, reason: str, message: str):
+        self.reason  = reason
+        self.message = message
+        super().__init__(message)
+
+
+# ── 函数1（内部）：计算时间窗口 ────────────────────────────────────────────────
+def _build_time_window(
+    entry_time: int | None,
+) -> tuple[str | None, str | None, bool]:
+    """
+    根据建仓时间戳计算新闻搜索的时间窗口。
+    返回 (start_date, end_date, time_anchored)，日期格式 "YYYY-MM-DD"。
+
+    time_anchored=False 的含义：下游 AI 解码层必须降级处理，
+    在卡片上注明"建仓时间未知，新闻仅供参考"。
+    """
+    if entry_time is None:
+        return None, None, False
+
+    now      = datetime.now(tz=timezone.utc)
+    entry_dt = datetime.fromtimestamp(entry_time, tz=timezone.utc)
+
+    # 未来时间是异常数据，当作未知处理
+    if entry_dt > now:
+        return None, None, False
+
+    # 超过 Tavily 实测上限，拿不到那么早的新闻，如实返回 False
+    if (now - entry_dt).days > MAX_DAYS_BACK:
+        return None, None, False
+
+    start_dt = entry_dt - timedelta(days=7)
+    # end 不能超过今天
+    end_dt   = min(entry_dt + timedelta(days=3), now)
+
+    return (
+        start_dt.strftime("%Y-%m-%d"),
+        end_dt.strftime("%Y-%m-%d"),
+        True,
+    )
+
+
+# ── 函数2（内部）：生成缓存文件路径 ───────────────────────────────────────────
+def _get_cache_path(market_question: str) -> Path:
+    """
+    用 market_question 的 md5 生成缓存文件路径。
+
+    为什么不把时间窗口加进 key？
+    entry_time 来自实时 activity API，每次调用可能略有差异，
+    加进去会导致同一个市场永远命不中缓存，开发期间白刷 credit。
+    """
+    key = hashlib.md5(market_question.encode("utf-8")).hexdigest()
+    CACHE_DIR.mkdir(parents=True, exist_ok=True)
+    return CACHE_DIR / f"{key}.json"
+
+
+# ── 函数3（内部）：用课堂网关 AI 提取搜索关键词 ───────────────────────────────
+def _extract_keywords_via_ai(market_question: str) -> str:
+    """
+    用老师课堂网关调 claude-haiku-4.5，从市场标题里提取搜索关键词。
+    不降级到规则提取——宁可整个 news 流程失败，也不用低质量关键词搜出噪音。
+    """
+    if not market_question.strip():
+        raise ValueError("market_question 不能为空")
+
+    if FAKE_MODE:
+        # 去掉 "Will" 开头和标点，取前 5 个非停用词作为占位关键词
+        words = [w for w in market_question.rstrip("?").split()
+                 if w.lower() not in {"will", "the", "a", "an", "whether"}]
+        return " ".join(words[:5])
+
+    prompt = (
+        "下面是一个预测市场的标题。请提取 2-4 个最适合用来搜索相关新闻动态的关键词，"
+        "聚焦标题里的核心实体（人名、地名、事件），去掉 will/whether/by/before 这类"
+        "对搜索无意义的词，也不要保留具体日期。只回复关键词本身，空格分隔，不要任何解释。\n"
+        f"标题：{market_question}"
+    )
+
+    try:
+        resp = requests.post(
+            CLASSROOM_API_URL,
+            headers={
+                "Content-Type": "application/json",
+                "x-api-key":    CLASSROOM_API_KEY,
+            },
+            json={
+                "model":     "claude-sonnet-4.5",
+                "input":     prompt,
+                "maxTokens": 100,
+            },
+            timeout=REQUEST_TIMEOUT,
+        )
+    except requests.exceptions.Timeout:
+        raise NewsError("KEYWORD_EXTRACT_FAILED", "关键词提取 API 超时，请稍后重试")
+    except requests.exceptions.ConnectionError:
+        raise NewsError("KEYWORD_EXTRACT_FAILED", "无法连接关键词提取 API，请检查网络")
+
+    if resp.status_code == 429:
+        raise NewsError("KEYWORD_EXTRACT_FAILED", "关键词提取 API 请求过于频繁，请稍后重试")
+    if resp.status_code != 200:
+        raise NewsError("KEYWORD_EXTRACT_FAILED", f"关键词提取 API 返回异常状态码：{resp.status_code}")
+
+    output = resp.json().get("output", "").strip()
+    if not output:
+        raise NewsError("KEYWORD_EXTRACT_FAILED", "关键词提取 API 返回了空结果")
+
+    # 防止 AI 没遵守指令返回了长文，截断保护
+    return output[:100]
+
+
+# ── 函数4（内部）：调 Tavily 搜新闻 ────────────────────────────────────────────
+def _fetch_from_tavily(
+    keywords: str,
+    start_date: str | None,
+    end_date: str | None,
+) -> list[dict]:
+    """
+    用 Tavily 搜索新闻，返回清洗后的文章列表。
+    没有 published_at 的文章直接丢弃，保证 AI 解码层拿到的每条都有日期。
+    """
+    if start_date is not None:
+        today     = datetime.now(tz=timezone.utc).date()
+        start     = datetime.strptime(start_date, "%Y-%m-%d").date()
+        days_back = (today - start).days + 1  # +1 确保覆盖 start 当天
+    else:
+        days_back = 30
+
+    try:
+        resp = _tavily.search(
+            keywords,
+            topic="news",
+            days=days_back,
+            max_results=MAX_RESULTS,
+        )
+    except Exception as e:
+        msg = str(e).lower()
+        if "timeout" in msg:
+            raise NewsError("TAVILY_TIMEOUT", "Tavily 搜索超时，请稍后重试")
+        if "429" in msg or "rate" in msg:
+            raise NewsError("TAVILY_RATE_LIMITED", "Tavily 请求频率超限，请稍后重试")
+        raise NewsError("TAVILY_API_ERROR", f"Tavily 搜索失败：{e}")
+
+    articles = []
+    for item in resp.get("results", []):
+        # RFC 2822 → "YYYY-MM-DD"，解析失败则丢弃（宁少勿错）
+        raw_date = item.get("published_date", "")
+        try:
+            published_at = parsedate_to_datetime(raw_date).strftime("%Y-%m-%d")
+        except Exception:
+            continue
+
+        # 客户端过滤时间窗口（Tavily days 是"最近 N 天"，可能包含窗口外的文章）
+        if end_date   and published_at > end_date:
+            continue
+        if start_date and published_at < start_date:
+            continue
+
+        # snippet 优先用 content，空时用 title 兜底
+        snippet = (item.get("content") or "")[:300].strip()
+        if not snippet:
+            snippet = item.get("title", "")
+
+        articles.append({
+            "title":        item.get("title", ""),
+            "url":          item.get("url", ""),
+            "published_at": published_at,
+            "source":       item.get("url", "").split("/")[2] if item.get("url") else "",
+            "snippet":      snippet,
+        })
+
+    return articles
+
+
+# ── 对外唯一入口 ───────────────────────────────────────────────────────────────
+def get_news_for_market(market_question: str, entry_time: int | None) -> dict:
+    """
+    给定市场标题和建仓时间戳，返回相关新闻及时间锚定状态。
+
+    成功：{"articles": [...], "search_query": str, "time_anchored": bool}
+    失败：{"error": True, "reason": str, "message": str}
+    """
+    # 第一步：计算时间窗口
+    start_date, end_date, time_anchored = _build_time_window(entry_time)
+
+    # 第二步：命中缓存则直接返回，跳过所有 API 调用
+    cache_path = _get_cache_path(market_question)
+    if cache_path.exists():
+        try:
+            return json.loads(cache_path.read_text(encoding="utf-8"))
+        except Exception:
+            pass  # 缓存文件损坏则忽略，走正常流程重新拉取
+
+    # 第三步：AI 提取关键词
+    try:
+        keywords = _extract_keywords_via_ai(market_question)
+    except NewsError as e:
+        return {"error": True, "reason": e.reason, "message": e.message}
+
+    # 第四步：搜索新闻
+    try:
+        articles = _fetch_from_tavily(keywords, start_date, end_date)
+    except NewsError as e:
+        return {"error": True, "reason": e.reason, "message": e.message}
+
+    # 第五步：组装并缓存结果
+    result = {
+        "articles":      articles,
+        "search_query":  keywords,
+        "time_anchored": time_anchored,
+    }
+    try:
+        cache_path.write_text(
+            json.dumps(result, ensure_ascii=False, indent=2),
+            encoding="utf-8",
+        )
+    except Exception:
+        pass  # 写缓存失败不影响主流程，静默跳过
+
+    return result
