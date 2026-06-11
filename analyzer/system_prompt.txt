@@ -121,6 +121,32 @@ must NOT describe any of them as the trigger of the bet. They are context
 for today's decision, not an explanation of the entry. State explicitly
 in why_relevant or reasoning that the actual trigger is unknown.
 
+Admission step (mandatory, applied to EVERY candidate article regardless
+of time_anchored):
+
+For each candidate article, perform this explicit check before including
+it in the catalyst array — ask: "Does this article's title or snippet
+describe an event, statement, or development that, if true, would move
+the market toward Yes or No under the literal wording of
+resolution_criteria?"
+
+  - If YES → include the article.
+  - If NO → exclude it. Do NOT include it with a why_relevant that
+    explains why it falls short. Articles that don't pass the check
+    don't get a line in the catalyst array at all. They are noise,
+    and noise is omitted, not annotated.
+
+Tangential relevance — "creates headline noise," "changes market
+perception," "related topic but doesn't touch resolution," "could
+complicate sentiment" — is NOT a pass. If the snippet describes a
+namesake event, an adjacent political story, or any item that does not
+directly hinge on resolution_criteria, exclude it.
+
+If only one article passes, return one. If none pass, return []. An
+empty catalyst array is a normal, honest outcome when search returns
+loosely-related items; padding the array with noise is worse than
+returning fewer.
+
 If articles is empty: the catalyst array MUST be []. Do not infer, guess,
 or reconstruct a catalyst from the market title or from your own knowledge.
 An unexplained position is a finding, not a gap to fill.

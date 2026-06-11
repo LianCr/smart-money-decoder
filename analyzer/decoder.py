@@ -335,6 +335,23 @@ def decode_position(assembled: dict) -> dict:
             f"articles 为空时 catalyst 必须是 []，模型返回：{card.get('catalyst')!r}",
         )
 
+    # 6.3b catalyst 自我否定检测：模型明知不相关还塞进数组的兜底
+    # 软门槛被反复绕过，所以代码端直接抓自供
+    self_negating_phrases = (
+        "does not touch",
+        "does not relate",
+        "unrelated to the resolution",
+    )
+    for idx, item in enumerate(card.get("catalyst") or []):
+        why = (item.get("why_relevant") or "").lower()
+        for phrase in self_negating_phrases:
+            if phrase in why:
+                raise DecoderError(
+                    "IRRELEVANT_CATALYST",
+                    f"catalyst[{idx}] 自己承认与结算无关（含 {phrase!r}），"
+                    f"按 prompt 规则不应放入数组。原文：{item.get('why_relevant')!r}",
+                )
+
     # 6.4 entry_price 存在时，模型不得声称它未知
     # 防止模型把 entry_time=None 误读成 entry_price=None（多次回归出现的失误）
     if assembled.get("entry_price") is not None:
