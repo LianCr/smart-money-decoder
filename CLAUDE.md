@@ -152,6 +152,25 @@ output = resp.json()["output"]   # 结果在 output 字段，不是 content[0].t
 
 **Prompt 硬约束**：新闻为空时禁止 AI 编造催化剂故事，必须如实写"无新闻支撑"。
 
+**算术边界（定稿 2026-06-10）**
+
+模型禁止做的：
+
+- 任何涉及今天/日期的时长推算（"three weeks left"、"in seven months"、"for X more days" 等）。
+  原因：契约里没有任何时长字段，叙述里出现"数字+日/周/月/年"必然是模型自算的；
+  且日期数学这类计算的盲区是系统性的（模型自认为知道今天），错了用户也难发现。
+  代码层用正则 `(one|two|...|twelve|\d+)[\s-]+(more\s+)?(day|week|month|year)s?`
+  扫 what_bet / edge_analysis / reasoning / catalyst[i].why_relevant，命中即抛
+  `DecoderError("DURATION_COMPUTED")`。
+
+模型允许做的：
+
+- 价格单位换算（`0.105` ↔ `10.5 cents`）。无错的恒等转换，对读者更友好。
+- 契约内两个真数的简单比例（"two-thirds of the upside captured"、"about a quarter
+  remaining"）。这是 edge 分析的核心价值，且没有日期推算那种系统性盲区。
+
+回测时把这两类输出顺带人工抽查，发现错误率上升再收紧。
+
 ## 当前进度（2026-06-07）
 
 **已完成并验证**：

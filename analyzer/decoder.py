@@ -352,10 +352,16 @@ def decode_position(assembled: dict) -> dict:
                     f"按 prompt 规则不应放入数组。原文：{item.get('why_relevant')!r}",
                 )
 
-    # 6.3c duration 检测：HARD RULE 2 反复被破，加正则兜底
-    # 匹配 "within (the next)? N day/week/month/year(s)" 这类时长推算
+    # 6.3c duration 检测：HARD RULE 2 反复被破，加代码兜底
+    # 不追句式（"within"/"for"/... 这类引导词模型会变着花样绕）
+    # 改为直接匹配"数字+时间单位"的组合本身——契约里没有任何时长字段，
+    # 叙述里出现"数字+日/周/月/年"必然是模型自算的。
+    # 豁免 published_at(YYYY-MM-DD) 和 resolution_date_human("December 31, 2026")
+    # 的字段原文：它们没有 day/week/month/year 这种英文单位词跟在数字后面，
+    # 天然不会触发，无需显式排除。
     duration_re = re.compile(
-        r"\b(within|next|in)\s+(the\s+next\s+)?(\w+|\d+)\s+(day|week|month|year)s?\b",
+        r"\b(one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|"
+        r"\d+(?:\.\d+)?)[\s-]+(more\s+)?(day|week|month|year)s?\b",
         re.IGNORECASE,
     )
     text_fields = []
