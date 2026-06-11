@@ -171,6 +171,16 @@ output = resp.json()["output"]   # 结果在 output 字段，不是 content[0].t
 
 回测时把这两类输出顺带人工抽查，发现错误率上升再收紧。
 
+## 回测设计备忘
+
+**【路线 A 专用】历史翻页不要复用现有 activity.py**
+
+当前 `get_entry_time()` 翻最近 3 页（150 条）是为正向流程设计的：当下用户输入钱包，找最近建仓。activity API 的记录永存，但回测时反推历史持仓需要按时间段不设上限地翻页（可能要翻几百到几千条），与正向流程的硬性 150 条上限语义完全不同。
+
+**禁止做的事**：把现有 `get_entry_time` 的页数上限调高、或加可选参数让它兼容回测。两个语义会在代码里互相干扰——正向流程的"超出 150 条即如实降级 None"是契约的一部分，被回测共用后会失去明确含义。
+
+**应该做的事**：在 `backtest/` 模块下单独实现 `fetch_full_activity(wallet, start_time, end_time)`，独立的翻页逻辑、独立的边界处理。`fetcher/activity.py` 不动。
+
 ## 当前进度（2026-06-07）
 
 **已完成并验证**：
@@ -188,7 +198,17 @@ output = resp.json()["output"]   # 结果在 output 字段，不是 content[0].t
 
 **待解决**：
 - 课堂网关已通（claude-sonnet-4.5，点号不是横杠），USE_FAKE_KEYWORDS 可改回 false ✅
-- **【Bug】activity.py conditionId 不匹配**：`positions` 接口返回的 `conditionId` 与 `activity` 接口记录里的 `conditionId` 不是同一个字段语义——同一个大事件下的子市场（如 "before 2027" vs "by September 30"）各有不同 conditionId，导致 `get_entry_time()` 几乎总是返回 None。修复方向：改用 `eventSlug` 做匹配（activity 和 positions 里该字段一致），或在找到 position 的 conditionId 后先通过 Gamma API 查出同一 event 下的所有 conditionId，再逐一匹配 activity 记录。修复前需完整验证，demo 后处理。
+- **【已诊断为非 Bug】activity.py conditionId 命中率低**（2026-06-10 用 aliens + 伊朗两钱包真实数据核查）
+
+  - **结论**：`positions` 和 `activity` 两个接口的 `conditionId` 字段语义**完全一致**——都是子市场（market）级别的 ID，不是 event 级别。伊朗钱包 positions 的 146 个 conditionId 与 activity 前 150 条 TRADE 的 18 个 conditionId **交集 15 个**，证明同一子市场两边匹配得上；老代码的精确匹配是对的。
+
+  - **真实机制**：一个父 event 下可挂多个子市场（如同一父 event "aliens before 2027" 下挂 "before 2027" / "by September 30" / "by Dec 31" 等），用户可能在多个子市场都交易过，每个子市场都有独立的 conditionId。当持仓的那个具体子市场的**建仓动作不在最近 150 条 activity 内**时（持仓很老，最近交易全在其它子市场），自然找不到匹配。**`entry_time=None` 是正确降级**，比错配安全得多。
+
+  - **反例钉死**：aliens 钱包持有 "before 2027" 子市场 5 万股 No 仓（conditionId `0x747dc8...`），而 activity 前 150 条里有 146 条 TRADE 全部属于**另一个子市场** "by September 30"（conditionId `0xace3c7...`）。两者共享 `eventSlug = will-the-us-confirm-that-aliens-exist-before-2027`。
+
+  - **禁止改用 eventSlug 模糊匹配做"修复"**：会把另一个赌盘（"by September 30" 子市场）的交易时间错配成本仓（"before 2027" 子市场）的建仓时间，污染下游新闻搜索时间窗。**错配比 None 危险一个量级**——None 会触发明确的降级路径，错配会以 time_anchored=True 的假象交给后续模块。这条记在这里防止未来任何人（包括 AI）重新提出该方案。
+
+  - **v2 方向**：按市场维度查历史交易记录（参考 Polymarket 公开的 trades 接口），而非按用户翻全活动流。
 
 
 "本项目可用命令:/checkpoint —— 整理进度并存档"
