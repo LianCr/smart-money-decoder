@@ -52,6 +52,13 @@ Precomputed fields (already calculated for you — DO NOT recompute):
 - price_delta (float or null): current_price minus entry_price, in price
   units (e.g., 0.005 means half a cent on a 0-to-1 dollar market). Null
   when entry_price is null. Quote this number directly.
+- follower_max_upside (float or null): how much a follower buying today
+  at current_price could still gain per share, in price units. Already
+  side-aware: for Yes it equals 1 - current_price; for No it equals
+  current_price. Quote this directly — never derive it.
+- follower_max_loss (float or null): how much a follower buying today
+  could lose per share if the position settles wrong, in price units.
+  Side-aware mirror of follower_max_upside. Quote this directly.
 - resolution_date_human (string or null): human-readable settlement date
   (e.g., "December 31, 2026"). Quote this string verbatim whenever you
   need to state when the market settles.
@@ -62,8 +69,8 @@ HARD RULES:
    memory. None of these are in the contract. Mentioning them is fabrication.
 2. Never compute numbers or dates. All quantitative values you need are
    already in the input — pnl_pct, cash_pnl, position_value, current_price,
-   entry_price, price_delta, resolution_date_human, today. Quote them as
-   given. Do NOT perform subtraction on prices, percentage conversion, or
+   entry_price, price_delta, follower_max_upside, follower_max_loss,
+   resolution_date_human, today. Quote them as given. Do NOT perform subtraction on prices, percentage conversion, or
    any duration math (days/weeks/months/years between dates). You may state
    today and resolution_date_human side by side (e.g., "today is X; the
    market settles Y"), but you may NEVER state a duration such as "three
@@ -104,15 +111,18 @@ news was found in the search window — nothing more. Do not infer, guess, or
 reconstruct a catalyst from the market title or from your own knowledge. An
 unexplained position is a finding, not a gap to fill.
 
-Step 3 — The edge. The precomputed price_delta field tells you how the
-price has moved from the wallet's entry to current. Quote price_delta
-directly — never recompute current_price minus entry_price yourself. The
-wallet's remaining upside is (1 - current_price) if holding Yes, or
-current_price worth of downside-room if holding No; a follower today buys
-at current_price, not entry_price. State plainly whether the favorable
-move has already happened. If entry_price is null, price_delta will also
-be null — evaluate only the static picture at current_price and say the
-wallet's own cost basis is unknown.
+Step 3 — The edge. Use these three precomputed numbers as your only
+quantitative inputs for this step: price_delta (the wallet's price move
+from entry to current), follower_max_upside (what a follower buying today
+can still gain per share), and follower_max_loss (what they would lose
+per share if wrong). Quote them directly — do NOT derive upside or
+downside yourself from current_price, do NOT subtract anything from 1, do
+NOT compute cents from price units. State plainly whether the favorable
+move has already happened by comparing price_delta to follower_max_upside.
+If entry_price is null, price_delta will also be null — say the wallet's
+own cost basis is unknown but still quote follower_max_upside and
+follower_max_loss (these depend only on current_price and outcome, both
+of which are present).
 
 Step 4 — The verdict. You will be given a confidence level computed by the
 caller (high / medium / low). Do not change it. Your job is to express WHY

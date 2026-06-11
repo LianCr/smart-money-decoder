@@ -144,6 +144,32 @@ def _compute_price_delta(assembled: dict) -> float | None:
     return round(curr - entry, 4)
 
 
+# ── 函数2.52（内部）：跟单者的剩余上行 / 最大损失 ─────────────────────────────
+def _compute_follower_max_upside_and_loss(assembled: dict) -> tuple[float | None, float | None]:
+    """
+    跟单者今天按 current_price 买入时的「剩余上行」与「最大损失」。
+
+      持 Yes：上行 = 1 - current_price，最大损失 = current_price
+      持 No ：上行 = current_price        ，最大损失 = 1 - current_price
+
+    （Polymarket 价格 ∈ [0, 1] 区间，1 表示结算时全额拿走 1 USDC。
+     例如以 0.865 买 No，若结算 No=赢则赚 1-0.865=0.135；若 No=输则损失 0.865。）
+
+    current_price 缺失时返回 (None, None)。
+    """
+    curr    = assembled.get("current_price")
+    outcome = (assembled.get("outcome") or "").strip().lower()
+    if curr is None or outcome not in {"yes", "no"}:
+        return None, None
+    if outcome == "yes":
+        upside = round(1.0 - curr, 4)
+        loss   = round(curr, 4)
+    else:  # "no"
+        upside = round(curr, 4)
+        loss   = round(1.0 - curr, 4)
+    return upside, loss
+
+
 # ── 函数2.55（内部）：当前日期，给模型作为"现在"的唯一参考点 ─────────────────
 def _today_str() -> str:
     """模型没有可靠的"现在"概念，必须由代码注入 today (UTC, YYYY-MM-DD)。"""
@@ -250,6 +276,9 @@ def decode_position(assembled: dict) -> dict:
     user_payload = {k: assembled.get(k) for k in CONTRACT_KEYS}
     user_payload["computed_confidence"]   = computed_confidence
     user_payload["price_delta"]           = _compute_price_delta(assembled)
+    upside, loss                          = _compute_follower_max_upside_and_loss(assembled)
+    user_payload["follower_max_upside"]   = upside
+    user_payload["follower_max_loss"]     = loss
     user_payload["resolution_date_human"] = _format_resolution_date_human(
         assembled.get("resolution_date")
     )
