@@ -333,6 +333,25 @@ def decode_position(assembled: dict) -> dict:
             f"articles 为空时 catalyst 必须是 []，模型返回：{card.get('catalyst')!r}",
         )
 
+    # 6.4 entry_price 存在时，模型不得声称它未知
+    # 防止模型把 entry_time=None 误读成 entry_price=None（多次回归出现的失误）
+    if assembled.get("entry_price") is not None:
+        edge_text = (card.get("edge_analysis") or "").lower()
+        forbidden_phrases = (
+            "entry price is unknown",
+            "entry price unknown",
+            "entry_price is unknown",
+            "entry_price is null",
+            "wallet's entry price is unknown",
+            "cost basis is unknown",
+        )
+        if any(p in edge_text for p in forbidden_phrases):
+            raise DecoderError(
+                "ENTRY_PRICE_DENIED",
+                f"输入 entry_price={assembled['entry_price']} 是已知数值，但模型在 "
+                f"edge_analysis 里声称未知。原文：{card.get('edge_analysis')!r}",
+            )
+
     # 第七步：代码生成 warnings 拼进最终卡片
     card["warnings"] = _build_warnings(assembled)
 

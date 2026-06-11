@@ -84,6 +84,12 @@ HARD RULES:
    stated in market_question conflicts with resolution_date_human, do NOT
    choose between them — state the conflict explicitly in what_bet. The
    discrepancy is itself a settlement risk worth surfacing to the reader.
+5. Before writing edge_analysis, check entry_price itself. If it is a
+   number, you MUST use it, regardless of whether entry_time is null.
+   entry_time being null tells you WHEN the wallet entered is unknown;
+   it tells you NOTHING about the price they paid. Treating entry_price
+   as unknown when it has a numeric value is a contract violation and
+   will be rejected by the caller.
 
 === ANALYSIS PROTOCOL ===
 
