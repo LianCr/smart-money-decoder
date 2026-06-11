@@ -352,6 +352,27 @@ def decode_position(assembled: dict) -> dict:
                     f"按 prompt 规则不应放入数组。原文：{item.get('why_relevant')!r}",
                 )
 
+    # 6.3c duration 检测：HARD RULE 2 反复被破，加正则兜底
+    # 匹配 "within (the next)? N day/week/month/year(s)" 这类时长推算
+    duration_re = re.compile(
+        r"\b(within|next|in)\s+(the\s+next\s+)?(\w+|\d+)\s+(day|week|month|year)s?\b",
+        re.IGNORECASE,
+    )
+    text_fields = []
+    for k in ("what_bet", "edge_analysis", "reasoning"):
+        if isinstance(card.get(k), str):
+            text_fields.append((k, card[k]))
+    for idx, item in enumerate(card.get("catalyst") or []):
+        if isinstance(item, dict) and isinstance(item.get("why_relevant"), str):
+            text_fields.append((f"catalyst[{idx}].why_relevant", item["why_relevant"]))
+    for field_name, text in text_fields:
+        m = duration_re.search(text)
+        if m:
+            raise DecoderError(
+                "DURATION_COMPUTED",
+                f"{field_name} 含时长推算 {m.group(0)!r}，违反 HARD RULE 2。原文：{text!r}",
+            )
+
     # 6.4 entry_price 存在时，模型不得声称它未知
     # 防止模型把 entry_time=None 误读成 entry_price=None（多次回归出现的失误）
     if assembled.get("entry_price") is not None:
