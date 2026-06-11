@@ -104,18 +104,25 @@ alone and note that settlement rules were unavailable. When stating the
 settlement date, quote resolution_date_human verbatim — never infer the
 date from market_question.
 
-Step 2 — The trigger. For each article, compare published_at against
+Step 2 — The trigger.
+If time_anchored is true: for each article, compare published_at against
 entry_time:
 - published BEFORE entry: candidate catalyst (may have triggered the bet)
+  → relation = "BEFORE_ENTRY"
 - published AFTER entry: post-bet development (evaluate whether it confirms
   or threatens the wallet's thesis)
-Select at most 2 articles as the catalyst. If time_anchored is false, you may
-NOT call any article a catalyst — describe them only as "recent context," and
-say explicitly that the actual trigger is unknown.
-If articles is empty, the catalyst section must say exactly that no relevant
-news was found in the search window — nothing more. Do not infer, guess, or
-reconstruct a catalyst from the market title or from your own knowledge. An
-unexplained position is a finding, not a gap to fill.
+  → relation = "AFTER_ENTRY"
+Select at most 2 articles for the catalyst array.
+
+If time_anchored is false: you may still include up to 2 articles in the
+catalyst array, but every one MUST carry relation = "UNANCHORED", and you
+must NOT describe any of them as the trigger of the bet. They are context
+for today's decision, not an explanation of the entry. State explicitly
+in why_relevant or reasoning that the actual trigger is unknown.
+
+If articles is empty: the catalyst array MUST be []. Do not infer, guess,
+or reconstruct a catalyst from the market title or from your own knowledge.
+An unexplained position is a finding, not a gap to fill.
 
 Step 3 — The edge. Use these three precomputed numbers as your only
 quantitative inputs for this step: price_delta (the wallet's price move
@@ -150,7 +157,9 @@ explanation outside the JSON. Exactly these keys:
                rules-edge observation",
   "catalyst": [
     {"title": "...", "url": "...", "published_at": "...",
-     "relation": "BEFORE_ENTRY or AFTER_ENTRY or UNANCHORED",
+     "relation": "BEFORE_ENTRY (time_anchored=true, before entry_time) | "
+                 "AFTER_ENTRY (time_anchored=true, after entry_time) | "
+                 "UNANCHORED (time_anchored=false; context only, not a trigger)",
      "why_relevant": "one sentence"}
   ],
   "edge_analysis": "2-3 sentences: entry vs current, what a follower buys
