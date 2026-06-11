@@ -172,8 +172,14 @@ def _compute_follower_max_upside_and_loss(assembled: dict) -> tuple[float | None
 
 # ── 函数2.55（内部）：当前日期，给模型作为"现在"的唯一参考点 ─────────────────
 def _today_str() -> str:
-    """模型没有可靠的"现在"概念，必须由代码注入 today (UTC, YYYY-MM-DD)。"""
-    return datetime.now(tz=timezone.utc).strftime("%Y-%m-%d")
+    """
+    模型没有可靠的"现在"概念，由代码注入 today (本地时区, YYYY-MM-DD)。
+
+    用本地时区不是 UTC：用户看到的"今天"是本地日历日，UTC 在傍晚到次日清晨
+    之间会与本地日期错位（例如 PDT 18:00 = UTC 次日 01:00，给模型 UTC 日期
+    会让卡片显示"明天"），扰乱阅读。
+    """
+    return datetime.now().strftime("%Y-%m-%d")
 
 
 # ── 函数2.6（内部）：把 ISO 时间转成人类可读日期，让模型不必推算 ─────────────
