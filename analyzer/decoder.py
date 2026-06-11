@@ -149,25 +149,21 @@ def _compute_follower_max_upside_and_loss(assembled: dict) -> tuple[float | None
     """
     跟单者今天按 current_price 买入时的「剩余上行」与「最大损失」。
 
-      持 Yes：上行 = 1 - current_price，最大损失 = current_price
-      持 No ：上行 = current_price        ，最大损失 = 1 - current_price
+    前提（用真实数据验证过，详见 verify_price_side.py）：
+      positions API 返回的 current_price 已经是 outcome 那一侧自己的报价
+      ——例如持 No 仓位时 curPrice=0.895 就是 No 侧的市场价，
+      不是 Yes 侧的 0.105。方向性已经消化在数据里，无需再按 Yes/No 分支。
 
-    （Polymarket 价格 ∈ [0, 1] 区间，1 表示结算时全额拿走 1 USDC。
-     例如以 0.865 买 No，若结算 No=赢则赚 1-0.865=0.135；若 No=输则损失 0.865。）
+    所以对任意一侧统一：
+      上行 = 1 - current_price   （赢时拿 1 USDC 减去成本）
+      损失 = current_price       （输时血本无归）
 
     current_price 缺失时返回 (None, None)。
     """
-    curr    = assembled.get("current_price")
-    outcome = (assembled.get("outcome") or "").strip().lower()
-    if curr is None or outcome not in {"yes", "no"}:
+    curr = assembled.get("current_price")
+    if curr is None:
         return None, None
-    if outcome == "yes":
-        upside = round(1.0 - curr, 4)
-        loss   = round(curr, 4)
-    else:  # "no"
-        upside = round(curr, 4)
-        loss   = round(1.0 - curr, 4)
-    return upside, loss
+    return round(1.0 - curr, 4), round(curr, 4)
 
 
 # ── 函数2.55（内部）：当前日期，给模型作为"现在"的唯一参考点 ─────────────────

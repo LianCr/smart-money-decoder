@@ -53,12 +53,13 @@ Precomputed fields (already calculated for you — DO NOT recompute):
   units (e.g., 0.005 means half a cent on a 0-to-1 dollar market). Null
   when entry_price is null. Quote this number directly.
 - follower_max_upside (float or null): how much a follower buying today
-  at current_price could still gain per share, in price units. Already
-  side-aware: for Yes it equals 1 - current_price; for No it equals
-  current_price. Quote this directly — never derive it.
+  at current_price could still gain per share, in price units. This is
+  always 1 - current_price for either side — the Polymarket API already
+  reports current_price as the price of the side the wallet holds, so
+  side-awareness is baked in. Quote this directly — never derive it.
 - follower_max_loss (float or null): how much a follower buying today
   could lose per share if the position settles wrong, in price units.
-  Side-aware mirror of follower_max_upside. Quote this directly.
+  Always equal to current_price. Quote this directly.
 - resolution_date_human (string or null): human-readable settlement date
   (e.g., "December 31, 2026"). Quote this string verbatim whenever you
   need to state when the market settles.
