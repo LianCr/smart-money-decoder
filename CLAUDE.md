@@ -87,10 +87,48 @@ output = resp.json()["output"]   # 结果在 output 字段，不是 content[0].t
 
 ## 解码层设计（analyzer/decoder.py，待实现）
 
-**输入**（assembled dict）：
-- 持仓：`market_question`, `outcome`, `entry_price`(可 None), `current_price`, `pnl_pct`, `cash_pnl`
-- 时间：`entry_time`(可 None)
-- 新闻：`articles`(可空列表), `time_anchored`(bool)
+**输入数据契约（定稿 2026-06-10，基于真实 API 返回核查）**
+
+来自 `get_top_political_position()` 的 position dict：
+
+| 字段 | 类型 | 可空 | 来源 | 用途 |
+|------|------|------|------|------|
+| `market_question` | str | 否 | positions API `title` | 市场标题，AI 生成"赌的是什么"那句大白话的输入 |
+| `outcome` | str | 否 | positions API `outcome`（"Yes"/"No"） | 押注方向 |
+| `entry_price` | float | **可 None** | positions API `avgPrice` | 买入均价；**与 `entry_time` 独立**，None 时表示 API 未返回均价，不受 entry_time 影响 |
+| `current_price` | float | 否 | positions API `curPrice` | 当前市价 |
+| `position_value` | float | 否 | positions API `currentValue`（USDC） | 持仓现值，用于 price_info 渲染 |
+| `cash_pnl` | float | 否 | positions API `cashPnl`（USDC） | 现金浮盈，price_info 渲染用 |
+| `pnl_pct` | float | 否 | positions API `percentPnl` | **百分比数值，不是小数**。0.5813 = 0.5813%（两钱包三字段算术对账证实：(curr-entry)/entry × 100 ≈ cash_pnl/cost × 100 ≈ pnl_pct）。置信度矩阵阈值直接用 30 / 60 |
+| `resolution_criteria` | str | 可 None | Gamma events API `description` | 市场结算规则原文，AI 写 what_bet 时必读，避免胡编规则 |
+| `resolution_date` | str | 可 None | Gamma events API `endDate`（ISO 8601） | 结算截止时间，follow_advice 判断"太迟了"用 |
+| `market_id` | str | 否 | positions API `conditionId` | 内部 ID，给 activity 模块用，不入卡片 |
+| `event_id` / `event_slug` | str | 否 | positions API | 内部 ID，不入卡片 |
+| `size` | float | 否 | positions API `size` | 持仓股数，目前不入卡片 |
+
+来自 `get_entry_time()` 的独立返回值：
+
+| 字段 | 类型 | 可空 | 来源 | 用途 |
+|------|------|------|------|------|
+| `entry_time` | int | **可 None** | activity API trade `timestamp` | Unix 秒级时间戳；None 表示翻页 150 条未找到买入记录（合法降级，下游照常运行） |
+
+来自 `get_news_for_market()` 的 news dict 顶层：
+
+| 字段 | 类型 | 可空 | 来源 | 用途 |
+|------|------|------|------|------|
+| `articles` | list[dict] | 可空列表 `[]` | Tavily search results | 新闻列表，AI 选 catalyst 的素材 |
+| `search_query` | str | 否 | 课堂网关 sonnet-4.5 提取 | 实际用于 Tavily 的关键词，调试/透明展示用 |
+| `time_anchored` | bool | 否 | news.py `_build_time_window` | **顶层字段**，True=新闻锁在 entry±时间窗，False=降级到近 30 天；置信度矩阵和 warnings 都用它 |
+
+`articles[i]` 每条新闻对象：
+
+| 字段 | 类型 | 可空 | 来源 | 用途 |
+|------|------|------|------|------|
+| `title` | str | 否 | Tavily `title` | 催化剂卡片标题 |
+| `url` | str | 否 | Tavily `url` | 催化剂卡片可点链接 |
+| `published_at` | str | 否 | Tavily `published_date` 转 `"YYYY-MM-DD"` | 催化剂日期；**字段名固定 `published_at`，不是 `date`** |
+| `source` | str | 否 | url 域名提取 | 媒体来源（如 `www.reuters.com`） |
+| `snippet` | str | 否 | Tavily `content` 截 300 字 | AI 判断这条新闻是否与本次交易有关的依据 |
 
 **输出卡片**：
 - `what_bet`：AI 生成，一句大白话
@@ -131,7 +169,6 @@ output = resp.json()["output"]   # 结果在 output 字段，不是 content[0].t
 
 **待解决**：
 - 课堂网关已通（claude-sonnet-4.5，点号不是横杠），USE_FAKE_KEYWORDS 可改回 false ✅
-- 置信度矩阵的 30%/60% 阈值需用真实仓位数据校准
 - **【Bug】activity.py conditionId 不匹配**：`positions` 接口返回的 `conditionId` 与 `activity` 接口记录里的 `conditionId` 不是同一个字段语义——同一个大事件下的子市场（如 "before 2027" vs "by September 30"）各有不同 conditionId，导致 `get_entry_time()` 几乎总是返回 None。修复方向：改用 `eventSlug` 做匹配（activity 和 positions 里该字段一致），或在找到 position 的 conditionId 后先通过 Gamma API 查出同一 event 下的所有 conditionId，再逐一匹配 activity 记录。修复前需完整验证，demo 后处理。
 
 
