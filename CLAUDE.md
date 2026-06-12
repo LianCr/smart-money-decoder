@@ -231,8 +231,12 @@ cd frontend && npm install && npm run dev       # 前端 → http://localhost:51
 - 目标：对钱包每个**已结算政治盘**，在历史时点（T-7 / T-1）重放 decoder，与真实结算对照，
   产出 `{market_question, resolved_outcome, t7_card, t1_card, hit}`，结构已被 `backtest_mock.py`
   钉死，跑出来直接替换 `MOCK_BACKTEST` 即可，前端零改动。
-- 模块约束（见本文件「回测设计备忘」）：单独 `backtest/` 模块、`fetch_full_activity`，
-  **不动 `fetcher/activity.py`**。
+- 模块约束（见本文件「回测设计备忘」）：单独 `backtest/` 模块、**不动 `fetcher/activity.py`**。
+- **第一块砖已落地**：`backtest/full_activity.py` 的 `fetch_full_activity(wallet, start_time,
+  end_time)`——独立翻页（破 150 上限）、时间窗闭区间筛选、老边界提前停，13 项单测通过、
+  真实烟测过。历史持仓反推的原料已就绪。
+- 还差（在这块原料之上）：① conditionId→结算结果映射（见下「拦路虎」）；
+  ② T-7/T-1 历史快照取数（当时价格 + 当时窗口新闻）+ 重放 decoder；③ 聚合成 `/backtest`。
 
 **待解决的硬问题 / 待验证假设（回测 pipeline 的拦路虎，2026-06-12 实探结论）**：
 - **「输」的信号在公开接口里缺失**：已结算**赢**的市场有 REDEEM 事件（伊朗实测 84 条 REDEEM），
