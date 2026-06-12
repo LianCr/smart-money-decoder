@@ -34,13 +34,16 @@ CLASSROOM_API_KEY=...     # 课堂 AI 网关，老师分配，pending 时返回 
 
 ```
 fetcher/polymarket.py   →  get_top_political_position(address)
-fetcher/activity.py     →  get_entry_time(address, condition_id)
+fetcher/trades.py       →  get_entry_time_v2(address, condition_id)   ← 首选（按市场查 trades）
+fetcher/activity.py     →  get_entry_time(address, condition_id)      ← fallback（翻全活动流）
 fetcher/news.py         →  get_news_for_market(market_question, entry_time)
                                     ↓
-analyzer/decoder.py     →  decode(position, entry_time, news)   ← 待建
+analyzer/decoder.py     →  decode_position(assembled)
                                     ↓
-renderer/card.py        →  render(decoded_card)                 ← 待建
-main.py                 →  串联入口                              ← 待建
+renderer/card.py        →  render(card, position)                     ← 终端卡片
+main.py                 →  CLI 串联入口
+api/main.py             →  FastAPI GET /analyze?wallet=               ← Web 后端
+frontend/ (Vite+React)  →  单页 App.jsx                               ← Web 前端
 ```
 
 **数据流**：
@@ -181,24 +184,38 @@ output = resp.json()["output"]   # 结果在 output 字段，不是 content[0].t
 
 **应该做的事**：在 `backtest/` 模块下单独实现 `fetch_full_activity(wallet, start_time, end_time)`，独立的翻页逻辑、独立的边界处理。`fetcher/activity.py` 不动。
 
-## 当前进度（2026-06-07）
+## 当前进度（2026-06-11）
 
-**已完成并验证**：
-- `fetcher/polymarket.py`：持仓获取、政治类过滤、$5000 阈值（10 项 mock 测试通过）
-- `fetcher/activity.py`：建仓时间查询、3 页翻页、BUY/TRADE 过滤（8 项 mock 测试通过）
-- `fetcher/news.py`：关键词提取、Tavily 搜索、时间窗计算、文件缓存（两条时间窗分支均验证）
+**端到端全链路打通**（CLI + Web 双前端）：
+- `fetcher/polymarket.py` / `fetcher/activity.py` / `fetcher/news.py`：数据层，mock 测试全过。
+- `fetcher/trades.py`【新】：`get_entry_time_v2` 按市场维度查 `/trades?market=&user=`，
+  服务器端精确过滤有效，取**最早一笔 BUY**=真实建仓时间。解决了老 activity 翻 150 条
+  窗口对 whale 老仓位命中率低的问题（伊朗/Newsom 两钱包老 activity 全 None，v2 均命中）。
+  6 项 mock 测试通过。`activity.py` 保留为 fallback，未改。
+- `analyzer/decoder.py`：AI 解码，课堂网关 sonnet-4.5。守卫已修两处误报/矛盾（见 Stage 2）。
+- `renderer/card.py` / `main.py`：终端卡片 + CLI 串联（`_resolve_entry_time` 三级降级）。
+- `api/main.py`【新】：FastAPI `GET /analyze`，CORS 放行 3000/5173，错误分层 400/404/500/502。
+- `frontend/`【新】：Vite+React 单页，`App.jsx` 一把梭，生产构建通过。
 
-**正在进行**：
-- 解码层 `analyzer/decoder.py` 的 prompt 逐句打磨（设计已定，尚未写代码）
+**运行 Web 全栈**：
+```bash
+.venv/bin/uvicorn api.main:app --port 8000     # 后端
+cd frontend && npm install && npm run dev       # 前端 → http://localhost:5173
+```
 
-**待做**：
-- `analyzer/decoder.py`：AI 解码，调课堂网关 sonnet-4-6
-- `renderer/card.py`：终端卡片渲染
-- `main.py`：串联所有层的入口
+**2026-06-11 收官冲刺修掉的几处**：
+- ENTRY_PRICE_DENIED 守卫子串误伤（"unknown by date" 良性措辞）→ 改为数值在场即放行。
+- DURATION_COMPUTED 与 HARD RULE 4 矛盾 → 改 prompt（日期并列、禁止表述时长）。
+- 字段值内裸双引号破坏 JSON → prompt 强制单引号。
+- **news 缓存 key 漏带时间窗**（真 bug）→ key 改 `md5(question|start|end)`，否则 entry_time
+  变化后会命中旧缓存返回过期 anchored 结果。
 
-**待解决**：
+**待解决 / 下一步**：
 - 课堂网关已通（claude-sonnet-4.5，点号不是横杠），USE_FAKE_KEYWORDS 可改回 false ✅
-- **【已诊断为非 Bug】activity.py conditionId 命中率低**（2026-06-10 用 aliens + 伊朗两钱包真实数据核查）
+- relation 主干道（BEFORE_ENTRY/AFTER_ENTRY）已实战验证（Netanyahu 钱包），但能否打出
+  取决于 on-topic 文章是否落在锚定窗内；同名噪音（aliens 移民网站）被 admission 正确剔除。
+- 前端视觉精修（这版只求可读，未追求美观）。
+- **【已诊断为非 Bug，且 v2 已落地】activity.py conditionId 命中率低**（2026-06-10 用 aliens + 伊朗两钱包真实数据核查）
 
   - **结论**：`positions` 和 `activity` 两个接口的 `conditionId` 字段语义**完全一致**——都是子市场（market）级别的 ID，不是 event 级别。伊朗钱包 positions 的 146 个 conditionId 与 activity 前 150 条 TRADE 的 18 个 conditionId **交集 15 个**，证明同一子市场两边匹配得上；老代码的精确匹配是对的。
 
@@ -208,7 +225,7 @@ output = resp.json()["output"]   # 结果在 output 字段，不是 content[0].t
 
   - **禁止改用 eventSlug 模糊匹配做"修复"**：会把另一个赌盘（"by September 30" 子市场）的交易时间错配成本仓（"before 2027" 子市场）的建仓时间，污染下游新闻搜索时间窗。**错配比 None 危险一个量级**——None 会触发明确的降级路径，错配会以 time_anchored=True 的假象交给后续模块。这条记在这里防止未来任何人（包括 AI）重新提出该方案。
 
-  - **v2 方向**：按市场维度查历史交易记录（参考 Polymarket 公开的 trades 接口），而非按用户翻全活动流。
+  - **v2 已落地（2026-06-11）**：`fetcher/trades.py` 的 `get_entry_time_v2` 用 `/trades?market=<conditionId>&user=<wallet>` 按市场维度查，服务器端精确过滤有效（实测伊朗 98 条全命中、Newsom 6 条全命中——后者正是 activity 翻 2000 条都找不到的老仓位）。取最早一笔 BUY。`main.py` / `api/main.py` 均走 trades v2 优先、activity fallback、None 降级。**这是文档原定 v2 方向，未用被禁止的 eventSlug 模糊匹配**——trades 的 conditionId 精确过滤天然不会错配到别的子市场。
 
 
 "本项目可用命令:/checkpoint —— 整理进度并存档"
