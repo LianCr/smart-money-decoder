@@ -235,8 +235,11 @@ cd frontend && npm install && npm run dev       # 前端 → http://localhost:51
 - **第一块砖已落地**：`backtest/full_activity.py` 的 `fetch_full_activity(wallet, start_time,
   end_time)`——独立翻页（破 150 上限）、时间窗闭区间筛选、老边界提前停，13 项单测通过、
   真实烟测过。历史持仓反推的原料已就绪。
-- 还差（在这块原料之上）：① conditionId→结算结果映射（见下「拦路虎」）；
-  ② T-7/T-1 历史快照取数（当时价格 + 当时窗口新闻）+ 重放 decoder；③ 聚合成 `/backtest`。
+- **第二块砖已落地**：`backtest/resolution.py` 的 `get_market_resolution(condition_id)`——
+  conditionId→真实结算结果（获胜方 + 实际结算时间）。16 单测 + 三类真实市场（Yes赢/No赢/
+  开放）对账通过。**关键**：gamma 查询必带 `closed=true`（默认不返回已结算市场）。
+  T 锚定为 `closedTime`（实际结算），优于 `endDate`（预定）——实测有市场两者差 4 天。
+- 还差：② T-7/T-1 历史快照取数（当时价格 + 当时窗口新闻）+ 重放 decoder；③ 聚合成 `/backtest`。
 
 **待解决的硬问题 / 待验证假设（回测 pipeline 的拦路虎，2026-06-12 实探结论）**：
 - **「输」的信号在公开接口里缺失**：已结算**赢**的市场有 REDEEM 事件（伊朗实测 84 条 REDEEM），
@@ -245,10 +248,12 @@ cd frontend && npm install && npm run dev       # 前端 → http://localhost:51
   （现金流：买入 vs 卖出+赎回）」而非胜率**——亏损单买入收不回，自然拖低净值。
   （注：回测页的「方向命中率」是另一回事——它对照的是 decoder 判断 vs 真实结算，不是钱包盈亏；
   但它同样需要先拿到每个市场的「真实结算结果」，见下条。）
-- **每个历史市场的「真实结算结果」难拿**：`/activity` 记录**不带 eventId**（只有 conditionId），
-  且 gamma `/markets?conditionId=` 服务器端过滤**失效**（返回 20 条无关市场，与已知的
-  category 过滤同款坑）。需另找可靠的「conditionId → 结算获胜方」映射（待调研：gamma 按 slug、
-  或 CLOB / resolution 接口）。
+- ✅ **【2026-06-12 已解决】每个历史市场的「真实结算结果」**：gamma
+  `/markets?condition_ids=<cid>&closed=true` 可靠返回。**真因不是 conditionId 反查失效，而是
+  默认过滤掉已结算市场——必须带 `closed=true`**（此前误判）。读法：`closed:true` 标识已结算；
+  `outcomes`/`outcomePrices` 是 **JSON 字符串**需 parse，获胜方 = `outcomePrices` argmax 对应
+  outcome（`["0","1"]`→No 赢、`["1","0"]`→Yes 赢）；`closedTime`=实际结算时间（T 锚），
+  `endDate`=预定（两者实测可差几小时到几天）。已封装为 `backtest/resolution.py`。
 - **历史时点的价格/新闻快照**：T-7/T-1 当时的 current_price、当时窗口的新闻，需要按历史时间点
   取数，正向流程的实时取数不能直接复用。
 - 课堂网关已通（claude-sonnet-4.5，点号不是横杠），USE_FAKE_KEYWORDS 可改回 false ✅
