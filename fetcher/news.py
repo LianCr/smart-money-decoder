@@ -85,15 +85,26 @@ def _build_time_window(
 
 
 # ── 函数2（内部）：生成缓存文件路径 ───────────────────────────────────────────
-def _get_cache_path(market_question: str) -> Path:
+def _get_cache_path(
+    market_question: str,
+    start_date: str | None,
+    end_date: str | None,
+) -> Path:
     """
-    用 market_question 的 md5 生成缓存文件路径。
+    用 (market_question + 时间窗) 的 md5 生成缓存文件路径。
 
-    为什么不把时间窗口加进 key？
-    entry_time 来自实时 activity API，每次调用可能略有差异，
-    加进去会导致同一个市场永远命不中缓存，开发期间白刷 credit。
+    为什么必须把时间窗加进 key（修正旧设计）：
+    决定搜索结果的是时间窗本身，而时间窗已被 _build_time_window 量化到「天」
+    （start/end 是 YYYY-MM-DD 字符串）。同一天的 entry_time 产生同一个窗、同一个 key，
+    缓存照常命中，不会白刷 credit；而 entry_time=None（窗为 None/None，降级近30天）
+    与「真锚定窗」会落在不同 key 下。
+
+    旧实现只按 market_question 做 key，导致：先以 entry_time=None 跑出
+    time_anchored=False 并缓存，之后 trades v2 拿到真 entry_time 再跑，仍命中旧缓存
+    返回过期的 anchored=False —— 正是这个 bug 让 Netanyahu 钱包一度显示未锚定。
     """
-    key = hashlib.md5(market_question.encode("utf-8")).hexdigest()
+    sig = f"{market_question}|{start_date}|{end_date}"
+    key = hashlib.md5(sig.encode("utf-8")).hexdigest()
     CACHE_DIR.mkdir(parents=True, exist_ok=True)
     return CACHE_DIR / f"{key}.json"
 
@@ -227,7 +238,8 @@ def get_news_for_market(market_question: str, entry_time: int | None) -> dict:
     start_date, end_date, time_anchored = _build_time_window(entry_time)
 
     # 第二步：命中缓存则直接返回，跳过所有 API 调用
-    cache_path = _get_cache_path(market_question)
+    # 注意：缓存 key 必须带时间窗，否则 entry_time 变化后会返回过期结果
+    cache_path = _get_cache_path(market_question, start_date, end_date)
     if cache_path.exists():
         try:
             return json.loads(cache_path.read_text(encoding="utf-8"))
