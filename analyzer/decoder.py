@@ -260,9 +260,14 @@ def _cache_key(user_payload: dict, computed_confidence: str) -> str:
 
 
 # ── 对外唯一入口 ───────────────────────────────────────────────────────────────
-def decode_position(assembled: dict) -> dict:
+def decode_position(assembled: dict, as_of: str | None = None) -> dict:
     """
     输入 assembled dict（CLAUDE.md 数据契约结构），返回解读卡片。
+
+    as_of（可选，"YYYY-MM-DD"）：覆盖注入给模型的「今天」。
+      - 正向流程不传 → 用真实当下（_today_str()），行为不变。
+      - **回测历史重放必须传快照日（T-7/T-1）**：否则模型拿到真实当下、却看到一个已过去的
+        结算日，会算出诡异时长撞 DURATION_COMPUTED 守卫。这是回测重放唯一需要的时间旅行入口。
 
     成功：{ what_bet, catalyst, edge_analysis, follow_call,
             confidence, reasoning, warnings }
@@ -284,7 +289,7 @@ def decode_position(assembled: dict) -> dict:
     user_payload["resolution_date_human"] = _format_resolution_date_human(
         assembled.get("resolution_date")
     )
-    user_payload["today"]                 = _today_str()
+    user_payload["today"]                 = as_of or _today_str()
 
     # 第三步：缓存命中检查（默认关）
     cache_path = None

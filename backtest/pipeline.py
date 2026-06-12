@@ -117,6 +117,17 @@ def _assemble(pos, res, current_price, news):
     }
 
 
+def _decode_retry(assembled, as_of, tries=3):
+    """重放 decoder，传快照日 as_of；守卫偶发命中（DURATION/JSON）时重试，模型随机性常能过。"""
+    last = None
+    for _ in range(tries):
+        try:
+            return decode_position(assembled, as_of=as_of)
+        except DecoderError as e:
+            last = e
+    raise last
+
+
 def _front_card(assembled, decoder_card):
     """合成前端 Card 形（decoder 输出 + 代码直填 price_info + 市场元信息）。"""
     return {
@@ -191,10 +202,10 @@ def run_backtest(wallet: str, max_samples: int = 6, min_cost: float = 1000.0) ->
 
         winner = res["winning_outcome"]; bet_won = (pos["outcome"] == winner)
         try:
-            a7 = _assemble(pos, res, p7, news); c7 = decode_position(a7)
-            a1 = _assemble(pos, res, p1, news); c1 = decode_position(a1)
+            a7 = _assemble(pos, res, p7, news); c7 = _decode_retry(a7, _date(t7))
+            a1 = _assemble(pos, res, p1, news); c1 = _decode_retry(a1, _date(t1))
         except DecoderError as e:
-            _log(f"   ⚠️ {pos['title'][:30]} decoder 抛 {e.reason}，跳过")
+            _log(f"   ⚠️ {(pos['title'] or '')[:30]} decoder 抛 {e.reason}（重试后仍失败），跳过")
             continue
 
         t7c = _front_card(a7, c7); t1c = _front_card(a1, c1)
