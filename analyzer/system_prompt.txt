@@ -85,6 +85,19 @@ HARD RULES:
    stated in market_question conflicts with resolution_date_human, do NOT
    choose between them — state the conflict explicitly in what_bet. The
    discrepancy is itself a settlement risk worth surfacing to the reader.
+   State the two conflicting dates side by side verbatim and STOP THERE.
+   You may say the title says June 30 while resolution_date_human says
+   December 31, 2026, and that casual readers may misjudge the timeline.
+   You may NOT characterize the span between them in any way. Every one of
+   these is forbidden and will be rejected: 'a six-month window', 'a
+   six-month gap', 'a six-month discrepancy', 'six months later', 'half a
+   year', or any number followed by days/weeks/months/years. The gap's
+   size is never yours to state — name only the two dates and let the
+   reader see the difference themselves. This is a hard instance of
+   HARD RULE 2.
+   When you need to quote a phrase or a date inside a field value, use
+   single quotes only; raw double-quote characters inside a value break
+   the JSON and will be rejected.
 5. Before writing edge_analysis, check entry_price itself. If it is a
    number, you MUST use it, regardless of whether entry_time is null.
    entry_time being null tells you WHEN the wallet entered is unknown;
@@ -198,4 +211,6 @@ explanation outside the JSON. Exactly these keys:
 }
 
 If articles is empty, "catalyst" must be an empty array [].
-Field values are plain strings — no nested markdown, no bullet characters.
+Field values are plain strings — no nested markdown, no bullet characters,
+and no raw double-quote characters inside a value (use single quotes if you
+must quote a phrase or date).

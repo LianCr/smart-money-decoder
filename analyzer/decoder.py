@@ -379,11 +379,25 @@ def decode_position(assembled: dict) -> dict:
                 f"{field_name} 含时长推算 {m.group(0)!r}，违反 HARD RULE 2。原文：{text!r}",
             )
 
-    # 6.4 entry_price 存在时，模型不得声称它未知
-    # 防止模型把 entry_time=None 误读成 entry_price=None（多次回归出现的失误）
-    if assembled.get("entry_price") is not None:
+    # 6.4 entry_price 存在时，模型不得把它当未知
+    # 防止模型把 entry_time=None 误读成 entry_price=None（多次回归出现的失误）。
+    #
+    # 旧实现用子串匹配 "entry price is unknown" 会误伤良性措辞：模型写
+    # "Entry price is unknown by date but the wallet paid 79.83¢" 时，它其实
+    # 正确用了价、只是说建仓「日期」未知，却被子串误判成否认价格。
+    #
+    # 新判据：只要 edge_analysis 里出现了 entry_price 的数值本身（价格单位
+    # 0.7983 或美分写法 79.83），就证明模型确实在用这个价，不触发；
+    # 仅当数值「不在场」又出现 unknown 类表述时，才判定为真的把价当未知。
+    entry_price = assembled.get("entry_price")
+    if entry_price is not None:
         edge_text = (card.get("edge_analysis") or "").lower()
-        forbidden_phrases = (
+        # 价格本身 + 美分写法两种字面，任一出现即视为「已使用」
+        price_unit_str = f"{entry_price:g}".lower()        # 0.7983
+        cents_str      = f"{round(entry_price * 100, 2):g}"  # 79.83
+        price_used = (price_unit_str in edge_text) or (cents_str in edge_text)
+
+        denial_phrases = (
             "entry price is unknown",
             "entry price unknown",
             "entry_price is unknown",
@@ -391,11 +405,14 @@ def decode_position(assembled: dict) -> dict:
             "wallet's entry price is unknown",
             "cost basis is unknown",
         )
-        if any(p in edge_text for p in forbidden_phrases):
+        denies = any(p in edge_text for p in denial_phrases)
+
+        # 只有「数值不在场」且「出现否认表述」才算真违约
+        if denies and not price_used:
             raise DecoderError(
                 "ENTRY_PRICE_DENIED",
-                f"输入 entry_price={assembled['entry_price']} 是已知数值，但模型在 "
-                f"edge_analysis 里声称未知。原文：{card.get('edge_analysis')!r}",
+                f"输入 entry_price={entry_price} 是已知数值，但模型在 edge_analysis "
+                f"里既未引用该数值、又声称其未知。原文：{card.get('edge_analysis')!r}",
             )
 
     # 第七步：代码生成 warnings 拼进最终卡片
