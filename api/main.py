@@ -17,8 +17,10 @@ api/main.py — smart-money-decoder 的 FastAPI 后端
     .venv/bin/uvicorn api.main:app --reload --port 8000
 """
 
+import json
 import sys
 import time
+from pathlib import Path
 
 from dotenv import load_dotenv
 from fastapi import FastAPI
@@ -85,15 +87,25 @@ def _resolve_entry_time(wallet: str, condition_id: str) -> int | None:
     return None
 
 
+BACKTEST_RESULT = Path(".cache/backtest/result.json")
+
+
 @app.get("/backtest")
 def backtest():
     """
     Track Record 回测数据。
 
-    ⚠️ 当前返回 MOCK（_mock=true）：历史时点重放 decoder 的回测 pipeline 尚未实现。
-    真实回测产出后，把 MOCK_BACKTEST 换成实跑结果即可，契约不变（见 backtest_mock.py）。
+    有真实回测产物（.cache/backtest/result.json，由 backtest.pipeline 离线生成）→ 读它
+    （_mock=false）；否则回退 MOCK 占位（_mock=true）。契约一致，前端无需区分。
     """
-    _log("\n=== /backtest （MOCK 占位） ===")
+    if BACKTEST_RESULT.exists():
+        try:
+            data = json.loads(BACKTEST_RESULT.read_text(encoding="utf-8"))
+            _log(f"\n=== /backtest （真实回测 · {len(data.get('samples', []))} 样本）===")
+            return data
+        except Exception as e:
+            _log(f"\n=== /backtest （真实结果读取失败 {e}，回退 MOCK）===")
+    _log("\n=== /backtest （MOCK 占位）===")
     return MOCK_BACKTEST
 
 

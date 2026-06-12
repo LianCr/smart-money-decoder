@@ -103,7 +103,14 @@ def fetch_full_activity(
     """
     out: list[dict] = []
     for page in range(max_pages):
-        records = _fetch_page(wallet, page * PAGE_SIZE)
+        try:
+            records = _fetch_page(wallet, page * PAGE_SIZE)
+        except ActivityAPIError:
+            # 翻页途中失败（多见于深 offset 触发 data-api 的 400 分页越界）→ 当作到底。
+            # 仅首页失败才是真错误（坏地址 / 网络 / 限流），照常上抛。
+            if page == 0:
+                raise
+            break
         if not records:
             break
 

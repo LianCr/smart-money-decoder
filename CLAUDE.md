@@ -223,9 +223,10 @@ cd frontend && npm install && npm run dev       # 前端 → http://localhost:51
   变化后会命中旧缓存返回过期 anchored 结果。
 
 **正在做 / 还没完成**：
-- **Track Record 回测页：前端框架已成，数据仍是 MOCK**。`GET /backtest` 返回
-  `api/backtest_mock.py` 的 3 条手工样本（`_mock:true`，前端有琥珀角标）。回测 pipeline
-  尚未实现——这是当前最大的未完成块。
+- **Track Record 回测页：前端框架已成，数据仍是 MOCK**。`GET /backtest` 当前回退
+  `api/backtest_mock.py` 的 3 条手工样本（`_mock:true`，前端有琥珀角标）。
+- **回测 pipeline 三块砖代码全部写完，但第三块被一个 decoder 时间 bug 卡住、尚未产出真实数据**
+  （详见下方「下一步」与拦路 bug）。距离跑通只差「给 decoder 加 as_of 覆盖」这一步。
 
 **下一步具体要做：回测 pipeline（把 mock 换成真数据）**
 - 目标：对钱包每个**已结算政治盘**，在历史时点（T-7 / T-1）重放 decoder，与真实结算对照，
@@ -239,7 +240,29 @@ cd frontend && npm install && npm run dev       # 前端 → http://localhost:51
   conditionId→真实结算结果（获胜方 + 实际结算时间）。16 单测 + 三类真实市场（Yes赢/No赢/
   开放）对账通过。**关键**：gamma 查询必带 `closed=true`（默认不返回已结算市场）。
   T 锚定为 `closedTime`（实际结算），优于 `endDate`（预定）——实测有市场两者差 4 天。
-- 还差：② T-7/T-1 历史快照取数（当时价格 + 当时窗口新闻）+ 重放 decoder；③ 聚合成 `/backtest`。
+- **第三块砖：代码已写完，但被一个 decoder 时间 bug 卡住（未跑通）**。
+  - `backtest/snapshot.py`：`get_price_at(token_id, ts)`——CLOB `prices-history` 取历史价。
+    实探确认可用；短命市场在 T-7 时未创建会返回 None（上层据此跳过）。
+  - `backtest/pipeline.py`：`run_backtest(wallet, max_samples)`——翻全活动重建持有侧仓位 →
+    每个市场判赢输（持有侧 vs winner，**赢输都纳入**避免只测 REDEEM 全是赢）→ T-7/T-1 取历史价
+    → 新闻锚 entry_time（两时点共用）→ 两时点重放 decoder → hit=（T-1 背书 == 最终赢）→
+    聚合 overview。离线跑，写 `.cache/backtest/result.json`。政治过滤复用
+    `_is_political_event`（gamma `events[0].id` → `/events?id=` 拿 tags，已验证能区分体育/政治）。
+  - `api/main.py` 的 `GET /backtest` 已改：有 `result.json` 读它（`_mock:false`），否则回退 MOCK。
+  - **🚫 拦路 bug（下一步首要）**：`decode_position` 内部把 `today` 写死成 `datetime.now()`
+    （真实当下），历史重放时模型看到「今天 6-12、结算日 6-08（过去）」→ 算出诡异时长 →
+    **每个市场都撞 `DURATION_COMPUTED` 守卫被跳过，产出 0 样本**。
+    **修法**：给 `decode_position` 加 `as_of` 日期覆盖入口（默认仍 now，回测传快照日期 T-7/T-1）；
+    `_today_str()` / `resolution_date_human` 等都用 as_of。这是 sensitive 代码，改动要小心。
+
+**回测实探额外结论（2026-06-12，供下一步参考）**：
+- CLOB 历史价：`clob.polymarket.com/prices-history?market=<tokenId>&startTs=&endTs=&fidelity=`
+  → `{history:[{t,p}]}`。token 即记录里的 `asset` 字段。
+- 政治过滤：gamma 市场不带 tags，但 `events[0].id` → `/events?id=` 的 tags 能区分
+  （体育=`['sports','soccer']` vs 政治=`['politics','geopolitics']`）。
+- **该钱包合格样本（≥7天+有历史价+cost≥1000）实测 10 个全赢、0 输**——长线政治盘确实全中。
+  故回测的「失手」案例主要来自「decoder 对赢盘误判 NO BASIS」（✗=该跟却没跟），而非钱包亏损。
+  短引信盘（"by June X"）多被 T-7 历史价缺失筛掉，losses 多在其中。
 
 **待解决的硬问题 / 待验证假设（回测 pipeline 的拦路虎，2026-06-12 实探结论）**：
 - **「输」的信号在公开接口里缺失**：已结算**赢**的市场有 REDEEM 事件（伊朗实测 84 条 REDEEM），

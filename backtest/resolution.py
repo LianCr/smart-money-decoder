@@ -138,6 +138,8 @@ def get_market_resolution(condition_id: str) -> dict | None:
         return None  # 未干净结算（无明确获胜方）
 
     resolved_time = _parse_ts(m.get("closedTime")) or _parse_ts(m.get("endDate"))
+    events = m.get("events") or []
+    event_id = str(events[0].get("id")) if events and events[0].get("id") else None
     return {
         "condition_id":    condition_id,
         "winning_outcome": winner,
@@ -145,4 +147,5 @@ def get_market_resolution(condition_id: str) -> dict | None:
         "scheduled_end":   _parse_ts(m.get("endDate")),
         "question":        m.get("question"),
         "slug":            m.get("slug"),
+        "event_id":        event_id,   # 供回测做政治盘过滤（gamma /events?id= 拿 tags）
     }
