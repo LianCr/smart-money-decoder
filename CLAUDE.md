@@ -184,23 +184,35 @@ output = resp.json()["output"]   # 结果在 output 字段，不是 content[0].t
 
 **应该做的事**：在 `backtest/` 模块下单独实现 `fetch_full_activity(wallet, start_time, end_time)`，独立的翻页逻辑、独立的边界处理。`fetcher/activity.py` 不动。
 
-## 当前进度（2026-06-11）
+## 当前进度（2026-06-12）
 
-**端到端全链路打通**（CLI + Web 双前端）：
-- `fetcher/polymarket.py` / `fetcher/activity.py` / `fetcher/news.py`：数据层，mock 测试全过。
+**已完成并验证的模块（逐个职责）**：
+
+数据层 / 解码层 / 渲染层（实时解读，全链路真实跑通）：
+- `fetcher/polymarket.py`：持仓获取 + 政治过滤 + $5000 阈值。mock 测试全过。
+- `fetcher/activity.py`：建仓时间 v1（翻全活动流，150 条上限）。保留为 **fallback**，未改。
 - `fetcher/trades.py`【新】：`get_entry_time_v2` 按市场维度查 `/trades?market=&user=`，
-  服务器端精确过滤有效，取**最早一笔 BUY**=真实建仓时间。解决了老 activity 翻 150 条
-  窗口对 whale 老仓位命中率低的问题（伊朗/Newsom 两钱包老 activity 全 None，v2 均命中）。
-  6 项 mock 测试通过。`activity.py` 保留为 fallback，未改。
-- `analyzer/decoder.py`：AI 解码，课堂网关 sonnet-4.5。守卫已修两处误报/矛盾（见 Stage 2）。
-- `renderer/card.py` / `main.py`：终端卡片 + CLI 串联（`_resolve_entry_time` 三级降级）。
-- `api/main.py`【新】：FastAPI `GET /analyze`，CORS 放行 3000/5173，错误分层 400/404/500/502。
-- `frontend/`【新】：Vite+React 单页，`App.jsx` 一把梭，生产构建通过。
+  服务器端精确过滤有效，取**最早一笔 BUY**=真实建仓时间。解决老 activity 对 whale
+  老仓位命中率低的问题（伊朗/Newsom 老 activity 全 None，v2 均命中）。6 项 mock 测试通过。
+- `fetcher/news.py`：关键词提取 + Tavily 时间窗搜索 + 文件缓存。缓存 key 已带时间窗。
+- `analyzer/decoder.py`：AI 解码（sonnet-4.5）+ 代码层硬约束守卫。
+- `renderer/card.py` / `main.py`：终端卡片（price_info 代码直填）+ CLI 串联
+  （`_resolve_entry_time` 三级降级：trades v2 → activity → None）。
+
+Web 后端 / 前端：
+- `api/main.py`【新】：FastAPI。`GET /analyze?wallet=` 跑完整 pipeline 返回卡片；
+  CORS 放行 3000/5173；错误分层 400/404/500/502；进度打 stdout。
+- `api/backtest_mock.py`【新】：`GET /backtest` 的**占位 mock**（3 条手工样本，hit/hit/miss）。
+- `frontend/`【新】：Vite+React。`src/App.jsx` 组件化（Card 实时与回测快照共用 /
+  DecodeView / LoadingStages 阶段进度 / TrackRecordView 回测页），`src/index.css` 视觉语言。
+  两 tab：**Decode（实时解读，数据真实）/ Track Record（历史战绩，数据 mock）**。
+  视觉精修已完成（彭博克制 × 交易张力，深色 + cyan 强调 + follow 语义色）。
 
 **运行 Web 全栈**：
 ```bash
 .venv/bin/uvicorn api.main:app --port 8000     # 后端
 cd frontend && npm install && npm run dev       # 前端 → http://localhost:5173
+# 前端截图调试：cd frontend && node shot.mjs / shot-track.mjs（产物已 gitignore）
 ```
 
 **2026-06-11 收官冲刺修掉的几处**：
@@ -210,11 +222,34 @@ cd frontend && npm install && npm run dev       # 前端 → http://localhost:51
 - **news 缓存 key 漏带时间窗**（真 bug）→ key 改 `md5(question|start|end)`，否则 entry_time
   变化后会命中旧缓存返回过期 anchored 结果。
 
-**待解决 / 下一步**：
+**正在做 / 还没完成**：
+- **Track Record 回测页：前端框架已成，数据仍是 MOCK**。`GET /backtest` 返回
+  `api/backtest_mock.py` 的 3 条手工样本（`_mock:true`，前端有琥珀角标）。回测 pipeline
+  尚未实现——这是当前最大的未完成块。
+
+**下一步具体要做：回测 pipeline（把 mock 换成真数据）**
+- 目标：对钱包每个**已结算政治盘**，在历史时点（T-7 / T-1）重放 decoder，与真实结算对照，
+  产出 `{market_question, resolved_outcome, t7_card, t1_card, hit}`，结构已被 `backtest_mock.py`
+  钉死，跑出来直接替换 `MOCK_BACKTEST` 即可，前端零改动。
+- 模块约束（见本文件「回测设计备忘」）：单独 `backtest/` 模块、`fetch_full_activity`，
+  **不动 `fetcher/activity.py`**。
+
+**待解决的硬问题 / 待验证假设（回测 pipeline 的拦路虎，2026-06-12 实探结论）**：
+- **「输」的信号在公开接口里缺失**：已结算**赢**的市场有 REDEEM 事件（伊朗实测 84 条 REDEEM），
+  但**输**的市场份额归零、无任何事件，且赎回后多从 `/positions` 消失。→ **胜率不可靠**
+  （能数到的几乎全是赢，分母缺输，会虚高到 90%+）。**故战绩口径若要真做，应走「净实现盈亏
+  （现金流：买入 vs 卖出+赎回）」而非胜率**——亏损单买入收不回，自然拖低净值。
+  （注：回测页的「方向命中率」是另一回事——它对照的是 decoder 判断 vs 真实结算，不是钱包盈亏；
+  但它同样需要先拿到每个市场的「真实结算结果」，见下条。）
+- **每个历史市场的「真实结算结果」难拿**：`/activity` 记录**不带 eventId**（只有 conditionId），
+  且 gamma `/markets?conditionId=` 服务器端过滤**失效**（返回 20 条无关市场，与已知的
+  category 过滤同款坑）。需另找可靠的「conditionId → 结算获胜方」映射（待调研：gamma 按 slug、
+  或 CLOB / resolution 接口）。
+- **历史时点的价格/新闻快照**：T-7/T-1 当时的 current_price、当时窗口的新闻，需要按历史时间点
+  取数，正向流程的实时取数不能直接复用。
 - 课堂网关已通（claude-sonnet-4.5，点号不是横杠），USE_FAKE_KEYWORDS 可改回 false ✅
 - relation 主干道（BEFORE_ENTRY/AFTER_ENTRY）已实战验证（Netanyahu 钱包），但能否打出
   取决于 on-topic 文章是否落在锚定窗内；同名噪音（aliens 移民网站）被 admission 正确剔除。
-- 前端视觉精修（这版只求可读，未追求美观）。
 - **【已诊断为非 Bug，且 v2 已落地】activity.py conditionId 命中率低**（2026-06-10 用 aliens + 伊朗两钱包真实数据核查）
 
   - **结论**：`positions` 和 `activity` 两个接口的 `conditionId` 字段语义**完全一致**——都是子市场（market）级别的 ID，不是 event 级别。伊朗钱包 positions 的 146 个 conditionId 与 activity 前 150 条 TRADE 的 18 个 conditionId **交集 15 个**，证明同一子市场两边匹配得上；老代码的精确匹配是对的。
