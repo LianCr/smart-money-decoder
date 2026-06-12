@@ -151,8 +151,28 @@ body {
   color: var(--text-3); letter-spacing: 0.02em;
 }
 
+/* 钱包头部：头像 + 昵称 + 完整地址 */
+.wallet-head { display: flex; align-items: center; gap: 12px; padding: 18px 22px 12px; }
+.avatar {
+  width: 40px; height: 40px; border-radius: 50%; flex-shrink: 0; object-fit: cover;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--mono); font-size: 13px; font-weight: 700; color: #fff;
+  border: 1px solid var(--line);
+}
+.wmeta { min-width: 0; }
+.wnick { font-size: 15px; font-weight: 650; color: var(--text); line-height: 1.2; }
+.waddr { font-size: 11px; color: var(--text-4); margin-top: 3px; }
+
+/* 极简 PnL 折线 */
+.pnlchart { padding: 2px 22px 16px; }
+.pc-top { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 7px; }
+.pc-lab { font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-4); }
+.pc-val { font-family: var(--mono); font-size: 15px; font-weight: 700; }
+.pnlchart svg { width: 100%; height: 70px; display: block; }
+
 /* 头部：市场标题 + outcome 徽章 */
-.c-head { padding: 22px 22px 18px; display: flex; gap: 14px; align-items: flex-start; }
+.c-head { padding: 18px 22px 18px; display: flex; gap: 14px; align-items: flex-start;
+  border-top: 1px solid var(--line-soft); }
 .c-head .q { font-size: 18px; font-weight: 650; line-height: 1.32; letter-spacing: -0.01em; flex: 1; }
 .c-head .meta { color: var(--text-3); font-size: 12px; margin-top: 7px; font-family: var(--mono); }
 .outcome {

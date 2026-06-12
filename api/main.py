@@ -29,7 +29,7 @@ load_dotenv()
 
 from fetcher.polymarket import get_top_political_position
 from fetcher.activity import get_entry_time, ActivityAPIError
-from fetcher.trades import get_entry_time_v2
+from fetcher.trades import get_entry_time_v2, get_wallet_profile, get_wallet_pnl_history
 from fetcher.news import get_news_for_market
 from analyzer.decoder import decode_position, DecoderError
 from api.backtest_mock import MOCK_BACKTEST
@@ -152,9 +152,15 @@ def analyze(wallet: str):
         return _err(500, e.reason, e.message)  # decoder 失败一律 500
     _log(f"   ✓ 卡片生成完毕（耗时 {time.time() - t0:.1f}s）")
 
+    # ── 钱包展示资料（头像/昵称 + 历史 PnL 曲线），均 best-effort，绝不阻塞 ────
+    profile = get_wallet_profile(wallet)
+    pnl_history = get_wallet_pnl_history(wallet)
+
     # ── 组装响应：decoder 卡片 + 代码直填的 price_info + 市场元信息 ────────────
     # price_info 不经 AI，直接取 position 真值（防幻觉，与 CLI 渲染同源）
     response = {
+        "profile": profile,
+        "pnl_history": pnl_history,
         "market_question": position["market_question"],
         "outcome":         position["outcome"],
         "resolution_date": position["resolution_date"],

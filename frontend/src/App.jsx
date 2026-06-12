@@ -22,6 +22,74 @@ function money(v) {
   return s + "$" + Math.abs(v).toLocaleString("en-US", { minimumFractionDigits: 0, maximumFractionDigits: 0 });
 }
 
+function abbrev(addr) {
+  return addr && addr.length > 12 ? `${addr.slice(0, 6)}…${addr.slice(-4)}` : addr;
+}
+function avatarColor(addr) {
+  let h = 0;
+  for (let i = 2; i < (addr || "").length; i++) h = (h * 31 + addr.charCodeAt(i)) % 360;
+  return `hsl(${h}, 42%, 42%)`;
+}
+function avatarInitials(addr) {
+  return (addr || "0x").slice(2, 4).toUpperCase();
+}
+function fmtPnlCompact(v) {
+  const s = v < 0 ? "-" : "+";
+  const a = Math.abs(v);
+  if (a >= 1e6) return `${s}$${(a / 1e6).toFixed(2)}M`;
+  if (a >= 1e3) return `${s}$${(a / 1e3).toFixed(1)}K`;
+  return `${s}$${a.toFixed(0)}`;
+}
+
+function Avatar({ profile }) {
+  const [err, setErr] = useState(false);
+  const addr = profile.address || "";
+  if (profile.profile_image && !err) {
+    return <img className="avatar" src={profile.profile_image} onError={() => setErr(true)} alt="" />;
+  }
+  return <div className="avatar" style={{ background: avatarColor(addr) }}>{avatarInitials(addr)}</div>;
+}
+
+function WalletHeader({ profile }) {
+  const addr = profile.address || "";
+  const nick = profile.name || profile.pseudonym || abbrev(addr);
+  return (
+    <div className="wallet-head">
+      <Avatar profile={profile} />
+      <div className="wmeta">
+        <div className="wnick">{nick}</div>
+        <div className="waddr num">{addr}</div>
+      </div>
+    </div>
+  );
+}
+
+// 极简 PnL 折线：纯 SVG，无图表库、无交互、无 tooltip
+function PnlChart({ points }) {
+  const n = points.length;
+  const W = 600, H = 70, pad = 6;
+  const ps = points.map((d) => d.p);
+  const min = Math.min(...ps), max = Math.max(...ps), span = max - min || 1;
+  const x = (i) => (i / (n - 1)) * W;
+  const y = (p) => pad + (1 - (p - min) / span) * (H - 2 * pad);
+  const line = points.map((d, i) => `${i === 0 ? "M" : "L"}${x(i).toFixed(1)},${y(d.p).toFixed(1)}`).join(" ");
+  const area = `${line} L${W},${H} L0,${H} Z`;
+  const up = ps[n - 1] >= ps[0];
+  const color = up ? "var(--green)" : "var(--red)";
+  return (
+    <div className="pnlchart">
+      <div className="pc-top">
+        <span className="pc-lab">Wallet PnL · all-time</span>
+        <span className="pc-val" style={{ color }}>{fmtPnlCompact(ps[n - 1])}</span>
+      </div>
+      <svg viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="none">
+        <path d={area} fill={color} opacity="0.1" />
+        <path d={line} fill="none" stroke={color} strokeWidth="2" vectorEffect="non-scaling-stroke" />
+      </svg>
+    </div>
+  );
+}
+
 export default function App() {
   const [tab, setTab] = useState("decode");
   return (
@@ -141,6 +209,8 @@ export function Card({ card, banner }) {
   return (
     <div className="card">
       {banner && <div className="snapbanner">{banner}</div>}
+      {card.profile && <WalletHeader profile={card.profile} />}
+      {card.pnl_history && card.pnl_history.length > 1 && <PnlChart points={card.pnl_history} />}
 
       <div className="c-head">
         <div>
