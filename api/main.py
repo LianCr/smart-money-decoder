@@ -32,6 +32,7 @@ from fetcher.activity import get_entry_time, ActivityAPIError
 from fetcher.trades import get_entry_time_v2
 from fetcher.news import get_news_for_market
 from analyzer.decoder import decode_position, DecoderError
+from api.backtest_mock import MOCK_BACKTEST
 
 app = FastAPI(title="smart-money-decoder API", version="1.0")
 
@@ -82,6 +83,18 @@ def _resolve_entry_time(wallet: str, condition_id: str) -> int | None:
         _log(f"   ⚠️  activity 也失败 [{e.reason}]")
     _log("   ⚠️  entry_time=None（合法降级）")
     return None
+
+
+@app.get("/backtest")
+def backtest():
+    """
+    Track Record 回测数据。
+
+    ⚠️ 当前返回 MOCK（_mock=true）：历史时点重放 decoder 的回测 pipeline 尚未实现。
+    真实回测产出后，把 MOCK_BACKTEST 换成实跑结果即可，契约不变（见 backtest_mock.py）。
+    """
+    _log("\n=== /backtest （MOCK 占位） ===")
+    return MOCK_BACKTEST
 
 
 @app.get("/analyze")
