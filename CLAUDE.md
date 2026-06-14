@@ -222,11 +222,24 @@ cd frontend && npm install && npm run dev       # 前端 → http://localhost:51
 - **news 缓存 key 漏带时间窗**（真 bug）→ key 改 `md5(question|start|end)`，否则 entry_time
   变化后会命中旧缓存返回过期 anchored 结果。
 
-**回测 pipeline 已全线跑通（2026-06-12）**：三块砖全部落地，`GET /backtest` 已返回**真实
-回测数据**（`_mock:false`），前端 Track Record 页用真实 decoder 重放结果渲染成功（伊朗钱包
-首跑产出 3 个样本：2 命中 1 失手，含一个 `CHASED→NO BASIS` 的诚实失手案例）。
-- 运行：`.venv/bin/python -m backtest.pipeline <wallet> <max_samples>` → 写
-  `.cache/backtest/result.json`（gitignore 生成物），`/backtest` 自动读取，无则回退 MOCK。
+**回测 pipeline 已封板（2026-06-13）**：三块砖全部落地，`GET /backtest` 返回**真实回测数据**
+（`_mock:false`），前端 Track Record 用真实 decoder 重放结果渲染。
+- **最终样本：多钱包聚合 6 个**（伊朗 `Car` 3 个 + Netanyahu 钱包 `ImJustKen` 3 个）：
+  方向命中 **5/6**、构成 **4 赢 / 2 输**。最有说服力的是 **Starmer 两个亏损盘**：钱包押"首相下台"
+  赌输，decoder 两时点都读到"Starmer 拒辞"、判 `NO BASIS` 不背书 → **系统正确躲过亏损**。
+  Powell 一个失手（T-7 CHASED → T-1 NO BASIS）：decoder 正确识别"临时主席"的结算歧义但压错一边。
+- **完整复盘固化在 `backtest/final_samples.md`（git 跟踪，防缓存清理）** —— demo 核心素材，
+  每样本含两时点 follow_call/confidence/reasoning 原文 + 点评。
+- **NO BASIS 成因核查结论**：这 6 样本 12 张卡**没有一个 NO BASIS 是"搜不到新闻"**（全部
+  time_anchored + 有 catalyst）。NO BASIS 都是 decoder 读了新闻、对"证据逆向 thesis"主动不背书。
+  **demo 要诚实说"它在读新闻做判断"，不是"没信息所以保守"**。语义瑕疵：模型把 `NO BASIS`
+  借用来表达"催化剂反对 thesis"（功能对=别跟，但严格说缺个 `FADE` 档）。
+- 运行：单钱包 `python -m backtest.pipeline <wallet> <n>`；多钱包聚合
+  `python -m backtest.pipeline multi <per_wallet> <total_cap> <w1> <w2>...`（钱包来源：
+  `lb-api.polymarket.com/volume` 成交量榜筛政治活跃者）。结果写 `.cache/backtest/result.json`
+  （gitignore），`/backtest` 自动读取，无则回退 MOCK。
+- **低信心样本就此打住**（decoder 对这批已结算政治盘几乎都给中/高信心，低信心天然稀少，
+  硬凑边际收益低）。前端校准块无样本时显示 `—`（非误导性的 `0%`）。
 
 **回测三块砖（均已落地并跑通）**：
 - 模块约束（见本文件「回测设计备忘」）：单独 `backtest/` 模块、**不动 `fetcher/activity.py`**。
