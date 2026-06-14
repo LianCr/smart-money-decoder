@@ -177,7 +177,7 @@ def run_backtest(wallet: str, max_samples: int = 6, min_cost: float = 1000.0) ->
     samples = []
     examined = 0
     for cid, pos in positions.items():
-        if len(samples) >= max_samples or examined >= 70:
+        if len(samples) >= max_samples or examined >= 200:
             break
         if not pos["token"] or not pos["entry_time"]:
             continue

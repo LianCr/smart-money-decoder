@@ -320,8 +320,11 @@ function TrackRecordView() {
   if (!data) return <div className="stages"><div className="lead">LOADING TRACK RECORD…</div></div>;
 
   const o = data.overview;
-  const hi = pct(o.high_conf), lo = pct(o.low_conf);
-  const calibrated = hi > lo; // 高信心确实更准 → 给高的那个强调色
+  // 无样本的桶显示 "—" 而非 "0%"（0/0 不是 0% 命中率，避免误导）
+  const rate = (b) => (b.total ? `${pct(b)}%` : "—");
+  const hiStr = rate(o.high_conf), loStr = rate(o.low_conf);
+  // 仅当两桶都有样本、且高信心确实更准时，才给高的那个强调色
+  const calibrated = o.high_conf.total > 0 && o.low_conf.total > 0 && pct(o.high_conf) > pct(o.low_conf);
 
   return (
     <>
@@ -338,9 +341,9 @@ function TrackRecordView() {
         <div className="ov-sep" />
         <div className="ov-block">
           <div className="ov-num num calib">
-            <span className={calibrated ? "accent" : ""}>{hi}%</span>
+            <span className={calibrated ? "accent" : ""}>{hiStr}</span>
             <span className="vs">/</span>
-            <span className="muted">{lo}%</span>
+            <span className="muted">{loStr}</span>
           </div>
           <div className="ov-lab">信心校准 · HIGH / LOW CONF</div>
         </div>
