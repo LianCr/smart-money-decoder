@@ -202,7 +202,8 @@ output = resp.json()["output"]   # 结果在 output 字段，不是 content[0].t
 Web 后端 / 前端：
 - `api/main.py`【新】：FastAPI。`GET /analyze?wallet=` 跑完整 pipeline 返回卡片；
   CORS 放行 3000/5173；错误分层 400/404/500/502；进度打 stdout。
-- `api/backtest_mock.py`【新】：`GET /backtest` 的**占位 mock**（3 条手工样本，hit/hit/miss）。
+- `api/backtest_mock.py`：旧占位 mock，**现已弃用**（`/backtest` 改读 git 跟踪的静态文件，见下方
+  2026-06-14 note；import 仍在但不再被调用）。
 - `frontend/`【新】：Vite+React。`src/App.jsx` 组件化（Card 实时与回测快照共用 /
   DecodeView / LoadingStages 阶段进度 / TrackRecordView 回测页），`src/index.css` 视觉语言。
   两 tab：**Decode（实时解读，数据真实）/ Track Record（历史战绩，真实多钱包数据）**。
@@ -214,6 +215,16 @@ Web 后端 / 前端：
   ③**PnL 曲线可读化**——标题 + X 轴起止日期 + Y 轴峰值/当前值($3.13M) + 端点圆点 + 水下红绿分段。
   **动效全 CSS transition，未装 framer-motion（零新依赖）**。计划见
   `~/.claude/plans/radiant-sprouting-music.md`。
+  **2026-06-14 demo 收尾（重心转向"实时解读"，回测降为静态成绩牌；以下覆盖上面 06-13 的回测页描述）**：
+  ① **实时解读加外层缓存**——`/analyze` 顶部按 `(小写钱包, 当天日期)` 缓存整条 pipeline 结果到
+  `.cache/analyze/<wallet>_<date>.json`，同钱包当天重复点 = 零 token 秒回。**这是 demo 不烧穿额度的命门**
+  （decoder 缓存 key 含 current_price、盘中漂移会 miss，须靠这层外层缓存兜底；实测第二次 0.002s + CACHE HIT）。
+  ② **Track Record 改成"案例故事卡 + 折叠 lift"**——主体是 6 个具体案例（`backtest/cases.json`，手填自
+  `final_samples.md` 的诚实 5/6 版、git 跟踪）：默认行『市场 + AI当时判别跟/可跟 + 钱包赢/输 + ✓/✗』，
+  Starmer 两个"正确躲坑"★ 高亮、Powell 失手 ✗ 如实留；点开抽屉是 T-7→T-1 演变 + 催化剂 + reasoning 原文。
+  原 +10%/+13% lift 卡（`backtest/lift_result.json`，手填自 `lift_v1.md`）折叠进底部"整体战绩汇总(进阶)"、
+  黑话改大白话。③ `GET /backtest` 现返回 `{cases, summary, lift}`，读这两个 git 跟踪静态文件，**全静态、
+  零 token、不重跑**（难度系数/PnL 曲线等 06-13 特性属旧版，已被本次案例卡覆盖）。
 
 **运行 Web 全栈**：
 ```bash
