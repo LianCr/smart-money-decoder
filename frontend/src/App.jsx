@@ -40,6 +40,24 @@ function fmtPnlCompact(v) {
   if (a >= 1e3) return `${s}$${(a / 1e3).toFixed(1)}K`;
   return `${s}$${a.toFixed(0)}`;
 }
+// unix 秒 → "YYYY-MM"
+function fmtMonth(t) {
+  const d = new Date(t * 1000);
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
+}
+// decoder 的"跟/躲"：ROOM LEFT/CHASED=跟（背书），NO BASIS=躲（不背书）
+function decoderStance(fc) {
+  const follow = fc === "ROOM LEFT" || fc === "CHASED";
+  return { word: follow ? "跟" : "躲", cls: follow ? "stance-follow" : "stance-avoid" };
+}
+// 难度系数 → 三档标签（建仓价距 0.5 越近越难）
+function difficultyTier(d) {
+  if (typeof d !== "number") return { label: "难度不可得", cls: "diff-na", pct: "—" };
+  const pct = `${Math.round(d * 100)}%`;
+  if (d >= 0.7) return { label: "迷雾博弈 Coin-Flip", cls: "diff-hard", pct };
+  if (d >= 0.4) return { label: "倾斜中 Leaning", cls: "diff-mid", pct };
+  return { label: "近明牌 Near-Settled", cls: "diff-easy", pct };
+}
 
 function Avatar({ profile }) {
   const [err, setErr] = useState(false);
@@ -65,27 +83,67 @@ function WalletHeader({ profile }) {
 }
 
 // 极简 PnL 折线：纯 SVG，无图表库、无交互、无 tooltip
+// 把曲线按零线拆成 green/red 子段（水下=红）；全为正时返回单段
+function pnlSegments(points, x, y) {
+  const segs = [];
+  let cur = [], curNeg = points[0].p < 0;
+  for (let i = 0; i < points.length; i++) {
+    const p = points[i].p, neg = p < 0;
+    if (i > 0 && neg !== curNeg) {
+      const p0 = points[i - 1].p, t = p0 / (p0 - p);          // 线性插值零交叉点
+      const xc = x(i - 1) + (x(i) - x(i - 1)) * t, yc = y(0);
+      cur.push([xc, yc]); segs.push({ neg: curNeg, pts: cur });
+      cur = [[xc, yc]]; curNeg = neg;
+    }
+    cur.push([x(i), y(points[i].p)]);
+  }
+  if (cur.length) segs.push({ neg: curNeg, pts: cur });
+  return segs.map((s) => ({
+    neg: s.neg,
+    d: s.pts.map((c, j) => `${j ? "L" : "M"}${c[0].toFixed(1)},${c[1].toFixed(1)}`).join(" "),
+  }));
+}
+
 function PnlChart({ points }) {
   const n = points.length;
-  const W = 600, H = 70, pad = 6;
+  const W = 600, H = 84, pad = 10;
   const ps = points.map((d) => d.p);
   const min = Math.min(...ps), max = Math.max(...ps), span = max - min || 1;
   const x = (i) => (i / (n - 1)) * W;
   const y = (p) => pad + (1 - (p - min) / span) * (H - 2 * pad);
-  const line = points.map((d, i) => `${i === 0 ? "M" : "L"}${x(i).toFixed(1)},${y(d.p).toFixed(1)}`).join(" ");
-  const area = `${line} L${W},${H} L0,${H} Z`;
-  const up = ps[n - 1] >= ps[0];
-  const color = up ? "var(--green)" : "var(--red)";
+  const last = ps[n - 1], first = ps[0];
+  const underwater = min < 0;
+  const color = last >= first ? "var(--green)" : "var(--red)";
+  const segs = pnlSegments(points, x, y);
+  const area = `M0,${y(first)} ${points.map((d, i) => `L${x(i).toFixed(1)},${y(d.p).toFixed(1)}`).join(" ")} L${W},${H} L0,${H} Z`;
+  // 当前值端点 + 峰值点（百分比定位，HTML 圆点不被 SVG 拉伸）
+  const lastTop = (y(last) / H) * 100;
+  const peakIdx = ps.indexOf(max);
+  const peakLeft = Math.min(Math.max((peakIdx / (n - 1)) * 100, 6), 82);
+  const peakTop = (y(max) / H) * 100;
+
   return (
     <div className="pnlchart">
       <div className="pc-top">
-        <span className="pc-lab">Wallet PnL · all-time</span>
-        <span className="pc-val" style={{ color }}>{fmtPnlCompact(ps[n - 1])}</span>
+        <span className="pc-lab">CUMULATIVE PnL · 该钱包历史累计盈亏</span>
+        <span className="pc-val" style={{ color }}>{fmtPnlCompact(last)}</span>
       </div>
-      <svg viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="none">
-        <path d={area} fill={color} opacity="0.1" />
-        <path d={line} fill="none" stroke={color} strokeWidth="2" vectorEffect="non-scaling-stroke" />
-      </svg>
+      <div className="pc-chart">
+        <svg viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="none">
+          <path d={area} fill={color} opacity="0.08" />
+          {underwater && <line x1="0" x2={W} y1={y(0)} y2={y(0)} className="pc-zero" />}
+          {segs.map((s, i) => (
+            <path key={i} className="pc-line" d={s.d} fill="none" pathLength="1"
+              stroke={s.neg ? "var(--red)" : "var(--green)"} strokeWidth="2" vectorEffect="non-scaling-stroke" />
+          ))}
+        </svg>
+        <span className="pc-dot" style={{ left: "calc(100% - 4px)", top: `calc(${lastTop}% - 4px)`, background: color }} />
+        <span className="pc-peak" style={{ left: `${peakLeft}%`, top: `${peakTop}%` }}>peak {fmtPnlCompact(max)}</span>
+      </div>
+      <div className="pc-axis">
+        <span>{fmtMonth(points[0].t)}</span>
+        <span>{fmtMonth(points[n - 1].t)}</span>
+      </div>
     </div>
   );
 }
@@ -332,6 +390,13 @@ function TrackRecordView() {
         <div className="mocktag">MOCK · 回测 pipeline 待接入，以下为占位样本</div>
       )}
 
+      {/* 方法论说明：老实告诉用户这测的是什么 */}
+      <div className="method">
+        <b>这页测什么</b>：对每个已结算的政治盘，在它结算前的 <b>T-7 / T-1</b> 两个历史时点
+        重放 decoder，用它<b>当时</b>的判断（跟 / 躲）对照<b>真实结算结果</b>，统计命中率。
+        <b>难度系数</b>按建仓价距 0.5 的远近衡量——越靠 0.5 越是迷雾博弈，越靠 0/1 越是近明牌。
+      </div>
+
       {/* 战绩总览条：整页唯一大数字区 */}
       <div className="overview">
         <div className="ov-block">
@@ -379,22 +444,35 @@ function MiniFollow({ card }) {
 
 function BacktestRow({ s }) {
   const [open, setOpen] = useState(false);
-  const [tp, setTp] = useState("t7"); // 展开后看哪个时点
+  const [tp, setTp] = useState("t1"); // 展开后看哪个时点（默认 T-1，与默认行判断一致）
+  const ref = useRef(null);
+  const [h, setH] = useState(0);
+  // 抽屉平滑展开：量内容 scrollHeight，对 height 做 transition（纯 CSS，无库）
+  useEffect(() => {
+    setH(open && ref.current ? ref.current.scrollHeight : 0);
+  }, [open, tp]);
+
   const card = tp === "t7" ? s.t7_card : s.t1_card;
   const snapDate = tp === "t7" ? s.t7_date : s.t1_date;
   const banner = `Snapshot as of ${snapDate} — market resolved ${s.resolved_outcome} on ${s.resolved_date}`;
+
+  // 默认行：decoder 当时判断按 T-1（hit 即按 T-1 算）
+  const stance = decoderStance(s.t1_card.follow_call);
+  const diff = difficultyTier(s.difficulty);
+  const fcls = FOLLOW_CLASS[s.t1_card.follow_call] || "gray";
 
   return (
     <div className={`bt-item ${open ? "open" : ""}`}>
       <div className="bt-row" onClick={() => setOpen(!open)}>
         <div className="bt-left">
           <div className="bt-q">{s.market_question}</div>
-          <span className="resolved">RESOLVED {s.resolved_outcome}</span>
-        </div>
-        <div className="bt-mid">
-          <div className="tp"><span className="tp-lab">T-7</span><MiniFollow card={s.t7_card} /></div>
-          <span className="evo" />
-          <div className="tp"><span className="tp-lab">T-1</span><MiniFollow card={s.t1_card} /></div>
+          <div className="bt-tags">
+            <span className={`stance ${fcls}`}>
+              Decoder <b className={stance.cls}>{stance.word}</b> · {s.t1_card.follow_call} · {CONF_LABEL[s.t1_card.confidence] || s.t1_card.confidence}
+            </span>
+            <span className="resolved big">RESOLVED {s.resolved_outcome}</span>
+            <span className={`difftag ${diff.cls}`}>{diff.label} · {diff.pct}</span>
+          </div>
         </div>
         <div className="bt-right">
           <span className={s.hit ? "verd hit" : "verd miss"}>{s.hit ? "✓" : "✗"}</span>
@@ -402,15 +480,21 @@ function BacktestRow({ s }) {
         </div>
       </div>
 
-      {open && (
-        <div className="bt-expand">
+      <div className="bt-drawer" style={{ height: h }}>
+        <div className="bt-drawer-inner" ref={ref}>
+          {/* T-7→T-1 判断演变（移入抽屉） */}
+          <div className="bt-evo">
+            <div className="tp"><span className="tp-lab">T-7</span><MiniFollow card={s.t7_card} /></div>
+            <span className="evo" />
+            <div className="tp"><span className="tp-lab">T-1</span><MiniFollow card={s.t1_card} /></div>
+          </div>
           <div className="tp-toggle">
             <button className={tp === "t7" ? "on" : ""} onClick={() => setTp("t7")}>T-7 · {s.t7_date}</button>
             <button className={tp === "t1" ? "on" : ""} onClick={() => setTp("t1")}>T-1 · {s.t1_date}</button>
           </div>
           <Card card={card} banner={banner} />
         </div>
-      )}
+      </div>
     </div>
   );
 }

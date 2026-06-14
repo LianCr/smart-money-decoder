@@ -90,6 +90,28 @@ def _resolve_entry_time(wallet: str, condition_id: str) -> int | None:
 BACKTEST_RESULT = Path(".cache/backtest/result.json")
 
 
+def _difficulty(entry_price):
+    """
+    判断难度系数（距 0.5 越近越难）：1 - |entry_price - 0.5| * 2，∈ [0,1]。
+    用**建仓价** entry_price（不是 current_price）：押在 0.5 附近=迷雾博弈，押在 0.97=近明牌。
+    entry_price 缺失 → None（前端显示"难度不可得"，不崩）。
+    """
+    if not isinstance(entry_price, (int, float)):
+        return None
+    return round(1 - abs(entry_price - 0.5) * 2, 4)
+
+
+def _enrich_difficulty(data):
+    """读取时为每个回测样本注入 difficulty（不改 result.json / pipeline）。"""
+    for s in data.get("samples", []):
+        try:
+            entry = s["t7_card"]["price_info"]["entry_price"]
+        except (KeyError, TypeError):
+            entry = None
+        s["difficulty"] = _difficulty(entry)
+    return data
+
+
 @app.get("/backtest")
 def backtest():
     """
@@ -97,16 +119,17 @@ def backtest():
 
     有真实回测产物（.cache/backtest/result.json，由 backtest.pipeline 离线生成）→ 读它
     （_mock=false）；否则回退 MOCK 占位（_mock=true）。契约一致，前端无需区分。
+    读取时为每个样本注入 difficulty（纯展示增强，不碰已封板的 pipeline）。
     """
     if BACKTEST_RESULT.exists():
         try:
             data = json.loads(BACKTEST_RESULT.read_text(encoding="utf-8"))
             _log(f"\n=== /backtest （真实回测 · {len(data.get('samples', []))} 样本）===")
-            return data
+            return _enrich_difficulty(data)
         except Exception as e:
             _log(f"\n=== /backtest （真实结果读取失败 {e}，回退 MOCK）===")
     _log("\n=== /backtest （MOCK 占位）===")
-    return MOCK_BACKTEST
+    return _enrich_difficulty(dict(MOCK_BACKTEST))
 
 
 @app.get("/analyze")
