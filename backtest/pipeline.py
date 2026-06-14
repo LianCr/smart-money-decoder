@@ -190,46 +190,52 @@ def _collect_samples(wallet: str, max_samples: int, min_cost: float = 1000.0,
             continue
         examined += 1
 
-        res = get_market_resolution(cid)
-        if not res or not res.get("resolved_time"):
-            continue
-        rt = res["resolved_time"]; t7 = rt - 7 * 86400; t1 = rt - 1 * 86400
-        p7 = get_price_at(pos["token"], t7); p1 = get_price_at(pos["token"], t1)
-        if p7 is None or p1 is None:
-            continue  # 短命市场，T-7/T-1 历史价不全，跳过
-
-        if not _is_political(res.get("event_id")):
-            continue  # 只回测政治盘（剔除体育/加密），与工具定位一致
-
-        # #7：各时点各自重搜，as_of 截到该时点，杜绝未来新闻泄漏（基线/子集才可比）
-        q = pos["title"] or res["question"]
-        news7 = get_news_for_market(q, pos["entry_time"], as_of=t7)
-        news1 = get_news_for_market(q, pos["entry_time"], as_of=t1)
-        if news7.get("error") or news1.get("error"):
-            continue
-
-        winner = res["winning_outcome"]; bet_won = (pos["outcome"] == winner)
+        # 健壮性：逐候选包 try——单个瞬时 API 错（gamma ReadTimeout 让 get_market_resolution
+        # 抛 ActivityAPIError、偶发 JSON 异常等）只跳过该候选，绝不杀掉整个几十分钟的长跑。
         try:
-            a7 = _assemble(pos, res, p7, news7); c7 = _decode_retry(a7, _date(t7))
-            a1 = _assemble(pos, res, p1, news1); c1 = _decode_retry(a1, _date(t1))
-        except DecoderError as e:
-            _log(f"   ⚠️ {(pos['title'] or '')[:30]} decoder 抛 {e.reason}（重试后仍失败），跳过")
-            continue
+            res = get_market_resolution(cid)
+            if not res or not res.get("resolved_time"):
+                continue
+            rt = res["resolved_time"]; t7 = rt - 7 * 86400; t1 = rt - 1 * 86400
+            p7 = get_price_at(pos["token"], t7); p1 = get_price_at(pos["token"], t1)
+            if p7 is None or p1 is None:
+                continue  # 短命市场，T-7/T-1 历史价不全，跳过
 
-        t7c = _front_card(a7, c7); t1c = _front_card(a1, c1)
-        endorsed = t1c["follow_call"] in ENDORSE
-        hit = (endorsed == bet_won)
-        samples.append({
-            "cid": cid,   # 内部去重用，前端忽略
-            "market_question": res["question"] or pos["title"],
-            "resolved_outcome": (winner or "").upper(),
-            "resolved_date": _date(rt),
-            "t7_date": _date(t7), "t1_date": _date(t1),
-            "t7_card": t7c, "t1_card": t1c,
-            "hit": hit, "bet_won": bet_won,
-        })
-        _log(f"   ✓ [{len(samples)}] {res['question'][:36]} | 持{pos['outcome']} winner={winner} "
-             f"{'赢' if bet_won else '输'} | T-1 {t1c['follow_call']} → {'命中' if hit else '失手'}")
+            if not _is_political(res.get("event_id")):
+                continue  # 只回测政治盘（剔除体育/加密），与工具定位一致
+
+            # #7：各时点各自重搜，as_of 截到该时点，杜绝未来新闻泄漏（基线/子集才可比）
+            q = pos["title"] or res["question"]
+            news7 = get_news_for_market(q, pos["entry_time"], as_of=t7)
+            news1 = get_news_for_market(q, pos["entry_time"], as_of=t1)
+            if news7.get("error") or news1.get("error"):
+                continue
+
+            winner = res["winning_outcome"]; bet_won = (pos["outcome"] == winner)
+            try:
+                a7 = _assemble(pos, res, p7, news7); c7 = _decode_retry(a7, _date(t7))
+                a1 = _assemble(pos, res, p1, news1); c1 = _decode_retry(a1, _date(t1))
+            except DecoderError as e:
+                _log(f"   ⚠️ {(pos['title'] or '')[:30]} decoder 抛 {e.reason}（重试后仍失败），跳过")
+                continue
+
+            t7c = _front_card(a7, c7); t1c = _front_card(a1, c1)
+            endorsed = t1c["follow_call"] in ENDORSE
+            hit = (endorsed == bet_won)
+            samples.append({
+                "cid": cid,   # 内部去重用，前端忽略
+                "market_question": res["question"] or pos["title"],
+                "resolved_outcome": (winner or "").upper(),
+                "resolved_date": _date(rt),
+                "t7_date": _date(t7), "t1_date": _date(t1),
+                "t7_card": t7c, "t1_card": t1c,
+                "hit": hit, "bet_won": bet_won,
+            })
+            _log(f"   ✓ [{len(samples)}] {res['question'][:36]} | 持{pos['outcome']} winner={winner} "
+                 f"{'赢' if bet_won else '输'} | T-1 {t1c['follow_call']} → {'命中' if hit else '失手'}")
+        except Exception as e:
+            _log(f"   ⚠️ {(pos['title'] or cid)[:28]} 跳过（瞬时错 {type(e).__name__}: {str(e)[:40]}）")
+            continue
     return samples
 
 
