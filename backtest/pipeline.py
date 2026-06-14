@@ -201,14 +201,17 @@ def _collect_samples(wallet: str, max_samples: int, min_cost: float = 1000.0,
         if not _is_political(res.get("event_id")):
             continue  # 只回测政治盘（剔除体育/加密），与工具定位一致
 
-        news = get_news_for_market(pos["title"] or res["question"], pos["entry_time"])
-        if news.get("error"):
+        # #7：各时点各自重搜，as_of 截到该时点，杜绝未来新闻泄漏（基线/子集才可比）
+        q = pos["title"] or res["question"]
+        news7 = get_news_for_market(q, pos["entry_time"], as_of=t7)
+        news1 = get_news_for_market(q, pos["entry_time"], as_of=t1)
+        if news7.get("error") or news1.get("error"):
             continue
 
         winner = res["winning_outcome"]; bet_won = (pos["outcome"] == winner)
         try:
-            a7 = _assemble(pos, res, p7, news); c7 = _decode_retry(a7, _date(t7))
-            a1 = _assemble(pos, res, p1, news); c1 = _decode_retry(a1, _date(t1))
+            a7 = _assemble(pos, res, p7, news7); c7 = _decode_retry(a7, _date(t7))
+            a1 = _assemble(pos, res, p1, news1); c1 = _decode_retry(a1, _date(t1))
         except DecoderError as e:
             _log(f"   ⚠️ {(pos['title'] or '')[:30]} decoder 抛 {e.reason}（重试后仍失败），跳过")
             continue

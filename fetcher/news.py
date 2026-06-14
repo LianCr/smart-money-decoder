@@ -51,10 +51,16 @@ class NewsError(Exception):
 # ── 函数1（内部）：计算时间窗口 ────────────────────────────────────────────────
 def _build_time_window(
     entry_time: int | None,
+    as_of: int | None = None,
 ) -> tuple[str | None, str | None, bool]:
     """
     根据建仓时间戳计算新闻搜索的时间窗口。
     返回 (start_date, end_date, time_anchored)，日期格式 "YYYY-MM-DD"。
+
+    as_of（unix 秒，可选）：把窗口上界（"现在"）钉在某历史快照时点，杜绝未来新闻泄漏。
+      - 正向流程不传 → 用真实 now，行为完全不变。
+      - **回测历史重放必须传快照时点（T-7/T-1）**：end 截到 as_of，下游 _fetch_from_tavily 的
+        end_date 过滤会自动丢弃晚于该时点的文章。
 
     time_anchored=False 的含义：下游 AI 解码层必须降级处理，
     在卡片上注明"建仓时间未知，新闻仅供参考"。
@@ -74,8 +80,17 @@ def _build_time_window(
         return None, None, False
 
     start_dt = entry_dt - timedelta(days=7)
-    # end 不能超过今天
-    end_dt   = min(entry_dt + timedelta(days=3), now)
+    if as_of is not None:
+        # 回测：窗延伸到快照时点 as_of —— 让 T-7 / T-1 各自看到「至该刻」的全部新闻
+        #（T-1 窗是 T-7 的超集），且天然杜绝晚于该刻的未来文章。
+        end_dt = min(datetime.fromtimestamp(as_of, tz=timezone.utc), now)
+    else:
+        # 正向：catalyst 窗 [建仓-7, 建仓+3]，行为完全不变
+        end_dt = min(entry_dt + timedelta(days=3), now)
+
+    # 建仓-7 晚于快照时点（极短盘 / 时点远早于建仓）→ 窗退化，news 降级
+    if start_dt > end_dt:
+        return None, None, False
 
     return (
         start_dt.strftime("%Y-%m-%d"),
@@ -227,15 +242,26 @@ def _fetch_from_tavily(
 
 
 # ── 对外唯一入口 ───────────────────────────────────────────────────────────────
-def get_news_for_market(market_question: str, entry_time: int | None) -> dict:
+def get_news_for_market(
+    market_question: str, entry_time: int | None, as_of: int | None = None
+) -> dict:
     """
     给定市场标题和建仓时间戳，返回相关新闻及时间锚定状态。
+
+    as_of（unix 秒，可选）：回测历史重放时把窗口上界钉在快照时点，杜绝未来新闻泄漏。
+    正向流程不传 → 行为不变（见 _build_time_window）。
 
     成功：{"articles": [...], "search_query": str, "time_anchored": bool}
     失败：{"error": True, "reason": str, "message": str}
     """
     # 第一步：计算时间窗口
-    start_date, end_date, time_anchored = _build_time_window(entry_time)
+    start_date, end_date, time_anchored = _build_time_window(entry_time, as_of)
+
+    # #7：回测（as_of 指定）下，窗口退化（time_anchored=False，如建仓晚于快照时点）时
+    # **绝不走"近30天从现在往回"的兜底**——那不锚定、且无 as_of 上界 = 未来新闻泄漏。
+    # 该时点这注的催化剂尚未发生，如实返回空新闻，下游 decoder 凭"无新闻"判 NO BASIS（正确）。
+    if as_of is not None and not time_anchored:
+        return {"articles": [], "search_query": "", "time_anchored": False}
 
     # 第二步：命中缓存则直接返回，跳过所有 API 调用
     # 注意：缓存 key 必须带时间窗，否则 entry_time 变化后会返回过期结果
