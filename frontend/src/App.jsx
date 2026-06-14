@@ -45,19 +45,6 @@ function fmtMonth(t) {
   const d = new Date(t * 1000);
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
 }
-// decoder 的"跟/躲"：ROOM LEFT/CHASED=跟（背书），NO BASIS=躲（不背书）
-function decoderStance(fc) {
-  const follow = fc === "ROOM LEFT" || fc === "CHASED";
-  return { word: follow ? "跟" : "躲", cls: follow ? "stance-follow" : "stance-avoid" };
-}
-// 难度系数 → 三档标签（建仓价距 0.5 越近越难）
-function difficultyTier(d) {
-  if (typeof d !== "number") return { label: "难度不可得", cls: "diff-na", pct: "—" };
-  const pct = `${Math.round(d * 100)}%`;
-  if (d >= 0.7) return { label: "迷雾博弈 Coin-Flip", cls: "diff-hard", pct };
-  if (d >= 0.4) return { label: "倾斜中 Leaning", cls: "diff-mid", pct };
-  return { label: "近明牌 Near-Settled", cls: "diff-easy", pct };
-}
 
 function Avatar({ profile }) {
   const [err, setErr] = useState(false);
@@ -359,10 +346,6 @@ export function Card({ card, banner }) {
 }
 
 // ── Track Record 回测页 ─────────────────────────────────────────────────────
-function pct(o) {
-  return o.total ? Math.round((o.hits / o.total) * 100) : 0;
-}
-
 function TrackRecordView() {
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
@@ -415,9 +398,9 @@ function TrackRecordView() {
       </div>
 
       {/* 三层裁决 */}
-      <div className="verdict">
-        <div className="verdict-h">三层裁决 · VERDICT</div>
-        {data.verdict.map((v, i) => <div className="verdict-row" key={i}>{v}</div>)}
+      <div className="lift-verdict">
+        <div className="lift-verdict-h">三层裁决 · VERDICT</div>
+        {data.verdict.map((v, i) => <div className="lift-verdict-row" key={i}>{v}</div>)}
       </div>
 
       {/* caveats —— 第一条是“一次抽样会波动”快照声明 */}
@@ -429,72 +412,5 @@ function TrackRecordView() {
 
       <div className="foot">{data.source} · 静态成绩牌，不实时重跑、零 token</div>
     </>
-  );
-}
-
-function MiniFollow({ card }) {
-  const cls = FOLLOW_CLASS[card.follow_call] || "gray";
-  return (
-    <span className={`mini-follow ${cls}`}>
-      {card.follow_call}
-      <span className="mini-conf">{CONF_LABEL[card.confidence] || card.confidence}</span>
-    </span>
-  );
-}
-
-function BacktestRow({ s }) {
-  const [open, setOpen] = useState(false);
-  const [tp, setTp] = useState("t1"); // 展开后看哪个时点（默认 T-1，与默认行判断一致）
-  const ref = useRef(null);
-  const [h, setH] = useState(0);
-  // 抽屉平滑展开：量内容 scrollHeight，对 height 做 transition（纯 CSS，无库）
-  useEffect(() => {
-    setH(open && ref.current ? ref.current.scrollHeight : 0);
-  }, [open, tp]);
-
-  const card = tp === "t7" ? s.t7_card : s.t1_card;
-  const snapDate = tp === "t7" ? s.t7_date : s.t1_date;
-  const banner = `Snapshot as of ${snapDate} — market resolved ${s.resolved_outcome} on ${s.resolved_date}`;
-
-  // 默认行：decoder 当时判断按 T-1（hit 即按 T-1 算）
-  const stance = decoderStance(s.t1_card.follow_call);
-  const diff = difficultyTier(s.difficulty);
-  const fcls = FOLLOW_CLASS[s.t1_card.follow_call] || "gray";
-
-  return (
-    <div className={`bt-item ${open ? "open" : ""}`}>
-      <div className="bt-row" onClick={() => setOpen(!open)}>
-        <div className="bt-left">
-          <div className="bt-q">{s.market_question}</div>
-          <div className="bt-tags">
-            <span className={`stance ${fcls}`}>
-              Decoder <b className={stance.cls}>{stance.word}</b> · {s.t1_card.follow_call} · {CONF_LABEL[s.t1_card.confidence] || s.t1_card.confidence}
-            </span>
-            <span className="resolved big">RESOLVED {s.resolved_outcome}</span>
-            <span className={`difftag ${diff.cls}`}>{diff.label} · {diff.pct}</span>
-          </div>
-        </div>
-        <div className="bt-right">
-          <span className={s.hit ? "verd hit" : "verd miss"}>{s.hit ? "✓" : "✗"}</span>
-          <span className={`chev ${open ? "up" : ""}`}>›</span>
-        </div>
-      </div>
-
-      <div className="bt-drawer" style={{ height: h }}>
-        <div className="bt-drawer-inner" ref={ref}>
-          {/* T-7→T-1 判断演变（移入抽屉） */}
-          <div className="bt-evo">
-            <div className="tp"><span className="tp-lab">T-7</span><MiniFollow card={s.t7_card} /></div>
-            <span className="evo" />
-            <div className="tp"><span className="tp-lab">T-1</span><MiniFollow card={s.t1_card} /></div>
-          </div>
-          <div className="tp-toggle">
-            <button className={tp === "t7" ? "on" : ""} onClick={() => setTp("t7")}>T-7 · {s.t7_date}</button>
-            <button className={tp === "t1" ? "on" : ""} onClick={() => setTp("t1")}>T-1 · {s.t1_date}</button>
-          </div>
-          <Card card={card} banner={banner} />
-        </div>
-      </div>
-    </div>
   );
 }

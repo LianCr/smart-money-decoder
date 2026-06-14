@@ -319,19 +319,19 @@ body {
 .lift-meta b { color: var(--text); font-weight: 600; }
 .lift-meta .dot { color: var(--text-4); }
 
-.verdict {
+.lift-verdict {
   margin-top: 20px; background: var(--panel); border: 1px solid var(--line);
   border-radius: 10px; padding: 15px 18px;
 }
-.verdict-h {
+.lift-verdict-h {
   font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase;
   color: var(--text-4); margin-bottom: 11px;
 }
-.verdict-row {
+.lift-verdict-row {
   font-size: 13px; line-height: 1.62; color: var(--text-2);
   padding: 8px 0 8px 13px; border-left: 2px solid var(--accent-dim);
 }
-.verdict-row + .verdict-row { margin-top: 5px; }
+.lift-verdict-row + .lift-verdict-row { margin-top: 5px; }
 
 .caveats { margin-top: 16px; display: flex; flex-direction: column; gap: 6px; }
 .cav {
