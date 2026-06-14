@@ -205,8 +205,15 @@ Web 后端 / 前端：
 - `api/backtest_mock.py`【新】：`GET /backtest` 的**占位 mock**（3 条手工样本，hit/hit/miss）。
 - `frontend/`【新】：Vite+React。`src/App.jsx` 组件化（Card 实时与回测快照共用 /
   DecodeView / LoadingStages 阶段进度 / TrackRecordView 回测页），`src/index.css` 视觉语言。
-  两 tab：**Decode（实时解读，数据真实）/ Track Record（历史战绩，数据 mock）**。
+  两 tab：**Decode（实时解读，数据真实）/ Track Record（历史战绩，真实多钱包数据）**。
   视觉精修已完成（彭博克制 × 交易张力，深色 + cyan 强调 + follow 语义色）。
+  **2026-06-13 可读性重构**：①回测列表瘦身——默认行只留 4 元素（Decoder 一句话判断 /
+  RESOLVED 真相 / 难度标签 / ✓✗），其余收进抽屉（useRef 量高度 + CSS height 过渡平滑展开），
+  T-7→T-1 演变线移入抽屉顶部；②**难度系数**——`/backtest` 读取时按建仓价注入
+  `difficulty = 1-|entry_price-0.5|*2`（不碰 pipeline），前端三档：迷雾博弈/倾斜中/近明牌；
+  ③**PnL 曲线可读化**——标题 + X 轴起止日期 + Y 轴峰值/当前值($3.13M) + 端点圆点 + 水下红绿分段。
+  **动效全 CSS transition，未装 framer-motion（零新依赖）**。计划见
+  `~/.claude/plans/radiant-sprouting-music.md`。
 
 **运行 Web 全栈**：
 ```bash
