@@ -168,7 +168,10 @@ def _overview(samples):
     }
 
 
-def run_backtest(wallet: str, max_samples: int = 6, min_cost: float = 1000.0) -> dict:
+def _collect_samples(wallet: str, max_samples: int, min_cost: float = 1000.0,
+                     skip_cids: set | None = None) -> list[dict]:
+    """单钱包采样（不写文件）。skip_cids：跨钱包聚合时已收过的市场，避免重复。"""
+    skip_cids = skip_cids or set()
     _log(f"① 翻全活动 {wallet[:12]}…")
     records = fetch_full_activity(wallet)
     positions = _reconstruct_positions(records)
@@ -179,6 +182,8 @@ def run_backtest(wallet: str, max_samples: int = 6, min_cost: float = 1000.0) ->
     for cid, pos in positions.items():
         if len(samples) >= max_samples or examined >= 200:
             break
+        if cid in skip_cids:
+            continue
         if not pos["token"] or not pos["entry_time"]:
             continue
         if pos["entry_price"] * pos["size"] < min_cost:
@@ -212,6 +217,7 @@ def run_backtest(wallet: str, max_samples: int = 6, min_cost: float = 1000.0) ->
         endorsed = t1c["follow_call"] in ENDORSE
         hit = (endorsed == bet_won)
         samples.append({
+            "cid": cid,   # 内部去重用，前端忽略
             "market_question": res["question"] or pos["title"],
             "resolved_outcome": (winner or "").upper(),
             "resolved_date": _date(rt),
@@ -221,8 +227,11 @@ def run_backtest(wallet: str, max_samples: int = 6, min_cost: float = 1000.0) ->
         })
         _log(f"   ✓ [{len(samples)}] {res['question'][:36]} | 持{pos['outcome']} winner={winner} "
              f"{'赢' if bet_won else '输'} | T-1 {t1c['follow_call']} → {'命中' if hit else '失手'}")
+    return samples
 
-    result = {"_mock": False, "wallet": wallet, "overview": _overview(samples), "samples": samples}
+
+def _finalize(samples: list[dict], label: str) -> dict:
+    result = {"_mock": False, "wallet": label, "overview": _overview(samples), "samples": samples}
     RESULT_PATH.parent.mkdir(parents=True, exist_ok=True)
     RESULT_PATH.write_text(json.dumps(result, ensure_ascii=False, indent=2), encoding="utf-8")
     _log(f"\n完成：{len(samples)} 个样本，写入 {RESULT_PATH}")
@@ -230,7 +239,40 @@ def run_backtest(wallet: str, max_samples: int = 6, min_cost: float = 1000.0) ->
     return result
 
 
+def run_backtest(wallet: str, max_samples: int = 6, min_cost: float = 1000.0) -> dict:
+    return _finalize(_collect_samples(wallet, max_samples, min_cost), wallet)
+
+
+def run_backtest_multi(wallets: list[str], per_wallet: int = 3, total_cap: int = 15,
+                       min_cost: float = 1000.0) -> dict:
+    """跨多个钱包聚合（前端 Track Record 不显示具体钱包，聚合=系统级 decoder 准确度）。
+    每钱包只取 per_wallet 个、按 conditionId 跨钱包去重，凑够 total_cap 即停。"""
+    all_samples: list[dict] = []
+    seen_cids: set = set()
+    for i, w in enumerate(wallets, 1):
+        if len(all_samples) >= total_cap:
+            break
+        _log(f"\n═══ 钱包 {i}/{len(wallets)} {w[:14]}… ═══")
+        try:
+            s = _collect_samples(w, min(per_wallet, total_cap - len(all_samples)),
+                                 min_cost, skip_cids=seen_cids)
+        except Exception as e:
+            _log(f"   ⚠️ 钱包失败 {type(e).__name__}: {str(e)[:60]}，跳过")
+            continue
+        for x in s:
+            if x["cid"] not in seen_cids:
+                seen_cids.add(x["cid"]); all_samples.append(x)
+        _log(f"   本钱包贡献 {len(s)}，累计 {len(all_samples)}")
+    return _finalize(all_samples, f"{len(wallets)}_wallets")
+
+
 if __name__ == "__main__":
-    w = sys.argv[1] if len(sys.argv) > 1 else "0x7c3db723f1d4d8cb9c550095203b686cb11e5c6b"
-    n = int(sys.argv[2]) if len(sys.argv) > 2 else 6
-    run_backtest(w, max_samples=n)
+    # 单钱包: python -m backtest.pipeline <wallet> <n>
+    # 多钱包: python -m backtest.pipeline multi <per_wallet> <total_cap> <w1> <w2> ...
+    if len(sys.argv) > 1 and sys.argv[1] == "multi":
+        per, cap, ws = int(sys.argv[2]), int(sys.argv[3]), sys.argv[4:]
+        run_backtest_multi(ws, per_wallet=per, total_cap=cap)
+    else:
+        w = sys.argv[1] if len(sys.argv) > 1 else "0x7c3db723f1d4d8cb9c550095203b686cb11e5c6b"
+        n = int(sys.argv[2]) if len(sys.argv) > 2 else 6
+        run_backtest(w, max_samples=n)
