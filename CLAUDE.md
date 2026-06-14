@@ -184,6 +184,39 @@ output = resp.json()["output"]   # 结果在 output 字段，不是 content[0].t
 
 **应该做的事**：在 `backtest/` 模块下单独实现 `fetch_full_activity(wallet, start_time, end_time)`，独立的翻页逻辑、独立的边界处理。`fetcher/activity.py` 不动。
 
+## 当前状态（2026-06-14 · demo 就绪，代码已封）
+
+> 最新快照；详细历史见下方各「进度」节 + `KNOWN_ISSUES.md` + `backtest/lift_v1.md`。
+
+**1. 已完成并验证的模块（demo 栈，全链路跑通）**
+- 数据层：`fetcher/polymarket.py`（持仓 + 政治过滤 + $5k）· `fetcher/trades.py`（建仓时间 v2，首选）·
+  `fetcher/activity.py`（fallback）· `fetcher/news.py`（关键词 + Tavily 时间窗 + 文件缓存 + `as_of` 防泄漏）。
+- 解码层：`analyzer/decoder.py`（课堂 sonnet-4.5 + 6 道守卫 + `as_of` 时间旅行 + 可选文件缓存）。
+- 渲染 / CLI：`renderer/card.py` · `main.py`。
+- 后端 `api/main.py`：`GET /analyze`（完整 pipeline + **「钱包+日期」外层缓存**——同钱包当天重复 = 零 token
+  秒回，实测 0.002s + CACHE HIT）；`GET /backtest` 返回 `{cases, summary, lift}`，读两个 git 静态文件。
+- 前端 `frontend/src/App.jsx`：Decode 实时卡 / Track Record **案例故事卡 + 折叠 lift（进阶）**；`index.css` 视觉。
+  三视图（主体 / hero 抽屉 / 进阶展开）均实拍验证。
+- 回测产物（全 git 跟踪、静态、零 token）：`backtest/_market_lift.py`（路 A lift 取样器）·
+  `backtest/lift_v1.md`（N=94 lift 首跑固化）· `backtest/final_samples.md`（6 案例叙事）·
+  `backtest/cases.json`（Track Record 案例卡数据，手填自 final_samples）· `backtest/lift_result.json`（lift 卡数据）。
+- 回测三块砖：`backtest/full_activity.py` · `resolution.py` · `snapshot.py` · `pipeline.py`（均单测 + 实跑过）。
+
+**2. 正在做 / 未完成**
+- 代码无在途改动；**v2 lift 结论已封板**（见下方「v2 结算结论」/ `KNOWN_ISSUES.md`）。当前阶段 = **demo 演练**，不动代码。
+
+**3. 下一步**
+- demo 当天：开场前**预热 Decode 钱包**（之后零 token 秒出）；Track Record 全静态、免预热。
+- v3（待用户定节奏才启动）：路 B「离场盈亏」口径（= 愿景 A/B 同一工程），救活「硬盘 edge」的判别力。
+
+**4. 待解决 / 待验证（诚实清单）**
+- lift 是**一次抽样、会波动**（前端琥珀声明已标）；edge-band 的 GO 仅 3 个、不具统计结论性（非证伪，是数据喂不饱）。
+- 案例卡用 `final_samples.md` 的**诚实 5/6 版**；`.cache/backtest/result.json` 是另一次 6/6 旧跑、已不喂前端。
+- 残留死代码（不影响运行）：`api/backtest_mock.py` 已弃用未删；`index.css` 旧 `.bt-*` 部分被案例卡复用、部分仍 dead。想清是零 token 小收尾。
+- demo token：仅 Decode 的**新**钱包每个烧 ~2 次网关调用、须当天预热；重复点 + 整个 Track Record = 零。
+
+---
+
 ## 当前进度（2026-06-12）
 
 **已完成并验证的模块（逐个职责）**：
