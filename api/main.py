@@ -20,6 +20,7 @@ api/main.py — smart-money-decoder 的 FastAPI 后端
 import json
 import sys
 import time
+from datetime import date
 from pathlib import Path
 
 from dotenv import load_dotenv
@@ -87,7 +88,8 @@ def _resolve_entry_time(wallet: str, condition_id: str) -> int | None:
     return None
 
 
-BACKTEST_RESULT = Path(".cache/backtest/result.json")
+BACKTEST_RESULT = Path("backtest/lift_result.json")   # 静态 lift 成绩牌（git 跟踪、手填自 lift_v1.md，不重跑）
+ANALYZE_CACHE   = Path(".cache/analyze")   # 实时解读结果缓存：key=小写钱包_日期，命中=零 token 秒回
 
 
 def _difficulty(entry_price):
@@ -115,11 +117,11 @@ def _enrich_difficulty(data):
 @app.get("/backtest")
 def backtest():
     """
-    Track Record 回测数据。
+    Track Record 静态 lift 成绩牌。
 
-    有真实回测产物（.cache/backtest/result.json，由 backtest.pipeline 离线生成）→ 读它
-    （_mock=false）；否则回退 MOCK 占位（_mock=true）。契约一致，前端无需区分。
-    读取时为每个样本注入 difficulty（纯展示增强，不碰已封板的 pipeline）。
+    读 git 跟踪的 `backtest/lift_result.json`（手填自 lift_v1.md 的路A首跑快照，不重跑、
+    零 token）→ 直接返回（_mock=false）；文件缺失才回退 MOCK 占位。
+    lift 成绩牌无 per-sample，_enrich_difficulty 对空 samples 自动空转。
     """
     if BACKTEST_RESULT.exists():
         try:
@@ -138,6 +140,17 @@ def analyze(wallet: str):
     t0 = time.time()
     wallet = (wallet or "").strip()
     _log(f"\n=== /analyze wallet={wallet[:14]}… ===")
+
+    # ── 第 0 层：钱包+日期 外层缓存（命门：花 token 前先短路整条 pipeline）──────
+    cache_key  = f"{wallet.lower()}_{date.today().isoformat()}"
+    cache_path = ANALYZE_CACHE / f"{cache_key}.json"
+    if cache_path.exists():
+        try:
+            cached = json.loads(cache_path.read_text(encoding="utf-8"))
+            _log(f"   ⚡ CACHE HIT {cache_key} — 零 token 秒回")
+            return cached
+        except Exception:
+            pass  # 缓存损坏则忽略，照常跑
 
     # ── 第 1 层：最大政治仓位 ──────────────────────────────────────────────────
     _log("① 拉取最大政治仓位")
@@ -217,4 +230,11 @@ def analyze(wallet: str):
         "reasoning":     card.get("reasoning"),
         "warnings":      card.get("warnings", []),
     }
+    # 写外层缓存（只缓存成功卡片；错误路径在上方已 return，到不了这里）
+    try:
+        ANALYZE_CACHE.mkdir(parents=True, exist_ok=True)
+        cache_path.write_text(json.dumps(response, ensure_ascii=False, indent=2), encoding="utf-8")
+        _log(f"   💾 已缓存 {cache_key}（同钱包当天再点零 token、秒回）")
+    except Exception:
+        pass
     return response

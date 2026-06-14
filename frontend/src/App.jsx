@@ -376,58 +376,58 @@ function TrackRecordView() {
 
   if (error) return <div className="error"><div className="r">NETWORK</div><div>{error}</div></div>;
   if (!data) return <div className="stages"><div className="lead">LOADING TRACK RECORD…</div></div>;
+  if (!data.full) return <div className="method">成绩牌数据缺失（backtest/lift_result.json 未就位）</div>;
 
-  const o = data.overview;
-  // 无样本的桶显示 "—" 而非 "0%"（0/0 不是 0% 命中率，避免误导）
-  const rate = (b) => (b.total ? `${pct(b)}%` : "—");
-  const hiStr = rate(o.high_conf), loStr = rate(o.low_conf);
-  // 仅当两桶都有样本、且高信心确实更准时，才给高的那个强调色
-  const calibrated = o.high_conf.total > 0 && o.low_conf.total > 0 && pct(o.high_conf) > pct(o.low_conf);
+  const f = data.full, eb = data.edge_band, nm = data.near_money, cf = data.confidence;
+  const sign = (x) => (x >= 0 ? "+" : "") + Math.round(x * 100) + "%";
+  const wr = (x) => Math.round(x * 100) + "%";
+  const loStr = cf.low && cf.low.n ? wr(cf.low.wins / cf.low.n) : "—";
 
   return (
     <>
-      {data._mock && (
-        <div className="mocktag">MOCK · 回测 pipeline 待接入，以下为占位样本</div>
-      )}
-
-      {/* 方法论说明：老实告诉用户这测的是什么 */}
+      {/* 方法论：诚实说这块成绩牌测什么 */}
       <div className="method">
-        <b>这页测什么</b>：对每个已结算的政治盘，在它结算前的 <b>T-7 / T-1</b> 两个历史时点
-        重放 decoder，用它<b>当时</b>的判断（跟 / 躲）对照<b>真实结算结果</b>，统计命中率。
-        <b>难度系数</b>按建仓价距 0.5 的远近衡量——越靠 0.5 越是迷雾博弈，越靠 0/1 越是近明牌。
+        <b>这是一块成绩牌</b>：我诚实测了自己的 decoder——对 {data.params.markets_examined} 个已结算政治盘、
+        N={f.n} 个 &gt;$5k 聪明钱仓位，在<b>建仓时点</b>重放它的判断；它说“跟”（GO）的子集，方向胜率是否
+        <b>跑赢全抄</b>基线。差值 = <b>lift</b>。
       </div>
 
-      {/* 战绩总览条：整页唯一大数字区 */}
+      {/* 双 lift 大数字：整页核心 */}
       <div className="overview">
         <div className="ov-block">
-          <div className="ov-num num">{o.directional.hits}<span className="slash">/</span>{o.directional.total}</div>
-          <div className="ov-lab">方向命中 · DIRECTIONAL</div>
+          <div className="ov-num num"><span className="accent">{sign(f.lift)}</span></div>
+          <div className="ov-lab">全集 LIFT · GO {wr(f.go_wr)} vs 基线 {wr(f.base_wr)} · N={f.n}</div>
         </div>
         <div className="ov-sep" />
         <div className="ov-block">
-          <div className="ov-num num calib">
-            <span className={calibrated ? "accent" : ""}>{hiStr}</span>
-            <span className="vs">/</span>
-            <span className="muted">{loStr}</span>
-          </div>
-          <div className="ov-lab">信心校准 · HIGH / LOW CONF</div>
-        </div>
-        <div className="ov-sep" />
-        <div className="ov-block">
-          <div className="ov-num num">
-            <span className="up">{o.composition.profitable}</span>
-            <span className="slash">+</span>
-            <span className="down">{o.composition.loss}</span>
-          </div>
-          <div className="ov-lab">样本构成 · WIN / LOSS</div>
+          <div className="ov-num num"><span className="accent">{sign(eb.lift)}</span></div>
+          <div className="ov-lab">edge-band LIFT · GO {wr(eb.go_wr)} vs {wr(eb.base_wr)} · N={eb.n}</div>
         </div>
       </div>
 
-      {/* 逐场复盘 */}
-      <div className="bt-list">
-        {data.samples.map((s, i) => <BacktestRow key={i} s={s} />)}
+      {/* 支撑数字 */}
+      <div className="lift-meta">
+        <span>建仓时点 <b>GO {f.go_n}</b> / 躲 {f.avoid_n}</span>
+        <span className="dot">·</span>
+        <span>信心校准 high <b>{wr(cf.high.wins / cf.high.n)}</b> / low {loStr}</span>
+        <span className="dot">·</span>
+        <span>近明牌 <b>{wr(nm.share)}</b> 抬高基线</span>
       </div>
-      <div className="foot">回测在历史时点重放 decoder，与真实结算对照 · 失手案例如实展示</div>
+
+      {/* 三层裁决 */}
+      <div className="verdict">
+        <div className="verdict-h">三层裁决 · VERDICT</div>
+        {data.verdict.map((v, i) => <div className="verdict-row" key={i}>{v}</div>)}
+      </div>
+
+      {/* caveats —— 第一条是“一次抽样会波动”快照声明 */}
+      <div className="caveats">
+        {data.caveats.map((c, i) => (
+          <div className={"cav" + (i === 0 ? " snap" : "")} key={i}>{c}</div>
+        ))}
+      </div>
+
+      <div className="foot">{data.source} · 静态成绩牌，不实时重跑、零 token</div>
     </>
   );
 }
