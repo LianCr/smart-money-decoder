@@ -431,3 +431,39 @@ body {
   background: var(--panel); color: var(--text-3);
 }
 .tp-toggle button.on { color: var(--text); border-color: var(--accent); }
+
+/* ── Track Record：案例故事卡版（5 秒看懂）────────────────────────── */
+.tr-hero {
+  display: flex; align-items: center; gap: 20px;
+  background: var(--panel); border: 1px solid var(--line); border-radius: 14px;
+  padding: 20px 24px; margin-bottom: 20px;
+}
+.tr-hero-num { font-size: 38px; font-weight: 600; line-height: 1; letter-spacing: -0.02em; white-space: nowrap; }
+.tr-hero-num .tr-unit { font-size: 15px; font-weight: 500; color: var(--text-3); }
+.tr-hero-num .tr-slash { color: var(--text-4); font-weight: 400; }
+.tr-hero-txt { display: flex; flex-direction: column; gap: 5px; }
+.tr-hero-h { font-size: 16px; font-weight: 650; color: var(--text); }
+.tr-hero-sub { font-size: 12.5px; line-height: 1.5; color: var(--text-3); }
+
+.bt-item.hero { border-color: var(--amber); box-shadow: inset 0 0 0 1px var(--amber-2); }
+.hero-star { color: var(--amber); }
+
+.case-concl { font-size: 13.5px; font-weight: 650; color: var(--text); padding: 14px 0 5px; }
+.case-take { font-size: 13px; line-height: 1.6; color: var(--text-2); padding-bottom: 12px; border-bottom: 1px solid var(--line-soft); }
+.case-evo { display: flex; align-items: center; gap: 8px; padding: 13px 0 6px; flex-wrap: wrap; }
+.evo-step { display: inline-flex; align-items: center; gap: 8px; }
+.evo-lab { font-family: var(--mono); font-size: 10px; letter-spacing: 0.06em; color: var(--text-4); }
+.evo-arrow { color: var(--text-4); margin: 0 3px; }
+.case-tp { padding: 11px 0; border-top: 1px solid var(--line-soft); }
+.case-tp-h { font-family: var(--mono); font-size: 11px; color: var(--text-3); margin-bottom: 7px; }
+.case-cat { margin: 0 0 9px; padding-left: 16px; }
+.case-cat li { font-size: 12px; line-height: 1.55; color: var(--text-2); margin-bottom: 3px; }
+.case-reason { font-size: 11.5px; line-height: 1.6; color: var(--text-4); }
+.case-reason-lab { font-family: var(--mono); font-size: 9.5px; letter-spacing: 0.05em; color: var(--accent); background: var(--accent-dim); padding: 1px 6px; border-radius: 4px; margin-right: 7px; }
+
+.adv { margin-top: 22px; border-top: 1px solid var(--line); padding-top: 14px; }
+.adv-toggle { display: flex; align-items: center; gap: 9px; cursor: pointer; font-size: 12.5px; color: var(--text-3); user-select: none; }
+.adv-toggle:hover { color: var(--text-2); }
+.adv-body { overflow: hidden; transition: height 0.28s ease; height: 0; }
+.adv-inner { padding-top: 16px; }
+.adv-intro { font-size: 12.5px; line-height: 1.55; color: var(--text-3); margin-bottom: 14px; }

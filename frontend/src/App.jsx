@@ -346,71 +346,142 @@ export function Card({ card, banner }) {
 }
 
 // ── Track Record 回测页 ─────────────────────────────────────────────────────
+const CALL_PLAIN = { "NO BASIS": "别跟", CHASED: "可跟·已追高", "ROOM LEFT": "可跟·有空间" };
+const CALL_CLS = { "NO BASIS": "red", CHASED: "amber", "ROOM LEFT": "green" };
+
 function TrackRecordView() {
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
-
   useEffect(() => {
-    fetch(`${API}/backtest`)
-      .then((r) => r.json())
-      .then(setData)
+    fetch(`${API}/backtest`).then((r) => r.json()).then(setData)
       .catch(() => setError("无法连接后端 /backtest"));
   }, []);
-
   if (error) return <div className="error"><div className="r">NETWORK</div><div>{error}</div></div>;
   if (!data) return <div className="stages"><div className="lead">LOADING TRACK RECORD…</div></div>;
-  if (!data.full) return <div className="method">成绩牌数据缺失（backtest/lift_result.json 未就位）</div>;
+  if (!data.cases || !data.cases.length) return <div className="method">案例数据缺失（backtest/cases.json 未就位）</div>;
 
-  const f = data.full, eb = data.edge_band, nm = data.near_money, cf = data.confidence;
-  const sign = (x) => (x >= 0 ? "+" : "") + Math.round(x * 100) + "%";
-  const wr = (x) => Math.round(x * 100) + "%";
-  const loStr = cf.low && cf.low.n ? wr(cf.low.wins / cf.low.n) : "—";
-
+  const s = data.summary || {};
+  const wrong = (s.total || 0) - (s.directional_correct || 0);
   return (
     <>
-      {/* 方法论：诚实说这块成绩牌测什么 */}
-      <div className="method">
-        <b>这是一块成绩牌</b>：我诚实测了自己的 decoder——对 {data.params.markets_examined} 个已结算政治盘、
-        N={f.n} 个 &gt;$5k 聪明钱仓位，在<b>建仓时点</b>重放它的判断；它说“跟”（GO）的子集，方向胜率是否
-        <b>跑赢全抄</b>基线。差值 = <b>lift</b>。
-      </div>
-
-      {/* 双 lift 大数字：整页核心 */}
-      <div className="overview">
-        <div className="ov-block">
-          <div className="ov-num num"><span className="accent">{sign(f.lift)}</span></div>
-          <div className="ov-lab">全集 LIFT · GO {wr(f.go_wr)} vs 基线 {wr(f.base_wr)} · N={f.n}</div>
+      <div className="tr-hero">
+        <div className="tr-hero-num num">
+          <span className="up">{s.directional_correct}</span><span className="tr-unit"> 对</span>
+          <span className="tr-slash"> / </span>
+          <span className="down">{wrong}</span><span className="tr-unit"> 错</span>
         </div>
-        <div className="ov-sep" />
-        <div className="ov-block">
-          <div className="ov-num num"><span className="accent">{sign(eb.lift)}</span></div>
-          <div className="ov-lab">edge-band LIFT · GO {wr(eb.go_wr)} vs {wr(eb.base_wr)} · N={eb.n}</div>
+        <div className="tr-hero-txt">
+          <div className="tr-hero-h">AI 判断成绩单</div>
+          <div className="tr-hero-sub">{s.total} 个已结算的真实政治盘 · 每个都在结算前重放 AI 当时的判断，跟真实结果对账</div>
         </div>
       </div>
 
-      {/* 支撑数字 */}
-      <div className="lift-meta">
-        <span>建仓时点 <b>GO {f.go_n}</b> / 躲 {f.avoid_n}</span>
-        <span className="dot">·</span>
-        <span>信心校准 high <b>{wr(cf.high.wins / cf.high.n)}</b> / low {loStr}</span>
-        <span className="dot">·</span>
-        <span>近明牌 <b>{wr(nm.share)}</b> 抬高基线</span>
+      <div className="bt-list">
+        {data.cases.map((c, i) => <CaseRow key={i} c={c} />)}
       </div>
 
-      {/* 三层裁决 */}
-      <div className="lift-verdict">
-        <div className="lift-verdict-h">三层裁决 · VERDICT</div>
-        {data.verdict.map((v, i) => <div className="lift-verdict-row" key={i}>{v}</div>)}
-      </div>
+      {data.lift && <LiftSummary lift={data.lift} />}
 
-      {/* caveats —— 第一条是“一次抽样会波动”快照声明 */}
-      <div className="caveats">
-        {data.caveats.map((c, i) => (
-          <div className={"cav" + (i === 0 ? " snap" : "")} key={i}>{c}</div>
-        ))}
-      </div>
-
-      <div className="foot">{data.source} · 静态成绩牌，不实时重跑、零 token</div>
+      <div className="foot">案例来自历史回测：结算前重放 decoder、与真实结算对照 · 静态、零 token</div>
     </>
+  );
+}
+
+function CaseRow({ c }) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef(null);
+  const [h, setH] = useState(0);
+  useEffect(() => { setH(open && ref.current ? ref.current.scrollHeight : 0); }, [open]);
+
+  const verdict = CALL_PLAIN[c.t1.call] || c.t1.call;
+  const concl = c.ai_correct ? (c.hero ? "✓ AI 帮你躲过这笔亏损" : "✓ AI 判断正确") : "✗ AI 失手";
+  const tps = [["T-7", c.t7], ["T-1", c.t1]];
+
+  return (
+    <div className={`bt-item ${open ? "open" : ""} ${c.hero ? "hero" : ""}`}>
+      <div className="bt-row" onClick={() => setOpen(!open)}>
+        <div className="bt-left">
+          <div className="bt-q">{c.hero && <span className="hero-star">★ </span>}{c.market}</div>
+          <div className="bt-tags">
+            <span className={`stance ${CALL_CLS[c.t1.call] || "gray"}`}>AI 当时判 <b>{verdict}</b></span>
+            <span className="resolved big">真实：{c.bet_won ? "钱包赢了" : "钱包赌输了"}</span>
+          </div>
+        </div>
+        <div className="bt-right">
+          <span className={c.ai_correct ? "verd hit" : "verd miss"}>{c.ai_correct ? "✓" : "✗"}</span>
+          <span className={`chev ${open ? "up" : ""}`}>›</span>
+        </div>
+      </div>
+
+      <div className="bt-drawer" style={{ height: h }}>
+        <div className="bt-drawer-inner" ref={ref}>
+          <div className="case-concl">{concl} · 市场结算 {c.resolved}（{c.resolved_date}）</div>
+          <div className="case-take">{c.takeaway}</div>
+
+          <div className="case-evo">
+            {tps.map(([lab, pt], i) => (
+              <span className="evo-step" key={lab}>
+                <span className="evo-lab">{lab}</span>
+                <span className={`mini-follow ${CALL_CLS[pt.call] || "gray"}`}>{CALL_PLAIN[pt.call] || pt.call}</span>
+                {i === 0 && <span className="evo-arrow">→</span>}
+              </span>
+            ))}
+          </div>
+
+          {tps.map(([lab, pt]) => (
+            <div className="case-tp" key={lab}>
+              <div className="case-tp-h">{lab} · {pt.date} · 信心 {CONF_LABEL[pt.conf] || pt.conf}</div>
+              <ul className="case-cat">{pt.catalysts.map((cat, j) => <li key={j}>{cat}</li>)}</ul>
+              <div className="case-reason"><span className="case-reason-lab">AI 当时推理</span>{pt.reasoning}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function LiftSummary({ lift }) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef(null);
+  const [h, setH] = useState(0);
+  useEffect(() => { setH(open && ref.current ? ref.current.scrollHeight : 0); }, [open]);
+  const f = lift.full, eb = lift.edge_band, nm = lift.near_money;
+  const sign = (x) => (x >= 0 ? "+" : "") + Math.round(x * 100) + "%";
+  const wr = (x) => Math.round(x * 100) + "%";
+
+  return (
+    <div className="adv">
+      <div className="adv-toggle" onClick={() => setOpen(!open)}>
+        <span className={`chev ${open ? "up" : ""}`}>›</span>
+        整体战绩汇总（{f.n} 盘进阶统计）—— 不只这 6 个案例、想看大盘的人点开
+      </div>
+      <div className="adv-body" style={{ height: h }}>
+        <div ref={ref} className="adv-inner">
+          <div className="adv-intro">把 AI 在 {f.n} 个盘上的判断汇总成一个“提升率”：跟它说“跟”的注，比无脑全抄方向准多少。</div>
+          <div className="overview">
+            <div className="ov-block">
+              <div className="ov-num num"><span className="accent">{sign(f.lift)}</span></div>
+              <div className="ov-lab">跟 AI 说“跟”的 vs 无脑全抄 · 准 {sign(f.lift)}（N={f.n}）</div>
+            </div>
+            <div className="ov-sep" />
+            <div className="ov-block">
+              <div className="ov-num num"><span className="accent">{sign(eb.lift)}</span></div>
+              <div className="ov-lab">在真五五开的难盘上 · 准 {sign(eb.lift)}（N={eb.n}）</div>
+            </div>
+          </div>
+          <div className="lift-meta">
+            <span>近明牌占 <b>{wr(nm.share)}</b> —— 接近已定局、赢面大但几乎没赚头</span>
+          </div>
+          <div className="lift-verdict">
+            <div className="lift-verdict-h">三层裁决</div>
+            {(lift.verdict || []).map((v, i) => <div className="lift-verdict-row" key={i}>{v}</div>)}
+          </div>
+          <div className="caveats">
+            {(lift.caveats || []).map((c, i) => <div className={"cav" + (i === 0 ? " snap" : "")} key={i}>{c}</div>)}
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }

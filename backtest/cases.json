@@ -1,0 +1,142 @@
+{
+  "_note": "案例故事卡数据 · 手填自 backtest/final_samples.md（封板 5/6 诚实版）· 静态、零 token、不重跑",
+  "summary": { "directional_correct": 5, "total": 6, "won": 4, "lost": 2 },
+  "cases": [
+    {
+      "market": "Will Trump restart Project Freedom by June 30?",
+      "resolved": "YES", "resolved_date": "2026-06-14",
+      "wallet_side": "Yes", "bet_won": true,
+      "ai_correct": true, "hero": false,
+      "takeaway": "T-7 价格尚低、edge 未显，AI 说别跟；T-1 时间窗新闻确认 Freedom 250 在推进，AI 转判可跟。钱包押 Yes 赢，系统正确转向背书。",
+      "t7": {
+        "date": "2026-06-07", "call": "NO BASIS", "conf": "medium",
+        "catalysts": [
+          "[入场前] Freedom 250 and America250: How is the US celebrating its big birthday? — BBC",
+          "[入场后] Trump Makes It Official: The 'Freedom 250' Concerts Are Canceled — to Be Replaced With 'the Greatest Rally EVER!' — Yahoo News Canada"
+        ],
+        "reasoning": "Confidence is medium because the entry timing is known and a catalyst exists, but the post-entry cancellation news directly undermines the thesis. The 85% drawdown reflects market consensus that 'restart' will not occur by June 30. Without resolution criteria to clarify whether event substitution qualifies, the favorable case has evaporated and the current price offers no edge—only high-risk speculation on an undefined settlement standard."
+      },
+      "t1": {
+        "date": "2026-06-13", "call": "CHASED", "conf": "high",
+        "catalysts": [
+          "[入场前] Freedom 250 and America250: How is the US celebrating its big birthday? — BBC",
+          "[入场后] Trump Makes It Official: The 'Freedom 250' Concerts Are Canceled — to Be Replaced With 'the Greatest Rally EVER!' — Yahoo News Canada"
+        ],
+        "reasoning": "Time-anchored news before entry documented Freedom 250 as an active Trump initiative, and post-entry articles confirm ongoing programming adjustments within the resolution window. The wallet's 2.66% gain and current price of 0.9995 show the market has fully absorbed the thesis; the remaining upside is 0.0005 per share against a 0.9995 downside."
+      }
+    },
+    {
+      "market": "US x Iran diplomatic meeting by June 10, 2026?",
+      "resolved": "NO", "resolved_date": "2026-06-11",
+      "wallet_side": "No", "bet_won": true,
+      "ai_correct": true, "hero": false,
+      "takeaway": "T-7 保守说别跟；T-1 两篇入场后新闻确认美伊接触临近，AI 转判可跟。钱包押 No 赢。",
+      "t7": {
+        "date": "2026-06-04", "call": "NO BASIS", "conf": "medium",
+        "catalysts": [
+          "[入场后] U.S.-Iran memorandum of understanding likely to be signed next week — CBS News",
+          "[入场后] Unclear if Iran is prepared to meet Trump's nuclear demands — CNBC"
+        ],
+        "reasoning": "The wallet's entry preceded a significant post-bet development — CBS reporting a U.S.-Iran memorandum likely to be signed the following week, directly threatening the No thesis. The 4.64% drawdown indicates the market is pricing elevated risk of a diplomatic meeting. No pre-entry catalyst explains the original rationale, and the post-entry headline points toward the opposite outcome — no identifiable edge for a follower."
+      },
+      "t1": {
+        "date": "2026-06-10", "call": "CHASED", "conf": "high",
+        "catalysts": [
+          "[入场后] U.S.-Iran memorandum of understanding likely to be signed next week — CBS News",
+          "[入场后] Unclear if Iran is prepared to meet Trump's nuclear demands — CNBC"
+        ],
+        "reasoning": "The position is profitable at 2.94 percent, and both post-entry articles confirm real-time developments. The wallet timed entry before today's resolution date, capturing nearly the entire move to 0.9985. A follower today buys extreme conviction at extreme cost, with only 0.0015 per share left if correct."
+      }
+    },
+    {
+      "market": "Iran closes its airspace by June 8?",
+      "resolved": "YES", "resolved_date": "2026-06-12",
+      "wallet_side": "Yes", "bet_won": true,
+      "ai_correct": true, "hero": false,
+      "takeaway": "T-7 持 Yes 时价仅 0.05、像 longshot，AI 说别跟；T-1 新闻确认领空关闭、价 0.9995，AI 转判可跟。钱包押 Yes 赢。",
+      "t7": {
+        "date": "2026-06-05", "call": "NO BASIS", "conf": "medium",
+        "catalysts": [
+          "[入场后] Israel says it has struck Iran after taking missile fire — Politico"
+        ],
+        "reasoning": "The sole relevant article was published after entry and describes localized airspace closure that may or may not satisfy the market's language. The wallet's 97¢ entry and catastrophic loss suggest a failed escalation thesis or a settlement-criteria mismatch; without pre-entry catalyst or clear resolution rules, following at 5¢ is speculative."
+      },
+      "t1": {
+        "date": "2026-06-11", "call": "CHASED", "conf": "high",
+        "catalysts": [
+          "[入场后] Israel says it has struck Iran after taking missile fire — Politico"
+        ],
+        "reasoning": "High confidence stems from a post-entry article explicitly confirming Tehran airspace closure on the settlement date, time-anchored to entry, and a 2.94 percent gain showing the market absorbed the news. The thesis is likely correct, but follower upside of 0.0005 per share offers no meaningful edge at the current price."
+      }
+    },
+    {
+      "market": "Starmer out by May 31, 2026?",
+      "resolved": "NO", "resolved_date": "2026-06-01",
+      "wallet_side": "Yes", "bet_won": false,
+      "ai_correct": true, "hero": true,
+      "takeaway": "★ 正确躲坑：两个时点的新闻都显示 Starmer 公开拒绝辞职，AI 两次都判别跟；钱包押『下台』最终赌输，系统帮你躲过这笔亏损。",
+      "t7": {
+        "date": "2026-05-25", "call": "NO BASIS", "conf": "medium",
+        "catalysts": [
+          "[入场后] Britain's Starmer fights for his job as calls for his ouster grow after local election losses — Greenwich Time",
+          "[入场后] U.K. Prime Minister Starmer Says He Won't Step Down Amid Calls For Him To Resign — HuffPost"
+        ],
+        "reasoning": "Confidence is medium because time-anchored news confirms the departure thesis has live political support (80 lawmakers demanding resignation), but the wallet's -81.70% loss and the post-entry nature of all catalysts show the entry was mistimed. Starmer's public refusal to resign and the market's 96.6% implied probability he survives through May 31 indicate the window has likely closed. Today is May 25; resolution is May 31, leaving minimal time for a forced exit."
+      },
+      "t1": {
+        "date": "2026-05-31", "call": "NO BASIS", "conf": "medium",
+        "catalysts": [
+          "[入场后] Britain's Starmer fights for his job as calls for his ouster grow after local election losses — Greenwich Time",
+          "[入场后] U.K. Prime Minister Starmer Says He Won't Step Down Amid Calls For Him To Resign — HuffPost"
+        ],
+        "reasoning": "Both catalyst articles describe developments that moved sharply against the wallet's thesis: Starmer faced calls to resign but explicitly refused and remained in office through the settlement date. The bet lost completely. The directional call was clear from sourced events; following at settlement with the outcome already determined offers no edge."
+      }
+    },
+    {
+      "market": "Starmer out by May 15, 2026?",
+      "resolved": "NO", "resolved_date": "2026-05-16",
+      "wallet_side": "Yes", "bet_won": false,
+      "ai_correct": true, "hero": true,
+      "takeaway": "★ 正确躲坑：催化剂时间锚定（地方选举失利+辞职呼声），但新闻显示 Starmer 仍未下台，AI 判别跟；钱包押『下台』赌输，系统躲过。",
+      "t7": {
+        "date": "2026-05-09", "call": "NO BASIS", "conf": "medium",
+        "catalysts": [
+          "[入场前] Starmer says he won't quit after local elections deliver losses for Labour and wins for Reform UK — The Sun Chronicle",
+          "[入场后] Starmer pledges to prove his doubters wrong but faces a wave of resignation calls — The Sun Chronicle"
+        ],
+        "reasoning": "The catalyst is anchored and real — local election losses on May 7 preceded the bet and post-entry reporting confirms rising pressure — but the market has moved decisively against the thesis, declining 36 percent despite adverse headlines. Informed participants are fading the resignation narrative, and the brief window to May 15 leaves minimal time for the thesis to materialize."
+      },
+      "t1": {
+        "date": "2026-05-15", "call": "NO BASIS", "conf": "medium",
+        "catalysts": [
+          "[入场前] Starmer says he won't quit after local elections deliver losses for Labour and wins for Reform UK — The Sun Chronicle",
+          "[入场后] Starmer faces mounting pressure to resign as he meets UK Cabinet in crunch talks — The Sun Chronicle"
+        ],
+        "reasoning": "The catalyst was clear and time-anchored, but the market has moved decisively against the thesis: today is May 15, Starmer has not resigned, and the price has collapsed from 0.0433 to 0.0105. The title event (out by May 15) has not occurred, the wallet is down 75.75 percent, and no new catalyst suggests imminent departure."
+      }
+    },
+    {
+      "market": "Jerome Powell out as Fed Chair by May 15, 2026?",
+      "resolved": "YES", "resolved_date": "2026-05-16",
+      "wallet_side": "Yes", "bet_won": true,
+      "ai_correct": false, "hero": false,
+      "takeaway": "✗ 失手（审慎过头）：T-7 本判可跟；临近结算，AI 正确识别出一层结算歧义——Powell 被任命为『临时主席』算不算出局？——但把歧义判向『未出局』、收手成别跟。实际按全任期结束判为出局（Yes），该跟没跟。它看到了关键风险点，只是在二选一的歧义上压错了边。",
+      "t7": {
+        "date": "2026-05-09", "call": "CHASED", "conf": "high",
+        "catalysts": [
+          "[入场后] Fed Chair Jerome Powell Just Broke 75 Years of Precedent With a Move Likely to Frustrate President Trump — The Motley Fool",
+          "[入场后] Board Names Jerome Powell Temporary Fed Chair. Two Governors Disagree With the Move — Barron's"
+        ],
+        "reasoning": "Post-entry articles confirm Powell's standard chair term concluded and he was named to a temporary role, validating the wallet's thesis. The 19.16 percent gain shows the market repricing toward Yes as the May 15 settlement date arrived. However, the articles describe Powell holding a chair title—albeit temporary—on the resolution date itself, introducing settlement risk."
+      },
+      "t1": {
+        "date": "2026-05-15", "call": "NO BASIS", "conf": "high",
+        "catalysts": [
+          "[入场前] Fed Chair Jerome Powell Just Broke 75 Years of Precedent — The Motley Fool",
+          "[入场后] Board Names Jerome Powell Temporary Fed Chair. Two Governors Disagree With the Move — Barron's"
+        ],
+        "reasoning": "Time-anchored catalysts exist and the wallet captured a modest 5.4% move. However, the resolution date is today and post-entry news confirms Powell retained at least an interim chair title on May 15, directly conflicting with the Yes thesis. The position is now a settlement-interpretation gamble on a closed factual record; confidence in the wallet's win is low and following is unjustifiable."
+      }
+    }
+  ]
+}

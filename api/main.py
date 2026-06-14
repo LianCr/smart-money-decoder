@@ -88,7 +88,8 @@ def _resolve_entry_time(wallet: str, condition_id: str) -> int | None:
     return None
 
 
-BACKTEST_RESULT = Path("backtest/lift_result.json")   # 静态 lift 成绩牌（git 跟踪、手填自 lift_v1.md，不重跑）
+BACKTEST_RESULT = Path("backtest/lift_result.json")   # 整体 lift 汇总（git 跟踪、手填自 lift_v1.md，不重跑）
+CASES_PATH      = Path("backtest/cases.json")          # 6 个案例故事卡（git 跟踪、手填自 final_samples.md）
 ANALYZE_CACHE   = Path(".cache/analyze")   # 实时解读结果缓存：key=小写钱包_日期，命中=零 token 秒回
 
 
@@ -117,21 +118,25 @@ def _enrich_difficulty(data):
 @app.get("/backtest")
 def backtest():
     """
-    Track Record 静态 lift 成绩牌。
+    Track Record：6 个案例故事卡（主体）+ 整体 lift 汇总（进阶）。
 
-    读 git 跟踪的 `backtest/lift_result.json`（手填自 lift_v1.md 的路A首跑快照，不重跑、
-    零 token）→ 直接返回（_mock=false）；文件缺失才回退 MOCK 占位。
-    lift 成绩牌无 per-sample，_enrich_difficulty 对空 samples 自动空转。
+    两者都是 git 跟踪的静态文件、零 token、不重跑：
+      - cases  ← backtest/cases.json（手填自 final_samples.md，含 T-7/T-1 演变）
+      - lift   ← backtest/lift_result.json（N=94 汇总，给想深究的人）
     """
-    if BACKTEST_RESULT.exists():
-        try:
-            data = json.loads(BACKTEST_RESULT.read_text(encoding="utf-8"))
-            _log(f"\n=== /backtest （真实回测 · {len(data.get('samples', []))} 样本）===")
-            return _enrich_difficulty(data)
-        except Exception as e:
-            _log(f"\n=== /backtest （真实结果读取失败 {e}，回退 MOCK）===")
-    _log("\n=== /backtest （MOCK 占位）===")
-    return _enrich_difficulty(dict(MOCK_BACKTEST))
+    out = {"cases": [], "summary": {}, "lift": None}
+    try:
+        cj = json.loads(CASES_PATH.read_text(encoding="utf-8"))
+        out["cases"] = cj.get("cases", [])
+        out["summary"] = cj.get("summary", {})
+    except Exception as e:
+        _log(f"\n=== /backtest cases 读取失败：{e} ===")
+    try:
+        out["lift"] = json.loads(BACKTEST_RESULT.read_text(encoding="utf-8"))
+    except Exception as e:
+        _log(f"\n=== /backtest lift 读取失败：{e} ===")
+    _log(f"\n=== /backtest （{len(out['cases'])} 案例 + lift 汇总）===")
+    return out
 
 
 @app.get("/analyze")
