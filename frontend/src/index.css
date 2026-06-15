@@ -53,28 +53,32 @@ body {
 .shell { max-width: 760px; margin: 0 auto; padding: 0 24px 100px; }
 
 /* ── 顶部导航：极简两 tab ─────────────────────────────── */
+/* 顶栏 = 实时战力状态栏：深色 / 等宽 / 方正 / 青绿三色 / 细线 */
 .topbar {
-  display: flex; align-items: center; gap: 28px;
-  padding: 22px 2px 20px; margin-bottom: 26px;
+  display: flex; align-items: center; gap: 16px;
+  padding: 20px 2px; margin-bottom: 24px;
   border-bottom: 1px solid var(--line-soft);
 }
 .brand {
-  font-weight: 700; font-size: 14px; letter-spacing: 0.02em;
-  margin-right: auto; display: flex; align-items: center; gap: 9px;
+  font-family: var(--mono); font-weight: 700; font-size: 13px; letter-spacing: 0.08em;
+  color: var(--text); display: flex; align-items: center; gap: 9px; cursor: pointer;
 }
 .brand .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent);
-  box-shadow: 0 0 10px var(--accent); }
-.tab {
-  background: none; border: none; cursor: pointer; padding: 4px 0;
-  color: var(--text-3); font-size: 13px; font-family: var(--sans);
-  letter-spacing: 0.02em; position: relative;
+  box-shadow: 0 0 8px var(--accent); }
+
+/* 战力功勋章：方正等宽监控块，点击进回测。绿/红只落在 W/L 两字，配角不抢戏 */
+.medal {
+  margin-left: auto; display: flex; align-items: center; gap: 5px;
+  font-family: var(--mono); font-size: 11.5px; font-weight: 600; letter-spacing: 0.03em;
+  color: var(--text-2); padding: 6px 12px; border: 1px solid var(--line); border-radius: 3px;
+  background: var(--panel); cursor: pointer; white-space: nowrap;
+  transition: border-color 0.15s, background 0.15s;
 }
-.tab:hover { color: var(--text-2); }
-.tab.active { color: var(--text); }
-.tab.active::after {
-  content: ""; position: absolute; left: 0; right: 0; bottom: -21px; height: 2px;
-  background: var(--accent);
-}
+.medal:hover, .medal.active { border-color: var(--accent); background: var(--panel-2); }
+.medal .m-w { color: var(--green); font-weight: 700; }
+.medal .m-l { color: var(--red); font-weight: 700; }
+.medal .m-arrow { color: var(--text-4); transition: color 0.15s; }
+.medal:hover .m-arrow, .medal.active .m-arrow { color: var(--accent); }
 
 /* ============================================================
    Decode 首页 — 干净工具风（深色 + 等宽 + 青，少表演多层级）
@@ -175,42 +179,49 @@ body {
 }
 .sys-source:hover { color: var(--text-3); }
 
-/* ── 阶段式 loading：情报系统工作感 ───────────────────── */
+/* ── 通用加载容器（Track Record 的「LOADING…」复用 .stages/.lead）── */
 .stages { padding: 30px 4px; }
 .stages .lead { color: var(--text-3); font-size: 12.5px; letter-spacing: 0.04em;
   text-transform: uppercase; margin-bottom: 18px; }
 
-/* 贯穿的流水线进度线：dim 底线 + accent 填充随阶段推进 */
-.stage-track { position: relative; }
-.track-line { position: absolute; left: 5px; top: 18px; bottom: 18px; width: 2px;
-  background: var(--line); border-radius: 2px; }
-.track-fill { position: absolute; left: 5px; top: 18px; width: 2px; border-radius: 2px;
-  background: var(--accent); box-shadow: 0 0 9px var(--accent);
-  transition: height 0.6s ease; }
-.stage {
-  position: relative; display: flex; align-items: center; gap: 15px; padding: 9px 0;
-  color: var(--text-4); font-size: 14px; transition: color 0.4s;
+/* ── Decode 流水线：居中容器内左对齐，与首页同一左基准线 ──────── */
+.pipe { margin: 8px 0 0; padding: 16px 0; }
+.pipe-lead {
+  font-family: var(--mono); font-size: 12px; letter-spacing: 0.08em;
+  color: var(--text-3); margin-bottom: 24px;
 }
-.stage .pip {
-  position: relative; z-index: 1;
-  width: 12px; height: 12px; border-radius: 50%; background: var(--line);
-  border: 2px solid var(--bg); box-sizing: content-box;
-  flex-shrink: 0; transition: background 0.4s, box-shadow 0.4s; margin-left: -1px;
+.pipe-lead .pipe-sub { color: var(--text-4); }
+
+/* 垂直管道：1px 暗轨 + 青色填充（只点亮已完成/进行中区间，雷达扫描感）*/
+.pipe-list { position: relative; }
+.pipe-rail { position: absolute; left: 9px; top: 14px; bottom: 14px; width: 1px; background: var(--line); }
+.pipe-fill {
+  position: absolute; left: 9px; top: 14px; width: 1px;
+  background: var(--accent); box-shadow: 0 0 6px var(--accent);
+  transition: height 0.5s ease;
 }
-.stage.done { color: var(--text-2); }
-.stage.done .pip { background: var(--accent); box-shadow: 0 0 9px var(--accent); }
-.stage.active { color: var(--text); }
-.stage.active .pip {
-  background: var(--accent);
-  animation: pulse 1.1s ease-in-out infinite;
+
+/* 节点串在轨道上：步骤名在节点右侧（不再额外叠 ✓，避免堆叠）*/
+.pstep {
+  position: relative; padding: 11px 0 11px 30px;
+  font-family: var(--mono); font-size: 13px; letter-spacing: 0.1em; transition: color 0.4s;
 }
-@keyframes pulse {
-  0%,100% { box-shadow: 0 0 0 0 rgba(76,196,224,0.55); }
-  50%     { box-shadow: 0 0 0 6px rgba(76,196,224,0); }
+.pstep-node {
+  position: absolute; left: 4px; top: 50%; transform: translateY(-50%);
+  width: 11px; height: 11px; border-radius: 50%; box-sizing: border-box; z-index: 1;
+  border: 1.5px solid var(--text-4); background: var(--bg);   /* 未到：暗灰空心 */
 }
-.stage .tick { margin-left: auto; color: var(--accent); font-family: var(--mono);
-  font-size: 12px; opacity: 0; transition: opacity 0.4s; }
-.stage.done .tick { opacity: 1; }
+.pstep.todo { color: var(--text-4); }
+/* 已完成：节点实心暗青、文字暗青，静止 */
+.pstep.done { color: #3a7d8a; }
+.pstep.done .pstep-node { background: #2f6b78; border-color: #2f6b78; }
+/* 进行中：节点亮青加脉冲，文字亮青加粗 —— 全局唯一呼吸，其余死寂 */
+.pstep.active { color: var(--accent); font-weight: 700; }
+.pstep.active .pstep-node {
+  background: var(--accent); border-color: var(--accent); box-shadow: 0 0 8px var(--accent);
+  animation: pipe-pulse 1.6s ease-in-out infinite;
+}
+@keyframes pipe-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
 
 /* ── 错误态 ───────────────────────────────────────────── */
 .error {

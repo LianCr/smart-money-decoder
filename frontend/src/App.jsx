@@ -151,15 +151,29 @@ function PnlChart({ points }) {
 
 export default function App() {
   const [tab, setTab] = useState("decode");
+  // 功勋章的 W/L 取回测真值；默认 5/1（当前案例集事实），/backtest 到达后自校正、不闪
+  const [wl, setWl] = useState({ w: 5, l: 1 });
+  useEffect(() => {
+    fetch(`${API}/backtest`).then((r) => r.json()).then((d) => {
+      const s = d.summary || {};
+      if (typeof s.directional_correct === "number" && typeof s.total === "number")
+        setWl({ w: s.directional_correct, l: s.total - s.directional_correct });
+    }).catch(() => {});
+  }, []);
+
   return (
     <div className="shell">
       <div className="topbar">
-        <div className="brand"><span className="dot" />SMART MONEY DECODER</div>
-        <button className={`tab ${tab === "decode" ? "active" : ""}`} onClick={() => setTab("decode")}>
-          Decode
-        </button>
-        <button className={`tab ${tab === "track" ? "active" : ""}`} onClick={() => setTab("track")}>
-          Track Record
+        <div className="brand" onClick={() => setTab("decode")} title="回到解读台">
+          <span className="dot" />SMART MONEY DECODER
+        </div>
+        <button
+          className={`medal ${tab === "track" ? "active" : ""}`}
+          onClick={() => setTab(tab === "track" ? "decode" : "track")}
+          title={tab === "track" ? "返回解读台" : "查看历史战绩"}
+        >
+          [ TRACK RECORD:&nbsp;<span className="m-w">{wl.w}W</span> · <span className="m-l">{wl.l}L</span>&nbsp;]
+          <span className="m-arrow">↗</span>
         </button>
       </div>
       {tab === "decode" ? <DecodeView /> : <TrackRecordView />}
@@ -194,7 +208,8 @@ function DecodeView() {
     }
   }
 
-  const showHome = !card && !loading && !error;
+  const showHome = !card && !loading && !error;     // 示例流：仅空态
+  const showIntro = !card && !error;                // 副标题：空态 + loading 都留，锁住 cmdbar 位置防跳动
   function pickExample(addr) {
     setWallet(addr);
     analyze(addr);
@@ -202,7 +217,7 @@ function DecodeView() {
 
   return (
     <>
-      {showHome && (
+      {showIntro && (
         <div className="console-sub">
           输入 Polymarket 政治盘大户钱包,AI 解读他在赌什么、现在还值不值得跟
         </div>
@@ -264,30 +279,31 @@ function DecodeView() {
   );
 }
 
-// 阶段式进度：单请求在飞，前端按节奏点亮各阶段，营造"情报系统工作"的张力
+// 流水线加载：单请求在飞，前端按节奏 currentStep 逐个点亮，居中、与首页同语言。
+// 渐进式逻辑：i<step=已完成(暗青·✓静止) / i===step=进行中(亮青·脉冲) / i>step=未开始(暗灰静止)。
 function LoadingStages() {
-  const [active, setActive] = useState(0);
+  const [step, setStep] = useState(0);
   const timer = useRef();
   useEffect(() => {
     timer.current = setInterval(() => {
-      setActive((a) => (a < STAGES.length - 1 ? a + 1 : a));
-    }, 3600);
+      setStep((s) => (s < STAGES.length - 1 ? s + 1 : s));   // 卡在最后一步，绝不全打勾
+    }, 3500);
     return () => clearInterval(timer.current);
   }, []);
-  const fill = (active / (STAGES.length - 1)) * 100;
+  const last = STAGES.length - 1;
+
   return (
-    <div className="stages">
-      <div className="lead">PIPELINE RUNNING · 约需十几秒</div>
-      <div className="stage-track">
-        <div className="track-line" />
-        <div className="track-fill" style={{ height: `${fill}%` }} />
+    <div className="pipe">
+      <div className="pipe-lead">AI 推演中 <span className="pipe-sub">· 定位 → 追溯 → 检索 → 判断</span></div>
+      <div className="pipe-list">
+        <span className="pipe-rail" />
+        <span className="pipe-fill" style={{ height: `calc((100% - 28px) * ${step} / ${last})` }} />
         {STAGES.map((s, i) => {
-          const cls = i < active ? "done" : i === active ? "active" : "";
+          const state = i < step ? "done" : i === step ? "active" : "todo";
           return (
-            <div className={`stage ${cls}`} key={i}>
-              <span className="pip" />
-              {s}
-              <span className="tick">✓</span>
+            <div className={`pstep ${state}`} key={i}>
+              <span className="pstep-node" />
+              <span className="pstep-label">{s}</span>
             </div>
           );
         })}
