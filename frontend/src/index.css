@@ -76,49 +76,98 @@ body {
   background: var(--accent);
 }
 
-/* ── 搜索条 ───────────────────────────────────────────── */
-.searchbar { display: flex; gap: 8px; margin-bottom: 24px; }
-.searchbar input {
-  flex: 1; padding: 13px 15px; border-radius: 9px;
-  border: 1px solid var(--line); background: var(--panel); color: var(--text);
-  font-size: 14px; font-family: var(--mono); letter-spacing: 0.01em;
-  transition: border-color 0.15s;
-}
-.searchbar input::placeholder { color: var(--text-4); }
-.searchbar input:focus { outline: none; border-color: var(--accent); }
-.searchbar button {
-  padding: 13px 26px; border-radius: 9px; border: none; cursor: pointer;
-  background: var(--text); color: #0a0c10; font-weight: 700; font-size: 14px;
-  letter-spacing: 0.02em; transition: opacity 0.15s;
-}
-.searchbar button:disabled { opacity: 0.32; cursor: not-allowed; }
+/* ============================================================
+   Decode 首页 — 干净工具风（深色 + 等宽 + 青，少表演多层级）
+   质感保留：深底、等宽地址、青色交互；去掉中二代号与全大写
+   层级分明：名字亮(主角) > 说明中性 > 地址暗(辅助)
+   动效仅两处：输入提示符光标闪 + 示例行绿点微呼吸
+   ============================================================ */
 
-/* ── 首页空态：产品说明 + 示例钱包 + 榜单跳转（治"空洞"）──── */
-.home-tag {
-  margin: 0 0 16px; font-size: 15px; line-height: 1.6; color: var(--text-2);
-  max-width: 54ch;
+/* 副标题：正常中文，安静 */
+.console-sub {
+  font-size: 14px; line-height: 1.6; color: var(--text-2);
+  margin-bottom: 24px; max-width: 56ch;
 }
-.home-examples { margin-top: 8px; }
-.home-ex-lab {
-  display: block; font-size: 10.5px; letter-spacing: 0.09em; text-transform: uppercase;
-  color: var(--text-4); margin-bottom: 12px;
+
+/* ── 输入区：> 光标 + 输入框 + 解读按钮 ───────────────── */
+.cmdbar {
+  display: flex; align-items: stretch; margin-bottom: 32px;
+  background: var(--panel); border: 1px solid var(--line); border-radius: 8px;
+  overflow: hidden; transition: border-color 0.15s, box-shadow 0.15s;
 }
-.home-ex-row { display: flex; flex-wrap: wrap; gap: 8px; }
-.ex-chip {
-  display: flex; flex-direction: column; gap: 4px; align-items: flex-start;
-  padding: 12px 16px; border-radius: 10px; cursor: pointer;
-  background: var(--panel); border: 1px solid var(--line);
-  transition: border-color 0.15s, background 0.15s, transform 0.1s;
+.cmdbar:focus-within { border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent-dim); }
+.cmd-prompt {
+  display: flex; align-items: center; padding: 0 4px 0 16px;
+  font-family: var(--mono); font-size: 16px; font-weight: 700; color: var(--accent);
 }
-.ex-chip:hover { border-color: var(--accent); background: var(--panel-2); }
-.ex-chip:active { transform: translateY(1px); }
-.ex-nick { font-size: 14px; font-weight: 650; color: var(--text); }
-.ex-addr { font-size: 11px; color: var(--text-4); }
-.home-more {
-  display: inline-block; margin-top: 16px; font-size: 12.5px;
-  color: var(--accent); text-decoration: none; letter-spacing: 0.01em;
+.cmd-caret {
+  align-self: center; width: 8px; height: 17px; margin-right: 2px; flex-shrink: 0;
+  background: var(--accent); opacity: 0.85; animation: caret 1.1s step-end infinite;
 }
-.home-more:hover { text-decoration: underline; }
+@keyframes caret { 0%, 50% { opacity: 0.85; } 50.01%, 100% { opacity: 0; } }
+.cmd-input {
+  flex: 1; min-width: 0; padding: 14px 12px; border: none; background: none;
+  color: var(--text); font-size: 14px; letter-spacing: 0.01em;
+}
+.cmd-input:focus { outline: none; }
+.cmd-input::placeholder { color: var(--text-4); font-family: var(--sans); letter-spacing: normal; }
+.cmd-trigger {
+  flex-shrink: 0; padding: 0 26px; border: none; cursor: pointer;
+  border-left: 1px solid var(--line);
+  background: var(--accent-dim); color: var(--accent);
+  font-size: 14px; font-weight: 700; letter-spacing: 0.02em;
+  transition: background 0.15s, color 0.15s;
+}
+.cmd-trigger:hover:not(:disabled) { background: var(--accent); color: #051519; }
+.cmd-trigger:disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* ── 示例大户：一行一个，三档层级（名字主角 / 地址辅助）─── */
+.monitor { border-top: 1px solid var(--line-soft); padding-top: 16px; }
+.mon-head { font-size: 12px; color: var(--text-3); margin-bottom: 8px; }
+.mon-list { display: flex; flex-direction: column; }
+.mon-row {
+  display: flex; align-items: center; gap: 16px; width: 100%;
+  padding: 12px 8px; cursor: pointer; text-align: left;
+  background: none; border: none; border-top: 1px solid var(--line-soft);
+  transition: background 0.12s, padding 0.12s; position: relative;
+}
+.mon-row:first-child { border-top: none; }
+.mon-row:hover { background: var(--panel); padding-left: 14px; }
+.mon-row:hover::before {
+  content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 2px;
+  background: var(--accent);
+}
+.mon-dot {
+  flex-shrink: 0;
+  width: 7px; height: 7px; border-radius: 50%; background: var(--green);
+  box-shadow: 0 0 0 0 rgba(41, 208, 122, 0.5);
+  animation: monitor-pulse 2.4s ease-in-out infinite;   /* 极微弱呼吸 */
+}
+@keyframes monitor-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(41, 208, 122, 0.45); }
+  50%      { box-shadow: 0 0 0 4px rgba(41, 208, 122, 0); }
+}
+.mon-nick {
+  font-size: 15px; font-weight: 700; color: var(--text);
+  min-width: 130px; flex-shrink: 0; transition: color 0.12s;
+}
+.mon-row:hover .mon-nick { color: var(--accent); }
+.mon-addr { font-size: 12px; color: var(--text-4); }
+/* 累计盈利：聪明钱身份背书，右侧绿色 badge（信用，非实时行情）*/
+.mon-pnl { margin-left: auto; flex-shrink: 0; display: flex; align-items: baseline; gap: 8px; }
+.mon-pnl-lab { font-size: 11px; color: var(--text-4); }
+.mon-pnl-val { font-size: 13.5px; font-weight: 700; color: var(--green); }
+
+/* ── 底部：来源 + 找更多（两行，主次分明）─────────────── */
+.mon-foot { display: flex; flex-direction: column; gap: 8px; margin-top: 24px; }
+.sys-source {
+  align-self: flex-start;
+  font-size: 13px; color: var(--accent); text-decoration: none;
+  letter-spacing: 0.01em; transition: opacity 0.15s;
+}
+.sys-source:hover { opacity: 0.78; text-decoration: underline; }
+.sys-source.dim { font-size: 12px; color: var(--text-4); }
+.sys-source.dim:hover { color: var(--text-3); opacity: 1; }
 
 /* ── 阶段式 loading：情报系统工作感 ───────────────────── */
 .stages { padding: 30px 4px; }

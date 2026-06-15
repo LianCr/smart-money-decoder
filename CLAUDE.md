@@ -206,7 +206,16 @@ output = resp.json()["output"]   # 结果在 output 字段，不是 content[0].t
 - 代码无在途改动；**v2 lift 结论已封板**（见下方「v2 结算结论」/ `KNOWN_ISSUES.md`）。当前阶段 = **demo 演练**，不动代码。
 
 **3. 下一步**
-- demo 当天：开场前**预热 Decode 钱包**（之后零 token 秒出）；Track Record 全静态、免预热。
+- 🔴 **【DEMO 前固定动作 · 必做】** 因 `/analyze` 缓存 key 含**当天日期**，昨天的缓存当天全失效。
+  **demo 当天开场前，必须把首页所有示例钱包（`frontend/src/App.jsx` 的 `EXAMPLES`）各跑一次正向
+  `/analyze`、逐个确认出的是正常好看的卡（有持仓+催化剂+判断，非报空/无合格仓位），再开始 demo。**
+  预热后当天剩余时间零 token 秒出；Track Record 全静态、免预热。
+  - 钱包内容会随行情/新闻漂移：某盘可能已结算消失、或当天催化剂搜不到变空卡。**预热即体检**，
+    发现哪个变差立刻换掉再开场。**（2026-06-15 定稿示例钱包 = ImJustKen(高/Netanyahu) /
+    debased(中/Vance 2028) / denizz(低/美伊 +556%)；denizz 盘 by June 15 当日结算，过期则换
+    aenews2(0x44c1…ebc1) 或退回 Annica。）**
+  - 首页示例行的「累计盈利」(`EXAMPLES[].pnl`, +$3.1M/+$1.7M/+$2.6M) 是**手填的粗粒度快照**(我方
+    `pnl_history` 末值)，非实时。预热时顺手核对、漂太多就更新常量。
 - v3（待用户定节奏才启动）：路 B「离场盈亏」口径（= 愿景 A/B 同一工程），救活「硬盘 edge」的判别力。
 
 **4. 待解决 / 待验证（诚实清单）**

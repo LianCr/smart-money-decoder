@@ -13,13 +13,19 @@ const CONF_COLOR = { high: "var(--green)", medium: "var(--amber)", low: "var(--r
 
 const STAGES = ["定位最大政治仓位", "追溯链上建仓时间", "检索时间窗新闻", "AI 解读 / 置信度矩阵"];
 
-// 首页示例钱包：地址已验证、能产出真实政治盘。demo 当天早上各预热一次即零 token 秒出
+// 首页示例钱包：地址已正向 /analyze 验证、能产出精彩政治盘卡（2026-06-15 实测）。
+// 置信度全谱：ImJustKen=高(Netanyahu) / debased=中(Vance 2028) / denizz=低(+555% 美伊)。
+// pnl = 我方系统算的「历史累计盈亏」(pnl_history 末值) 的粗粒度快照，作"聪明钱"身份背书、非实时行情。
+// 🔴 DEMO 前必预热体检（CLAUDE.md 已记）：①denizz 的盘 by June 15 当日结算，若 demo 在 6/15 之后已消失，
+//    换 aenews2(0x44c1…ebc1) 或退回 Annica(0x689ae…779e)；②顺手核对 pnl 粗粒度是否还对，漂太多就更新。
 const EXAMPLES = [
-  { nick: "Car", addr: "0x7c3db723f1d4d8cb9c550095203b686cb11e5c6b" },
-  { nick: "Annica", addr: "0x689ae12e11aa489adb3605afd8f39040ff52779e" },
-  { nick: "ImJustKen", addr: "0x9d84ce0306f8551e02efef1680475fc0f1dc1344" },
+  { nick: "ImJustKen", addr: "0x9d84ce0306f8551e02efef1680475fc0f1dc1344", pnl: "+$3.1M" },
+  { nick: "debased", addr: "0x24c8cf69a0e0a17eee21f69d29752bfa32e823e1", pnl: "+$1.7M" },
+  { nick: "denizz", addr: "0xbaa2bcb5439e985ce4ccf815b4700027d1b92c73", pnl: "+$2.6M" },
 ];
 const TRADERS_URL = "https://polymarketanalytics.com/traders?tab=Politics&category=Politics";
+// 示例大户 + 累计盈利数字的权威来源：Polymarket 官方政治盈利榜
+const LEADERBOARD_URL = "https://polymarket.com/leaderboard/politics/all/profit";
 
 function price(p) {
   return typeof p === "number" ? p.toFixed(3) : "—";
@@ -197,38 +203,52 @@ function DecodeView() {
   return (
     <>
       {showHome && (
-        <p className="home-tag">
+        <div className="console-sub">
           输入 Polymarket 政治盘大户钱包,AI 解读他在赌什么、现在还值不值得跟
-        </p>
+        </div>
       )}
 
-      <div className="searchbar">
+      {/* 输入区：左侧青色 > 光标 + 输入框 + 解读按钮 */}
+      <div className={`cmdbar ${loading ? "busy" : ""}`}>
+        <span className="cmd-prompt">&gt;</span>
+        {showHome && !wallet && <span className="cmd-caret" />}
         <input
+          className="cmd-input num"
           value={wallet}
           onChange={(e) => setWallet(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && analyze()}
-          placeholder="0x… Polymarket 钱包地址"
+          placeholder="输入 Polymarket 钱包地址"
           spellCheck={false}
         />
-        <button onClick={() => analyze()} disabled={loading || !wallet.trim()}>
-          {loading ? "解读中" : "Analyze"}
+        <button className="cmd-trigger" onClick={() => analyze()} disabled={loading || !wallet.trim()}>
+          {loading ? "解读中" : "解读"}
         </button>
       </div>
 
       {showHome && (
-        <div className="home-examples">
-          <span className="home-ex-lab">试试这几个大户</span>
-          <div className="home-ex-row">
+        <div className="monitor">
+          <div className="mon-head">试试这几个大户 · 点击解读</div>
+          <div className="mon-list">
             {EXAMPLES.map((e) => (
-              <button className="ex-chip" key={e.addr} onClick={() => pickExample(e.addr)}>
-                <span className="ex-nick">{e.nick}</span>
-                <span className="ex-addr num">{abbrev(e.addr)}</span>
+              <button className="mon-row" key={e.addr} onClick={() => pickExample(e.addr)}>
+                <span className="mon-dot" />
+                <span className="mon-nick">{e.nick}</span>
+                <span className="mon-addr num">{abbrev(e.addr)}</span>
+                <span className="mon-pnl">
+                  <span className="mon-pnl-lab">累计盈利</span>
+                  <span className="mon-pnl-val num">{e.pnl}</span>
+                </span>
               </button>
             ))}
           </div>
-          <a className="home-more" href={TRADERS_URL} target="_blank" rel="noreferrer">
-            在 Polymarket 榜单找更多钱包 ↗
-          </a>
+          <div className="mon-foot">
+            <a className="sys-source" href={LEADERBOARD_URL} target="_blank" rel="noreferrer">
+              大户与盈利来自 Polymarket 政治盈利榜 ↗
+            </a>
+            <a className="sys-source dim" href={TRADERS_URL} target="_blank" rel="noreferrer">
+              浏览更多政治盘大户 ↗
+            </a>
+          </div>
         </div>
       )}
 
