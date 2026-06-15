@@ -242,11 +242,11 @@ function DecodeView() {
             ))}
           </div>
           <div className="mon-foot">
-            <a className="sys-source" href={LEADERBOARD_URL} target="_blank" rel="noreferrer">
-              大户与盈利来自 Polymarket 政治盈利榜 ↗
+            <a className="sys-cta" href={TRADERS_URL} target="_blank" rel="noreferrer">
+              想分析其他大户?浏览政治盘大户榜 ↗
             </a>
-            <a className="sys-source dim" href={TRADERS_URL} target="_blank" rel="noreferrer">
-              浏览更多政治盘大户 ↗
+            <a className="sys-source" href={LEADERBOARD_URL} target="_blank" rel="noreferrer">
+              数据来源:Polymarket 官方盈利榜 ↗
             </a>
           </div>
         </div>
