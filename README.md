@@ -8,6 +8,14 @@ Read-only public APIs throughout — **no trading, no private keys.**
 
 ---
 
+## 🎬 Demo
+
+Watch the walkthrough: paste a wallet, watch the pipeline decode a live political bet, then see the decoder's track record put on trial against history. Click the thumbnail to play on YouTube.
+
+[![Smart Money Decoder — demo walkthrough](https://img.youtube.com/vi/egFu1kzgWrs/maxresdefault.jpg)](https://youtu.be/egFu1kzgWrs)
+
+---
+
 ## Two views
 
 ### 1. Decode — real-time interpretation
