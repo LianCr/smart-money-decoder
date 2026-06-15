@@ -77,7 +77,7 @@ body {
 }
 
 /* ── 搜索条 ───────────────────────────────────────────── */
-.searchbar { display: flex; gap: 10px; margin-bottom: 26px; }
+.searchbar { display: flex; gap: 8px; margin-bottom: 24px; }
 .searchbar input {
   flex: 1; padding: 13px 15px; border-radius: 9px;
   border: 1px solid var(--line); background: var(--panel); color: var(--text);
@@ -92,6 +92,33 @@ body {
   letter-spacing: 0.02em; transition: opacity 0.15s;
 }
 .searchbar button:disabled { opacity: 0.32; cursor: not-allowed; }
+
+/* ── 首页空态：产品说明 + 示例钱包 + 榜单跳转（治"空洞"）──── */
+.home-tag {
+  margin: 0 0 16px; font-size: 15px; line-height: 1.6; color: var(--text-2);
+  max-width: 54ch;
+}
+.home-examples { margin-top: 8px; }
+.home-ex-lab {
+  display: block; font-size: 10.5px; letter-spacing: 0.09em; text-transform: uppercase;
+  color: var(--text-4); margin-bottom: 12px;
+}
+.home-ex-row { display: flex; flex-wrap: wrap; gap: 8px; }
+.ex-chip {
+  display: flex; flex-direction: column; gap: 4px; align-items: flex-start;
+  padding: 12px 16px; border-radius: 10px; cursor: pointer;
+  background: var(--panel); border: 1px solid var(--line);
+  transition: border-color 0.15s, background 0.15s, transform 0.1s;
+}
+.ex-chip:hover { border-color: var(--accent); background: var(--panel-2); }
+.ex-chip:active { transform: translateY(1px); }
+.ex-nick { font-size: 14px; font-weight: 650; color: var(--text); }
+.ex-addr { font-size: 11px; color: var(--text-4); }
+.home-more {
+  display: inline-block; margin-top: 16px; font-size: 12.5px;
+  color: var(--accent); text-decoration: none; letter-spacing: 0.01em;
+}
+.home-more:hover { text-decoration: underline; }
 
 /* ── 阶段式 loading：情报系统工作感 ───────────────────── */
 .stages { padding: 30px 4px; }
@@ -147,12 +174,12 @@ body {
 
 .snapbanner {
   background: var(--panel-2); border-bottom: 1px solid var(--line);
-  padding: 9px 22px; font-family: var(--mono); font-size: 11.5px;
+  padding: 8px 24px; font-family: var(--mono); font-size: 11.5px;
   color: var(--text-3); letter-spacing: 0.02em;
 }
 
 /* 钱包头部：头像 + 昵称 + 完整地址 */
-.wallet-head { display: flex; align-items: center; gap: 12px; padding: 18px 22px 12px; }
+.wallet-head { display: flex; align-items: center; gap: 12px; padding: 16px 24px 8px; }
 .avatar {
   width: 40px; height: 40px; border-radius: 50%; flex-shrink: 0; object-fit: cover;
   display: flex; align-items: center; justify-content: center;
@@ -164,7 +191,7 @@ body {
 .waddr { font-size: 11px; color: var(--text-4); margin-top: 3px; }
 
 /* PnL 迷你图表（可读化）：标题 + 端点圆点 + 峰值标注 + 时间轴 */
-.pnlchart { padding: 2px 22px 14px; }
+.pnlchart { padding: 0 24px 16px; }
 .pc-top { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px; }
 .pc-lab { font-size: 10px; letter-spacing: 0.07em; text-transform: uppercase; color: var(--text-4); }
 .pc-val { font-family: var(--mono); font-size: 22px; font-weight: 700; letter-spacing: -0.01em; }
@@ -188,7 +215,7 @@ body {
 }
 
 /* 头部：市场标题 + outcome 徽章 */
-.c-head { padding: 18px 22px 18px; display: flex; gap: 14px; align-items: flex-start;
+.c-head { padding: 16px 24px; display: flex; gap: 16px; align-items: flex-start;
   border-top: 1px solid var(--line-soft); }
 .c-head .q { font-size: 18px; font-weight: 650; line-height: 1.32; letter-spacing: -0.01em; flex: 1; }
 .c-head .meta { color: var(--text-3); font-size: 12px; margin-top: 7px; font-family: var(--mono); }
@@ -200,7 +227,7 @@ body {
 
 /* ── 多巴胺①：价格对比区，大号等宽 ───────────────────── */
 .pricezone {
-  display: flex; align-items: center; gap: 22px; padding: 8px 22px 24px;
+  display: flex; align-items: center; gap: 24px; padding: 8px 24px 24px;
   flex-wrap: wrap;
 }
 .pblock { display: flex; flex-direction: column; gap: 5px; }
@@ -215,7 +242,7 @@ body {
 .down { color: var(--red); }    /* 跌红 */
 
 /* ── 区块通用 ─────────────────────────────────────────── */
-.sec { padding: 17px 22px; border-top: 1px solid var(--line-soft); }
+.sec { padding: 16px 24px; border-top: 1px solid var(--line-soft); }
 .sec h4 {
   margin: 0 0 9px; font-size: 10.5px; letter-spacing: 0.1em; text-transform: uppercase;
   color: var(--text-3); font-weight: 600;
@@ -243,8 +270,8 @@ body {
 
 /* ── 多巴胺②：follow_call 大徽章（全卡唯一高饱和）─────── */
 .verdict {
-  padding: 22px; border-top: 1px solid var(--line);
-  display: flex; align-items: center; gap: 18px; flex-wrap: wrap;
+  padding: 24px; border-top: 1px solid var(--line);
+  display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
 }
 .followbadge {
   font-family: var(--mono); font-weight: 800; font-size: 24px; letter-spacing: 0.04em;
@@ -268,7 +295,7 @@ body {
 .confbox .val { font-family: var(--mono); font-size: 16px; font-weight: 700; }
 
 /* ── warnings：置底黄细条，存在感低但可见 ─────────────── */
-.warns { padding: 12px 22px; border-top: 1px solid var(--line-soft); background: rgba(243,168,42,0.04); }
+.warns { padding: 12px 24px; border-top: 1px solid var(--line-soft); background: rgba(243,168,42,0.04); }
 .warns .wline { display: flex; gap: 9px; font-size: 12px; color: var(--amber); line-height: 1.45; }
 .warns .wline + .wline { margin-top: 5px; }
 .warns .wmark { flex-shrink: 0; opacity: 0.8; }
@@ -294,58 +321,81 @@ body {
 }
 .method b { color: var(--text-2); font-weight: 650; }
 
-/* ── 战绩总览条：整页唯一大数字区 ─────────────────────── */
-.overview {
-  display: flex; align-items: stretch; gap: 0;
+/* ============================================================
+   整体战绩汇总 — 4 层渐进式金字塔（彭博终端冷冽风）
+   深夜黑 + 青(高亮) + 绿(对/盈) + 红(错/亏)，核心数字等宽
+   8px 律动网格；发光极度克制（仅两个核心数字）
+   ============================================================ */
+.lift2 { margin-top: 24px; border-top: 1px solid var(--line); padding-top: 24px; }
+
+/* 第一层 · 一句话定调 */
+.l2-thesis {
+  font-size: 19px; line-height: 1.5; font-weight: 600; letter-spacing: -0.005em;
+  color: var(--text-2); margin: 0 0 24px;
+}
+.l2-thesis .l2-accent { color: var(--accent); white-space: nowrap; }
+
+/* 第二层 · 双格终端窗：1px 细线分隔，数字不裸悬浮 */
+.l2-term {
+  display: flex; align-items: stretch;
   background: var(--panel); border: 1px solid var(--line); border-radius: 14px;
-  padding: 22px 8px; margin-bottom: 24px;
+  overflow: hidden; margin-bottom: 16px;
 }
-.ov-block { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 9px; padding: 4px 10px; }
-.ov-sep { width: 1px; background: var(--line); margin: 6px 0; }
-.ov-num { font-size: 40px; font-weight: 600; line-height: 1; letter-spacing: -0.02em; color: var(--text); }
-.ov-num .slash { color: var(--text-4); margin: 0 2px; font-weight: 400; }
-.ov-num.calib { font-size: 30px; }
-.ov-num .vs { color: var(--text-4); margin: 0 6px; font-weight: 400; }
-.ov-num .accent { color: var(--accent); }
-.ov-num .muted { color: var(--text-3); }
-.ov-lab { font-size: 10px; letter-spacing: 0.07em; text-transform: uppercase; color: var(--text-4); text-align: center; }
+.l2-cell { flex: 1; min-width: 0; padding: 24px; display: flex; flex-direction: column; gap: 16px; }
+.l2-cell + .l2-cell { border-left: 1px solid var(--line); }
+.l2-big {
+  font-size: 60px; font-weight: 800; line-height: 1; letter-spacing: -0.03em;
+  color: var(--accent);
+  text-shadow: 0 0 16px rgba(76, 196, 224, 0.28);   /* 极微弱青晕，宁可不发光也不过 */
+}
+.l2-sub { font-size: 12px; line-height: 1.6; color: var(--text-3); }
+.l2-sub b { color: var(--green); font-weight: 700; font-family: var(--mono); }
 
-/* ── lift 静态成绩牌 ──────────────────────────────────────────────── */
-.lift-meta {
-  display: flex; flex-wrap: wrap; justify-content: center; align-items: center;
-  gap: 10px; margin: 14px 0 2px; font-size: 12px; color: var(--text-3);
-  font-family: var(--mono);
+/* 第三层 · 诚实说明：承上启下，目光从 +10% 引向 +13% */
+.l2-honest {
+  font-size: 13px; line-height: 1.7; color: var(--text-3);
+  padding: 0 2px; margin: 0 0 24px;
 }
-.lift-meta b { color: var(--text); font-weight: 600; }
-.lift-meta .dot { color: var(--text-4); }
 
-.lift-verdict {
-  margin-top: 20px; background: var(--panel); border: 1px solid var(--line);
-  border-radius: 10px; padding: 15px 18px;
+/* 第四层 · 量化审计日志（默认折叠，Monospace 量化日志感）*/
+.l2-audit { border-top: 1px solid var(--line-soft); }
+.l2-audit-bar {
+  display: flex; align-items: center; gap: 8px; cursor: pointer; user-select: none;
+  padding: 12px 0; font-family: var(--mono); font-size: 12px;
+  letter-spacing: 0.03em; color: var(--text-3); transition: color 0.15s;
 }
-.lift-verdict-h {
-  font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase;
-  color: var(--text-4); margin-bottom: 11px;
-}
-.lift-verdict-row {
-  font-size: 13px; line-height: 1.62; color: var(--text-2);
-  padding: 8px 0 8px 13px; border-left: 2px solid var(--accent-dim);
-}
-.lift-verdict-row + .lift-verdict-row { margin-top: 5px; }
+.l2-audit-bar:hover { color: var(--text-2); }
+.l2-audit-tag { color: var(--accent); font-weight: 700; }
+.l2-arrow { margin-left: 2px; transition: transform 0.2s; display: inline-block; }
+.l2-arrow.on { transform: rotate(90deg); color: var(--accent); }
+.l2-audit-body { overflow: hidden; height: 0; transition: height 0.3s ease; }
+.l2-audit-inner { padding: 8px 0 4px; }
 
-.caveats { margin-top: 16px; display: flex; flex-direction: column; gap: 6px; }
-.cav {
-  font-size: 11px; line-height: 1.55; color: var(--text-4);
-  padding-left: 12px; border-left: 1px solid var(--line-soft);
+.audit-block {
+  padding: 16px; background: var(--panel); border: 1px solid var(--line-soft);
+  border-radius: 8px; margin-bottom: 8px;
 }
-.cav.snap {
+.audit-h {
+  font-family: var(--mono); font-size: 12px; font-weight: 700; color: var(--text);
+  letter-spacing: 0.02em; margin-bottom: 8px;
+}
+.audit-tag { color: var(--accent); }
+.audit-text {
+  font-family: var(--mono); font-size: 11.5px; line-height: 1.7;
+  color: var(--text-3); white-space: pre-line;
+}
+.audit-div { height: 1px; background: var(--line-soft); margin: 16px 0; }
+.audit-cav {
+  font-family: var(--mono); font-size: 11px; line-height: 1.6; color: var(--text-4);
+  padding-left: 12px; border-left: 1px solid var(--line-soft); margin-bottom: 8px;
+}
+.audit-cav.snap {
   color: var(--amber); border-left: 2px solid var(--amber);
-  background: var(--amber-2); border-radius: 0 6px 6px 0;
-  padding: 8px 11px 8px 13px; font-size: 12px; line-height: 1.5;
+  background: var(--amber-2); border-radius: 0 6px 6px 0; padding: 8px 12px;
 }
 
 /* ── 逐场复盘列表 ─────────────────────────────────────── */
-.bt-list { display: flex; flex-direction: column; gap: 10px; }
+.bt-list { display: flex; flex-direction: column; gap: 12px; }
 .bt-item { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
 .bt-item.open { border-color: var(--line); }
 .bt-row {
@@ -434,11 +484,11 @@ body {
 
 /* ── Track Record：案例故事卡版（5 秒看懂）────────────────────────── */
 .tr-hero {
-  display: flex; align-items: center; gap: 20px;
+  display: flex; align-items: center; gap: 24px;
   background: var(--panel); border: 1px solid var(--line); border-radius: 14px;
-  padding: 20px 24px; margin-bottom: 20px;
+  padding: 24px; margin-bottom: 24px;
 }
-.tr-hero-num { font-size: 38px; font-weight: 600; line-height: 1; letter-spacing: -0.02em; white-space: nowrap; }
+.tr-hero-num { font-size: 44px; font-weight: 600; line-height: 1; letter-spacing: -0.02em; white-space: nowrap; }
 .tr-hero-num .tr-unit { font-size: 15px; font-weight: 500; color: var(--text-3); }
 .tr-hero-num .tr-slash { color: var(--text-4); font-weight: 400; }
 .tr-hero-txt { display: flex; flex-direction: column; gap: 5px; }
@@ -461,9 +511,3 @@ body {
 .case-reason { font-size: 11.5px; line-height: 1.6; color: var(--text-4); }
 .case-reason-lab { font-family: var(--mono); font-size: 9.5px; letter-spacing: 0.05em; color: var(--accent); background: var(--accent-dim); padding: 1px 6px; border-radius: 4px; margin-right: 7px; }
 
-.adv { margin-top: 22px; border-top: 1px solid var(--line); padding-top: 14px; }
-.adv-toggle { display: flex; align-items: center; gap: 9px; cursor: pointer; font-size: 12.5px; color: var(--text-3); user-select: none; }
-.adv-toggle:hover { color: var(--text-2); }
-.adv-body { overflow: hidden; transition: height 0.28s ease; height: 0; }
-.adv-inner { padding-top: 16px; }
-.adv-intro { font-size: 12.5px; line-height: 1.55; color: var(--text-3); margin-bottom: 14px; }
