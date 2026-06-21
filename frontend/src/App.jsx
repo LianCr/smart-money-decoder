@@ -12,6 +12,7 @@ const CONF_LABEL = { high: "HIGH", medium: "MED", low: "LOW" };
 const CONF_COLOR = { high: "var(--green)", medium: "var(--amber)", low: "var(--red)" };
 
 const STAGES = ["定位最大政治仓位", "追溯链上建仓时间", "检索时间窗新闻", "AI 解读 / 置信度矩阵"];
+const STAGES_BRIEFING = ["画像 · 这人靠不靠谱", "动作 · 建仓/对冲/盈亏", "价格 · 空间/赔率", "双向催化剂 + 市场测谎", "第三个 AI 诚实整理"];
 
 // 首页示例钱包：地址已正向 /analyze 验证、能产出精彩政治盘卡（2026-06-15 实测）。
 // 置信度全谱：ImJustKen=高(Netanyahu) / debased=中(Vance 2028) / denizz=低(+555% 美伊)。
@@ -167,16 +168,25 @@ export default function App() {
         <div className="brand" onClick={() => setTab("decode")} title="回到解读台">
           <span className="dot" />SMART MONEY DECODER
         </div>
-        <button
-          className={`medal ${tab === "track" ? "active" : ""}`}
-          onClick={() => setTab(tab === "track" ? "decode" : "track")}
-          title={tab === "track" ? "返回解读台" : "查看历史战绩"}
-        >
-          [ TRACK RECORD:&nbsp;<span className="m-w">{wl.w}W</span> · <span className="m-l">{wl.l}L</span>&nbsp;]
-          <span className="m-arrow">↗</span>
-        </button>
+        <div className="topnav">
+          <button
+            className={`navbtn ${tab === "briefing" ? "active" : ""}`}
+            onClick={() => setTab(tab === "briefing" ? "decode" : "briefing")}
+            title="完整聪明钱简报（v3）"
+          >
+            完整简报<span className="navbtn-tag">v3</span>
+          </button>
+          <button
+            className={`medal ${tab === "track" ? "active" : ""}`}
+            onClick={() => setTab(tab === "track" ? "decode" : "track")}
+            title={tab === "track" ? "返回解读台" : "查看历史战绩"}
+          >
+            [ TRACK RECORD:&nbsp;<span className="m-w">{wl.w}W</span> · <span className="m-l">{wl.l}L</span>&nbsp;]
+            <span className="m-arrow">↗</span>
+          </button>
+        </div>
       </div>
-      {tab === "decode" ? <DecodeView /> : <TrackRecordView />}
+      {tab === "decode" ? <DecodeView /> : tab === "briefing" ? <BriefingView /> : <TrackRecordView />}
     </div>
   );
 }
@@ -281,24 +291,24 @@ function DecodeView() {
 
 // 流水线加载：单请求在飞，前端按节奏 currentStep 逐个点亮，居中、与首页同语言。
 // 渐进式逻辑：i<step=已完成(暗青·✓静止) / i===step=进行中(亮青·脉冲) / i>step=未开始(暗灰静止)。
-function LoadingStages() {
+function LoadingStages({ stages = STAGES, sub = "定位 → 追溯 → 检索 → 判断" }) {
   const [step, setStep] = useState(0);
   const timer = useRef();
   useEffect(() => {
     timer.current = setInterval(() => {
-      setStep((s) => (s < STAGES.length - 1 ? s + 1 : s));   // 卡在最后一步，绝不全打勾
+      setStep((s) => (s < stages.length - 1 ? s + 1 : s));   // 卡在最后一步，绝不全打勾
     }, 3500);
     return () => clearInterval(timer.current);
-  }, []);
-  const last = STAGES.length - 1;
+  }, [stages.length]);
+  const last = stages.length - 1;
 
   return (
     <div className="pipe">
-      <div className="pipe-lead">AI 推演中 <span className="pipe-sub">· 定位 → 追溯 → 检索 → 判断</span></div>
+      <div className="pipe-lead">AI 推演中 <span className="pipe-sub">· {sub}</span></div>
       <div className="pipe-list">
         <span className="pipe-rail" />
         <span className="pipe-fill" style={{ height: `calc((100% - 28px) * ${step} / ${last})` }} />
-        {STAGES.map((s, i) => {
+        {stages.map((s, i) => {
           const state = i < step ? "done" : i === step ? "active" : "todo";
           return (
             <div className={`pstep ${state}`} key={i}>
@@ -415,6 +425,196 @@ export function Card({ card, banner }) {
 
       <div className="foot">仅为公开数据 AI 解读，非投资建议</div>
     </div>
+  );
+}
+
+// ── Briefing 完整简报页（v3）─────────────────────────────────────────────────
+const MATERIAL_CLS = {
+  "当事人直接表态": "mat-direct", "已生效硬事件": "mat-hard", "周边压力情绪信号": "mat-soft",
+  "民调数据": "mat-poll", "社交舆情信号": "mat-social", "市场价格信号": "mat-price", "其他背景": "mat-other",
+};
+
+// 市场反应 chip：印证=绿、不一致(测谎)=红、微弱/不可知=灰
+function reactionChip(pr) {
+  if (!pr || !pr.available) return { txt: "市场反应不可知", cls: "rx-na" };
+  const mc = pr.market_check || "";
+  const sign = pr.move_pct >= 0 ? "▲" : "▼";
+  const base = `${sign}${Math.abs(pr.move_pct)}%`;
+  if (mc.includes("不一致")) return { txt: `${base} · 市场不买账 ⚠️`, cls: "rx-bad" };
+  if (mc.includes("印证")) return { txt: `${base} · 市场印证`, cls: "rx-good" };
+  return { txt: `${base} · 反应微弱`, cls: "rx-weak" };
+}
+
+// 把第三个 AI 的人话简报做轻量渲染（## 标题 / **粗体** / - 列表 / --- 分隔）
+function renderInline(s) {
+  return s.split(/(\*\*.+?\*\*)/g).map((p, i) =>
+    p.startsWith("**") && p.endsWith("**") ? <b key={i}>{p.slice(2, -2)}</b> : p);
+}
+function Narrative({ text }) {
+  return (
+    <div className="bf-narr">
+      {(text || "").split("\n").map((ln, i) => {
+        const t = ln.trim();
+        if (!t) return <div className="bf-gap" key={i} />;
+        if (/^#+\s/.test(t)) return <div className="bf-h" key={i}>{t.replace(/^#+\s*/, "").replace(/\*\*/g, "")}</div>;
+        if (/^---+$/.test(t)) return <hr className="bf-hr" key={i} />;
+        const bullet = /^[-•]\s/.test(t);
+        return <div className={`bf-l ${bullet ? "bullet" : ""}`} key={i}>{renderInline(t.replace(/^[-•]\s*/, ""))}</div>;
+      })}
+    </div>
+  );
+}
+
+function CatColumn({ title, side, items }) {
+  return (
+    <div className={`bf-col ${side}`}>
+      <div className="bf-col-h">{title} <span className="bf-col-n">{items.length}</span></div>
+      {items.length === 0 && <div className="bf-empty">如实留空</div>}
+      {items.map((c, i) => {
+        const rx = reactionChip(c.price_reaction);
+        return (
+          <div className="bf-cat" key={i}>
+            <div className="bf-cat-top">
+              <span className={`mat ${MATERIAL_CLS[c.type] || "mat-other"}`}>{c.type}</span>
+              <span className="bf-cat-date num">{c.date}</span>
+            </div>
+            {c.url ? <a className="bf-cat-t" href={c.url} target="_blank" rel="noreferrer">{c.title}</a>
+                   : <div className="bf-cat-t">{c.title}</div>}
+            <div className="bf-cat-why">{c.reason}</div>
+            <span className={`rx ${rx.cls}`}>{rx.txt}</span>
+            {c.price_reaction && c.price_reaction.same_window && (
+              <div className="bf-samewin">同窗合计 · 不可归因到单条</div>
+            )}
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+function BriefingBody({ d }) {
+  const m = d.meta || {};
+  const who = d.who_trader_profile || {};
+  const rk = who.official_rank || {};
+  const q = who.quality || {};
+  const pol = (who.category_specialization || []).find((c) => /Politics/i.test(c.category || ""));
+  const act = (d.what_position_actions || {}).actions || {};
+  const ts = (d.what_position_actions || {}).two_side_distribution || {};
+  const un = (d.what_position_actions || {}).unrealized || {};
+  const pc = d.price_context || {};
+  const cats = d.catalysts || { positive: [], negative: [] };
+  const wrLie = Number(rk.win_rate) > 0.8 && Number(rk.total_pnl) < 0;
+  const upct = un.unrealized_pct;
+
+  return (
+    <div className="card bf">
+      <div className="c-head">
+        <div>
+          <div className="q">{m.market}</div>
+          <div className="meta">{m.settle} · 催化剂锚 {m.catalyst_anchor === "entry_time" ? "建仓时(复盘)" : "现在(实战)"}</div>
+        </div>
+        <span className="outcome">{(m.analyzed_side || "").toUpperCase()}</span>
+      </div>
+
+      {/* WHO / WHAT / PRICE 三联卡 */}
+      <div className="bf-grid">
+        <div className="bf-mini">
+          <div className="bf-mini-h">WHO · 这人靠不靠谱</div>
+          <div className="bf-kv"><span>官方排名</span><b className="num">#{rk.rank ?? "—"}</b></div>
+          <div className="bf-kv"><span>胜率 / 累计盈亏</span><b className="num">{rk.win_rate ? (rk.win_rate * 100).toFixed(1) + "%" : "—"} · {rk.total_pnl ? money(Number(rk.total_pnl)) : "—"}</b></div>
+          {pol && <div className="bf-kv"><span>政治盘专长</span><b className="num">{(pol.win_rate * 100).toFixed(0)}% · {money(Number(pol.total_pnl))}</b></div>}
+          {wrLie && <div className="bf-flag">⚠️ 胜率谎言：高胜率但净亏 — 看净盈亏非胜率</div>}
+          {q.flagged_metrics && <div className="bf-sub">flagged: {q.flagged_metrics}</div>}
+        </div>
+
+        <div className="bf-mini">
+          <div className="bf-mini-h">WHAT · 他做了什么</div>
+          <div className="bf-kv"><span>建仓 / 均价</span><b className="num">{act.entry_time?.slice(0, 10) || "—"} · {price(act.avg_entry_price)}</b></div>
+          <div className="bf-kv"><span>买入 / 成本</span><b className="num">{act.num_buys ?? "—"}笔 · {money(act.net_cost_usd)}</b></div>
+          <div className="bf-kv"><span>盈亏</span><b className={`num ${Number(un.unrealized_pnl_usd) >= 0 ? "up" : "down"}`}>{money(un.unrealized_pnl_usd)} {typeof upct === "number" ? `(${upct >= 0 ? "+" : ""}${upct}%)` : ""}</b></div>
+          <div className={`bf-flag ${ts.hedged ? "warn" : "ok"}`}>{ts.hedged ? "⚑ 两边对冲 = 做市/非单边信念" : "单边建仓 = 信念注"}</div>
+        </div>
+
+        <div className="bf-mini">
+          <div className="bf-mini-h">PRICE · 还有没有空间</div>
+          <div className="bf-kv"><span>现价 / 隐含概率</span><b className="num">{price(pc.current_price)} · {pc.implied_probability_pct}%</b></div>
+          <div className="bf-kv"><span>剩余空间(赢)</span><b className="num">{pc.remaining_upside_pct_if_win}%</b></div>
+          <div className="bf-kv"><span>赔率 / vs入场</span><b className="num">{pc.odds_to_one ?? "—"} · {typeof pc.price_delta_pct === "number" ? (pc.price_delta_pct >= 0 ? "+" : "") + pc.price_delta_pct + "%" : "—"}</b></div>
+        </div>
+      </div>
+
+      {/* 双向催化剂 + 市场测谎 */}
+      <div className="bf-dialectic">
+        <CatColumn title="支持 · 正向证据" side="pos" items={cats.positive || []} />
+        <CatColumn title="威胁 · 负向证据" side="neg" items={cats.negative || []} />
+      </div>
+
+      {/* 第三个 AI 诚实整理（产品魂） */}
+      <div className="sec bf-narr-wrap">
+        <h4>AI 诚实整理 · 只陈列证据、不替你判断</h4>
+        <Narrative text={d.organized_text} />
+      </div>
+
+      <div className="foot">仅为公开数据 AI 整理，非投资建议 · 系统不替你称重，天平由你裁决</div>
+    </div>
+  );
+}
+
+function BriefingView() {
+  const [wallet, setWallet] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [data, setData] = useState(null);
+  const [error, setError] = useState(null);
+
+  async function run(addrArg) {
+    const w = (typeof addrArg === "string" ? addrArg : wallet).trim();
+    if (!w) return;
+    setLoading(true); setData(null); setError(null);
+    try {
+      const resp = await fetch(`${API}/briefing?wallet=${encodeURIComponent(w)}`);
+      const j = await resp.json();
+      if (!resp.ok || j.error) setError({ reason: j.error || `HTTP ${resp.status}`, message: j.message || "请求失败" });
+      else setData(j);
+    } catch (e) {
+      setError({ reason: "NETWORK", message: `无法连接后端 ${API}，请确认 uvicorn 已启动。` });
+    } finally { setLoading(false); }
+  }
+
+  const showHome = !data && !loading && !error;
+  return (
+    <>
+      {!data && !error && (
+        <div className="console-sub">输入聪明钱钱包,生成完整简报:画像 + 动作 + 价格 + 双向催化剂(市场测谎) + AI 诚实整理</div>
+      )}
+      <div className={`cmdbar ${loading ? "busy" : ""}`}>
+        <span className="cmd-prompt">&gt;</span>
+        {showHome && !wallet && <span className="cmd-caret" />}
+        <input className="cmd-input num" value={wallet} onChange={(e) => setWallet(e.target.value)}
+          onKeyDown={(e) => e.key === "Enter" && run()} placeholder="输入 Polymarket 钱包地址" spellCheck={false} />
+        <button className="cmd-trigger" onClick={() => run()} disabled={loading || !wallet.trim()}>
+          {loading ? "生成中" : "生成简报"}
+        </button>
+      </div>
+
+      {showHome && (
+        <div className="monitor">
+          <div className="mon-head">试试这几个大户 · 点击生成完整简报</div>
+          <div className="mon-list">
+            {EXAMPLES.map((e) => (
+              <button className="mon-row" key={e.addr} onClick={() => { setWallet(e.addr); run(e.addr); }}>
+                <span className="mon-dot" /><span className="mon-nick">{e.nick}</span>
+                <span className="mon-addr num">{abbrev(e.addr)}</span>
+                <span className="mon-pnl"><span className="mon-pnl-lab">累计盈利</span><span className="mon-pnl-val num">{e.pnl}</span></span>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {loading && <LoadingStages stages={STAGES_BRIEFING} sub="画像 → 动作 → 价格 → 催化剂 → 整理" />}
+      {error && <div className="error"><div className="r">{error.reason}</div><div>{error.message}</div></div>}
+      {data && <BriefingBody d={data} />}
+    </>
   );
 }
 
