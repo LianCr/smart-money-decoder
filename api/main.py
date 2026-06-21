@@ -18,6 +18,7 @@ api/main.py — smart-money-decoder 的 FastAPI 后端
 """
 
 import json
+import os
 import sys
 import time
 from datetime import date
@@ -36,6 +37,8 @@ from fetcher.trades import get_entry_time_v2, get_wallet_profile, get_wallet_pnl
 from fetcher.news import get_news_for_market
 from analyzer.decoder import decode_position, DecoderError
 from api.backtest_mock import MOCK_BACKTEST
+from briefing.assemble import load_or_build_briefing
+from briefing.organize import organize_briefing
 
 app = FastAPI(title="smart-money-decoder API", version="1.0")
 
@@ -91,6 +94,10 @@ def _resolve_entry_time(wallet: str, condition_id: str) -> int | None:
 BACKTEST_RESULT = Path("backtest/lift_result.json")   # 整体 lift 汇总（git 跟踪、手填自 lift_v1.md，不重跑）
 CASES_PATH      = Path("backtest/cases.json")          # 6 个案例故事卡（git 跟踪、手填自 final_samples.md）
 ANALYZE_CACHE   = Path(".cache/analyze")   # 实时解读结果缓存：key=小写钱包_日期，命中=零 token 秒回
+BRIEFING_CACHE  = Path(".cache/briefing_api")   # 完整简报响应缓存（结构化+人话），命中=零 token 秒回
+# 🔴 数据世界的"现在"：Heisenberg/gamma 都是 2026 世界，as_of 必须用它、不能用 wall-clock date.today()。
+# 真实时产品（切 Bedrock 后跑实时数据）再改成 date.today()。
+BRIEFING_AS_OF  = os.environ.get("BRIEFING_AS_OF", "2026-06-20")
 
 
 def _difficulty(entry_price):
@@ -240,6 +247,60 @@ def analyze(wallet: str):
         ANALYZE_CACHE.mkdir(parents=True, exist_ok=True)
         cache_path.write_text(json.dumps(response, ensure_ascii=False, indent=2), encoding="utf-8")
         _log(f"   💾 已缓存 {cache_key}（同钱包当天再点零 token、秒回）")
+    except Exception:
+        pass
+    return response
+
+
+@app.get("/briefing")
+def briefing(wallet: str):
+    """完整聪明钱简报：钱包→顶仓→A段编排(结构化)+B段第三个AI(人话)→整份硬缓存。"""
+    t0 = time.time()
+    wallet = (wallet or "").strip()
+    _log(f"\n=== /briefing wallet={wallet[:14]}… ===")
+
+    # ── 第 0 层：(钱包,数据世界日期) 整份缓存（命门：cache miss~5k token、hit=零 token 秒回）──
+    cache_key  = f"{wallet.lower()}_{BRIEFING_AS_OF}"
+    cache_path = BRIEFING_CACHE / f"{cache_key}.json"
+    if cache_path.exists():
+        try:
+            cached = json.loads(cache_path.read_text(encoding="utf-8"))
+            _log(f"   ⚡ CACHE HIT {cache_key} — 零 token 秒回")
+            return cached
+        except Exception:
+            pass
+
+    # ── 第 1 层：最大政治仓（复用 /analyze 同源，同 2026 世界）─────────────────────
+    _log("① 拉取最大政治仓位")
+    position = get_top_political_position(wallet)
+    if position.get("error"):
+        reason = position["reason"]
+        if reason in _BAD_REQUEST_REASONS:
+            return _err(400, reason, position["message"])
+        if reason in _NO_POSITION_REASONS:
+            return _err(404, reason, position["message"])
+        return _err(502, reason, position["message"])
+    _log(f"   ✓ {position['market_question'][:48]} · {position['outcome']}")
+
+    # ── 第 2 层：A 段编排（结构化简报，烧 dual_catalyst）+ B 段第三个 AI（人话）──────
+    try:
+        _log("② A段编排器（WHO/WHAT/PRICE + 双向催化剂 + 测谎仪）")
+        b = load_or_build_briefing(wallet, position["outcome"],
+                                   cid=position["market_id"], as_of=BRIEFING_AS_OF, mode="live")
+        if isinstance(b, dict) and b.get("error"):
+            return _err(502, "BRIEFING_BUILD_FAILED", b["error"])
+        _log("③ B段第三个 AI 诚实整理")
+        organized = organize_briefing(b)
+    except Exception as e:                    # Heisenberg/网关等上游失败一律 502
+        return _err(502, "BRIEFING_PIPELINE_FAILED", f"{type(e).__name__}: {e}")
+
+    response = {**b, "organized_text": organized["text"], "organize_guards": organized["guards"]}
+    _log(f"   ✓ 简报生成完毕（耗时 {time.time() - t0:.1f}s）")
+
+    try:
+        BRIEFING_CACHE.mkdir(parents=True, exist_ok=True)
+        cache_path.write_text(json.dumps(response, ensure_ascii=False, indent=2), encoding="utf-8")
+        _log(f"   💾 已缓存 {cache_key}（同钱包零 token 秒回）")
     except Exception:
         pass
     return response
