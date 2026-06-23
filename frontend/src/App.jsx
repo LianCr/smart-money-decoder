@@ -429,20 +429,30 @@ export function Card({ card, banner }) {
 }
 
 // ── Briefing 完整简报页（v3）─────────────────────────────────────────────────
-const MATERIAL_CLS = {
-  "当事人直接表态": "mat-direct", "已生效硬事件": "mat-hard", "周边压力情绪信号": "mat-soft",
-  "民调数据": "mat-poll", "社交舆情信号": "mat-social", "市场价格信号": "mat-price", "其他背景": "mat-other",
-};
+// 材质分层：硬材质(当事人直接表态/已生效硬事件)=亮+左tick / 其余软材质=暗。靠灰阶不靠颜色。
+const HARD_MATERIALS = new Set(["当事人直接表态", "已生效硬事件"]);
 
-// 市场反应 chip：印证=绿、不一致(测谎)=红、微弱/不可知=灰
+// 系统风险标记 → 中文（绝不把内部代码字段直接显示给用户）
+const FLAG_CN = {
+  suspicious_win_rate: "异常高胜率", position_size_volatility: "仓位波动大",
+  sybil_risk: "疑似女巫账户", perfect_timing: "完美择时(可疑)", perfect_timing_flag: "完美择时(可疑)",
+  bot_like: "类机器人模式", concentration_risk: "持仓过度集中", high_drawdown: "高回撤",
+  wash_trading: "疑似刷量", low_market_diversity: "市场集中度高",
+};
+function flagsCN(raw) {
+  return String(raw || "").replace(/[{}]/g, "").split(",").map((s) => s.trim())
+    .filter(Boolean).map((t) => FLAG_CN[t] || t.replace(/_/g, " ")).join("、");
+}
+
+// 市场反应 chip：印证=暗绿、不一致(测谎)=暗陶红+⚠、微弱/不可知=灰
 function reactionChip(pr) {
   if (!pr || !pr.available) return { txt: "市场反应不可知", cls: "rx-na" };
   const mc = pr.market_check || "";
-  const sign = pr.move_pct >= 0 ? "▲" : "▼";
-  const base = `${sign}${Math.abs(pr.move_pct)}%`;
-  if (mc.includes("不一致")) return { txt: `${base} · 市场不买账 ⚠️`, cls: "rx-bad" };
-  if (mc.includes("印证")) return { txt: `${base} · 市场印证`, cls: "rx-good" };
-  return { txt: `${base} · 反应微弱`, cls: "rx-weak" };
+  const arrow = pr.move_pct >= 0 ? "↑" : "↓";
+  const base = `${arrow}${Math.abs(pr.move_pct)}%`;
+  if (mc.includes("不一致")) return { txt: `⚠ ${base} 市场不买账`, cls: "rx-bad" };
+  if (mc.includes("印证")) return { txt: `${base} 市场印证`, cls: "rx-good" };
+  return { txt: `${base} 反应微弱`, cls: "rx-weak" };
 }
 
 // 把第三个 AI 的人话简报做轻量渲染（## 标题 / **粗体** / - 列表 / --- 分隔）
@@ -456,7 +466,9 @@ function Narrative({ text }) {
       {(text || "").split("\n").map((ln, i) => {
         const t = ln.trim();
         if (!t) return <div className="bf-gap" key={i} />;
+        if (/天平由你裁决/.test(t)) return <div className="bf-closing" key={i}>{t.replace(/\*\*/g, "")}<span className="bf-cursor animate-blink" /></div>;
         if (/^#+\s/.test(t)) return <div className="bf-h" key={i}>{t.replace(/^#+\s*/, "").replace(/\*\*/g, "")}</div>;
+        if (/^\*\*.+\*\*$/.test(t)) return <div className="bf-h" key={i}>{t.replace(/\*\*/g, "")}</div>;
         if (/^---+$/.test(t)) return <hr className="bf-hr" key={i} />;
         const bullet = /^[-•]\s/.test(t);
         return <div className={`bf-l ${bullet ? "bullet" : ""}`} key={i}>{renderInline(t.replace(/^[-•]\s*/, ""))}</div>;
@@ -468,14 +480,14 @@ function Narrative({ text }) {
 function CatColumn({ title, side, items }) {
   return (
     <div className={`bf-col ${side}`}>
-      <div className="bf-col-h">{title} <span className="bf-col-n">{items.length}</span></div>
+      <div className="bf-col-h">{title} <span className="bf-col-n">{items.length}</span><span className="bf-pulse pulse-dot" /></div>
       {items.length === 0 && <div className="bf-empty">如实留空</div>}
       {items.map((c, i) => {
         const rx = reactionChip(c.price_reaction);
         return (
           <div className="bf-cat" key={i}>
             <div className="bf-cat-top">
-              <span className={`mat ${MATERIAL_CLS[c.type] || "mat-other"}`}>{c.type}</span>
+              <span className={`mat ${HARD_MATERIALS.has(c.type) ? "hard" : "soft"}`}>{c.type}</span>
               <span className="bf-cat-date num">{c.date}</span>
             </div>
             {c.url ? <a className="bf-cat-t" href={c.url} target="_blank" rel="noreferrer">{c.title}</a>
@@ -523,16 +535,16 @@ function BriefingBody({ d }) {
           <div className="bf-kv"><span>官方排名</span><b className="num">#{rk.rank ?? "—"}</b></div>
           <div className="bf-kv"><span>胜率 / 累计盈亏</span><b className="num">{rk.win_rate ? (rk.win_rate * 100).toFixed(1) + "%" : "—"} · {rk.total_pnl ? money(Number(rk.total_pnl)) : "—"}</b></div>
           {pol && <div className="bf-kv"><span>政治盘专长</span><b className="num">{(pol.win_rate * 100).toFixed(0)}% · {money(Number(pol.total_pnl))}</b></div>}
-          {wrLie && <div className="bf-flag">⚠️ 胜率谎言：高胜率但净亏 — 看净盈亏非胜率</div>}
-          {q.flagged_metrics && <div className="bf-sub">flagged: {q.flagged_metrics}</div>}
+          {wrLie && <div className="bf-lie">⚠ 胜率谎言:高胜率但净盈亏为负 — 看净盈亏,非胜率</div>}
+          {q.flagged_metrics && <div className="bf-sub">风险标记: {flagsCN(q.flagged_metrics)}</div>}
         </div>
 
         <div className="bf-mini">
           <div className="bf-mini-h">WHAT · 他做了什么</div>
           <div className="bf-kv"><span>建仓 / 均价</span><b className="num">{act.entry_time?.slice(0, 10) || "—"} · {price(act.avg_entry_price)}</b></div>
           <div className="bf-kv"><span>买入 / 成本</span><b className="num">{act.num_buys ?? "—"}笔 · {money(act.net_cost_usd)}</b></div>
-          <div className="bf-kv"><span>盈亏</span><b className={`num ${Number(un.unrealized_pnl_usd) >= 0 ? "up" : "down"}`}>{money(un.unrealized_pnl_usd)} {typeof upct === "number" ? `(${upct >= 0 ? "+" : ""}${upct}%)` : ""}</b></div>
-          <div className={`bf-flag ${ts.hedged ? "warn" : "ok"}`}>{ts.hedged ? "⚑ 两边对冲 = 做市/非单边信念" : "单边建仓 = 信念注"}</div>
+          <div className="bf-kv"><span>盈亏</span><b className={`num ${Number(un.unrealized_pnl_usd) >= 0 ? "pos" : "neg"}`}>{money(un.unrealized_pnl_usd)} {typeof upct === "number" ? `(${upct >= 0 ? "+" : ""}${upct}%)` : ""}</b></div>
+          <div className="bf-note">{ts.hedged ? "两边对冲 · 做市/非单边信念" : "单边建仓 · 信念注"}</div>
         </div>
 
         <div className="bf-mini">
@@ -550,12 +562,12 @@ function BriefingBody({ d }) {
       </div>
 
       {/* 第三个 AI 诚实整理（产品魂） */}
-      <div className="sec bf-narr-wrap">
-        <h4>AI 诚实整理 · 只陈列证据、不替你判断</h4>
+      <div className="bf-narr-wrap">
+        <h4>AI 诚实整理 · 只陈列证据,不替你判断</h4>
         <Narrative text={d.organized_text} />
       </div>
 
-      <div className="foot">仅为公开数据 AI 整理，非投资建议 · 系统不替你称重，天平由你裁决</div>
+      <div className="foot">仅为公开数据 AI 整理,非投资建议</div>
     </div>
   );
 }
