@@ -432,6 +432,21 @@ export function Card({ card, banner }) {
 // 材质分层：硬材质(当事人直接表态/已生效硬事件)=亮+左tick / 其余软材质=暗。靠灰阶不靠颜色。
 const HARD_MATERIALS = new Set(["当事人直接表态", "已生效硬事件"]);
 
+// Polymarket 原生 embed —— 实时市场 Overview("实")，配我们自建历史 Context("虚")一虚一实同框。
+// URL 格式实测 200 可达(features=chart,buyButtons)；slug 与我们 2026 数据世界一致(gamma 已验)。
+function polymarketEmbedUrl(slug) {
+  return `https://embed.polymarket.com/market.html?market=${encodeURIComponent(slug)}&features=chart,buyButtons&theme=dark`;
+}
+function PolymarketEmbed({ slug }) {
+  if (!slug) return null;
+  return (
+    <iframe
+      className="pm-embed" title="Polymarket Live Overview" src={polymarketEmbedUrl(slug)}
+      sandbox="allow-scripts allow-same-origin allow-popups allow-forms" loading="lazy"
+    />
+  );
+}
+
 // 系统风险标记 → 中文（绝不把内部代码字段直接显示给用户）
 const FLAG_CN = {
   suspicious_win_rate: "异常高胜率", position_size_volatility: "仓位波动大",
