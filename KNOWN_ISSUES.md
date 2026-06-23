@@ -320,6 +320,31 @@
   - **边界+防泄漏全程守住**：整理器 0 导向/0 恐吓、"天平由你裁决"；6/20 当天新闻 `as_of_leak_guard`(无"之后价"诚实标不可知)。
   - **⏭ 下一步**：live 真能用、灵魂守住、洞察证明 → **接产品表面(API/前端)**，从命令行脚本变成"平时真能打开用的东西"。585 社交源排其后(加源安全但"变能用"优先)。
 
+### 📡 GDELT 新闻地基（已验证 · v3+ 蓝图，2026-06-23）
+> 缘起：Tavily 实时相关性好但①历史 as-of 可靠性存疑②无结构化维度。验"GDELT 当新闻地基"——两轮实测有数字，结论钉死。
+
+- **关键事实（免费 curl 验，零凭证零 token）**：
+  - **GDELT 直连文件 `data.gdeltproject.org/gdeltv2/*.gkg.csv.zip`：2026-current**（lastupdate=2026-06-23），**和我们模拟世界一致**，含 Starmer/Burnham/Lula 等政治实体。每 15min 一个 ~6MB GKG，含 **Themes/Persons/Orgs/Tone** 结构化列。
+  - **🔴 AWS 公开 GDELT 数据集 `s3://gdelt-open-data`(Athena) = 冻结镜像**：停在 ~2021、2022–2026 全空 → **看不到我们的 2026 世界、validation 用不了**。生产若要 AWS = 自建"从直连文件抓进自己 S3+索引"的定制管线（非那个公开集），等账号开好再议。
+- **✅ 三层架构（已跑通、有数字）**：
+  ```
+  GDELT(海量召回 + as-of结构性防泄漏 + Tone数值情绪)
+    → Stage1 硬过滤(免费): URL-slug thesis关键词 + Themes；324→45，召回到"国防大臣辞职→压力"类催化剂
+    → Stage2 LLM重排(~441 token/次): 顶上"工党领导权9/10"、排除噪音(斧头/燃油/骚乱)
+    = 既深、又对题、又 as-of 干净
+  ```
+- **真增量（Tavily 给不了 · 唯一保留的核心价值）**：**回测 as-of 完整性**——as-of 由"只下载 ≤AS_OF 的 15min 文件"**结构性强制（物理防泄漏）**，比信任第三方 published_date 硬一个量级（实证：6/15 看不到 6/19 Burnham 补选胜选）。附带：结构化 Themes + 明确出处。
+- **诚实短板**：GDELT 原始召回**广且噪**（提到 Starmer 的移民犯罪/北爱暴力都进），**不是 Tavily 的 drop-in 替代**——必须配三层过滤才对题。没洗出 Tavily 那条**字面**"staying put"，但洗出**同等/更高质量**的（工党领导权 9/10、国防大臣辞职=硬事件）。
+- **🔴🔴 已证伪并永久填死的坑（2026-06-23，团队硬核工程资产）：GDELT 实体聚合 ≠ 微观市场事件，不当市场交叉判定。**
+  - 试过两版"GDELT × 市场反应 第二重测谎"：① **Tone 方向**（`verify_tone_crosscheck.py`）② **新闻量/主题 spike**（`verify_volume_crosscheck.py`）——**两版都败在同一个 Burnham 案**：6/19 Burnham 补选把 Starmer-out 市场推 **+35%**，但 GDELT tone 仅 −0.1、Starmer 新闻量仅 1.0×基线（无 spike），"✓ 同轴印证"一次都没触发。
+  - **根因（元结论）**：GDELT 的**实体级日聚合**（tone/volume）反映的是"该实体的总新闻氛围"，**对不齐"某个具体催化剂事件的市场冲击"**——Burnham 是 Burnham 为中心的报道、很多没提 Starmer，但它是 Starmer-out 市场的核弹。市场靠**单个决定性事件**跳，实体日聚合把一切搅在一起 → **粒度错配**。
+  - **教训**：能成的测谎是**文章级/事件级**（Polymarket 异动 × **单篇具体文章**）；任何**实体级聚合**指标都是错粒度，换 tone 换 volume 换别的聚合都是同一个坑。**别再试。**
+- **🔒 收敛后的最终定位（最终裁决）**：
+  - GDELT = **纯催化剂来源**（三层过滤管线：召回 + as-of 物理防泄漏 + 硬过滤/LLM重排），**专供回测线**提供干净历史语料；**不进市场交叉判定**。
+  - **Tone = 纯软展示**（UI 上标个情绪基调供参考），**退出一切硬逻辑**。
+  - **测谎仪维持单层**：`Polymarket 异动 × 单篇具体文章` 的微观事件级 LLM 测谎（`analyzer/price_reaction.py`），不加 GDELT 第二层。
+  - 验证脚本 `verify_gdelt2/3.py`·`verify_tone_crosscheck.py`·`verify_volume_crosscheck.py`(全 gitignore)。**待用户定节奏落地三层来源管线。**
+
 ### endpoint → 解我哪个老大难（对照表）
 | 老大难（本文档） | 对应 endpoint | 性质 |
 |---|---|---|
