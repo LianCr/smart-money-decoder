@@ -13,6 +13,7 @@ const CONF_COLOR = { high: "var(--green)", medium: "var(--amber)", low: "var(--r
 
 const STAGES = ["定位最大政治仓位", "追溯链上建仓时间", "检索时间窗新闻", "AI 解读 / 置信度矩阵"];
 const STAGES_BRIEFING = ["画像 · 这人靠不靠谱", "动作 · 建仓/对冲/盈亏", "价格 · 空间/赔率", "双向催化剂 + 市场测谎", "第三个 AI 诚实整理"];
+const STAGES_CONTEXT = ["定位顶仓盘面", "扫描价格异动(≤as-of)", "GDELT 三层洗催化剂", "巨鲸 48h 进出动作流", "冷静客观宏观综述"];
 
 // 首页示例钱包：地址已正向 /analyze 验证、能产出精彩政治盘卡（2026-06-15 实测）。
 // 置信度全谱：ImJustKen=高(Netanyahu) / debased=中(Vance 2028) / denizz=低(+555% 美伊)。
@@ -177,6 +178,13 @@ export default function App() {
             完整简报<span className="navbtn-tag">v3</span>
           </button>
           <button
+            className={`navbtn ${tab === "context" ? "active" : ""}`}
+            onClick={() => setTab(tab === "context" ? "decode" : "context")}
+            title="市场 Context：实时盘面 × as-of 复盘（价格异动 + 催化剂 + 巨鲸动作）"
+          >
+            市场Context<span className="navbtn-tag">v3</span>
+          </button>
+          <button
             className={`medal ${tab === "track" ? "active" : ""}`}
             onClick={() => setTab(tab === "track" ? "decode" : "track")}
             title={tab === "track" ? "返回解读台" : "查看历史战绩"}
@@ -186,7 +194,8 @@ export default function App() {
           </button>
         </div>
       </div>
-      {tab === "decode" ? <DecodeView /> : tab === "briefing" ? <BriefingView /> : <TrackRecordView />}
+      {tab === "decode" ? <DecodeView /> : tab === "briefing" ? <BriefingView />
+        : tab === "context" ? <ContextView /> : <TrackRecordView />}
     </div>
   );
 }
@@ -641,6 +650,181 @@ function BriefingView() {
       {loading && <LoadingStages stages={STAGES_BRIEFING} sub="画像 → 动作 → 价格 → 催化剂 → 整理" />}
       {error && <div className="error"><div className="r">{error.reason}</div><div>{error.message}</div></div>}
       {data && <BriefingBody d={data} />}
+    </>
+  );
+}
+
+// ── 市场 Context 视图（一虚一实：实时盘面 × as-of 复盘）──────────────────────
+const FLAG_META = {
+  ADD:    { icon: "📈", label: "信念增强 · 加仓", cls: "add" },
+  EXIT:   { icon: "📉", label: "主力撤退 · 减仓", cls: "exit" },
+  STATIC: { icon: "⏸", label: "按兵不动 · 沉闷持仓", cls: "static" },
+};
+const EVT_META = {
+  catalyst:   { tag: "催化剂", cls: "cat" },
+  price_only: { tag: "诚实留白", cls: "blank" },
+  behavior:   { tag: "巨鲸动作", cls: "beh" },
+};
+
+function fmtUsd(v) {
+  return typeof v === "number" && v > 0 ? "$" + Math.round(v).toLocaleString("en-US") : "$0";
+}
+
+function BehaviorFlag({ b }) {
+  if (!b) return null;
+  const meta = FLAG_META[b.flag] || FLAG_META.STATIC;
+  const w = b.windows || {};
+  return (
+    <div className={`ctx-flag ${meta.cls}`}>
+      <div className="ctx-flag-h">
+        <span className="ctx-flag-ico">{meta.icon}</span>{meta.label}
+        <span className="ctx-flag-src">巨鲸 48h 动作流 · 556 Trades</span>
+      </div>
+      <div className="ctx-flag-fact">{b.fact}</div>
+      <div className="ctx-flag-win">
+        {["3h", "24h", "48h"].map((k) => {
+          const x = w[k] || {};
+          return (
+            <div className="ctx-win" key={k}>
+              <span className="ctx-win-k num">{k}</span>
+              <span className="ctx-win-b num">买 {x.buys || 0} · {fmtUsd(x.buy_usd)}</span>
+              <span className="ctx-win-s num">卖 {x.sells || 0} · {fmtUsd(x.sell_usd)}</span>
+            </div>
+          );
+        })}
+      </div>
+      {b.honest_note && <div className="ctx-flag-note">{b.honest_note}</div>}
+    </div>
+  );
+}
+
+function Timeline({ events }) {
+  if (!events || !events.length)
+    return <div className="ctx-empty">该 as-of 窗内无可锚定的价格异动 / 催化剂 — 如实留空</div>;
+  return (
+    <div className="ctx-timeline">
+      {events.map((e, i) => {
+        const meta = EVT_META[e.type] || EVT_META.catalyst;
+        return (
+          <div className={`ctx-evt ${meta.cls}`} key={i}>
+            <div className="ctx-evt-rail"><span className="ctx-evt-dot" /></div>
+            <div className="ctx-evt-body">
+              <div className="ctx-evt-top">
+                <span className={`ctx-tag ${meta.cls}`}>{meta.tag}</span>
+                <span className="ctx-evt-date num">{e.timestamp}</span>
+                {e.price_impact_string && <span className="ctx-impact num">{e.price_impact_string}</span>}
+              </div>
+              {e.title && <div className="ctx-evt-title">{e.title}</div>}
+              <div className="ctx-evt-fact">{e.fact_summary}</div>
+              <div className="ctx-evt-foot">
+                {e.source && <span className="ctx-evt-src">{e.source}</span>}
+                {e.temporal_note && <span className="ctx-evt-note">{e.temporal_note}</span>}
+              </div>
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+function ContextBody({ d }) {
+  const mc = d.market_context || {};
+  const side = (mc.analyzed_side || "").toUpperCase();
+  return (
+    <div className="card bf ctx">
+      <div className="c-head">
+        <div>
+          <div className="q">{mc.market_question}</div>
+          <div className="meta">市场 Context · 锁定 as-of {mc.as_of} · 钱包 {abbrev(mc.wallet)}</div>
+        </div>
+        <span className="outcome">{side}</span>
+      </div>
+
+      <div className="ctx-split">
+        {/* 实：实时盘面（Polymarket 直嵌） */}
+        <div className="ctx-pane ctx-real">
+          <div className="ctx-pane-h"><span className="ctx-live-dot" />实时盘面 · Polymarket</div>
+          {mc.market_slug
+            ? <PolymarketEmbed slug={mc.market_slug} />
+            : <div className="ctx-empty">无 slug,实时盘面不可嵌入</div>}
+          <div className="ctx-pane-foot">实时行情由 Polymarket 提供 · 与右侧 as-of 复盘相互独立</div>
+        </div>
+
+        {/* 虚：我们合成的 as-of 复盘 Context */}
+        <div className="ctx-pane ctx-synth">
+          <div className="ctx-pane-h">复盘上下文 · 锁定 as-of {mc.as_of}（防泄漏）</div>
+          <BehaviorFlag b={mc.behavioral_flag} />
+          {mc.ai_experimental_summary && (
+            <div className="bf-narr-wrap ctx-summary">
+              <h4>宏观综述 · 只陈列事实,不替你判断</h4>
+              <Narrative text={mc.ai_experimental_summary} />
+            </div>
+          )}
+          <div className="ctx-tl-h">事件时间线 · 价格异动 × 催化剂 × 巨鲸动作</div>
+          <Timeline events={mc.timeline_events} />
+        </div>
+      </div>
+
+      <div className="foot">价格异动窗 ≤ as-of(防泄漏) · 催化剂=GDELT 三层洗 · 因果→仅时间相关 · 巨鲸动作=事实非判断 · 仅公开数据 AI 整理,非投资建议</div>
+    </div>
+  );
+}
+
+function ContextView() {
+  const [wallet, setWallet] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [data, setData] = useState(null);
+  const [error, setError] = useState(null);
+
+  async function run(addrArg) {
+    const w = (typeof addrArg === "string" ? addrArg : wallet).trim();
+    if (!w) return;
+    setLoading(true); setData(null); setError(null);
+    try {
+      const resp = await fetch(`${API}/market-context?wallet=${encodeURIComponent(w)}`);
+      const j = await resp.json();
+      if (!resp.ok || j.error) setError({ reason: j.error || `HTTP ${resp.status}`, message: j.message || "请求失败" });
+      else setData(j);
+    } catch (e) {
+      setError({ reason: "NETWORK", message: `无法连接后端 ${API}，请确认 uvicorn 已启动。` });
+    } finally { setLoading(false); }
+  }
+
+  const showHome = !data && !loading && !error;
+  return (
+    <>
+      {!data && !error && (
+        <div className="console-sub">输入聪明钱钱包,生成市场 Context:实时盘面(实) × as-of 复盘(虚) = 价格异动 + 催化剂 + 巨鲸 48h 进出动作</div>
+      )}
+      <div className={`cmdbar ${loading ? "busy" : ""}`}>
+        <span className="cmd-prompt">&gt;</span>
+        {showHome && !wallet && <span className="cmd-caret" />}
+        <input className="cmd-input num" value={wallet} onChange={(e) => setWallet(e.target.value)}
+          onKeyDown={(e) => e.key === "Enter" && run()} placeholder="输入 Polymarket 钱包地址" spellCheck={false} />
+        <button className="cmd-trigger" onClick={() => run()} disabled={loading || !wallet.trim()}>
+          {loading ? "合成中" : "生成 Context"}
+        </button>
+      </div>
+
+      {showHome && (
+        <div className="monitor">
+          <div className="mon-head">试试这几个大户 · 点击生成市场 Context</div>
+          <div className="mon-list">
+            {EXAMPLES.map((e) => (
+              <button className="mon-row" key={e.addr} onClick={() => { setWallet(e.addr); run(e.addr); }}>
+                <span className="mon-dot" /><span className="mon-nick">{e.nick}</span>
+                <span className="mon-addr num">{abbrev(e.addr)}</span>
+                <span className="mon-pnl"><span className="mon-pnl-lab">累计盈利</span><span className="mon-pnl-val num">{e.pnl}</span></span>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {loading && <LoadingStages stages={STAGES_CONTEXT} sub="盘面 → 价格异动 → 催化剂 → 巨鲸动作 → 综述" />}
+      {error && <div className="error"><div className="r">{error.reason}</div><div>{error.message}</div></div>}
+      {data && <ContextBody d={data} />}
     </>
   );
 }

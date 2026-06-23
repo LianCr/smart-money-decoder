@@ -40,6 +40,7 @@ from api.backtest_mock import MOCK_BACKTEST
 from briefing.assemble import load_or_build_briefing
 from briefing.organize import organize_briefing
 from fetcher.positions import get_top_political_position_hz
+from briefing.market_context import load_or_build as build_market_context
 
 app = FastAPI(title="smart-money-decoder API", version="1.0")
 
@@ -251,6 +252,62 @@ def analyze(wallet: str):
     except Exception:
         pass
     return response
+
+
+# 从市场问题里抠出主体实体（喂给 GDELT 硬过滤）。专有名词小写、去停用词。
+_Q_STOP = {"will", "the", "a", "an", "be", "is", "are", "by", "out", "as", "of", "in",
+           "on", "to", "for", "and", "or", "next", "win", "wins", "won", "leader",
+           "president", "presidential", "election", "democratic", "republican", "world",
+           "cup", "fifa", "june", "july", "august", "may", "april", "march", "who", "what",
+           "prime", "minister", "united", "kingdom", "states", "government", "party",
+           "leadership", "national", "general", "american", "british", "before", "after"}
+
+
+def _entities_from_question(q: str) -> list[str]:
+    import re
+    toks = re.findall(r"[A-Za-z]{3,}", q or "")
+    ents, seen = [], set()
+    for t in toks:
+        low = t.lower()
+        if t[0].isupper() and low not in _Q_STOP and low not in seen:
+            ents.append(low)
+            seen.add(low)
+    return ents[:5] or ["politics"]
+
+
+@app.get("/market-context")
+def market_context(wallet: str, cid: str = "", outcome: str = ""):
+    """市场 Context 视图：钱包→顶仓→Polymarket 风格上下文（价格异动×as-of 催化剂×巨鲸 48h 行为流）。
+    复用 synthesizer 内部缓存：同(盘,as_of,侧,钱包)命中=零 token。
+    可选 cid/outcome：直指某盘（钉盘复盘，不走顶仓解析）。"""
+    wallet = (wallet or "").strip()
+    cid = (cid or "").strip()
+    _log(f"\n=== /market-context wallet={wallet[:14]}… cid={cid[:14] or '(auto)'} ===")
+
+    if cid:                                   # 钉指定盘：跳过顶仓解析（含已缓存富节点复盘）
+        outcome = outcome or "Yes"
+        question = ""
+    else:                                     # 默认：钱包 → 最大未结算政治顶仓
+        position = get_top_political_position_hz(wallet, as_of=BRIEFING_AS_OF)
+        if position.get("error"):
+            reason = position["reason"]
+            if reason in _BAD_REQUEST_REASONS:
+                return _err(400, reason, position["message"])
+            if reason in _NO_POSITION_REASONS:
+                return _err(404, reason, position["message"])
+            return _err(502, reason, position["message"])
+        cid = position["market_id"]
+        outcome = position.get("outcome") or "Yes"
+        question = position.get("market_question", "")
+
+    entities = _entities_from_question(question)
+    _log(f"   ✓ {question[:48] or cid[:20]} · {outcome} · 实体={entities}")
+
+    try:
+        obj = build_market_context(cid, BRIEFING_AS_OF, entities, outcome, wallet=wallet)
+    except Exception as e:
+        return _err(502, "MARKET_CONTEXT_FAILED", f"{type(e).__name__}: {e}")
+    return obj
 
 
 @app.get("/briefing")
