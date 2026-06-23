@@ -232,6 +232,13 @@ def _validate_types(catalysts):
     return deviations, weight_hits
 
 
+# 内部标记绝不泄露给用户：命中即"静默删掉违规词"，不加任何 [待修] 前缀（违规记录留 _guards 供内部审计）
+def _strip_words(reason, words):
+    for w in words:
+        reason = reason.replace(w, "")
+    return re.sub(r"\s{2,}", " ", reason).strip(" ，,、")
+
+
 # ── 守卫② 恐吓词（负向 reason）──────────────────────────────────────────────────
 def _guard_fear(neg_catalysts):
     hits = []
@@ -240,8 +247,30 @@ def _guard_fear(neg_catalysts):
         bad = [w for w in FEAR_WORDS if w in reason]
         if bad:
             hits.append({"reason": reason, "words": bad})
-            c["reason"] = "⚠️[恐吓措辞待修] " + reason
+            c["reason"] = _strip_words(reason, bad)   # 删词、不显示标记
     return hits
+
+
+# ── 去重：一条证据(按 URL/标题)只能进正负其一，禁止同一新闻既支持又威胁 ────────────
+def _evi_key(c):
+    u = re.sub(r"[?#].*$", "", str(c.get("url", "")).strip().lower()).rstrip("/")
+    return u or str(c.get("title", "")).strip().lower()
+
+
+def _dedup(pos, neg):
+    def uniq(items):
+        seen, out = set(), []
+        for c in items:
+            k = _evi_key(c)
+            if k and k in seen:
+                continue
+            seen.add(k)
+            out.append(c)
+        return out
+    pos, neg = uniq(pos), uniq(neg)              # 各自栏内去重
+    neg_keys = {_evi_key(c) for c in neg}        # 跨栏冲突：保留在负向(威胁向检索更精准)、从正向删
+    pos = [c for c in pos if _evi_key(c) not in neg_keys]
+    return pos, neg
 
 
 # ── 守卫④b 份量词扫 reason（正负都扫，防"决定性/关键"从 reason 漏过）──────────────
@@ -252,7 +281,7 @@ def _guard_weight_in_reason(catalysts):
         bad = [w for w in WEIGHT_WORDS if w in reason]
         if bad:
             hits.append({"reason": reason, "words": bad})
-            c["reason"] = "⚠️[份量词待修] " + reason
+            c["reason"] = _strip_words(reason, bad)   # 删词、不显示标记
     return hits
 
 
@@ -309,6 +338,8 @@ def analyze(market_title, outcome, entry_time, as_of_anchor=None):
     # 守卫① 相关性门
     pos, drop_p = _relevance_gate(pos, entities)
     neg, drop_n = _relevance_gate(neg, entities)
+    # 去重：同一条新闻不可既支持又威胁，按 URL/标题正负去重（跨栏保留负向）
+    pos, neg = _dedup(pos, neg)
     # 守卫④ 类型校验
     dev_p, wh_p = _validate_types(pos)
     dev_n, wh_n = _validate_types(neg)

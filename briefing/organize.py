@@ -33,61 +33,53 @@ MAX_TOKENS_OUT = 1200
 REQUEST_TIMEOUT = 30
 
 
-ORGANIZER_PROMPT = """你是一个**诚实的简报整理员**——不是顾问、不是裁判。
-下面是一份关于某聪明钱钱包某持仓的【结构化简报数据】（代码算好的事实 + 双向催化剂证据，每条带"材质类型"和"市场反应/测谎旗标"）。
+ORGANIZER_PROMPT = """你是一个**诚实的证据综合员**——不是顾问、不是裁判。
+上方界面已用数据卡片向用户展示了【交易者画像、持仓动作、价格结构】的全部硬数字。**你绝不重复这些数字。**
 
-任务：整理成一份**清晰、冷静、人能读的简报**，让用户看清全貌：这个交易者是谁、做了什么、价格结构、以及支持/威胁这注的双向证据（连同各自的材质类型、市场真金白银的反应、任何"市场与分类不一致"的⚠️旗标）。
+下面给你这注的【双向催化剂证据】（每条带材质类型 + 市场真金白银的反应/测谎旗标）和玩家姿态(定性)。
+
+任务：**只写卡片表达不了的东西**——把正反证据的张力、材质对比、市场测谎的矛盾，综合成 2–3 段短文，帮用户看清这副天平的"质感"：
+- 支持侧 vs 威胁侧各是什么**材质**的证据（如"支持方多是周边压力，威胁方是当事人亲口表态"），材质轻重让用户自己掂。
+- 哪些催化剂的**市场反应与其分类矛盾**（⚠️测谎）、这矛盾意味着什么张力（如"他否认下台，市场反而给'下台'定价"）。
+- 诚实提示（拿不到价 / 同窗多条合计不可归因）。
 
 🔴 铁律（违反即失败）：
-- **只整理给定数据**：绝不新增事实、绝不计算、绝不推断超出数据的东西。
-- **绝不判断、绝不建议**：不许出现"该跟/别跟/值得跟/胜率高/赢面大/稳/好机会/建议"等任何导向或下注倾向。你陈列，用户裁决。
-- **如实标材质与真伪、让用户自己掂份量**：把这些平实呈现、不替用户称重——
-  · "胜率谎言"标注（高胜率但净亏）· "对冲玩家=非单边信念" · 催化剂的材质类型
-  · 市场测谎⚠️（市场反应与 LLM 正负分类不一致）· honesty_caveat · 同窗多条新闻"合计、不可归因到单条"
-- **冷静客观**：不夸大、不恐吓（"致命/崩塌"等情绪词一律不许）、不卖确定性。
-- 结尾必须原样写这一句：「系统已完成证据陈述，天平由你裁决。」
+- **绝不复述画像/动作/价格的任何数字**：rank/胜率/累计盈亏/均价/现价/浮盈亏 等一律不得出现，卡片已展示。也**不要**"一、交易者画像/二、持仓动作"这类重复卡片的分节。
+- **只用给定证据，绝不编造**。
+- **绝不判断、绝不建议**：不许"该跟/别跟/值得/胜率高/稳/好机会"等任何倾向。你综合张力，用户裁决。
+- 冷静客观，不夸大不恐吓（"致命/崩塌"等情绪词禁用）。
+- 结尾必须另起一行原样写：「系统已完成证据陈述，天平由你裁决。」
 
-输出：分区简报正文（交易者画像 / 持仓动作 / 价格结构 / 双向证据），纯文本中文，不要 markdown 代码块。"""
+输出：纯文本中文，不要 markdown 代码块；可用极简小标题，但绝不重复卡片内容。"""
 
 
 def _compact(b):
-    """把结构化简报压成喂给 LLM 的精简材料（控 token，只留整理所需）。"""
+    """喂给整理器的精简材料：**不含画像/动作/价格的硬数字**（避免它复述卡片），
+    只给定性姿态 + 双向催化剂（材质+市场反应）+ 诚实标注。"""
     who = b.get("who_trader_profile", {})
-    q, rk = who.get("quality", {}), who.get("official_rank", {})
-    pol = [c for c in who.get("category_specialization", []) if "Politics" in str(c.get("category"))]
-    act = (b.get("what_position_actions") or {}).get("actions", {})
+    rk = who.get("official_rank", {})
+    pol = any("Politics" in str(c.get("category", "")) for c in who.get("category_specialization", []))
     ts = (b.get("what_position_actions") or {}).get("two_side_distribution", {})
-    un = (b.get("what_position_actions") or {}).get("unrealized", {})
-    pc = b.get("price_context", {})
 
     def cat_line(c):
         pr = c.get("price_reaction", {})
         r = (f"{pr.get('direction','')}{pr.get('move_pct','')}% {pr.get('market_check','')}"
-             if pr.get("available") else f"市场反应不可知({pr.get('reason','')})")
-        sw = f" | {pr['same_window']}" if pr.get("same_window") else ""
-        return {"材质": c.get("type"), "证据": c.get("title"), "日期": c.get("date"),
-                "理由": c.get("reason"), "市场反应": r + sw}
+             if pr.get("available") else "市场反应不可知")
+        sw = " [同窗多条·合计不可归因到单条]" if pr.get("same_window") else ""
+        return {"材质": c.get("type"), "证据": c.get("title"), "理由": c.get("reason"), "市场反应": r + sw}
 
     cats = b.get("catalysts", {})
     return {
         "市场": b.get("meta", {}).get("market"),
         "分析侧": b.get("meta", {}).get("analyzed_side"),
-        "结算状态": b.get("meta", {}).get("settle"),
-        "画像": {"风险分": q.get("combined_risk_score"), "flagged": q.get("flagged_metrics"),
-                "曲线": q.get("equity_curve_pattern"),
-                "官方榜": {"rank": rk.get("rank"), "win_rate": rk.get("win_rate"), "total_pnl": rk.get("total_pnl")},
-                "政治盘专长": (pol[0] if pol else None),
-                "胜率谎言提示": "高胜率但净PnL为负" if _wr_lie(rk) else None},
-        "动作": {"建仓": act.get("entry_time"), "买入笔数": act.get("num_buys"),
-                "均价": act.get("avg_entry_price"), "成本USD": act.get("net_cost_usd"),
-                "两侧": {"对冲": ts.get("hedged"), "说明": ts.get("note")},
-                "盈亏": {"金额": un.get("unrealized_pnl_usd"), "百分比": un.get("unrealized_pct"), "说明": un.get("note")}},
-        "价格": {"现价": pc.get("current_price"), "隐含概率%": pc.get("implied_probability_pct"),
-                "剩余空间%": pc.get("remaining_upside_pct_if_win"), "赔率": pc.get("odds_to_one"),
-                "vs入场%": pc.get("price_delta_pct")},
+        "结算": b.get("meta", {}).get("settle"),
+        "玩家姿态_定性勿复述数字": {
+            "建仓类型": "两边对冲(非单边信念)" if ts.get("hedged") else "单边建仓(信念注)",
+            "胜率谎言": _wr_lie(rk),
+            "政治盘专长": pol,
+        },
         "正向催化剂": [cat_line(c) for c in cats.get("positive", [])],
         "负向催化剂": [cat_line(c) for c in cats.get("negative", [])],
-        "天平摘要": cats.get("balance_summary"),
         "honesty_caveat": cats.get("honesty_caveat"),
     }
 
