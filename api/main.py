@@ -39,6 +39,7 @@ from analyzer.decoder import decode_position, DecoderError
 from api.backtest_mock import MOCK_BACKTEST
 from briefing.assemble import load_or_build_briefing
 from briefing.organize import organize_briefing
+from fetcher.positions import get_top_political_position_hz
 
 app = FastAPI(title="smart-money-decoder API", version="1.0")
 
@@ -270,9 +271,9 @@ def briefing(wallet: str):
         except Exception:
             pass
 
-    # ── 第 1 层：最大政治仓（复用 /analyze 同源，同 2026 世界）─────────────────────
-    _log("① 拉取最大政治仓位")
-    position = get_top_political_position(wallet)
+    # ── 第 1 层：最大政治仓（走 Heisenberg，不依赖会挂的真实 Polymarket data-api）──
+    _log("① 拉取最大政治仓位（Heisenberg）")
+    position = get_top_political_position_hz(wallet, as_of=BRIEFING_AS_OF)
     if position.get("error"):
         reason = position["reason"]
         if reason in _BAD_REQUEST_REASONS:
