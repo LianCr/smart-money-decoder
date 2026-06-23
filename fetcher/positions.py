@@ -5,8 +5,8 @@ fetcher/positions.py — Heisenberg 版"钱包最大政治仓"查找器（v3 简
 它打真实 data-api/gamma-api.polymarket.com，那两个公开 API 会挂（实测 HTTP 000 挂 18s）→ API_TIMEOUT。
 而整个简报数据层跑的是 Heisenberg（可达、2026 数据世界）。让入口也走 Heisenberg = 数据世界一致 + 不依赖会挂的外部 API。
 
-口径：拉钱包近 60 天成交(556)，按 (市场,outcome) 聚合买入成本，取成本最大的政治盘（优先未结算），
-返回 {market_id(=condition_id), outcome, market_question}，喂给 assemble_briefing。
+口径：拉钱包近 60 天成交(556)，按 (市场,outcome) 聚合买入成本，取成本最大的**未结算**政治盘
+（live 简报问"现在还要不要跟"，已结算盘没意义、绝不返回），返回 {market_id, outcome, market_question}。
 """
 
 from datetime import datetime, timedelta, timezone
@@ -33,7 +33,7 @@ def _f(x):
 
 
 def get_top_political_position_hz(wallet, as_of="2026-06-20", min_cost=300.0):
-    """返回该钱包最大政治持仓 {market_id, outcome, market_question} 或 {error,reason,message}。"""
+    """返回该钱包最大**未结算**政治持仓 {market_id, outcome, market_question} 或 {error,reason,message}。"""
     wallet = (wallet or "").strip()
     if not (wallet.startswith("0x") and len(wallet) == 42):
         return {"error": True, "reason": "INVALID_ADDRESS", "message": "钱包地址格式不对（应为 0x + 40 位）"}
@@ -63,34 +63,40 @@ def get_top_political_position_hz(wallet, as_of="2026-06-20", min_cost=300.0):
         agg[cid][o] += cost
         slugs[cid] = str(t.get("slug", ""))
 
-    # 按总买入成本排序，找成本最大的政治盘（优先未结算）；非政治留作兜底
+    # 按总买入成本降序，取成本最大的【未结算政治盘】（live 简报绝不返回已结算盘）
     ranked = sorted(agg.items(), key=lambda kv: -sum(kv[1].values()))
-    fallback = None
+    saw_pol_settled = False
     for cid, outs in ranked:
         total = sum(outs.values())
-        if total < min_cost and fallback is not None:
-            break
-        outcome = max(outs.items(), key=lambda kv: kv[1])[0]   # 主仓侧（买入成本更大那侧）
-        m = results(call(AGENTS["markets"][0], {"condition_id": cid})) \
-            or results(call(AGENTS["markets"][0], {"condition_id": cid, "closed": "True"}))
+        if total < min_cost:
+            break                                  # 已降序，后面更小，停
+        # 574 默认只返未结算市场；空 = 已结算/不存在 → 该盘不能进 live 简报
+        m = results(call(AGENTS["markets"][0], {"condition_id": cid}))
+        q_blob_for_settled = slugs.get(cid, "").lower()
         if not m:
+            # 确认它是不是"政治但已结算"（仅用于给用户更准的提示）
+            if any(k in q_blob_for_settled for k in POLITICAL_KW):
+                saw_pol_settled = True
             continue
         m = m[0]
         q = str(m.get("question", ""))
         blob = (q + " " + slugs.get(cid, "")).lower()
-        is_sport = any(k in blob for k in SPORT_KW)
-        is_pol = any(k in blob for k in POLITICAL_KW) and not is_sport
-        is_open = not bool(m.get("closed"))
-        cand = {"market_id": cid, "outcome": outcome, "market_question": q,
-                "_open": is_open, "_pol": is_pol, "_cost": round(total, 2)}
-        if fallback is None:
-            fallback = cand
-        if is_pol and total >= min_cost:          # 命中政治+达标 → 优先返回
-            return {k: cand[k] for k in ("market_id", "outcome", "market_question")}
+        if any(k in blob for k in SPORT_KW):
+            continue
+        end_d = str(m.get("end_date", ""))[:10]
+        live = (not bool(m.get("closed"))) and (not end_d or end_d > as_of)   # 🔴 未结算 + 未到期
+        if not live:
+            if any(k in blob for k in POLITICAL_KW):
+                saw_pol_settled = True
+            continue
+        if any(k in blob for k in POLITICAL_KW):
+            outcome = max(outs.items(), key=lambda kv: kv[1])[0]   # 主仓侧
+            return {"market_id": cid, "outcome": outcome, "market_question": q}
 
-    if fallback:                                   # 无政治盘则返回最大仓兜底
-        return {k: fallback[k] for k in ("market_id", "outcome", "market_question")}
-    return {"error": True, "reason": "ALL_BELOW_MIN_VALUE", "message": "未找到达标持仓"}
+    # 没有未结算的政治持仓 → 诚实报错（绝不拿已结算盘充数）
+    msg = ("该钱包当前没有未结算的政治持仓（持仓可能均已结算），换个有活跃政治持仓的钱包再试"
+           if saw_pol_settled else "该钱包近 60 天无达标的未结算政治持仓")
+    return {"error": True, "reason": "NO_OPEN_POSITIONS", "message": msg}
 
 
 if __name__ == "__main__":
