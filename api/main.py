@@ -41,6 +41,9 @@ from briefing.assemble import load_or_build_briefing
 from briefing.organize import organize_briefing
 from fetcher.positions import get_top_political_position_hz
 from briefing.market_context import load_or_build as build_market_context
+from briefing.market_context import get_behavior_flags
+from analyzer.reasoner_v3 import reason_v3, ReasonerError
+from fetcher.heisenberg import call as hz_call, results as hz_results, AGENTS as HZ_AGENTS
 
 app = FastAPI(title="smart-money-decoder API", version="1.0")
 
@@ -97,6 +100,7 @@ BACKTEST_RESULT = Path("backtest/lift_result.json")   # 整体 lift 汇总（git
 CASES_PATH      = Path("backtest/cases.json")          # 6 个案例故事卡（git 跟踪、手填自 final_samples.md）
 ANALYZE_CACHE   = Path(".cache/analyze")   # 实时解读结果缓存：key=小写钱包_日期，命中=零 token 秒回
 BRIEFING_CACHE  = Path(".cache/briefing_api")   # 完整简报响应缓存（结构化+人话），命中=零 token 秒回
+DASHBOARD_CACHE = Path(".cache/dashboard")      # 统一看板整份响应缓存（①-⑥），命中=零 token 秒回
 # 🔴 数据世界的"现在"：Heisenberg/gamma 都是 2026 世界，as_of 必须用它、不能用 wall-clock date.today()。
 # 真实时产品（切 Bedrock 后跑实时数据）再改成 date.today()。
 BRIEFING_AS_OF  = os.environ.get("BRIEFING_AS_OF", "2026-06-20")
@@ -308,6 +312,113 @@ def market_context(wallet: str, cid: str = "", outcome: str = ""):
     except Exception as e:
         return _err(502, "MARKET_CONTEXT_FAILED", f"{type(e).__name__}: {e}")
     return obj
+
+
+def _market_slug(cid: str) -> str | None:
+    try:
+        m = (hz_results(hz_call(HZ_AGENTS["markets"][0], {"condition_id": cid})) or
+             hz_results(hz_call(HZ_AGENTS["markets"][0], {"condition_id": cid, "closed": "True"})))
+        return m[0].get("slug") if m else None
+    except Exception:
+        return None
+
+
+def _relation_to_entry(cat_date: str, entry_time) -> str:
+    """催化剂日期 vs 建仓日 → BEFORE/AFTER ENTRY（纯代码日期比较，不经 AI）。"""
+    if not entry_time or not cat_date:
+        return "UNANCHORED"
+    entry_day = str(entry_time)[:10]
+    return "BEFORE_ENTRY" if cat_date[:10] < entry_day else "AFTER_ENTRY"
+
+
+def _tag_catalyst_relations(cats: dict, entry_time):
+    for side in ("positive", "negative"):
+        for c in cats.get(side, []) or []:
+            c.setdefault("relation", _relation_to_entry(c.get("date"), entry_time))
+    return cats
+
+
+@app.get("/dashboard")
+def dashboard(wallet: str):
+    """v3 统一看板：①身份 ②这一注 ③实时盘面 ④行为流 ⑤世界催化剂 ⑥Edge/Reasoning。
+    复用已封板模块输出（briefing + behavioral_flag + reasoner ⑥ + pnl 曲线），整份按(钱包,as_of)硬缓存。"""
+    t0 = time.time()
+    wallet = (wallet or "").strip()
+    _log(f"\n=== /dashboard wallet={wallet[:14]}… ===")
+
+    cache_key  = f"{wallet.lower()}_{BRIEFING_AS_OF}"
+    cache_path = DASHBOARD_CACHE / f"{cache_key}.json"
+    if cache_path.exists():
+        try:
+            _log(f"   ⚡ CACHE HIT {cache_key} — 零 token 秒回")
+            return json.loads(cache_path.read_text(encoding="utf-8"))
+        except Exception:
+            pass
+
+    # ① 顶仓
+    position = get_top_political_position_hz(wallet, as_of=BRIEFING_AS_OF)
+    if position.get("error"):
+        reason = position["reason"]
+        if reason in _BAD_REQUEST_REASONS:
+            return _err(400, reason, position["message"])
+        if reason in _NO_POSITION_REASONS:
+            return _err(404, reason, position["message"])
+        return _err(502, reason, position["message"])
+    cid, outcome = position["market_id"], position["outcome"]
+
+    try:
+        # ②⑤ 完整简报（who/what/price/catalysts）—— 已封板，命中缓存零 token
+        b = load_or_build_briefing(wallet, outcome, cid=cid, as_of=BRIEFING_AS_OF, mode="live")
+        if isinstance(b, dict) and b.get("error"):
+            return _err(502, "BRIEFING_BUILD_FAILED", b["error"])
+
+        # ④ 巨鲸 48h 行为流（免费 556+算术）
+        behavior = get_behavior_flags(wallet, cid, BRIEFING_AS_OF)
+
+        # ⑥ Edge/Reasoning（代码矩阵 + reasoner，含三铁律守卫）
+        try:
+            reasoning = reason_v3(b, behavior, BRIEFING_AS_OF)
+        except ReasonerError as e:                  # 守卫拦截 = 合法降级（如 DURATION_COMPUTED），不阻塞看板
+            reasoning = {"follow_call": None, "confidence": None, "reasoning": None,
+                         "guard_tripped": e.reason, "guard_message": e.message}
+
+        # ① 画像 + PnL 曲线（best-effort，不阻塞）
+        profile = get_wallet_profile(wallet)
+        pnl_history = get_wallet_pnl_history(wallet)
+    except Exception as e:
+        return _err(502, "DASHBOARD_PIPELINE_FAILED", f"{type(e).__name__}: {e}")
+
+    entry_time = (b.get("what_position_actions", {}).get("actions", {}) or {}).get("entry_time")
+    catalysts = _tag_catalyst_relations(b.get("catalysts", {}) or {}, entry_time)
+
+    response = {
+        "wallet": wallet,
+        "as_of": BRIEFING_AS_OF,
+        "identity": {                                # ①
+            "profile": profile,
+            "pnl_history": pnl_history,
+            "who_trader_profile": b.get("who_trader_profile", {}),
+        },
+        "position": {                                # ②
+            "meta": b.get("meta", {}),
+            "what_position_actions": b.get("what_position_actions", {}),
+            "price_context": b.get("price_context", {}),
+        },
+        "market": {"slug": _market_slug(cid), "market_id": cid},   # ③
+        "behavior": behavior,                        # ④
+        "catalysts": catalysts,                      # ⑤ 世界催化剂（含 relation + price_reaction 符号）
+        "world_summary": b.get("organized_text"),    # ⑤ 市场综述（第三个 AI 诚实整理）
+        "reasoning": reasoning,                      # ⑥
+    }
+    _log(f"   ✓ 看板生成完毕（耗时 {time.time() - t0:.1f}s）")
+
+    try:
+        DASHBOARD_CACHE.mkdir(parents=True, exist_ok=True)
+        cache_path.write_text(json.dumps(response, ensure_ascii=False, indent=2), encoding="utf-8")
+        _log(f"   💾 已缓存 {cache_key}（同钱包零 token 秒回）")
+    except Exception:
+        pass
+    return response
 
 
 @app.get("/briefing")
