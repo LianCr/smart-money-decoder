@@ -125,6 +125,7 @@ def gdelt_for_jump(entity_terms, t_jump, outcome_label):
                     continue
                 seen.add(u)
                 cand.append({"title": ti, "src": row[C_SRC], "date": row[C_DATE][:8],
+                             "url": row[C_URL].strip(),       # 文章链接(DocumentIdentifier)，供统一看板 ⑤ 可点击
                              "tone": _f(row[C_TONE].split(",")[0]) if "," in row[C_TONE] else None})
     if not cand:
         return []                                        # 边界3：无候选 → 上层留白
@@ -145,7 +146,8 @@ def gdelt_for_jump(entity_terms, t_jump, outcome_label):
                 # 回填日期/来源（从候选里按标题匹配）
                 src = next((c for c in cand if str(p.get("title", ""))[:20] in c["title"]), None)
                 picked.append({"title": p.get("title"), "source": p.get("source") or (src["src"] if src else ""),
-                               "date": src["date"] if src else "", "fact": p.get("fact", "")})
+                               "date": src["date"] if src else "", "fact": p.get("fact", ""),
+                               "url": src["url"] if src else ""})
         except json.JSONDecodeError:
             pass
     return picked, len(cand), len(prompt) + len(out)
@@ -222,6 +224,7 @@ def synthesize(cid, as_of, entity_terms, outcome="Yes", wallet=None):
             for c in cats:
                 events.append({
                     "timestamp": j["date"], "type": "catalyst", "title": c["title"], "source": c["source"],
+                    "url": c.get("url", ""),
                     "price_impact_string": impact, "fact_summary": c["fact"],
                     "temporal_note": "该事件与价格变动时间相关，非确证因果" + multi,
                 })

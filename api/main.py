@@ -44,6 +44,7 @@ from briefing.market_context import load_or_build as build_market_context
 from briefing.market_context import get_behavior_flags
 from analyzer.reasoner_v3 import reason_v3, ReasonerError
 from fetcher.heisenberg import call as hz_call, results as hz_results, AGENTS as HZ_AGENTS
+from briefing import board_feed
 
 app = FastAPI(title="smart-money-decoder API", version="1.0")
 
@@ -101,6 +102,7 @@ CASES_PATH      = Path("backtest/cases.json")          # 6 个案例故事卡（
 ANALYZE_CACHE   = Path(".cache/analyze")   # 实时解读结果缓存：key=小写钱包_日期，命中=零 token 秒回
 BRIEFING_CACHE  = Path(".cache/briefing_api")   # 完整简报响应缓存（结构化+人话），命中=零 token 秒回
 DASHBOARD_CACHE = Path(".cache/dashboard")      # 统一看板整份响应缓存（①-⑥），命中=零 token 秒回
+REASONER_CACHE  = Path(".cache/reasoner_v3")     # ⑥ reasoner 独立缓存：改 ⑤/② 重建看板不重烧 ⑥
 # 🔴 数据世界的"现在"：Heisenberg/gamma 都是 2026 世界，as_of 必须用它、不能用 wall-clock date.today()。
 # 真实时产品（切 Bedrock 后跑实时数据）再改成 date.today()。
 BRIEFING_AS_OF  = os.environ.get("BRIEFING_AS_OF", "2026-06-20")
@@ -314,6 +316,27 @@ def market_context(wallet: str, cid: str = "", outcome: str = ""):
     return obj
 
 
+def _reasoner_cached(briefing: dict, behavior: dict, wallet: str) -> dict:
+    """⑥ reasoner 独立缓存（按 钱包,as_of）：改 ⑤/② 重建看板时不重烧 ⑥。守卫拦截存为降级态。"""
+    REASONER_CACHE.mkdir(parents=True, exist_ok=True)
+    p = REASONER_CACHE / f"{wallet.lower()}_{BRIEFING_AS_OF}.json"
+    if p.exists():
+        try:
+            return json.loads(p.read_text(encoding="utf-8"))
+        except Exception:
+            pass
+    try:
+        r = reason_v3(briefing, behavior, BRIEFING_AS_OF)
+    except ReasonerError as e:
+        r = {"follow_call": None, "confidence": None, "reasoning": None,
+             "guard_tripped": e.reason, "guard_message": e.message}
+    try:
+        p.write_text(json.dumps(r, ensure_ascii=False, indent=2), encoding="utf-8")
+    except Exception:
+        pass
+    return r
+
+
 def _market_slug(cid: str) -> str | None:
     try:
         m = (hz_results(hz_call(HZ_AGENTS["markets"][0], {"condition_id": cid})) or
@@ -366,8 +389,10 @@ def dashboard(wallet: str):
         return _err(502, reason, position["message"])
     cid, outcome = position["market_id"], position["outcome"]
 
+    slug = _market_slug(cid)
+    market_q = position["market_question"]
     try:
-        # ②⑤ 完整简报（who/what/price/catalysts）—— 已封板，命中缓存零 token
+        # ②⑤ 完整简报（who/what/price/catalysts·Tavily）—— 已封板，命中缓存零 token
         b = load_or_build_briefing(wallet, outcome, cid=cid, as_of=BRIEFING_AS_OF, mode="live")
         if isinstance(b, dict) and b.get("error"):
             return _err(502, "BRIEFING_BUILD_FAILED", b["error"])
@@ -375,21 +400,33 @@ def dashboard(wallet: str):
         # ④ 巨鲸 48h 行为流（免费 556+算术）
         behavior = get_behavior_flags(wallet, cid, BRIEFING_AS_OF)
 
-        # ⑥ Edge/Reasoning（代码矩阵 + reasoner，含三铁律守卫）
+        # ⑤ 三源合并：GDELT(market_context·缓存命中零 token) + Tavily(briefing) + gamma context
         try:
-            reasoning = reason_v3(b, behavior, BRIEFING_AS_OF)
-        except ReasonerError as e:                  # 守卫拦截 = 合法降级（如 DURATION_COMPUTED），不阻塞看板
-            reasoning = {"follow_call": None, "confidence": None, "reasoning": None,
-                         "guard_tripped": e.reason, "guard_message": e.message}
+            mc = build_market_context(cid, BRIEFING_AS_OF,
+                                      _entities_from_question(market_q), outcome, wallet=wallet)
+            gdelt_events = (mc.get("market_context", {}) or {}).get("timeline_events", [])
+        except Exception:
+            gdelt_events = []                       # GDELT 挂 → 退化成 Tavily+gamma 两源
+        tok = board_feed.held_token(cid, outcome)
+        resolution, gamma_ctx = board_feed.gamma_meta(slug)
+        tavily_cats = b.get("catalysts", {}) or {}
+        news_stream = board_feed.build_news_stream(gdelt_events, tavily_cats, tok, BRIEFING_AS_OF)
+        gdelt_facts = [e.get("fact_summary") for e in gdelt_events
+                       if e.get("type") == "catalyst" and e.get("fact_summary")]
+        tavily_facts = [c.get("reason") for side in ("positive", "negative")
+                        for c in (tavily_cats.get(side) or []) if c.get("reason")]
+        world_summary = board_feed.merged_summary(market_q, outcome, behavior,
+                                                  gdelt_facts, tavily_facts, gamma_ctx)
+        what_bet = board_feed.what_the_bet(market_q, outcome, resolution)
+
+        # ⑥ Edge/Reasoning（代码矩阵 + reasoner，含三铁律守卫）—— 独立缓存，改 ⑤/② 不重烧
+        reasoning = _reasoner_cached(b, behavior, wallet)
 
         # ① 画像 + PnL 曲线（best-effort，不阻塞）
         profile = get_wallet_profile(wallet)
         pnl_history = get_wallet_pnl_history(wallet)
     except Exception as e:
         return _err(502, "DASHBOARD_PIPELINE_FAILED", f"{type(e).__name__}: {e}")
-
-    entry_time = (b.get("what_position_actions", {}).get("actions", {}) or {}).get("entry_time")
-    catalysts = _tag_catalyst_relations(b.get("catalysts", {}) or {}, entry_time)
 
     response = {
         "wallet": wallet,
@@ -403,11 +440,13 @@ def dashboard(wallet: str):
             "meta": b.get("meta", {}),
             "what_position_actions": b.get("what_position_actions", {}),
             "price_context": b.get("price_context", {}),
+            "what_the_bet": what_bet,                # ②补回：这一注在赌什么
+            "resolution_criteria": resolution,       # 官方结算规则原文
         },
-        "market": {"slug": _market_slug(cid), "market_id": cid},   # ③
+        "market": {"slug": slug, "market_id": cid},  # ③
         "behavior": behavior,                        # ④
-        "catalysts": catalysts,                      # ⑤ 世界催化剂（含 relation + price_reaction 符号）
-        "world_summary": b.get("organized_text"),    # ⑤ 市场综述（第三个 AI 诚实整理）
+        "news_stream": news_stream,                  # ⑤ 三源合并时间线（source 链接 + 反应符号）
+        "world_summary": world_summary,              # ⑤ 三源合并综述（巨鲸动态/事态进展）
         "reasoning": reasoning,                      # ⑥
     }
     _log(f"   ✓ 看板生成完毕（耗时 {time.time() - t0:.1f}s）")
