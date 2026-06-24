@@ -733,10 +733,75 @@ a.bf-cat-t:hover { color: var(--bf-accent); }
 .ctx-evt-note { font-size: 10.5px; color: var(--fg-3); font-style: italic; }
 .ctx-evt.blank .ctx-evt-fact { color: var(--neg); }
 
+/* ══ v3 统一看板 ════════════════════════════════════════════════════════════ */
+.navbtn.primary { color: var(--fg-1); border-color: var(--bf-accent); background: var(--accent-bg); }
+.navbtn.primary:hover, .navbtn.primary.active { background: rgba(0,229,255,0.16); box-shadow: 0 0 12px var(--accent-glow); }
+
+.card.bf.db { max-width: 920px; }
+.db-sec-tag { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--bf-accent); margin: 26px 0 12px; padding-bottom: 6px; border-bottom: 1px solid var(--line-1); }
+.db-sec-tag:first-child { margin-top: 4px; }
+.db-sec-tag.last { color: var(--fg-1); border-bottom-color: var(--bf-accent); }
+
+/* ① 身份 */
+.db-id { display: flex; align-items: center; justify-content: space-between; gap: 14px; flex-wrap: wrap; margin-bottom: 14px; }
+.db-id-stats { display: flex; gap: 16px; font-size: 11.5px; color: var(--fg-3); flex-wrap: wrap; }
+.db-id-stats b { font-family: var(--mono); color: var(--bf-accent); margin-left: 4px; text-shadow: 0 0 6px var(--accent-glow); }
+.db-flags { margin-top: 8px; }
+
+/* ② 现状 */
+.db-pos-head { margin: 0 0 14px; }
+.db-grid { grid-template-columns: repeat(2,1fr); margin: 0 0 6px; }
+
+/* ③ 实时盘面跳转 */
+.db-jump { display: inline-block; margin-top: 8px; font-size: 11px; color: var(--bf-accent); text-decoration: none; }
+.db-jump:hover { text-shadow: 0 0 8px var(--accent-glow); }
+
+/* ④⑤ 折叠 + 双栏 */
+.db-fold { margin: 22px 0 6px; border: 1px solid var(--line-1); border-radius: 3px; overflow: hidden; }
+.db-fold-h { display: flex; align-items: center; gap: 9px; padding: 12px 14px; cursor: pointer; background: var(--bg-2);
+  font-size: 12.5px; font-weight: 600; color: var(--fg-1); user-select: none; }
+.db-fold-h:hover { background: var(--bg-3); }
+.db-fold-arrow { color: var(--bf-accent); font-size: 11px; }
+.db-fold-sub { margin-left: auto; font-size: 10.5px; color: var(--fg-4); font-weight: 400; }
+.db-fold-body { overflow: hidden; transition: height 0.28s ease; }
+.db-fold-body > div { padding: 16px 14px; }
+.db-dual { display: grid; grid-template-columns: minmax(0,0.85fr) minmax(0,1.15fr); gap: 1px; background: var(--line-1); border: 1px solid var(--line-1); border-radius: 3px; overflow: hidden; }
+.db-dual-col { background: var(--bg-1); padding: 14px; min-width: 0; }
+.db-dual-h { font-family: var(--mono); font-size: 10px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--fg-3); margin-bottom: 12px; }
+.db-wsum { margin-bottom: 14px; padding-bottom: 12px; border-bottom: 1px solid var(--line-2); }
+.db-wsum .bf-narr { font-size: 12px; }
+.db-cats { margin: 0; }
+
+/* ⑥ Edge / Reasoning */
+.db-reason { border: 1px solid var(--line-1); border-left: 3px solid var(--fg-4); border-radius: 3px; padding: 14px 16px; background: var(--bg-2); }
+.db-reason.green { border-left-color: var(--pos); box-shadow: inset 0 0 30px var(--pos-bg); }
+.db-reason.amber { border-left-color: var(--amber); }
+.db-reason.red { border-left-color: var(--neg); box-shadow: inset 0 0 30px var(--neg-bg); }
+.db-reason.guard { border-left-color: var(--amber); background: var(--amber-2); }
+.db-reason-top { display: flex; align-items: center; gap: 14px; margin-bottom: 10px; }
+.db-call { font-family: var(--mono); font-size: 13px; font-weight: 700; letter-spacing: 0.04em; padding: 4px 12px; border-radius: 3px; border: 1px solid currentColor; }
+.db-call.green { color: var(--pos); background: var(--pos-bg); }
+.db-call.amber { color: var(--amber); background: rgba(243,168,42,0.10); }
+.db-call.red { color: var(--neg); background: var(--neg-bg); }
+.db-call.gray { color: var(--fg-3); }
+.db-conf { font-size: 12px; color: var(--fg-3); }
+.db-conf b { font-family: var(--mono); font-size: 14px; margin-left: 4px; }
+.db-conf b.green { color: var(--pos); } .db-conf b.amber { color: var(--amber); } .db-conf b.red { color: var(--neg); }
+.db-rchips { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 11px; }
+.db-rchip { font-family: var(--mono); font-size: 10px; color: var(--fg-2); background: var(--bg-1); border: 1px solid var(--line-1); padding: 2px 8px; border-radius: 2px; }
+.db-reason-text { font-size: 13px; line-height: 1.65; color: var(--fg-1); }
+.db-guard-h { font-family: var(--mono); font-size: 12px; font-weight: 700; color: var(--amber); margin-bottom: 7px; }
+.db-guard-msg { font-size: 12.5px; color: var(--fg-1); margin-bottom: 6px; }
+.db-guard-sub { font-size: 11px; color: var(--fg-3); }
+.db-disc { font-size: 11px; color: var(--fg-3); margin-top: 10px; font-style: italic; }
+
 @media (max-width: 680px) {
   .bf-grid { grid-template-columns: 1fr; }
   .bf-dialectic { grid-template-columns: 1fr; column-gap: 0; }
   .bf-col + .bf-col { border-left: none; border-top: 1px solid var(--line-1); padding-left: 0; padding-top: 16px; margin-top: 16px; }
   .ctx-split { grid-template-columns: 1fr; }
+  .db-grid { grid-template-columns: 1fr; }
+  .db-dual { grid-template-columns: 1fr; }
 }
 

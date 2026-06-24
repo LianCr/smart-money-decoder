@@ -14,6 +14,7 @@ const CONF_COLOR = { high: "var(--green)", medium: "var(--amber)", low: "var(--r
 const STAGES = ["定位最大政治仓位", "追溯链上建仓时间", "检索时间窗新闻", "AI 解读 / 置信度矩阵"];
 const STAGES_BRIEFING = ["画像 · 这人靠不靠谱", "动作 · 建仓/对冲/盈亏", "价格 · 空间/赔率", "双向催化剂 + 市场测谎", "第三个 AI 诚实整理"];
 const STAGES_CONTEXT = ["定位顶仓盘面", "扫描价格异动(≤as-of)", "GDELT 三层洗催化剂", "巨鲸 48h 进出动作流", "冷静客观宏观综述"];
+const STAGES_BOARD = ["身份+体量画像", "这一注+现状", "实时盘面嵌入", "行为流 × 世界催化剂", "Edge 矩阵 + 局势判断"];
 
 // 首页示例钱包：地址已正向 /analyze 验证、能产出精彩政治盘卡（2026-06-15 实测）。
 // 置信度全谱：ImJustKen=高(Netanyahu) / debased=中(Vance 2028) / denizz=低(+555% 美伊)。
@@ -171,6 +172,13 @@ export default function App() {
         </div>
         <div className="topnav">
           <button
+            className={`navbtn primary ${tab === "board" ? "active" : ""}`}
+            onClick={() => setTab(tab === "board" ? "decode" : "board")}
+            title="v3 统一看板：身份+这一注+实时盘面+行为×催化剂+Edge 一屏看全"
+          >
+            ★ 统一看板<span className="navbtn-tag">v3</span>
+          </button>
+          <button
             className={`navbtn ${tab === "briefing" ? "active" : ""}`}
             onClick={() => setTab(tab === "briefing" ? "decode" : "briefing")}
             title="完整聪明钱简报（v3）"
@@ -194,7 +202,8 @@ export default function App() {
           </button>
         </div>
       </div>
-      {tab === "decode" ? <DecodeView /> : tab === "briefing" ? <BriefingView />
+      {tab === "decode" ? <DecodeView /> : tab === "board" ? <BoardView />
+        : tab === "briefing" ? <BriefingView />
         : tab === "context" ? <ContextView /> : <TrackRecordView />}
     </div>
   );
@@ -825,6 +834,239 @@ function ContextView() {
       {loading && <LoadingStages stages={STAGES_CONTEXT} sub="盘面 → 价格异动 → 催化剂 → 巨鲸动作 → 综述" />}
       {error && <div className="error"><div className="r">{error.reason}</div><div>{error.message}</div></div>}
       {data && <ContextBody d={data} />}
+    </>
+  );
+}
+
+// ── v3 统一看板（①身份 ②这一注 ③实时盘面 ④⑤行为×催化剂 ⑥Edge）─────────────
+const FOLLOW_LABEL_CN = { "ROOM LEFT": "还有空间", CHASED: "已追高", "NO BASIS": "没依据" };
+const CONF_CN = { high: "高", medium: "中", low: "低" };
+
+function Fold({ title, sub, children }) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef(null);
+  const [h, setH] = useState(0);
+  useEffect(() => { setH(open && ref.current ? ref.current.scrollHeight : 0); }, [open]);
+  return (
+    <div className={`db-fold ${open ? "open" : ""}`}>
+      <div className="db-fold-h" onClick={() => setOpen(!open)}>
+        <span className="db-fold-arrow">{open ? "▾" : "▸"}</span>
+        <span className="db-fold-t">{title}</span>
+        {sub && <span className="db-fold-sub">{sub}</span>}
+      </div>
+      <div className="db-fold-body" style={{ height: open ? h : 0 }}>
+        <div ref={ref}>{children}</div>
+      </div>
+    </div>
+  );
+}
+
+// ⑤ 世界催化剂列（板专属：在 Briefing 的 CatColumn 上加 BEFORE/AFTER ENTRY 关系标，不碰旧组件）
+function DbCatColumn({ title, side, items }) {
+  return (
+    <div className={`bf-col ${side}`}>
+      <div className="bf-col-h">{title} <span className="bf-col-n">{items.length}</span></div>
+      {items.length === 0 && <div className="bf-empty">如实留空</div>}
+      {items.map((c, i) => {
+        const rx = reactionChip(c.price_reaction);
+        const rel = RELATION[c.relation];
+        return (
+          <div className="bf-cat" key={i}>
+            <div className="bf-cat-top">
+              <span className={`mat ${HARD_MATERIALS.has(c.type) ? "hard" : "soft"}`}>{c.type}</span>
+              {rel && <span className={`rtag ${rel.cls}`}>{rel.label}</span>}
+              <span className="bf-cat-date num">{c.date}</span>
+            </div>
+            {c.url ? <a className="bf-cat-t" href={c.url} target="_blank" rel="noreferrer">{c.title}</a>
+                   : <div className="bf-cat-t">{c.title}</div>}
+            <div className="bf-cat-why">{c.reason}</div>
+            <span className={`rx ${rx.cls}`}>{rx.txt}</span>
+            {c.price_reaction && c.price_reaction.same_window && (
+              <div className="bf-samewin">同窗合计 · 不可归因到单条</div>
+            )}
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+function BoardReasoning({ r }) {
+  if (!r) return null;
+  if (r.guard_tripped) {
+    return (
+      <div className="db-reason guard">
+        <div className="db-guard-h">🛡 诚实守卫拦截 · [{r.guard_tripped}]</div>
+        <div className="db-guard-msg">{r.guard_message}</div>
+        <div className="db-guard-sub">该判断触发守卫（如时长推算/篡改置信度），按设计不输出 reasoning——守卫真实发火，不是摆设。</div>
+      </div>
+    );
+  }
+  const cls = FOLLOW_CLASS[r.follow_call] || "gray";
+  return (
+    <div className={`db-reason ${cls}`}>
+      <div className="db-reason-top">
+        <span className={`db-call ${cls}`}>{FOLLOW_LABEL_CN[r.follow_call] || r.follow_call}</span>
+        <span className="db-conf">信心 <b className={cls}>{CONF_CN[r.confidence] || r.confidence}</b></span>
+      </div>
+      {r.confidence_reasons && r.confidence_reasons.length > 0 && (
+        <div className="db-rchips">
+          {r.confidence_reasons.map((x, i) => <span className="db-rchip" key={i}>{x}</span>)}
+        </div>
+      )}
+      <div className="db-reason-text">{r.reasoning}</div>
+    </div>
+  );
+}
+
+function BoardBody({ d }) {
+  const id = d.identity || {};
+  const profile = { ...(id.profile || {}), address: id.profile?.address || d.wallet };
+  const who = id.who_trader_profile || {};
+  const rk = who.official_rank || {};
+  const q = who.quality || {};
+  const pol = (who.category_specialization || []).find((c) => /Politics/i.test(c.category || ""));
+  const pos = d.position || {};
+  const m = pos.meta || {};
+  const wpa = pos.what_position_actions || {};
+  const act = wpa.actions || {};
+  const ts = wpa.two_side_distribution || {};
+  const un = wpa.unrealized || {};
+  const pc = pos.price_context || {};
+  const cats = d.catalysts || {};
+  const wrLie = Number(rk.win_rate) > 0.8 && Number(rk.total_pnl) < 0;
+  const upct = un.unrealized_pct;
+
+  return (
+    <div className="card bf db">
+      {/* ① 身份 + 体量 */}
+      <div className="db-sec-tag">① 钱包身份 · 体量</div>
+      <div className="db-id">
+        <WalletHeader profile={profile} />
+        <div className="db-id-stats">
+          <span>官方榜 <b className="num">#{rk.rank ?? "—"}</b></span>
+          <span>胜率 <b className="num">{rk.win_rate ? (Number(rk.win_rate) * 100).toFixed(1) + "%" : "—"}</b></span>
+          {pol && <span>政治盘 <b className="num">{(pol.win_rate * 100).toFixed(0)}% · {money(Number(pol.total_pnl))}</b></span>}
+        </div>
+      </div>
+      {id.pnl_history && id.pnl_history.length > 1 && <PnlChart points={id.pnl_history} />}
+      {wrLie && <div className="bf-lie">⚠ 胜率谎言:高胜率但净盈亏为负 — 看净盈亏,非胜率</div>}
+      {q.flagged_metrics && <div className="bf-sub db-flags">风险标记: {flagsCN(q.flagged_metrics)}</div>}
+
+      {/* ② 这一注 + 现状 */}
+      <div className="db-sec-tag">② 这一注 · 现状</div>
+      <div className="c-head db-pos-head">
+        <div>
+          <div className="q">{m.market}</div>
+          <div className="meta">{m.settle} · 建仓 {act.entry_time?.slice(0, 10) || "—"}</div>
+        </div>
+        <span className="outcome">{(m.analyzed_side || "").toUpperCase()}</span>
+      </div>
+      <div className="bf-grid db-grid">
+        <div className="bf-mini">
+          <div className="bf-mini-h">动作 · 他做了什么</div>
+          <div className="bf-kv"><span>均价 / 成本</span><b className="num">{price(act.avg_entry_price)} · {money(act.net_cost_usd)}</b></div>
+          <div className="bf-kv"><span>买入笔数</span><b className="num">{act.num_buys ?? "—"}</b></div>
+          <div className="bf-kv"><span>盈亏</span><b className={`num ${Number(un.unrealized_pnl_usd) >= 0 ? "pos" : "neg"}`}>{money(un.unrealized_pnl_usd)} {typeof upct === "number" ? `(${upct >= 0 ? "+" : ""}${upct}%)` : ""}</b></div>
+          <div className="bf-note">{ts.hedged ? "两边对冲 · 做市/非单边信念" : "单边建仓 · 信念注"}</div>
+        </div>
+        <div className="bf-mini">
+          <div className="bf-mini-h">价格 · Entry ↗ Current</div>
+          <div className="bf-kv"><span>入场 → 现价</span><b className="num">{price(act.avg_entry_price)} → {price(pc.current_price)}</b></div>
+          <div className="bf-kv"><span>vs 入场 / 隐含概率</span><b className="num">{typeof pc.price_delta_pct === "number" ? (pc.price_delta_pct >= 0 ? "+" : "") + pc.price_delta_pct + "%" : "—"} · {pc.implied_probability_pct}%</b></div>
+          <div className="bf-kv"><span>剩余空间(赢) / 赔率</span><b className="num">{pc.remaining_upside_pct_if_win}% · {pc.odds_to_one ?? "—"}</b></div>
+        </div>
+      </div>
+
+      {/* ③ 实时盘面 */}
+      <div className="db-sec-tag">③ 实时盘面 · Polymarket</div>
+      {d.market?.slug
+        ? <><PolymarketEmbed slug={d.market.slug} />
+            <a className="db-jump num" href={`https://polymarket.com/market/${d.market.slug}`} target="_blank" rel="noreferrer">在 Polymarket 打开 ↗</a></>
+        : <div className="ctx-empty">无 slug,实时盘面不可嵌入</div>}
+
+      {/* ④⑤ 双栏对照（默认折叠）*/}
+      <Fold title="④⑤ 钱包动作流 × 世界催化剂" sub="点开看双栏对照（行为 vs 新闻）">
+        <div className="db-dual">
+          <div className="db-dual-col">
+            <div className="db-dual-h">④ 钱包动作流 · 48h</div>
+            <BehaviorFlag b={d.behavior} />
+          </div>
+          <div className="db-dual-col">
+            <div className="db-dual-h">⑤ 世界催化剂 · 市场综述 + 证据</div>
+            {d.world_summary && <div className="db-wsum"><Narrative text={d.world_summary} /></div>}
+            <div className="bf-dialectic db-cats">
+              <DbCatColumn title="支持 · 正向" side="pos" items={cats.positive || []} />
+              <DbCatColumn title="威胁 · 负向" side="neg" items={cats.negative || []} />
+            </div>
+          </div>
+        </div>
+      </Fold>
+
+      {/* ⑥ Edge / Reasoning */}
+      <div className="db-sec-tag last">⑥ Edge · 局势性质判断（不替你决定）</div>
+      <BoardReasoning r={d.reasoning} />
+      <div className="db-disc">⑥ 只判断"局势性质"(还有多少空间 / 风险在哪 / 市场认不认这个方向),从不替你决定跟不跟 · 天平由你裁决</div>
+
+      <div className="foot">①-⑤ 全部公开数据 + 代码计算,⑥ 置信度由代码矩阵算定、AI 只解释不改判 · 非投资建议</div>
+    </div>
+  );
+}
+
+function BoardView() {
+  const [wallet, setWallet] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [data, setData] = useState(null);
+  const [error, setError] = useState(null);
+
+  async function run(addrArg) {
+    const w = (typeof addrArg === "string" ? addrArg : wallet).trim();
+    if (!w) return;
+    setLoading(true); setData(null); setError(null);
+    try {
+      const resp = await fetch(`${API}/dashboard?wallet=${encodeURIComponent(w)}`);
+      const j = await resp.json();
+      if (!resp.ok || j.error) setError({ reason: j.error || `HTTP ${resp.status}`, message: j.message || "请求失败" });
+      else setData(j);
+    } catch (e) {
+      setError({ reason: "NETWORK", message: `无法连接后端 ${API}，请确认 uvicorn 已启动。` });
+    } finally { setLoading(false); }
+  }
+
+  const showHome = !data && !loading && !error;
+  return (
+    <>
+      {!data && !error && (
+        <div className="console-sub">输入聪明钱钱包,生成 v3 统一看板:身份体量 → 这一注 → 实时盘面 → 行为×催化剂 → Edge 判断,一屏看全</div>
+      )}
+      <div className={`cmdbar ${loading ? "busy" : ""}`}>
+        <span className="cmd-prompt">&gt;</span>
+        {showHome && !wallet && <span className="cmd-caret" />}
+        <input className="cmd-input num" value={wallet} onChange={(e) => setWallet(e.target.value)}
+          onKeyDown={(e) => e.key === "Enter" && run()} placeholder="输入 Polymarket 钱包地址" spellCheck={false} />
+        <button className="cmd-trigger" onClick={() => run()} disabled={loading || !wallet.trim()}>
+          {loading ? "生成中" : "生成看板"}
+        </button>
+      </div>
+
+      {showHome && (
+        <div className="monitor">
+          <div className="mon-head">试试这几个大户 · 点击生成统一看板</div>
+          <div className="mon-list">
+            {EXAMPLES.map((e) => (
+              <button className="mon-row" key={e.addr} onClick={() => { setWallet(e.addr); run(e.addr); }}>
+                <span className="mon-dot" /><span className="mon-nick">{e.nick}</span>
+                <span className="mon-addr num">{abbrev(e.addr)}</span>
+                <span className="mon-pnl"><span className="mon-pnl-lab">累计盈利</span><span className="mon-pnl-val num">{e.pnl}</span></span>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {loading && <LoadingStages stages={STAGES_BOARD} sub="身份 → 这一注 → 盘面 → 行为×催化剂 → Edge" />}
+      {error && <div className="error"><div className="r">{error.reason}</div><div>{error.message}</div></div>}
+      {data && <BoardBody d={data} />}
     </>
   );
 }
