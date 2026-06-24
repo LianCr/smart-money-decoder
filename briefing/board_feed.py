@@ -89,11 +89,13 @@ def build_news_stream(gdelt_events, tavily_cats, tok, as_of):
         seen.add(k)
         url = (e.get("url") or "").strip()
         src = e.get("source")
+        # GDELT 不经 dual_catalyst 分类 → 方向标为 None（诚实：不杜撰支持/威胁）
         items.append({"date": e.get("timestamp"), "title": e.get("title"),
                       "summary": e.get("fact_summary"),
                       "url": url or (f"https://{src}" if src else ""),   # 老缓存无 url → 退化到来源域名
-                      "source": src, "origin": "GDELT"})
-    for side in ("positive", "negative"):           # Tavily（briefing catalysts，含真实 url）
+                      "origin": "GDELT", "direction": None})
+    # Tavily（briefing catalysts）：方向标直接取 dual_catalyst 已分好的正负
+    for side, direction in (("positive", "support"), ("negative", "threat")):
         for c in (tavily_cats.get(side) or []):
             k = _norm(c.get("url"), c.get("title"))
             if k in seen:
@@ -101,7 +103,7 @@ def build_news_stream(gdelt_events, tavily_cats, tok, as_of):
             seen.add(k)
             items.append({"date": c.get("date"), "title": c.get("title"),
                           "summary": c.get("reason"), "url": (c.get("url") or "").strip(),
-                          "source": _domain(c.get("url")), "origin": "Tavily"})
+                          "origin": "Tavily", "direction": direction})
     daycount = {}
     for it in items:
         if it["date"]:

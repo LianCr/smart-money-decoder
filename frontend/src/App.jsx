@@ -903,27 +903,30 @@ function ReactionTag({ r }) {
   const mv = `${r.move_pct > 0 ? "+" : ""}${r.move_pct}%`;
   return <span className={`rx ${m.cls}`}>{m.sym}{m.txt} {mv}</span>;
 }
+// 方向标=dual_catalyst 已分好的正负（支持/威胁）；GDELT 未分类→不杜撰方向
+const DIR_META = { support: { txt: "支持", cls: "support" }, threat: { txt: "威胁", cls: "threat" } };
 function NewsStream({ items }) {
   if (!items || !items.length)
     return <div className="bf-empty">该时点窗内三源都没洗出对题新闻 — 如实留空</div>;
   return (
     <div className="db-stream">
-      {items.map((it, i) => (
-        <div className="db-news" key={i}>
-          <div className="db-news-top">
-            <span className="db-news-date num">{it.date || "—"}</span>
-            <span className={`db-origin ${it.origin === "GDELT" ? "g" : "t"}`}>{it.origin}</span>
-            <ReactionTag r={it.reaction} />
+      {items.map((it, i) => {
+        const dir = DIR_META[it.direction];
+        return (
+          <div className={`db-news ${it.direction || ""}`} key={i}>
+            <div className="db-news-top">
+              <span className="db-news-date num">{it.date || "—"}</span>
+              {dir && <span className={`db-dir ${dir.cls}`}>{dir.txt}</span>}
+              <span className={`db-origin ${it.origin === "GDELT" ? "g" : "t"}`}>{it.origin}</span>
+              <ReactionTag r={it.reaction} />
+            </div>
+            {it.url ? <a className="db-news-t" href={it.url} target="_blank" rel="noreferrer">{it.title}</a>
+                    : <div className="db-news-t">{it.title}</div>}
+            {it.summary && <div className="db-news-s">{it.summary}</div>}
+            {it.same_window && <div className="db-news-foot"><span className="db-news-sw">同日多条 · 前后变动为合计,不可归因到单条</span></div>}
           </div>
-          {it.url ? <a className="db-news-t" href={it.url} target="_blank" rel="noreferrer">{it.title}</a>
-                  : <div className="db-news-t">{it.title}</div>}
-          {it.summary && <div className="db-news-s">{it.summary}</div>}
-          <div className="db-news-foot">
-            {it.source && <span className="db-news-src">{it.source}</span>}
-            {it.same_window && <span className="db-news-sw">同日多条 · 前后变动为合计,不可归因到单条</span>}
-          </div>
-        </div>
-      ))}
+        );
+      })}
     </div>
   );
 }

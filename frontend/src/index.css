@@ -811,6 +811,11 @@ a.bf-cat-t:hover { color: var(--bf-accent); }
 .db-stream::before { content: ""; position: absolute; left: 3px; top: 4px; bottom: 4px; width: 1px; background: var(--line-1); }
 .db-news { position: relative; padding: 0 0 15px; }
 .db-news::before { content: ""; position: absolute; left: -16px; top: 5px; width: 7px; height: 7px; border-radius: 50%; background: var(--bg-3); border: 1px solid var(--fg-4); }
+.db-news.support::before { background: var(--pos); border-color: var(--pos); box-shadow: 0 0 6px var(--pos-glow); }
+.db-news.threat::before { background: var(--neg); border-color: var(--neg); box-shadow: 0 0 6px var(--neg-glow); }
+.db-dir { font-family: var(--mono); font-size: 9.5px; font-weight: 700; letter-spacing: 0.05em; padding: 1px 7px; border-radius: 2px; border: 1px solid currentColor; }
+.db-dir.support { color: var(--pos); background: var(--pos-bg); }
+.db-dir.threat { color: var(--neg); background: var(--neg-bg); }
 .db-news-top { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 5px; }
 .db-news-date { font-size: 11px; color: var(--fg-3); }
 .db-origin { font-family: var(--mono); font-size: 9px; letter-spacing: 0.05em; padding: 1px 6px; border-radius: 2px; border: 1px solid var(--line-1); }
