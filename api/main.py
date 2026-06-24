@@ -45,6 +45,7 @@ from briefing.market_context import get_behavior_flags
 from analyzer.reasoner_v3 import reason_v3, ReasonerError
 from fetcher.heisenberg import call as hz_call, results as hz_results, AGENTS as HZ_AGENTS
 from briefing import board_feed
+import scorecard
 
 app = FastAPI(title="smart-money-decoder API", version="1.0")
 
@@ -258,6 +259,12 @@ def analyze(wallet: str):
         _log(f"   💾 已缓存 {cache_key}（同钱包当天再点零 token、秒回）")
     except Exception:
         pass
+    # 📒 诚实记分牌钩子（best-effort，绝不阻塞）：v2 decode 判断存档
+    scorecard.record_judgment(
+        wallet=wallet, cid=position["market_id"], market_question=position["market_question"],
+        outcome=position["outcome"], market_price=position["current_price"],
+        follow_call=card.get("follow_call"), confidence=card.get("confidence"),
+        source="decode", settle_date=position.get("resolution_date"))
     return response
 
 
@@ -478,7 +485,33 @@ def dashboard(wallet: str):
         _log(f"   💾 已缓存 {cache_key}（同钱包零 token 秒回）")
     except Exception:
         pass
+    # 📒 诚实记分牌钩子（best-effort）：⑥ board 判断存档（守卫拦截无 follow_call 时不记）
+    if reasoning.get("follow_call"):
+        scorecard.record_judgment(
+            wallet=wallet, cid=cid, market_question=market_q, outcome=outcome,
+            market_price=(b.get("price_context", {}) or {}).get("current_price"),
+            follow_call=reasoning["follow_call"], confidence=reasoning["confidence"],
+            source="board", settle_date=(b.get("meta", {}) or {}).get("settle"))
     return response
+
+
+@app.get("/scorecard")
+def scorecard_endpoint():
+    """诚实记分牌：增量抓结算(574,免费) → 纯代码冷数字 + 行表（不调 AI、不算收益率）。"""
+    def _resolve_574(cid):
+        m = (hz_results(hz_call(HZ_AGENTS["markets"][0], {"condition_id": cid})) or
+             hz_results(hz_call(HZ_AGENTS["markets"][0], {"condition_id": cid, "closed": "True"})))
+        if not m:
+            return None
+        w = str(m[0].get("winning_outcome") or "").strip()
+        return w if w in ("Yes", "No") else None
+    try:
+        filled = scorecard.fetch_settlements(_resolve_574)
+        if filled:
+            _log(f"   📒 记分牌新结算 {filled} 条")
+    except Exception as e:
+        _log(f"   ⚠ 记分牌抓结算失败: {e}")
+    return scorecard.compute_scorecard()
 
 
 @app.get("/briefing")

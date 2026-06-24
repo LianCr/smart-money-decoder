@@ -1124,40 +1124,112 @@ function BoardView() {
 const CALL_PLAIN = { "NO BASIS": "别跟", CHASED: "可跟·已追高", "ROOM LEFT": "可跟·有空间" };
 const CALL_CLS = { "NO BASIS": "red", CHASED: "amber", "ROOM LEFT": "green" };
 
+// ── 诚实记分牌（装上后累积的真实 decode/看板判断的自我验证）──────────────────
+const SC_STATUS = {
+  hit: { txt: "✓ 一致", cls: "up" }, miss: { txt: "✗ 不一致", cls: "down" },
+  pending: { txt: "待结算", cls: "pending" }, nobasis: { txt: "NO BASIS", cls: "nb" },
+};
+const SC_SOURCE = { decode: "v2·解读", board: "v3·看板" };
+
+function LiveScorecard({ sc }) {
+  if (!sc || sc.error) return null;
+  const rate = sc.hit_rate_pct;
+  const settledRows = (sc.rows || []).filter((r) => r.status !== "nobasis");
+  const nbRows = (sc.rows || []).filter((r) => r.status === "nobasis");
+  return (
+    <div className="sc">
+      <div className="sc-head">
+        <div className="sc-title">诚实记分牌 · 我的判断后来被现实证明对了多少</div>
+        <div className="sc-sub">从装上往后累积的真实 decode / 看板判断 → 盘结算后回来对账。与下方历史回测是两套独立机制。</div>
+      </div>
+      <div className="sc-nums">
+        <div className="sc-num"><b className="num">{sc.tested}</b><span>测了</span></div>
+        <div className="sc-num"><b className="num">{sc.settled}</b><span>已结算</span></div>
+        <div className="sc-num"><b className="num up">{sc.direction_consistent}</b><span>方向一致</span></div>
+        <div className="sc-num big"><b className="num">{rate == null ? "—" : rate + "%"}</b><span>命中率</span></div>
+        <div className="sc-num"><b className="num">{sc.nobasis_total}</b><span>NO BASIS</span></div>
+      </div>
+      <div className="sc-discipline">命中率 = <b>判断方向命中</b>，不是跟单收益率 · NO BASIS 不计入命中率 · 顶上冷数字纯代码算，不经 AI</div>
+
+      {sc.tested === 0 ? (
+        <div className="sc-empty">还没有记录 — 去解读台 / 统一看板跑几个钱包，判断就会存进档案；等这些盘在数据世界里真结算，这里才长出命中率。第一天空是正常的。</div>
+      ) : (
+        <div className="sc-rows">
+          {settledRows.map((r, i) => {
+            const st = SC_STATUS[r.status] || SC_STATUS.pending;
+            return (
+              <div className="sc-row" key={i}>
+                <span className="sc-src">{SC_SOURCE[r.source] || r.source}</span>
+                <span className="sc-q">{r.market_question}</span>
+                <span className="sc-call num">判 {FOLLOW_LABEL_CN[r.follow_call] || r.follow_call} · 押 {r.outcome}</span>
+                <span className={`sc-status ${st.cls}`}>{st.txt}{(r.status === "hit" || r.status === "miss") && r.winner ? ` · 赢家 ${r.winner}` : ""}</span>
+              </div>
+            );
+          })}
+        </div>
+      )}
+
+      {sc.nobasis_total > 0 && (
+        <div className="sc-nobasis">
+          <div className="sc-nobasis-h">NO BASIS 单独区 · {sc.nobasis_total} 个（不进命中率）· 其中事后看其实有清晰方向 <b className="down">{sc.nobasis_clear_in_hindsight}</b> 个（当时过谨慎、错过）</div>
+          {nbRows.map((r, i) => (
+            <div className="sc-row nb" key={i}>
+              <span className="sc-src">{SC_SOURCE[r.source] || r.source}</span>
+              <span className="sc-q">{r.market_question}</span>
+              <span className="sc-call num">押 {r.outcome}</span>
+              <span className="sc-status nb">{r.winner ? (r.winner === r.outcome ? "事后有方向" : "正确回避") : "待结算"}</span>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
 function TrackRecordView() {
   const [data, setData] = useState(null);
+  const [sc, setSc] = useState(null);
   const [error, setError] = useState(null);
   useEffect(() => {
     fetch(`${API}/backtest`).then((r) => r.json()).then(setData)
       .catch(() => setError("无法连接后端 /backtest"));
+    fetch(`${API}/scorecard`).then((r) => r.json()).then(setSc).catch(() => {});
   }, []);
-  if (error) return <div className="error"><div className="r">NETWORK</div><div>{error}</div></div>;
-  if (!data) return <div className="stages"><div className="lead">LOADING TRACK RECORD…</div></div>;
-  if (!data.cases || !data.cases.length) return <div className="method">案例数据缺失（backtest/cases.json 未就位）</div>;
 
-  const s = data.summary || {};
+  const s = (data && data.summary) || {};
   const wrong = (s.total || 0) - (s.directional_correct || 0);
   return (
     <>
-      <div className="tr-hero">
-        <div className="tr-hero-num num">
-          <span className="up">{s.directional_correct}</span><span className="tr-unit"> 对</span>
-          <span className="tr-slash"> / </span>
-          <span className="down">{wrong}</span><span className="tr-unit"> 错</span>
-        </div>
-        <div className="tr-hero-txt">
-          <div className="tr-hero-h">AI 判断成绩单</div>
-          <div className="tr-hero-sub">{s.total} 个已结算的真实政治盘 · 每个都在结算前重放 AI 当时的判断，跟真实结果对账</div>
-        </div>
-      </div>
+      <LiveScorecard sc={sc} />
 
-      <div className="bt-list">
-        {data.cases.map((c, i) => <CaseRow key={i} c={c} />)}
-      </div>
+      <div className="sc-divider">↓ 历史回测（v2 已封板·静态零 token，与上方实时记分牌相互独立）</div>
 
-      {data.lift && <LiftSummary lift={data.lift} />}
+      {error ? <div className="error"><div className="r">NETWORK</div><div>{error}</div></div>
+       : !data ? <div className="stages"><div className="lead">LOADING TRACK RECORD…</div></div>
+       : !data.cases || !data.cases.length ? <div className="method">案例数据缺失（backtest/cases.json 未就位）</div>
+       : (
+        <>
+          <div className="tr-hero">
+            <div className="tr-hero-num num">
+              <span className="up">{s.directional_correct}</span><span className="tr-unit"> 对</span>
+              <span className="tr-slash"> / </span>
+              <span className="down">{wrong}</span><span className="tr-unit"> 错</span>
+            </div>
+            <div className="tr-hero-txt">
+              <div className="tr-hero-h">AI 判断成绩单</div>
+              <div className="tr-hero-sub">{s.total} 个已结算的真实政治盘 · 每个都在结算前重放 AI 当时的判断，跟真实结果对账</div>
+            </div>
+          </div>
 
-      <div className="foot">案例来自历史回测：结算前重放 decoder、与真实结算对照 · 静态、零 token</div>
+          <div className="bt-list">
+            {data.cases.map((c, i) => <CaseRow key={i} c={c} />)}
+          </div>
+
+          {data.lift && <LiftSummary lift={data.lift} />}
+
+          <div className="foot">案例来自历史回测：结算前重放 decoder、与真实结算对照 · 静态、零 token</div>
+        </>
+      )}
     </>
   );
 }
