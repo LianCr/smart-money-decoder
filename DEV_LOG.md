@@ -6,6 +6,18 @@
 
 ---
 
+## 2026-06-23 · v3 收官后打磨 — ⑤ 三源新闻流 + 双向方向标 + 诚实记分牌
+
+- **⑤ 三源合并新闻流 `briefing/board_feed.py`**（纯组合层,不碰封板）：综述+时间线都吃 **GDELT(market_context 缓存)+Tavily(briefing)+gamma `context_description`** 三源。每条新闻：可点击 source 链接 + **市场反应符号**(↑印证/↓不买账+幅度,统一口径=持有侧价前后窗涨跌,复用 `compute_reaction` 不改它,纪律"前后变动非导致")。② 补回 What-the-bet(grounded 在 gamma `resolution_criteria`)。给 ⑤②AI(综述+what_bet) 加独立缓存→改结构零 token 重建。
+  - **诊断结论(按 empty_field_guide)**：Tavily"市场反应不可知"是**诚实降级非 bug**——board_feed 与简报自身 price_reaction 逐条对齐(Lula 6-10 +9.76%印证 / Trump 6-19 -3.79%微弱),denizz 全"不可知"纯因新闻全卡在 as_of 当天(防泄漏窗超界)。published_at 喂对了。
+  - **方向标融进时间线**：每条新闻带"支持/威胁"——**直接取 dual_catalyst 已分好的正负**(Tavily positive→支持/negative→威胁),GDELT 未分类→**不杜撰方向**标中性。保留单条时间线(不回退双栏)。方向标用文字、不和反应符号撞箭头。去掉冗余 source 标。
+- **诚实记分牌 `scorecard.py`**（decode/board 判断的自我验证,产品唯一能答"我的判断后来被现实证明对了多少"）：
+  - **存档钩子**：`record_judgment`(key=钱包_仓_来源,更新不灌水、已结算结果绝不覆盖) 打在 `/analyze`(source=decode·v2矩阵)+`/dashboard`(source=board·v3⑥),api 层 best-effort,封板模块零改。`.data/scorecard.json`(gitignored,装上后累积,第一天空=正常,绝不回填)。
+  - **增量抓结算**：`/scorecard` 调 `fetch_settlements`(只填 final_result 空的)→ heisenberg **574** 拿 `winning_outcome`(**实测=字面 "Yes"/"No",与 gamma argmax 完全一致**)。`compute_scorecard` 纯代码冷数字。
+  - **三灵魂红线(落码)**：① 顶上=判断方向命中率,永不算跟单收益率(无任何 $ 数学);② NO BASIS 不进命中率,单列(+"事后看其实有清晰方向"自审);③ 顶上纯代码、不调 AI。
+  - **验证**：574 结算格式(真实已结算盘)✓ · 命中/失手/nobasis 数学(合成 50% 精确)✓ · 待结算+已结算两 UI 态 ✓。前端记分牌置于 Track Record 历史回测**之上**(回测一行没删),v2/v3 来源标。**~0 token**(存档=代码、抓结算=574免费)。
+  - **待验证**：端到端"真结算→574填→命中率长出"在真实时间推进下尚未观察(开放盘暂全待结算,正常)。
+
 ## 2026-06-23 · v3 收官 — 统一看板（①-⑥）+ ⑥ Edge/Reasoning
 
 - **统一看板**：把 Decode / Briefing / Context 三个分散版本的长板合并成一屏 6 段——①身份+体量(头像+PnL曲线+官方榜/胜率/政治盘专长) · ②这一注+现状 · ③实时盘面(Polymarket 嵌入) · ④⑤折叠双栏(钱包48h行为流 × 世界催化剂,催化剂带 BEFORE/AFTER ENTRY + ↑↓市场反应符号+幅度) · ⑥Edge。**旧三 tab 原封保留(纯增量,一行没删)**。`/dashboard` 端点复用已封板模块输出(briefing + 行为流 + ⑥ + PnL曲线)，整份按 (钱包,as_of) 硬缓存→重复零 token。
