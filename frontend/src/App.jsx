@@ -891,6 +891,43 @@ function DbCatColumn({ title, side, items }) {
   );
 }
 
+// ⑤ 时间线新闻流 · 市场反应符号（统一口径:持有侧价格前后涨跌,非该新闻导致）
+const REACT_SYM = {
+  confirm: { sym: "↑", txt: "印证", cls: "rx-good" },
+  reject:  { sym: "↓", txt: "不买账", cls: "rx-bad" },
+  weak:    { sym: "·", txt: "微弱", cls: "rx-weak" },
+};
+function ReactionTag({ r }) {
+  if (!r || !r.available) return <span className="rx rx-na">市场反应不可知</span>;
+  const m = REACT_SYM[r.kind] || REACT_SYM.weak;
+  const mv = `${r.move_pct > 0 ? "+" : ""}${r.move_pct}%`;
+  return <span className={`rx ${m.cls}`}>{m.sym}{m.txt} {mv}</span>;
+}
+function NewsStream({ items }) {
+  if (!items || !items.length)
+    return <div className="bf-empty">该时点窗内三源都没洗出对题新闻 — 如实留空</div>;
+  return (
+    <div className="db-stream">
+      {items.map((it, i) => (
+        <div className="db-news" key={i}>
+          <div className="db-news-top">
+            <span className="db-news-date num">{it.date || "—"}</span>
+            <span className={`db-origin ${it.origin === "GDELT" ? "g" : "t"}`}>{it.origin}</span>
+            <ReactionTag r={it.reaction} />
+          </div>
+          {it.url ? <a className="db-news-t" href={it.url} target="_blank" rel="noreferrer">{it.title}</a>
+                  : <div className="db-news-t">{it.title}</div>}
+          {it.summary && <div className="db-news-s">{it.summary}</div>}
+          <div className="db-news-foot">
+            {it.source && <span className="db-news-src">{it.source}</span>}
+            {it.same_window && <span className="db-news-sw">同日多条 · 前后变动为合计,不可归因到单条</span>}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
 function BoardReasoning({ r }) {
   if (!r) return null;
   if (r.guard_tripped) {
@@ -933,7 +970,6 @@ function BoardBody({ d }) {
   const ts = wpa.two_side_distribution || {};
   const un = wpa.unrealized || {};
   const pc = pos.price_context || {};
-  const cats = d.catalysts || {};
   const wrLie = Number(rk.win_rate) > 0.8 && Number(rk.total_pnl) < 0;
   const upct = un.unrealized_pct;
 
@@ -962,6 +998,18 @@ function BoardBody({ d }) {
         </div>
         <span className="outcome">{(m.analyzed_side || "").toUpperCase()}</span>
       </div>
+      {(pos.what_the_bet || pos.resolution_criteria) && (
+        <div className="db-whatbet">
+          <div className="db-whatbet-h">这一注在赌什么</div>
+          {pos.what_the_bet && <div className="db-whatbet-t">{renderInline(pos.what_the_bet)}</div>}
+          {pos.resolution_criteria && (
+            <details className="db-rc">
+              <summary>官方结算规则原文（什么算赢）</summary>
+              <div className="db-rc-body">{pos.resolution_criteria}</div>
+            </details>
+          )}
+        </div>
+      )}
       <div className="bf-grid db-grid">
         <div className="bf-mini">
           <div className="bf-mini-h">动作 · 他做了什么</div>
@@ -985,20 +1033,18 @@ function BoardBody({ d }) {
             <a className="db-jump num" href={`https://polymarket.com/market/${d.market.slug}`} target="_blank" rel="noreferrer">在 Polymarket 打开 ↗</a></>
         : <div className="ctx-empty">无 slug,实时盘面不可嵌入</div>}
 
-      {/* ④⑤ 双栏对照（默认折叠）*/}
-      <Fold title="④⑤ 钱包动作流 × 世界催化剂" sub="点开看双栏对照（行为 vs 新闻）">
+      {/* ④⑤ 双栏对照（默认折叠）：左=钱包动作流，右=三源综述 + 时间线新闻流 */}
+      <Fold title="④⑤ 钱包动作流 × 世界催化剂" sub="点开看双栏对照（行为 vs 新闻·三源合并）">
         <div className="db-dual">
           <div className="db-dual-col">
             <div className="db-dual-h">④ 钱包动作流 · 48h</div>
             <BehaviorFlag b={d.behavior} />
           </div>
           <div className="db-dual-col">
-            <div className="db-dual-h">⑤ 世界催化剂 · 市场综述 + 证据</div>
+            <div className="db-dual-h">⑤ 世界催化剂 · 综述 + 时间线（GDELT·Tavily·gamma 三源）</div>
             {d.world_summary && <div className="db-wsum"><Narrative text={d.world_summary} /></div>}
-            <div className="bf-dialectic db-cats">
-              <DbCatColumn title="支持 · 正向" side="pos" items={cats.positive || []} />
-              <DbCatColumn title="威胁 · 负向" side="neg" items={cats.negative || []} />
-            </div>
+            <div className="db-stream-note">↑印证 / ↓不买账 = 钱包持有侧价格在新闻前后窗口的涨跌（前后变动，非该新闻导致）</div>
+            <NewsStream items={d.news_stream} />
           </div>
         </div>
       </Fold>
