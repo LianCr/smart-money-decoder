@@ -880,23 +880,47 @@ a.db-news-t:hover { color: var(--bf-accent); text-decoration: underline; }
 
 /* ══ 上帝视角时间轴（D3 价格×动作×新闻）═══════════════════════════════════════ */
 .gmt { margin: 4px 0 6px; }
-.gmt-cap { font-size: 10.5px; color: var(--fg-3); margin-bottom: 10px; line-height: 1.5; }
-.gmt-cap b { color: var(--neg); font-style: normal; }
+/* 大标题：押侧 + 实时价（随光标变）*/
+.gmt-header { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; margin-bottom: 10px; }
+.gmt-h-side { font-size: 13px; font-weight: 700; color: var(--fg-2); }
+.gmt-h-pct { font-family: var(--mono); font-size: 30px; font-weight: 800; line-height: 1; letter-spacing: -0.02em; }
+.gmt-h-pct.pos { color: var(--pos); text-shadow: 0 0 18px var(--pos-glow); }
+.gmt-h-pct.neg { color: var(--neg); text-shadow: 0 0 18px var(--neg-glow); }
+.gmt-h-date { font-family: var(--mono); font-size: 13px; color: var(--fg-3); }
+.gmt-h-delta { font-family: var(--mono); font-size: 13px; font-weight: 700; }
+.gmt-h-delta.pos { color: var(--pos); } .gmt-h-delta.neg { color: var(--neg); }
+.gmt-h-cap { margin-left: auto; font-size: 10px; color: var(--fg-4); }
+.gmt-warn { color: var(--neg); font-style: normal; }
 .gmt-wrap { position: relative; width: 100%; }
-.gmt-svg { display: block; width: 100%; height: auto; overflow: visible; }
+.gmt-svg { display: block; width: 100%; height: auto; overflow: visible; cursor: crosshair; }
 .gmt-grid { stroke: var(--line-2); stroke-width: 1; vector-effect: non-scaling-stroke; }
-.gmt-ytick { fill: var(--fg-4); font-size: 9px; font-family: var(--mono); text-anchor: end; }
-.gmt-room { fill: rgba(0,229,255,0.07); }
-.gmt-area { fill: var(--bf-accent); opacity: 0.06; }
-.gmt-line { fill: none; stroke: var(--bf-accent); stroke-width: 2; vector-effect: non-scaling-stroke; filter: drop-shadow(0 0 4px var(--accent-glow)); }
+.gmt-grid.v { stroke: var(--line-2); opacity: 0.5; }
+.gmt-ytick { fill: var(--fg-4); font-size: 9px; font-family: var(--mono); }
+.gmt-ytick.r { text-anchor: start; }
+.gmt-xtick { fill: var(--fg-4); font-size: 9px; font-family: var(--mono); text-anchor: middle; }
+.gmt-area { opacity: 0.07; }
+.gmt-area.pos { fill: var(--pos); } .gmt-area.neg { fill: var(--neg); }
+.gmt-line { fill: none; stroke-width: 2; vector-effect: non-scaling-stroke; }
+.gmt-line.pos { stroke: var(--pos); filter: drop-shadow(0 0 4px var(--pos-glow)); }
+.gmt-line.neg { stroke: var(--neg); filter: drop-shadow(0 0 4px var(--neg-glow)); }
+.gmt-line.dim { opacity: 0.22; filter: none; }
+.gmt-entry-h { stroke: var(--fg-4); stroke-width: 1; stroke-dasharray: 2 4; vector-effect: non-scaling-stroke; }
 .gmt-entry-v { stroke: var(--fg-3); stroke-width: 1; stroke-dasharray: 3 3; vector-effect: non-scaling-stroke; }
 .gmt-entry-dot { fill: var(--bg-0); stroke: var(--fg-1); stroke-width: 2; }
-.gmt-now-dot { fill: var(--bf-accent); stroke: var(--bg-0); stroke-width: 1.5; filter: drop-shadow(0 0 6px var(--accent-glow)); }
-.gmt-node { cursor: pointer; stroke: var(--bg-0); stroke-width: 1.5; transition: r 0.12s; filter: drop-shadow(0 0 5px currentColor); }
-.gmt-node.on { stroke-width: 2; }
+.gmt-now-dot { stroke: var(--bg-0); stroke-width: 1.5; }
+.gmt-now-dot.pos { fill: var(--pos); } .gmt-now-dot.neg { fill: var(--neg); }
+.gmt-node { pointer-events: none; stroke: var(--bg-0); stroke-width: 1.5; filter: drop-shadow(0 0 5px currentColor); }
+.gmt-cross-v { stroke: var(--fg-3); stroke-width: 1; vector-effect: non-scaling-stroke; }
+.gmt-cross-dot { stroke: var(--bg-0); stroke-width: 2; }
+.gmt-cross-dot.pos { fill: var(--pos); filter: drop-shadow(0 0 6px var(--pos-glow)); }
+.gmt-cross-dot.neg { fill: var(--neg); filter: drop-shadow(0 0 6px var(--neg-glow)); }
+.gmt-cross-date { position: absolute; top: 0; transform: translate(-50%, -118%); font-family: var(--mono); font-size: 10.5px; color: var(--fg-2); white-space: nowrap; pointer-events: none; }
+.gmt-cross-tip { position: absolute; transform: translate(12px, -50%); font-family: var(--mono); font-size: 12px; font-weight: 700; white-space: nowrap; pointer-events: none;
+  padding: 3px 8px; border-radius: 3px; background: var(--bg-0); border: 1px solid currentColor; z-index: 4; }
+.gmt-cross-tip.l { transform: translate(calc(-100% - 12px), -50%); }
+.gmt-cross-tip.pos { color: var(--pos); } .gmt-cross-tip.neg { color: var(--neg); }
 .gmt-lbl { position: absolute; font-family: var(--mono); font-size: 10px; font-weight: 700; white-space: nowrap; pointer-events: none; padding: 1px 5px; border-radius: 2px; }
-.gmt-lbl.entry { transform: translate(-50%, -185%); color: var(--fg-1); background: var(--bg-2); border: 1px solid var(--line-1); }
-.gmt-lbl.now { transform: translate(-92%, -185%); color: var(--bf-accent); background: var(--accent-bg); border: 1px solid rgba(0,229,255,0.3); }
+.gmt-lbl.entry { transform: translate(-50%, -185%); color: var(--fg-2); background: var(--bg-2); border: 1px solid var(--line-1); }
 .gmt-tip { position: absolute; width: 260px; max-width: 80vw; z-index: 5; pointer-events: none;
   background: var(--bg-0); border: 1px solid var(--bf-accent); border-radius: 4px; padding: 10px 12px; box-shadow: 0 6px 24px rgba(0,0,0,0.6); }
 /* 水平锚定：ac 居中 / al 贴左 / ar 贴右；below = 节点靠顶时翻到下方 */

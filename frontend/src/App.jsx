@@ -935,33 +935,42 @@ function NewsStream({ items }) {
 }
 
 // 上帝视角时间轴：价格曲线 × 建仓点 × 新闻发光节点 × 剩余空间（D3 算数学，React 渲 SVG）
-const GMT_W = 760, GMT_H = 300, GMT_M = { t: 16, r: 18, b: 24, l: 38 };
+const GMT_W = 760, GMT_H = 300, GMT_M = { t: 14, r: 36, b: 26, l: 14 };
 function _pdate(s) { return new Date(s + "T00:00:00Z"); }
 function gmtReact(rx) {
   if (!rx || !rx.available) return { txt: "市场反应不可知", cls: "rx-na" };
   const m = REACT_SYM[rx.kind] || REACT_SYM.weak;
   return { txt: `${m.sym}${m.txt} ${rx.move_pct > 0 ? "+" : ""}${rx.move_pct}%`, cls: m.cls };
 }
+function fmtMD(dt) { return `${dt.getUTCMonth() + 1}/${dt.getUTCDate()}`; }
 function GodModeTimeline({ d }) {
-  const [hover, setHover] = useState(null);
+  const [cross, setCross] = useState(null);   // 鼠标所在的 series 索引（实时光标）
   const series = (d.price_series || []).filter((p) => typeof p.price === "number")
     .map((p) => ({ t: _pdate(p.date), date: p.date, price: p.price }));
   if (series.length < 2)
     return <div className="bf-empty">该盘价格日线不足(薄盘/新盘)——按"有多少画多少",暂不足以绘制时间轴</div>;
-  const pos = d.position || {}, act = (pos.what_position_actions || {}).actions || {}, pc = pos.price_context || {};
+  const pos = d.position || {}, wpa = pos.what_position_actions || {};
+  const act = wpa.actions || {}, un = wpa.unrealized || {}, pc = pos.price_context || {};
+  const side = ((pos.meta || {}).analyzed_side || "").toUpperCase();
+  const entryDate = act.entry_time ? act.entry_time.slice(0, 10) : null;
+  const entryPrice = act.avg_entry_price, curPrice = pc.current_price, upct = un.unrealized_pct;
+  const up = typeof curPrice === "number" && typeof entryPrice === "number" ? curPrice >= entryPrice : true;
+  const dirCls = up ? "pos" : "neg";
   const iw = GMT_W - GMT_M.l - GMT_M.r, ih = GMT_H - GMT_M.t - GMT_M.b;
   const x = scaleTime().domain(extent(series, (s) => s.t)).range([0, iw]);
-  const y = scaleLinear().domain([0, 1]).range([ih, 0]);
+  // 🔴 Y 轴聚焦到数据实际区间（否则 80-98% 的走势在 0-100 轴上被压成顶部一条平线，看不出趋势）
+  const prices = series.map((s) => s.price).concat(typeof entryPrice === "number" ? [entryPrice] : []);
+  const pMin = Math.min(...prices), pMax = Math.max(...prices);
+  const pad = Math.max((pMax - pMin) * 0.18, 0.025);
+  const y = scaleLinear().domain([Math.max(0, pMin - pad), Math.min(1, pMax + pad)]).range([ih, 0]);
   const lg = d3line().x((s) => x(s.t)).y((s) => y(s.price)).curve(curveMonotoneX);
   const ag = d3area().x((s) => x(s.t)).y0(ih).y1((s) => y(s.price)).curve(curveMonotoneX);
-  const entryDate = act.entry_time ? act.entry_time.slice(0, 10) : null;
-  const entryPrice = act.avg_entry_price, curPrice = pc.current_price;
-  const [dMin, dMax] = x.domain();
   const priceAt = (date) => {
     const t = _pdate(date); let best = series[0];
     for (const s of series) if (Math.abs(s.t - t) < Math.abs(best.t - t)) best = s;
     return best.price;
   };
+  const [dMin, dMax] = x.domain();
   const nodes = (d.news_stream || []).filter((n) => n.date && _pdate(n.date) >= dMin && _pdate(n.date) <= dMax)
     .map((n) => ({ ...n, t: _pdate(n.date), px: priceAt(n.date) }));
   const nodeColor = (n) => {
@@ -970,64 +979,95 @@ function GodModeTimeline({ d }) {
   };
   const sx = (vx) => ((GMT_M.l + vx) / GMT_W) * 100;
   const sy = (vy) => ((GMT_M.t + vy) / GMT_H) * 100;
-  const yTicks = [0, 0.25, 0.5, 0.75, 1];
+  const yTicks = y.ticks(4), xTicks = x.ticks(6);
+
+  const hv = cross != null ? series[cross] : null;
+  const newsAt = hv ? nodes.find((n) => n.date === hv.date) : null;
+  const bright = cross != null ? series.slice(0, cross + 1) : series;
+  const shownPrice = hv ? hv.price : curPrice;
+
+  function onMove(e) {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const plotX = Math.max(0, Math.min(iw, ((e.clientX - rect.left) / rect.width) * GMT_W - GMT_M.l));
+    const td = x.invert(plotX);
+    let bi = 0;
+    for (let k = 1; k < series.length; k++) if (Math.abs(series[k].t - td) < Math.abs(series[bi].t - td)) bi = k;
+    setCross(bi);
+  }
 
   return (
     <div className="gmt">
-      <div className="gmt-cap">Y = 持有侧价格 / 市场隐含概率（0–100%）· 发光节点 = 新闻发生时点（与价格变动<b>时间相关、非因果</b>）</div>
+      <div className="gmt-header">
+        <span className="gmt-h-side">押 {side}</span>
+        <span className={`gmt-h-pct ${dirCls}`}>{typeof shownPrice === "number" ? Math.round(shownPrice * 100) + "%" : "—"}</span>
+        {hv ? <span className="gmt-h-date">{fmtMD(hv.t)}</span>
+          : (typeof upct === "number" && <span className={`gmt-h-delta ${dirCls}`}>{upct >= 0 ? "▲" : "▼"} {upct >= 0 ? "+" : ""}{upct}%</span>)}
+        <span className="gmt-h-cap">移动鼠标看任意时点价格 · 彩点=新闻催化（与价格变动<b className="gmt-warn">时间相关、非因果</b>）</span>
+      </div>
       <div className="gmt-wrap">
-        <svg viewBox={`0 0 ${GMT_W} ${GMT_H}`} className="gmt-svg">
+        <svg viewBox={`0 0 ${GMT_W} ${GMT_H}`} className="gmt-svg" onMouseMove={onMove} onMouseLeave={() => setCross(null)}>
           <g transform={`translate(${GMT_M.l},${GMT_M.t})`}>
-            {yTicks.map((t, i) => (
-              <g key={i}>
-                <line x1="0" x2={iw} y1={y(t)} y2={y(t)} className="gmt-grid" />
-                <text x="-8" y={y(t)} className="gmt-ytick" dy="0.32em">{t * 100}</text>
+            {xTicks.map((t, i) => (
+              <g key={"x" + i}>
+                <line x1={x(t)} x2={x(t)} y1="0" y2={ih} className="gmt-grid v" />
+                <text x={x(t)} y={ih + 15} className="gmt-xtick">{fmtMD(t)}</text>
               </g>
             ))}
-            {typeof curPrice === "number" && y(1) < y(curPrice) && (
-              <rect x="0" y={y(1)} width={iw} height={y(curPrice) - y(1)} className="gmt-room" />
-            )}
-            <path d={ag(series)} className="gmt-area" />
-            <path d={lg(series)} className="gmt-line" />
+            {yTicks.map((t, i) => (
+              <g key={"y" + i}>
+                <line x1="0" x2={iw} y1={y(t)} y2={y(t)} className="gmt-grid" />
+                <text x={iw + 6} y={y(t)} className="gmt-ytick r" dy="0.32em">{Math.round(t * 100)}%</text>
+              </g>
+            ))}
+            <path d={ag(series)} className={`gmt-area ${dirCls}`} />
+            {cross != null && <path d={lg(series)} className={`gmt-line ${dirCls} dim`} />}
+            <path d={lg(bright)} className={`gmt-line ${dirCls}`} />
+            {typeof entryPrice === "number" && <line x1="0" x2={iw} y1={y(entryPrice)} y2={y(entryPrice)} className="gmt-entry-h" />}
             {entryDate && typeof entryPrice === "number" && (
               <g>
                 <line x1={x(_pdate(entryDate))} x2={x(_pdate(entryDate))} y1="0" y2={ih} className="gmt-entry-v" />
-                <circle cx={x(_pdate(entryDate))} cy={y(entryPrice)} r="5" className="gmt-entry-dot" />
+                <circle cx={x(_pdate(entryDate))} cy={y(entryPrice)} r="4.5" className="gmt-entry-dot" />
               </g>
             )}
-            {typeof curPrice === "number" && <circle cx={iw} cy={y(curPrice)} r="5" className="gmt-now-dot" />}
             {nodes.map((n, i) => (
-              <circle key={i} cx={x(n.t)} cy={y(n.px)} r={hover === i ? 7.5 : 5.5} fill={nodeColor(n)}
-                className={`gmt-node ${hover === i ? "on" : ""}`}
-                onMouseEnter={() => setHover(i)} onMouseLeave={() => setHover(null)} />
+              <circle key={i} cx={x(n.t)} cy={y(n.px)} r="5.5" fill={nodeColor(n)} className="gmt-node" />
             ))}
+            {hv && (
+              <g>
+                <line x1={x(hv.t)} x2={x(hv.t)} y1="0" y2={ih} className="gmt-cross-v" />
+                <circle cx={x(hv.t)} cy={y(hv.price)} r="5" className={`gmt-cross-dot ${dirCls}`} />
+              </g>
+            )}
+            {!hv && typeof curPrice === "number" && <circle cx={iw} cy={y(curPrice)} r="4.5" className={`gmt-now-dot ${dirCls}`} />}
           </g>
         </svg>
+        {hv && <div className="gmt-cross-date" style={{ left: `${sx(x(hv.t))}%` }}>{fmtMD(hv.t)}</div>}
+        {hv && (
+          <div className={`gmt-cross-tip ${dirCls} ${sx(x(hv.t)) > 60 ? "l" : ""}`} style={{ left: `${sx(x(hv.t))}%`, top: `${sy(y(hv.price))}%` }}>
+            押 {side} {Math.round(hv.price * 100)}%
+          </div>
+        )}
         {entryDate && typeof entryPrice === "number" && (
           <div className="gmt-lbl entry" style={{ left: `${sx(x(_pdate(entryDate)))}%`, top: `${sy(y(entryPrice))}%` }}>建仓 {Math.round(entryPrice * 100)}¢</div>
         )}
-        {typeof curPrice === "number" && (
-          <div className="gmt-lbl now" style={{ left: `${sx(iw)}%`, top: `${sy(y(curPrice))}%` }}>现价 {Math.round(curPrice * 100)}¢</div>
-        )}
-        {hover != null && nodes[hover] && (() => {
-          const n = nodes[hover], rc = gmtReact(n.reaction);
-          const lx = sx(x(n.t)), ly = sy(y(n.px));
+        {newsAt && (() => {
+          const rc = gmtReact(newsAt.reaction);
+          const lx = sx(x(newsAt.t)), ly = sy(y(newsAt.px));
           const cls = `${ly < 42 ? "below" : ""} ${lx > 72 ? "ar" : lx < 28 ? "al" : "ac"}`;
           return (
             <div className={`gmt-tip ${cls}`} style={{ left: `${lx}%`, top: `${ly}%` }}>
               <div className="gmt-tip-top">
-                <span className="gmt-tip-date num">{n.date}</span>
-                {n.direction && <span className={`db-dir ${n.direction}`}>{n.direction === "support" ? "支持" : "威胁"}</span>}
+                <span className="gmt-tip-date num">{newsAt.date}</span>
+                {newsAt.direction && <span className={`db-dir ${newsAt.direction}`}>{newsAt.direction === "support" ? "支持" : "威胁"}</span>}
                 <span className={`rx ${rc.cls}`}>{rc.txt}</span>
               </div>
-              <div className="gmt-tip-title">{n.title}</div>
-              {n.summary && <div className="gmt-tip-sum">{n.summary}</div>}
-              <div className="gmt-tip-foot">{n.origin} · 时间相关·非因果</div>
+              <div className="gmt-tip-title">{newsAt.title}</div>
+              {newsAt.summary && <div className="gmt-tip-sum">{newsAt.summary}</div>}
+              <div className="gmt-tip-foot">{newsAt.origin} · 时间相关·非因果</div>
             </div>
           );
         })()}
       </div>
-      <div className="gmt-xaxis"><span>{series[0].date}</span><span>{series[series.length - 1].date} · 现在</span></div>
     </div>
   );
 }
