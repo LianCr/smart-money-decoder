@@ -468,6 +468,31 @@ function PolymarketEmbed({ slug }) {
   );
 }
 
+// 原生赔率条（替代 Polymarket iframe）：Yes/No 比例条，高亮钱包押的那一侧
+function OddsBar({ held, side, slug }) {
+  if (typeof held !== "number") return <div className="ctx-empty">无价,赔率不可显</div>;
+  const S = (side || "").toUpperCase();
+  const yesP = S === "NO" ? 1 - held : held;          // held=持有侧价；换算 Yes/No
+  const noP = 1 - yesP;
+  const yesHeld = S === "YES";
+  return (
+    <div className="oddsbar">
+      <div className="ob-bar">
+        <div className={`ob-seg yes ${yesHeld ? "held" : "dim"}`} style={{ width: `${Math.max(yesP * 100, 8)}%` }}>
+          <span className="ob-lab">Yes</span><span className="ob-val num">{Math.round(yesP * 100)}¢</span>
+        </div>
+        <div className={`ob-seg no ${!yesHeld ? "held" : "dim"}`} style={{ width: `${Math.max(noP * 100, 8)}%` }}>
+          <span className="ob-lab">No</span><span className="ob-val num">{Math.round(noP * 100)}¢</span>
+        </div>
+      </div>
+      <div className="ob-foot">
+        <span>他押 <b className={yesHeld ? "ob-yes" : "ob-no"}>{S}</b> · 高亮侧</span>
+        {slug && <a className="ob-jump" href={`https://polymarket.com/market/${slug}`} target="_blank" rel="noreferrer">在 Polymarket 打开 ↗</a>}
+      </div>
+    </div>
+  );
+}
+
 // 系统风险标记 → 中文（绝不把内部代码字段直接显示给用户）
 const FLAG_CN = {
   suspicious_win_rate: "异常高胜率", position_size_volatility: "仓位波动大",
@@ -756,11 +781,9 @@ function ContextBody({ d }) {
       <div className="ctx-split">
         {/* 实：实时盘面（Polymarket 直嵌） */}
         <div className="ctx-pane ctx-real">
-          <div className="ctx-pane-h"><span className="ctx-live-dot" />实时盘面 · Polymarket</div>
-          {mc.market_slug
-            ? <PolymarketEmbed slug={mc.market_slug} />
-            : <div className="ctx-empty">无 slug,实时盘面不可嵌入</div>}
-          <div className="ctx-pane-foot">实时行情由 Polymarket 提供 · 与右侧 as-of 复盘相互独立</div>
+          <div className="ctx-pane-h"><span className="ctx-live-dot" />当前赔率 · 市场定价</div>
+          <OddsBar held={mc.current_price} side={mc.analyzed_side} slug={mc.market_slug} />
+          <div className="ctx-pane-foot">市场当前对 Yes/No 的定价（高亮=钱包押的侧）· 与右侧 as-of 复盘相互独立</div>
         </div>
 
         {/* 虚：我们合成的 as-of 复盘 Context */}
@@ -1281,12 +1304,9 @@ function BoardBody({ d }) {
         </div>
       </div>
 
-      {/* ③ 实时盘面 */}
-      <div className="db-sec-tag">③ 实时盘面 · Polymarket</div>
-      {d.market?.slug
-        ? <><PolymarketEmbed slug={d.market.slug} />
-            <a className="db-jump num" href={`https://polymarket.com/market/${d.market.slug}`} target="_blank" rel="noreferrer">在 Polymarket 打开 ↗</a></>
-        : <div className="ctx-empty">无 slug,实时盘面不可嵌入</div>}
+      {/* ③ 当前赔率 · 原生条（替 iframe）*/}
+      <div className="db-sec-tag">③ 当前赔率 · 市场怎么定价</div>
+      <OddsBar held={pc.current_price} side={(m.analyzed_side || "").toUpperCase()} slug={d.market?.slug} />
 
       {/* 降级：钱包历史体量（资格审查，不再霸占首屏）*/}
       <Fold title="钱包历史体量 · 身份背书" sub="累计盈亏曲线 + 风险标记（背景调查，非本注结论）">

@@ -321,6 +321,13 @@ def market_context(wallet: str, cid: str = "", outcome: str = ""):
         obj = build_market_context(cid, BRIEFING_AS_OF, entities, outcome, wallet=wallet)
     except Exception as e:
         return _err(502, "MARKET_CONTEXT_FAILED", f"{type(e).__name__}: {e}")
+    # 持有侧现价（供 Context「实」面板的原生赔率条，免费 568）
+    try:
+        ser = board_feed.price_series(board_feed.held_token(cid, outcome), BRIEFING_AS_OF)
+        if ser:
+            obj["market_context"]["current_price"] = ser[-1]["price"]
+    except Exception:
+        pass
     return obj
 
 
