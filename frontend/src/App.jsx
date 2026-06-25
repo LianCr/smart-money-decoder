@@ -959,13 +959,124 @@ function BoardReasoning({ r }) {
   );
 }
 
-function BoardBody({ d }) {
+// 状态灯配色（🔴 守魂#4：判断非买入信号——CHASED 用 amber 表"谨慎,好价过了",不用红"别买";NO BASIS 灰=中性）
+const LIGHT_CLS = { "ROOM LEFT": "green", CHASED: "amber", "NO BASIS": "grey" };
+const cent = (v) => (typeof v === "number" ? Math.round(v * 100) + "¢" : "—");
+
+// 迷你 sparkline（身份徽章用，纯 SVG，零依赖）
+function MiniSpark({ points }) {
+  const n = points.length, W = 66, H = 18;
+  const ps = points.map((d) => d.p);
+  const min = Math.min(...ps), max = Math.max(...ps), span = max - min || 1;
+  const x = (i) => (i / (n - 1)) * W, y = (p) => (1 - (p - min) / span) * H;
+  const path = ps.map((p, i) => `${i ? "L" : "M"}${x(i).toFixed(1)},${y(p).toFixed(1)}`).join(" ");
+  const color = ps[n - 1] >= ps[0] ? "var(--pos)" : "var(--neg)";
+  return (
+    <svg className="vh-spark" viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="none">
+      <path d={path} fill="none" stroke={color} strokeWidth="1.5" vectorEffect="non-scaling-stroke" />
+    </svg>
+  );
+}
+
+// 身份徽章（资格审查降级成角落名片，不再霸占首屏）
+function CredBadge({ profile, rk, pnlHistory }) {
+  const nick = profile.name || profile.pseudonym || abbrev(profile.address);
+  const last = pnlHistory && pnlHistory.length ? pnlHistory[pnlHistory.length - 1].p : null;
+  return (
+    <div className="vh-badge">
+      <Avatar profile={profile} />
+      <div className="vh-badge-meta">
+        <div className="vh-badge-nick">{nick}</div>
+        <div className="vh-badge-stats num">
+          #{rk.rank ?? "—"} · 胜率 {rk.win_rate ? (Number(rk.win_rate) * 100).toFixed(0) + "%" : "—"}
+          {last != null ? " · " + fmtPnlCompact(last) : (rk.total_pnl ? " · " + money(Number(rk.total_pnl)) : "")}
+        </div>
+      </div>
+      {pnlHistory && pnlHistory.length > 1 && <MiniSpark points={pnlHistory} />}
+    </div>
+  );
+}
+
+// 首屏判断英雄区：结论先行，0.5 秒拿到"还能不能跟"
+function VerdictHero({ d }) {
+  const r = d.reasoning || {};
+  const pos = d.position || {};
+  const m = pos.meta || {};
+  const wpa = pos.what_position_actions || {};
+  const act = wpa.actions || {};
+  const un = wpa.unrealized || {};
+  const pc = pos.price_context || {};
   const id = d.identity || {};
   const profile = { ...(id.profile || {}), address: id.profile?.address || d.wallet };
+  const rk = (id.who_trader_profile || {}).official_rank || {};
+  const side = (m.analyzed_side || "").toUpperCase();
+  const cls = r.follow_call ? (LIGHT_CLS[r.follow_call] || "grey") : "grey";
+  const upct = un.unrealized_pct;
+  const gain = typeof upct === "number"
+    ? upct >= 0
+    : (typeof pc.current_price === "number" && typeof act.avg_entry_price === "number"
+        ? pc.current_price >= act.avg_entry_price : true);
+  const dirCls = gain ? "pos" : "neg";
+
+  return (
+    <div className="vh">
+      <div className="vh-top">
+        <div className="vh-q">{m.market} <span className="vh-side">· 押 {side}</span></div>
+        <CredBadge profile={profile} rk={rk} pnlHistory={id.pnl_history} />
+      </div>
+
+      {(pos.what_the_bet || pos.resolution_criteria) && (
+        <div className="db-whatbet vh-whatbet">
+          <div className="db-whatbet-h">这一注在赌什么</div>
+          {pos.what_the_bet && <div className="db-whatbet-t">{renderInline(pos.what_the_bet)}</div>}
+          {pos.resolution_criteria && (
+            <details className="db-rc">
+              <summary>官方结算规则原文（什么算赢）</summary>
+              <div className="db-rc-body">{pos.resolution_criteria}</div>
+            </details>
+          )}
+        </div>
+      )}
+
+      <div className="vh-essence">
+        <div className="vh-e"><span>入场成本</span><b className="vh-from num">{cent(act.avg_entry_price)}</b></div>
+        <span className="vh-arrow">→</span>
+        <div className="vh-e vh-e-main">
+          <span>现价 · 隐含概率</span>
+          <div className="vh-now-row">
+            <b className={`vh-now num ${dirCls}`}>{cent(pc.current_price)}</b>
+            {typeof upct === "number" && (
+              <span className={`vh-delta ${dirCls}`}>{upct >= 0 ? "▲" : "▼"} {upct >= 0 ? "+" : ""}{upct}%</span>
+            )}
+          </div>
+        </div>
+        <div className="vh-e vh-room"><span>剩余空间(若赢)</span><b className="num">{pc.remaining_upside_pct_if_win != null ? pc.remaining_upside_pct_if_win + "%" : "—"}</b></div>
+      </div>
+
+      {r.guard_tripped ? (
+        <div className="vh-light guard"><span className="vh-call">🛡 守卫拦截</span>
+          <span className="vh-conf">该判断触发诚实守卫,不输出结论</span></div>
+      ) : (
+        <div className={`vh-light ${cls}`}>
+          <span className="vh-dot" />
+          <span className="vh-call">{FOLLOW_LABEL_CN[r.follow_call] || r.follow_call || "—"}</span>
+          <span className="vh-conf">信心 <b>{CONF_CN[r.confidence] || r.confidence || "—"}</b></span>
+        </div>
+      )}
+
+      <div className="vh-verdict">{r.guard_tripped ? r.guard_message : r.reasoning}</div>
+
+      {d.behavior && <div className="vh-whale">🐳 巨鲸动态 · {d.behavior.fact}</div>}
+      <div className="vh-disc">这是对"局势性质"的判断(还有多少空间/风险在哪/市场认不认这个方向),不替你决定跟不跟 · 天平由你裁决</div>
+    </div>
+  );
+}
+
+function BoardBody({ d }) {
+  const id = d.identity || {};
   const who = id.who_trader_profile || {};
   const rk = who.official_rank || {};
   const q = who.quality || {};
-  const pol = (who.category_specialization || []).find((c) => /Politics/i.test(c.category || ""));
   const pos = d.position || {};
   const m = pos.meta || {};
   const wpa = pos.what_position_actions || {};
@@ -978,22 +1089,11 @@ function BoardBody({ d }) {
 
   return (
     <div className="card bf db">
-      {/* ① 身份 + 体量 */}
-      <div className="db-sec-tag">① 钱包身份 · 体量</div>
-      <div className="db-id">
-        <WalletHeader profile={profile} />
-        <div className="db-id-stats">
-          <span>官方榜 <b className="num">#{rk.rank ?? "—"}</b></span>
-          <span>胜率 <b className="num">{rk.win_rate ? (Number(rk.win_rate) * 100).toFixed(1) + "%" : "—"}</b></span>
-          {pol && <span>政治盘 <b className="num">{(pol.win_rate * 100).toFixed(0)}% · {money(Number(pol.total_pnl))}</b></span>}
-        </div>
-      </div>
-      {id.pnl_history && id.pnl_history.length > 1 && <PnlChart points={id.pnl_history} />}
-      {wrLie && <div className="bf-lie">⚠ 胜率谎言:高胜率但净盈亏为负 — 看净盈亏,非胜率</div>}
-      {q.flagged_metrics && <div className="bf-sub db-flags">风险标记: {flagsCN(q.flagged_metrics)}</div>}
+      {/* 首屏：结论先行 */}
+      <VerdictHero d={d} />
 
-      {/* ② 这一注 + 现状 */}
-      <div className="db-sec-tag">② 这一注 · 现状</div>
+      {/* ② 这一注 · 明细 */}
+      <div className="db-sec-tag">② 这一注 · 明细</div>
       <div className="c-head db-pos-head">
         <div>
           <div className="q">{m.market}</div>
@@ -1001,18 +1101,6 @@ function BoardBody({ d }) {
         </div>
         <span className="outcome">{(m.analyzed_side || "").toUpperCase()}</span>
       </div>
-      {(pos.what_the_bet || pos.resolution_criteria) && (
-        <div className="db-whatbet">
-          <div className="db-whatbet-h">这一注在赌什么</div>
-          {pos.what_the_bet && <div className="db-whatbet-t">{renderInline(pos.what_the_bet)}</div>}
-          {pos.resolution_criteria && (
-            <details className="db-rc">
-              <summary>官方结算规则原文（什么算赢）</summary>
-              <div className="db-rc-body">{pos.resolution_criteria}</div>
-            </details>
-          )}
-        </div>
-      )}
       <div className="bf-grid db-grid">
         <div className="bf-mini">
           <div className="bf-mini-h">动作 · 他做了什么</div>
@@ -1052,12 +1140,18 @@ function BoardBody({ d }) {
         </div>
       </Fold>
 
-      {/* ⑥ Edge / Reasoning */}
-      <div className="db-sec-tag last">⑥ Edge · 局势性质判断（不替你决定）</div>
-      <BoardReasoning r={d.reasoning} />
-      <div className="db-disc">⑥ 只判断"局势性质"(还有多少空间 / 风险在哪 / 市场认不认这个方向),从不替你决定跟不跟 · 天平由你裁决</div>
+      {/* 降级：钱包历史体量（资格审查，不再霸占首屏）*/}
+      <Fold title="钱包历史体量 · 身份背书" sub="累计盈亏曲线 + 风险标记（背景调查，非本注结论）">
+        {id.pnl_history && id.pnl_history.length > 1 && <PnlChart points={id.pnl_history} />}
+        {wrLie && <div className="bf-lie">⚠ 胜率谎言:高胜率但净盈亏为负 — 看净盈亏,非胜率</div>}
+        {q.flagged_metrics && <div className="bf-sub db-flags">风险标记: {flagsCN(q.flagged_metrics)}</div>}
+        <div className="db-id-stats db-id-stats-full">
+          <span>官方榜 <b className="num">#{rk.rank ?? "—"}</b></span>
+          <span>胜率 <b className="num">{rk.win_rate ? (Number(rk.win_rate) * 100).toFixed(1) + "%" : "—"}</b></span>
+        </div>
+      </Fold>
 
-      <div className="foot">①-⑤ 全部公开数据 + 代码计算,⑥ 置信度由代码矩阵算定、AI 只解释不改判 · 非投资建议</div>
+      <div className="foot">结论由代码矩阵算定信心、AI 只解释不改判 · 价格为市场隐含概率(非胜率) · 公开数据整理,非投资建议</div>
     </div>
   );
 }
