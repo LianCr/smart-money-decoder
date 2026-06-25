@@ -1,4 +1,7 @@
 import { useState, useEffect, useRef } from "react";
+import { scaleLinear, scaleTime } from "d3-scale";
+import { line as d3line, area as d3area, curveMonotoneX } from "d3-shape";
+import { extent } from "d3-array";
 
 const API = "http://localhost:8000";
 
@@ -931,6 +934,104 @@ function NewsStream({ items }) {
   );
 }
 
+// 上帝视角时间轴：价格曲线 × 建仓点 × 新闻发光节点 × 剩余空间（D3 算数学，React 渲 SVG）
+const GMT_W = 760, GMT_H = 300, GMT_M = { t: 16, r: 18, b: 24, l: 38 };
+function _pdate(s) { return new Date(s + "T00:00:00Z"); }
+function gmtReact(rx) {
+  if (!rx || !rx.available) return { txt: "市场反应不可知", cls: "rx-na" };
+  const m = REACT_SYM[rx.kind] || REACT_SYM.weak;
+  return { txt: `${m.sym}${m.txt} ${rx.move_pct > 0 ? "+" : ""}${rx.move_pct}%`, cls: m.cls };
+}
+function GodModeTimeline({ d }) {
+  const [hover, setHover] = useState(null);
+  const series = (d.price_series || []).filter((p) => typeof p.price === "number")
+    .map((p) => ({ t: _pdate(p.date), date: p.date, price: p.price }));
+  if (series.length < 2)
+    return <div className="bf-empty">该盘价格日线不足(薄盘/新盘)——按"有多少画多少",暂不足以绘制时间轴</div>;
+  const pos = d.position || {}, act = (pos.what_position_actions || {}).actions || {}, pc = pos.price_context || {};
+  const iw = GMT_W - GMT_M.l - GMT_M.r, ih = GMT_H - GMT_M.t - GMT_M.b;
+  const x = scaleTime().domain(extent(series, (s) => s.t)).range([0, iw]);
+  const y = scaleLinear().domain([0, 1]).range([ih, 0]);
+  const lg = d3line().x((s) => x(s.t)).y((s) => y(s.price)).curve(curveMonotoneX);
+  const ag = d3area().x((s) => x(s.t)).y0(ih).y1((s) => y(s.price)).curve(curveMonotoneX);
+  const entryDate = act.entry_time ? act.entry_time.slice(0, 10) : null;
+  const entryPrice = act.avg_entry_price, curPrice = pc.current_price;
+  const [dMin, dMax] = x.domain();
+  const priceAt = (date) => {
+    const t = _pdate(date); let best = series[0];
+    for (const s of series) if (Math.abs(s.t - t) < Math.abs(best.t - t)) best = s;
+    return best.price;
+  };
+  const nodes = (d.news_stream || []).filter((n) => n.date && _pdate(n.date) >= dMin && _pdate(n.date) <= dMax)
+    .map((n) => ({ ...n, t: _pdate(n.date), px: priceAt(n.date) }));
+  const nodeColor = (n) => {
+    const r = n.reaction || {};
+    return !r.available ? "var(--fg-4)" : r.kind === "confirm" ? "var(--pos)" : r.kind === "reject" ? "var(--neg)" : "var(--fg-3)";
+  };
+  const sx = (vx) => ((GMT_M.l + vx) / GMT_W) * 100;
+  const sy = (vy) => ((GMT_M.t + vy) / GMT_H) * 100;
+  const yTicks = [0, 0.25, 0.5, 0.75, 1];
+
+  return (
+    <div className="gmt">
+      <div className="gmt-cap">Y = 持有侧价格 / 市场隐含概率（0–100%）· 发光节点 = 新闻发生时点（与价格变动<b>时间相关、非因果</b>）</div>
+      <div className="gmt-wrap">
+        <svg viewBox={`0 0 ${GMT_W} ${GMT_H}`} className="gmt-svg">
+          <g transform={`translate(${GMT_M.l},${GMT_M.t})`}>
+            {yTicks.map((t, i) => (
+              <g key={i}>
+                <line x1="0" x2={iw} y1={y(t)} y2={y(t)} className="gmt-grid" />
+                <text x="-8" y={y(t)} className="gmt-ytick" dy="0.32em">{t * 100}</text>
+              </g>
+            ))}
+            {typeof curPrice === "number" && y(1) < y(curPrice) && (
+              <rect x="0" y={y(1)} width={iw} height={y(curPrice) - y(1)} className="gmt-room" />
+            )}
+            <path d={ag(series)} className="gmt-area" />
+            <path d={lg(series)} className="gmt-line" />
+            {entryDate && typeof entryPrice === "number" && (
+              <g>
+                <line x1={x(_pdate(entryDate))} x2={x(_pdate(entryDate))} y1="0" y2={ih} className="gmt-entry-v" />
+                <circle cx={x(_pdate(entryDate))} cy={y(entryPrice)} r="5" className="gmt-entry-dot" />
+              </g>
+            )}
+            {typeof curPrice === "number" && <circle cx={iw} cy={y(curPrice)} r="5" className="gmt-now-dot" />}
+            {nodes.map((n, i) => (
+              <circle key={i} cx={x(n.t)} cy={y(n.px)} r={hover === i ? 7.5 : 5.5} fill={nodeColor(n)}
+                className={`gmt-node ${hover === i ? "on" : ""}`}
+                onMouseEnter={() => setHover(i)} onMouseLeave={() => setHover(null)} />
+            ))}
+          </g>
+        </svg>
+        {entryDate && typeof entryPrice === "number" && (
+          <div className="gmt-lbl entry" style={{ left: `${sx(x(_pdate(entryDate)))}%`, top: `${sy(y(entryPrice))}%` }}>建仓 {Math.round(entryPrice * 100)}¢</div>
+        )}
+        {typeof curPrice === "number" && (
+          <div className="gmt-lbl now" style={{ left: `${sx(iw)}%`, top: `${sy(y(curPrice))}%` }}>现价 {Math.round(curPrice * 100)}¢</div>
+        )}
+        {hover != null && nodes[hover] && (() => {
+          const n = nodes[hover], rc = gmtReact(n.reaction);
+          const lx = sx(x(n.t)), ly = sy(y(n.px));
+          const cls = `${ly < 42 ? "below" : ""} ${lx > 72 ? "ar" : lx < 28 ? "al" : "ac"}`;
+          return (
+            <div className={`gmt-tip ${cls}`} style={{ left: `${lx}%`, top: `${ly}%` }}>
+              <div className="gmt-tip-top">
+                <span className="gmt-tip-date num">{n.date}</span>
+                {n.direction && <span className={`db-dir ${n.direction}`}>{n.direction === "support" ? "支持" : "威胁"}</span>}
+                <span className={`rx ${rc.cls}`}>{rc.txt}</span>
+              </div>
+              <div className="gmt-tip-title">{n.title}</div>
+              {n.summary && <div className="gmt-tip-sum">{n.summary}</div>}
+              <div className="gmt-tip-foot">{n.origin} · 时间相关·非因果</div>
+            </div>
+          );
+        })()}
+      </div>
+      <div className="gmt-xaxis"><span>{series[0].date}</span><span>{series[series.length - 1].date} · 现在</span></div>
+    </div>
+  );
+}
+
 function BoardReasoning({ r }) {
   if (!r) return null;
   if (r.guard_tripped) {
@@ -1124,17 +1225,19 @@ function BoardBody({ d }) {
             <a className="db-jump num" href={`https://polymarket.com/market/${d.market.slug}`} target="_blank" rel="noreferrer">在 Polymarket 打开 ↗</a></>
         : <div className="ctx-empty">无 slug,实时盘面不可嵌入</div>}
 
-      {/* ④⑤ 双栏对照（默认折叠）：左=钱包动作流，右=三源综述 + 时间线新闻流 */}
-      <Fold title="④⑤ 钱包动作流 × 世界催化剂" sub="点开看双栏对照（行为 vs 新闻·三源合并）">
+      {/* ④⑤ 上帝视角时间轴：价格 × 巨鲸动作 × 新闻催化剂，揉成一张图 */}
+      <div className="db-sec-tag">④⑤ 局势时间轴 · 价格 × 巨鲸动作 × 新闻催化剂</div>
+      <GodModeTimeline d={d} />
+      {d.world_summary && <div className="db-wsum gmt-summary"><Narrative text={d.world_summary} /></div>}
+      <Fold title="全部明细 · 巨鲸 48h 动作 + 三源新闻流（可点链接）" sub="点开看每条新闻 + 行为窗口">
         <div className="db-dual">
           <div className="db-dual-col">
-            <div className="db-dual-h">④ 钱包动作流 · 48h</div>
+            <div className="db-dual-h">巨鲸动作流 · 48h</div>
             <BehaviorFlag b={d.behavior} />
           </div>
           <div className="db-dual-col">
-            <div className="db-dual-h">⑤ 世界催化剂 · 综述 + 时间线（GDELT·Tavily·gamma 三源）</div>
-            {d.world_summary && <div className="db-wsum"><Narrative text={d.world_summary} /></div>}
-            <div className="db-stream-note">↑印证 / ↓不买账 = 钱包持有侧价格在新闻前后窗口的涨跌（前后变动，非该新闻导致）</div>
+            <div className="db-dual-h">三源新闻明细</div>
+            <div className="db-stream-note">↑印证 / ↓不买账 = 持有侧价格在新闻前后窗口的涨跌（前后变动，非该新闻导致）</div>
             <NewsStream items={d.news_stream} />
           </div>
         </div>

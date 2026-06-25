@@ -472,6 +472,7 @@ def dashboard(wallet: str):
             "resolution_criteria": resolution,       # 官方结算规则原文
         },
         "market": {"slug": slug, "market_id": cid},  # ③
+        "price_series": board_feed.price_series(tok, BRIEFING_AS_OF),  # 上帝视角时间轴(568日线,免费)
         "behavior": behavior,                        # ④
         "news_stream": news_stream,                  # ⑤ 三源合并时间线（source 链接 + 反应符号）
         "world_summary": world_summary,              # ⑤ 三源合并综述（巨鲸动态/事态进展）
