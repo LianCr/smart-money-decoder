@@ -879,22 +879,25 @@ a.db-news-t:hover { color: var(--bf-accent); text-decoration: underline; }
 .db-news-sw { font-size: 10px; color: var(--fg-3); font-style: italic; }
 
 /* ══ 上帝视角时间轴（D3 价格×动作×新闻）═══════════════════════════════════════ */
-.gmt { margin: 4px 0 6px; }
-/* 大标题：押侧 + 实时价（随光标变）*/
-.gmt-header { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; margin-bottom: 10px; }
-.gmt-h-side { font-size: 13px; font-weight: 700; color: var(--fg-2); }
-.gmt-h-pct { font-family: var(--mono); font-size: 30px; font-weight: 800; line-height: 1; letter-spacing: -0.02em; }
-.gmt-h-pct.pos { color: var(--pos); text-shadow: 0 0 18px var(--pos-glow); }
-.gmt-h-pct.neg { color: var(--neg); text-shadow: 0 0 18px var(--neg-glow); }
-.gmt-h-date { font-family: var(--mono); font-size: 13px; color: var(--fg-3); }
-.gmt-h-delta { font-family: var(--mono); font-size: 13px; font-weight: 700; }
+.gmt { margin: 10px 0 14px; }
+/* 大标题：押侧 + 实时价（随光标变）—— Polymarket 式竖排,干净留白 */
+.gmt-header { margin-bottom: 18px; }
+.gmt-h-side { font-size: 12px; font-weight: 700; letter-spacing: 0.05em; color: var(--fg-3); margin-bottom: 5px; }
+.gmt-h-row { display: flex; align-items: baseline; gap: 11px; }
+.gmt-h-pct { font-family: var(--sans); font-size: 42px; font-weight: 800; line-height: 1; letter-spacing: -0.025em; }
+.gmt-h-pct.pos { color: var(--pos); text-shadow: 0 0 24px var(--pos-glow); }
+.gmt-h-pct.neg { color: var(--neg); text-shadow: 0 0 24px var(--neg-glow); }
+.gmt-h-unit { font-size: 13px; color: var(--fg-3); }
+.gmt-h-date { font-family: var(--mono); font-size: 14px; color: var(--fg-2); }
+.gmt-h-delta { font-family: var(--mono); font-size: 14px; font-weight: 700; }
 .gmt-h-delta.pos { color: var(--pos); } .gmt-h-delta.neg { color: var(--neg); }
-.gmt-h-cap { margin-left: auto; font-size: 10px; color: var(--fg-4); }
 .gmt-warn { color: var(--neg); font-style: normal; }
+.gmt-foot { margin-top: 14px; font-size: 10.5px; color: var(--fg-4); display: flex; align-items: center; gap: 7px; line-height: 1.5; }
+.gmt-foot-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--pos); box-shadow: 0 0 5px var(--pos-glow); flex-shrink: 0; }
 .gmt-wrap { position: relative; width: 100%; }
 .gmt-svg { display: block; width: 100%; height: auto; overflow: visible; cursor: crosshair; }
-.gmt-grid { stroke: var(--line-2); stroke-width: 1; vector-effect: non-scaling-stroke; }
-.gmt-grid.v { stroke: var(--line-2); opacity: 0.5; }
+.gmt-grid { stroke: var(--line-2); stroke-width: 1; stroke-dasharray: 1 5; opacity: 0.6; vector-effect: non-scaling-stroke; }
+.gmt-grid.v { stroke: var(--line-2); stroke-dasharray: none; opacity: 0.3; }
 .gmt-ytick { fill: var(--fg-4); font-size: 9px; font-family: var(--mono); }
 .gmt-ytick.r { text-anchor: start; }
 .gmt-xtick { fill: var(--fg-4); font-size: 9px; font-family: var(--mono); text-anchor: middle; }

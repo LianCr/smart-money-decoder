@@ -935,7 +935,7 @@ function NewsStream({ items }) {
 }
 
 // 上帝视角时间轴：价格曲线 × 建仓点 × 新闻发光节点 × 剩余空间（D3 算数学，React 渲 SVG）
-const GMT_W = 760, GMT_H = 300, GMT_M = { t: 14, r: 36, b: 26, l: 14 };
+const GMT_W = 760, GMT_H = 340, GMT_M = { t: 18, r: 38, b: 28, l: 14 };
 function _pdate(s) { return new Date(s + "T00:00:00Z"); }
 function gmtReact(rx) {
   if (!rx || !rx.available) return { txt: "市场反应不可知", cls: "rx-na" };
@@ -953,9 +953,11 @@ function GodModeTimeline({ d }) {
   const act = wpa.actions || {}, un = wpa.unrealized || {}, pc = pos.price_context || {};
   const side = ((pos.meta || {}).analyzed_side || "").toUpperCase();
   const entryDate = act.entry_time ? act.entry_time.slice(0, 10) : null;
-  const entryPrice = act.avg_entry_price, curPrice = pc.current_price, upct = un.unrealized_pct;
-  const up = typeof curPrice === "number" && typeof entryPrice === "number" ? curPrice >= entryPrice : true;
-  const dirCls = up ? "pos" : "neg";
+  const entryPrice = act.avg_entry_price, curPrice = pc.current_price;
+  // 🔴 颜色按价格走势(涨绿/跌红),像 Polymarket——描述价格本身、不与"他赚没赚"混淆(后者在英雄区)
+  const firstP = series[0].price, lastP = series[series.length - 1].price;
+  const dirCls = lastP >= firstP ? "pos" : "neg";
+  const chgPts = typeof curPrice === "number" ? Math.round((curPrice - firstP) * 100) : null;
   const iw = GMT_W - GMT_M.l - GMT_M.r, ih = GMT_H - GMT_M.t - GMT_M.b;
   const x = scaleTime().domain(extent(series, (s) => s.t)).range([0, iw]);
   // 🔴 Y 轴聚焦到数据实际区间（否则 80-98% 的走势在 0-100 轴上被压成顶部一条平线，看不出趋势）
@@ -998,11 +1000,14 @@ function GodModeTimeline({ d }) {
   return (
     <div className="gmt">
       <div className="gmt-header">
-        <span className="gmt-h-side">押 {side}</span>
-        <span className={`gmt-h-pct ${dirCls}`}>{typeof shownPrice === "number" ? Math.round(shownPrice * 100) + "%" : "—"}</span>
-        {hv ? <span className="gmt-h-date">{fmtMD(hv.t)}</span>
-          : (typeof upct === "number" && <span className={`gmt-h-delta ${dirCls}`}>{upct >= 0 ? "▲" : "▼"} {upct >= 0 ? "+" : ""}{upct}%</span>)}
-        <span className="gmt-h-cap">移动鼠标看任意时点价格 · 彩点=新闻催化（与价格变动<b className="gmt-warn">时间相关、非因果</b>）</span>
+        <div className="gmt-h-side">押 {side}</div>
+        <div className="gmt-h-row">
+          <span className={`gmt-h-pct ${dirCls}`}>{typeof shownPrice === "number" ? Math.round(shownPrice * 100) + "%" : "—"}</span>
+          <span className="gmt-h-unit">隐含概率</span>
+          {hv
+            ? <span className="gmt-h-date">{hv.date.slice(5)}</span>
+            : (chgPts != null && <span className={`gmt-h-delta ${dirCls}`}>{chgPts >= 0 ? "▲ +" : "▼ "}{Math.abs(chgPts)}% 区间</span>)}
+        </div>
       </div>
       <div className="gmt-wrap">
         <svg viewBox={`0 0 ${GMT_W} ${GMT_H}`} className="gmt-svg" onMouseMove={onMove} onMouseLeave={() => setCross(null)}>
@@ -1068,6 +1073,7 @@ function GodModeTimeline({ d }) {
           );
         })()}
       </div>
+      <div className="gmt-foot"><i className="gmt-foot-dot" />彩点 = 新闻催化（移动鼠标查看）· 与价格变动<b className="gmt-warn">时间相关、非因果</b> · 灰虚线 = 建仓成本</div>
     </div>
   );
 }
@@ -1233,6 +1239,23 @@ function BoardBody({ d }) {
       {/* 首屏：结论先行 */}
       <VerdictHero d={d} />
 
+      {/* 局势时间轴（核心视觉，紧跟结论）*/}
+      <GodModeTimeline d={d} />
+      {d.world_summary && <div className="db-wsum gmt-summary"><Narrative text={d.world_summary} /></div>}
+      <Fold title="全部明细 · 巨鲸 48h 动作 + 三源新闻流（可点链接）" sub="点开看每条新闻 + 行为窗口">
+        <div className="db-dual">
+          <div className="db-dual-col">
+            <div className="db-dual-h">巨鲸动作流 · 48h</div>
+            <BehaviorFlag b={d.behavior} />
+          </div>
+          <div className="db-dual-col">
+            <div className="db-dual-h">三源新闻明细</div>
+            <div className="db-stream-note">↑印证 / ↓不买账 = 持有侧价格在新闻前后窗口的涨跌（前后变动，非该新闻导致）</div>
+            <NewsStream items={d.news_stream} />
+          </div>
+        </div>
+      </Fold>
+
       {/* ② 这一注 · 明细 */}
       <div className="db-sec-tag">② 这一注 · 明细</div>
       <div className="c-head db-pos-head">
@@ -1264,24 +1287,6 @@ function BoardBody({ d }) {
         ? <><PolymarketEmbed slug={d.market.slug} />
             <a className="db-jump num" href={`https://polymarket.com/market/${d.market.slug}`} target="_blank" rel="noreferrer">在 Polymarket 打开 ↗</a></>
         : <div className="ctx-empty">无 slug,实时盘面不可嵌入</div>}
-
-      {/* ④⑤ 上帝视角时间轴：价格 × 巨鲸动作 × 新闻催化剂，揉成一张图 */}
-      <div className="db-sec-tag">④⑤ 局势时间轴 · 价格 × 巨鲸动作 × 新闻催化剂</div>
-      <GodModeTimeline d={d} />
-      {d.world_summary && <div className="db-wsum gmt-summary"><Narrative text={d.world_summary} /></div>}
-      <Fold title="全部明细 · 巨鲸 48h 动作 + 三源新闻流（可点链接）" sub="点开看每条新闻 + 行为窗口">
-        <div className="db-dual">
-          <div className="db-dual-col">
-            <div className="db-dual-h">巨鲸动作流 · 48h</div>
-            <BehaviorFlag b={d.behavior} />
-          </div>
-          <div className="db-dual-col">
-            <div className="db-dual-h">三源新闻明细</div>
-            <div className="db-stream-note">↑印证 / ↓不买账 = 持有侧价格在新闻前后窗口的涨跌（前后变动，非该新闻导致）</div>
-            <NewsStream items={d.news_stream} />
-          </div>
-        </div>
-      </Fold>
 
       {/* 降级：钱包历史体量（资格审查，不再霸占首屏）*/}
       <Fold title="钱包历史体量 · 身份背书" sub="累计盈亏曲线 + 风险标记（背景调查，非本注结论）">
