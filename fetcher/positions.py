@@ -5,8 +5,10 @@ fetcher/positions.py — Heisenberg 版"钱包最大政治仓"查找器（v3 简
 它打真实 data-api/gamma-api.polymarket.com，那两个公开 API 会挂（实测 HTTP 000 挂 18s）→ API_TIMEOUT。
 而整个简报数据层跑的是 Heisenberg（可达、2026 数据世界）。让入口也走 Heisenberg = 数据世界一致 + 不依赖会挂的外部 API。
 
-口径：拉钱包近 60 天成交(556)，按 (市场,outcome) 聚合买入成本，取成本最大的**未结算**政治盘
-（live 简报问"现在还要不要跟"，已结算盘没意义、绝不返回），返回 {market_id, outcome, market_question}。
+口径：拉钱包近 60 天成交(556)，按 (市场,outcome) 算**当前净持仓**(买入份额−卖出份额，×均买价)，
+取净持仓最大的**未结算**政治盘（live 简报问"现在还要不要跟"，已结算盘没意义、绝不返回）。
+🔴 用净持仓**不用累计买入成本**：一个边买边卖、已基本清仓的盘，历史买入额可能很大但他已跑掉，
+   按买入成本会误选成"最大仓"给用户看个幽灵盘——净持仓才反映他现在还重仓在哪。返回 {market_id, outcome, market_question}。
 """
 
 from datetime import datetime, timedelta, timezone
@@ -50,24 +52,34 @@ def get_top_political_position_hz(wallet, as_of="2026-06-20", min_cost=300.0):
     if not trades:
         return {"error": True, "reason": "NO_POSITIONS", "message": "该钱包近 60 天无成交记录"}
 
-    # 按 (cid, outcome) 聚合买入成本
+    # 按 (cid, outcome) 聚合：买入份额/成本 + 卖出份额 → 当前净持仓
     agg, slugs = {}, {}
     for t in trades:
-        if str(t.get("side", "")).upper() != "BUY":
-            continue
         cid, o = t.get("condition_id"), t.get("outcome")
-        cost = (_f(t.get("size")) or 0) * (_f(t.get("price")) or 0)
         if not cid:
             continue
-        agg.setdefault(cid, {}).setdefault(o, 0.0)
-        agg[cid][o] += cost
+        size = _f(t.get("size")) or 0
+        price = _f(t.get("price")) or 0
+        side = str(t.get("side", "")).upper()
+        d = agg.setdefault(cid, {}).setdefault(o, {"buy_shares": 0.0, "buy_cost": 0.0, "sell_shares": 0.0})
+        if side == "BUY":
+            d["buy_shares"] += size
+            d["buy_cost"] += size * price
+        elif side == "SELL":
+            d["sell_shares"] += size
         slugs[cid] = str(t.get("slug", ""))
 
-    # 按总买入成本降序，取成本最大的【未结算政治盘】（live 简报绝不返回已结算盘）
-    ranked = sorted(agg.items(), key=lambda kv: -sum(kv[1].values()))
+    def _net_cost(d):
+        """当前净持仓规模 = max(买入份额−卖出份额, 0) × 该侧均买价（剩余成本基础）。已清仓→≈0，自然落榜。"""
+        net = max(d["buy_shares"] - d["sell_shares"], 0.0)
+        avg = d["buy_cost"] / d["buy_shares"] if d["buy_shares"] else 0.0
+        return net * avg
+
+    # 按当前净持仓降序，取净持仓最大的【未结算政治盘】（live 简报绝不返回已结算盘）
+    ranked = sorted(agg.items(), key=lambda kv: -sum(_net_cost(d) for d in kv[1].values()))
     saw_pol_settled = False
     for cid, outs in ranked:
-        total = sum(outs.values())
+        total = sum(_net_cost(d) for d in outs.values())
         if total < min_cost:
             break                                  # 已降序，后面更小，停
         # 574 默认只返未结算市场；空 = 已结算/不存在 → 该盘不能进 live 简报
@@ -90,7 +102,7 @@ def get_top_political_position_hz(wallet, as_of="2026-06-20", min_cost=300.0):
                 saw_pol_settled = True
             continue
         if any(k in blob for k in POLITICAL_KW):
-            outcome = max(outs.items(), key=lambda kv: kv[1])[0]   # 主仓侧
+            outcome = max(outs.items(), key=lambda kv: _net_cost(kv[1]))[0]   # 净持仓更大的一侧
             return {"market_id": cid, "outcome": outcome, "market_question": q}
 
     # 没有未结算的政治持仓 → 诚实报错（绝不拿已结算盘充数）
