@@ -1013,8 +1013,18 @@ a.db-news-t:hover { color: var(--bf-accent); text-decoration: underline; }
 @media (max-width: 680px) { .ns-split { grid-template-columns: 1fr; } }
 
 /* Polymarket 价格滚动栏（第三方 widget，自带样式，只给外框间距）*/
-.ticker-wrap { margin: -4px 0 18px; min-height: 36px; overflow: hidden; border: 1px solid var(--line-1); border-radius: 4px; }
-#polymarket-price-ticker { width: 100%; }
+/* 入口滚动条：本周政治盘热门交易者 */
+.hot-wrap { display: flex; align-items: center; gap: 14px; margin: -4px 0 18px; padding: 8px 14px; overflow: hidden; border: 1px solid var(--line-1); border-radius: 4px; background: var(--panel, rgba(255,255,255,0.02)); }
+.hot-label { flex-shrink: 0; font-size: 11px; font-weight: 700; color: var(--accent); white-space: nowrap; letter-spacing: 0.02em; }
+.hot-marquee { flex: 1; overflow: hidden; -webkit-mask-image: linear-gradient(90deg, transparent, #000 4%, #000 96%, transparent); mask-image: linear-gradient(90deg, transparent, #000 4%, #000 96%, transparent); }
+.hot-track { display: inline-flex; gap: 26px; white-space: nowrap; animation: hot-scroll 48s linear infinite; }
+.hot-wrap:hover .hot-track { animation-play-state: paused; }
+.hot-item { display: inline-flex; align-items: baseline; gap: 7px; padding: 0; background: none; border: none; cursor: pointer; font-size: 12px; }
+.hot-rank { font-size: 10px; color: var(--fg-3); }
+.hot-addr { color: var(--fg-2); transition: color 0.12s; }
+.hot-pnl { font-weight: 700; color: var(--pos); }
+.hot-item:hover .hot-addr { color: var(--accent); }
+@keyframes hot-scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 
 /* ══ 扫榜推荐（输入页"值得看的聪明钱"）═════════════════════════════════════════ */
 .recs { margin-bottom: 26px; }
@@ -1028,7 +1038,35 @@ a.db-news-t:hover { color: var(--bf-accent); text-decoration: underline; }
 .rec-aibadge { font-family: var(--mono); font-size: 9px; font-weight: 700; color: var(--bf-accent); background: var(--accent-bg); border: 1px solid rgba(0,229,255,0.3); padding: 1px 6px; border-radius: 2px; }
 .rec-addr { font-size: 11px; color: var(--fg-3); }
 .rec-tier { font-family: var(--mono); font-size: 9px; color: var(--amber); background: rgba(243,168,42,0.1); padding: 1px 6px; border-radius: 2px; }
+.rec-cross { font-family: var(--mono); font-size: 9px; color: var(--pos); background: var(--pos-bg); border: 1px solid rgba(0,230,118,0.3); padding: 1px 5px; border-radius: 2px; }
 .rec-h { margin-left: auto; font-size: 12px; font-weight: 700; color: var(--pos); }
+.rec-pol { font-size: 11px; color: var(--fg-2); margin-bottom: 7px; }
+.rec-pol b { font-family: var(--mono); color: var(--pos); }
+.rec-pol span { color: var(--fg-3); }
+.rec-src { font-size: 10px; color: var(--fg-3); margin: 2px 0 6px; }
+.rec-disagree { font-size: 10px; color: #f0b429; background: rgba(240,180,41,0.1); border: 1px solid rgba(240,180,41,0.25); border-radius: 3px; padding: 3px 7px; margin: 4px 0 6px; line-height: 1.5; }
+.rec-disagree b { font-family: var(--mono); }
+.rec-disagree .with { color: var(--pos); }
+.rec-disagree .against { color: #f0b429; }
+/* ⑥ 市场命题级 edge / 胜负手 / 多空对抗审计 */
+.vh-edge { font-size: 13px; color: var(--fg-2); margin: 6px 0 2px; }
+.vh-edge b { color: var(--fg-1); }
+.vh-edge-str { font-family: var(--mono); font-size: 11px; color: var(--fg-3); }
+.vh-align.against { color: #f0b429; }
+.vh-align.with { color: var(--pos); }
+.vh-pivotal { font-size: 12px; color: var(--fg-2); margin: 6px 0; padding: 6px 10px; border-left: 2px solid var(--border); background: rgba(255,255,255,0.02); }
+.vh-audit-th { font-size: 11px; line-height: 1.6; color: var(--fg-2); margin: 4px 0; }
+.vh-audit-th b { color: var(--fg-1); }
+.vh-trust { margin: 4px 0 8px; padding: 6px 8px; background: rgba(120,180,255,0.06); border-radius: 3px; }
+.vh-trust-h { font-size: 10px; font-weight: 700; color: var(--accent); margin-bottom: 3px; }
+.vh-trust-l { font-size: 11px; line-height: 1.6; color: var(--fg-2); }
+.rec-verdict { margin-top: 8px; padding-top: 8px; border-top: 1px dashed var(--border); display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px; }
+.rec-conf { font-size: 10px; font-weight: 700; padding: 1px 6px; border-radius: 2px; }
+.rec-conf.high { color: var(--pos); background: var(--pos-bg); }
+.rec-conf.medium { color: #f0b429; background: rgba(240,180,41,0.12); }
+.rec-conf.low { color: var(--fg-3); background: rgba(255,255,255,0.05); }
+.rec-call { font-size: 10px; font-weight: 700; color: var(--accent); }
+.rec-verdict-txt { flex-basis: 100%; font-size: 11px; line-height: 1.5; color: var(--fg-2); margin-top: 2px; }
 .rec-q { font-size: 12.5px; line-height: 1.45; color: var(--fg-1); margin-bottom: 7px; }
 .rec-side { color: var(--bf-accent); font-weight: 600; white-space: nowrap; }
 .rec-beh { font-size: 11px; color: var(--fg-3); line-height: 1.4; }

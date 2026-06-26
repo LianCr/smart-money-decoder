@@ -139,6 +139,39 @@ def build_news_stream(gdelt_events, tavily_cats, tok, as_of):
     return items
 
 
+def build_market_news_stream(gdelt_events, shared_pool, tok, as_of):
+    """⑤ 市场级版：从 market_thesis 的**共享文章池**建时间线（两个反向钱包看到同一批新闻）。
+    🔴 direction 一律 None——支持/威胁是相对钱包方向的、属于 ⑥（顺/逆 edge），⑤ 只呈现"市场的新闻现实 + 市场反应"，不按方向切。"""
+    items, seen = [], set()
+    for e in gdelt_events or []:
+        if e.get("type") != "catalyst":
+            continue
+        k = _norm(e.get("url"), e.get("title"))
+        if k in seen:
+            continue
+        seen.add(k)
+        url = (e.get("url") or "").strip()
+        src = e.get("source")
+        items.append({"date": e.get("timestamp"), "title": e.get("title"), "summary": e.get("fact_summary"),
+                      "url": url or (f"https://{src}" if src else ""), "origin": "GDELT", "direction": None})
+    for a in shared_pool or []:
+        k = _norm(a.get("url"), a.get("title"))
+        if k in seen:
+            continue
+        seen.add(k)
+        items.append({"date": a.get("date"), "title": a.get("title"), "summary": a.get("summary"),
+                      "url": (a.get("url") or "").strip(), "origin": "Tavily", "direction": None})
+    daycount = {}
+    for it in items:
+        if it["date"]:
+            daycount[it["date"]] = daycount.get(it["date"], 0) + 1
+    for it in items:
+        it["reaction"] = _reaction(tok, it["date"], as_of)
+        it["same_window"] = bool(it["date"] and daycount.get(it["date"], 0) > 1)
+    items.sort(key=lambda x: x.get("date") or "", reverse=True)
+    return items
+
+
 def _guard_directive(text):
     bad = [w for w in DIRECTIVE_WORDS + FEAR_WORDS if w in (text or "")]
     return text if not bad else None

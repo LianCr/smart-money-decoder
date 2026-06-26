@@ -34,8 +34,9 @@ def _f(x):
         return None
 
 
-def get_top_political_position_hz(wallet, as_of="2026-06-20", min_cost=300.0):
-    """返回该钱包最大**未结算**政治持仓 {market_id, outcome, market_question} 或 {error,reason,message}。"""
+def get_top_political_position_hz(wallet, as_of="2026-06-20", min_cost=300.0, max_pages=15):
+    """返回该钱包最大**未结算**政治持仓 {market_id, outcome, market_question} 或 {error,reason,message}。
+    max_pages：翻几页成交（默认 15 全量）；扫榜时可调小(如 6)换速度——大户最大净仓多在近几页。"""
     wallet = (wallet or "").strip()
     if not (wallet.startswith("0x") and len(wallet) == 42):
         return {"error": True, "reason": "INVALID_ADDRESS", "message": "钱包地址格式不对（应为 0x + 40 位）"}
@@ -46,7 +47,7 @@ def get_top_political_position_hz(wallet, as_of="2026-06-20", min_cost=300.0):
         trades = paginate(AGENTS["trades"][0],
                           {"proxy_wallet": wallet, "condition_id": "ALL",
                            "start_time": str(int(start.timestamp())), "end_time": str(int(end.timestamp()))},
-                          max_pages=15)
+                          max_pages=max_pages)
     except HeisenbergError as e:
         return {"error": True, "reason": e.reason, "message": e.message}
     if not trades:

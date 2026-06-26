@@ -43,6 +43,7 @@ from fetcher.positions import get_top_political_position_hz
 from briefing.market_context import load_or_build as build_market_context
 from briefing.market_context import get_behavior_flags
 from analyzer.reasoner_v3 import reason_v3, ReasonerError
+from analyzer.market_thesis import build_market_thesis, map_wallet
 from fetcher.heisenberg import call as hz_call, results as hz_results, AGENTS as HZ_AGENTS
 from briefing import board_feed
 from fetcher.social import social_pulse
@@ -460,8 +461,35 @@ def dashboard(wallet: str):
         # 社媒情绪动量（585，免费，🔴情绪非事实、仅实时——前端与新闻视觉分开 + 刷量标显眼）
         social = social_pulse(_entities_from_question(market_q))
 
-        # ⑥ Edge/Reasoning（代码矩阵 + reasoner，含三铁律守卫）—— 独立缓存，改 ⑤/② 不重烧
+        # ⑥ Edge/Reasoning：reason_v3 仍供 follow_call + 代码 facts（价格/时长/对冲）；
+        # 🔴 信心改由「市场命题级对抗推理」直出（market_thesis，按 cid,as_of 缓存→两个反向钱包共享同一份市场观，
+        #    信心一致、差异挪到 顺/逆 edge），替代旧 pnl 锚定矩阵。gateway/Tavily 挂则优雅退回旧矩阵。
         reasoning = _reasoner_cached(b, behavior, wallet)
+        try:
+            pc = b.get("price_context", {}) or {}
+            cp = pc.get("current_price")
+            cp = (cp / 100.0) if (cp and cp > 1) else cp                       # 归一到 0-1
+            yes_price = cp if str(outcome).lower() == "yes" else (None if cp is None else 1 - cp)
+            implied_yes = round(yes_price * 100) if yes_price is not None else 50
+            thesis = build_market_thesis(market_q, cid, BRIEFING_AS_OF, implied_yes, social=social)
+            algn = map_wallet(thesis, outcome)
+            # ⑤ 改市场级：从 thesis 共享池重建新闻流 → 两个反向钱包看到同一批新闻（不再按方向切）
+            if thesis.get("shared_pool"):
+                news_stream = board_feed.build_market_news_stream(
+                    gdelt_events, thesis["shared_pool"], tok, BRIEFING_AS_OF)
+            reasoning = {
+                **reasoning,
+                "confidence": thesis["confidence"],                  # 单一信心，市场级
+                "market_lean": thesis["market_lean"],
+                "lean_strength": thesis["lean_strength"],
+                "pivotal_unknown": thesis["pivotal_unknown"],
+                "alignment": algn["alignment"],                      # 这一注 顺/逆 edge（与信心解耦）
+                "reasoning": f"{thesis.get('rationale') or ''} 这一注押 {outcome}，{algn['alignment']}。".strip(),
+                "thesis_audit": thesis.get("_audit"),
+                "input_trust": (thesis.get("input_trust") or {}).get("lines"),   # Phase 1 可信度修正（价格深度/犹豫度/距结算）
+            }
+        except Exception as e:
+            _log(f"   ⚠ market_thesis 失败，⑥ 退回旧矩阵：{type(e).__name__}: {e}")
 
         # ① 画像 + PnL 曲线（best-effort，不阻塞）
         profile = get_wallet_profile(wallet)
@@ -522,6 +550,20 @@ def recommendations():
         except Exception:
             pass
     return {"as_of": BRIEFING_AS_OF, "candidates": []}
+
+
+HOT_TRADERS_FILE = Path(".data/hot_traders.json")
+
+
+@app.get("/hot-traders")
+def hot_traders():
+    """入口页滚动条：本周政治盘热门交易者（hot_traders.py 定期写）。空=还没扫过。"""
+    if HOT_TRADERS_FILE.exists():
+        try:
+            return json.loads(HOT_TRADERS_FILE.read_text(encoding="utf-8"))
+        except Exception:
+            pass
+    return {"as_of": BRIEFING_AS_OF, "period": "7d", "traders": []}
 
 
 @app.get("/scorecard")

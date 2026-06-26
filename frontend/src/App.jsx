@@ -156,7 +156,7 @@ function PnlChart({ points }) {
 }
 
 export default function App() {
-  const [tab, setTab] = useState("decode");
+  const [tab, setTab] = useState("board");   // 主页=统一看板(推荐流落地处)；Decode 降为存档，仍可经品牌 logo / 统一看板切换键到达
   // 功勋章的 W/L 取回测真值；默认 5/1（当前案例集事实），/backtest 到达后自校正、不闪
   const [wl, setWl] = useState({ w: 5, l: 1 });
   useEffect(() => {
@@ -1300,9 +1300,35 @@ function VerdictHero({ d }) {
         </div>
       )}
 
+      {r.market_lean && (
+        <div className="vh-edge">
+          市场倾向 <b>{r.market_lean}</b>{r.lean_strength != null && <span className="vh-edge-str"> {r.lean_strength}/100</span>}
+          {r.alignment && <span className={`vh-align ${r.alignment.includes("逆") ? "against" : "with"}`}> · 这一注 {r.alignment}</span>}
+        </div>
+      )}
+
       <div className="vh-verdict">{r.guard_tripped ? r.guard_message : r.reasoning}</div>
 
-      {!r.guard_tripped && r.confidence_reasons && r.confidence_reasons.length > 0 && (
+      {!r.guard_tripped && r.pivotal_unknown && (
+        <div className="vh-pivotal">⚖ 胜负手：{r.pivotal_unknown}</div>
+      )}
+
+      {!r.guard_tripped && r.market_lean && r.thesis_audit && (
+        <details className="vh-audit">
+          <summary>信心怎么来的？（多空对抗 → 中立裁决，单一信心直出）</summary>
+          {r.input_trust && r.input_trust.length > 0 && (
+            <div className="vh-trust">
+              <div className="vh-trust-h">输入可信度（决定价格/证据该信几分）</div>
+              {r.input_trust.map((l, i) => <div className="vh-trust-l" key={i}>· {l}</div>)}
+            </div>
+          )}
+          <div className="vh-audit-th"><b>多头(押 YES)：</b>{r.thesis_audit.bull}</div>
+          <div className="vh-audit-th"><b>空头(押 NO)：</b>{r.thesis_audit.bear}</div>
+          <div className="vh-audit-foot">↑ 同一市场只算一次、两个反向钱包共享同一份市场观；信心由裁决人直出、不锚钱包盈亏 · 已记日志，待盘结算回验是否真命中</div>
+        </details>
+      )}
+
+      {!r.guard_tripped && !r.market_lean && r.confidence_reasons && r.confidence_reasons.length > 0 && (
         <details className="vh-audit">
           <summary>为什么是「{CONF_CN[r.confidence] || r.confidence}」信心？（点开看代码怎么算的）</summary>
           <ul className="vh-audit-list">
@@ -1410,23 +1436,34 @@ function BoardBody({ d }) {
 }
 
 // Polymarket 价格滚动栏（第三方 widget：先渲 div、再注入脚本，脚本按 id 找 div 渲染）
-function PriceTicker() {
-  useEffect(() => {
-    if (document.querySelector('script[src*="price-ticker.js"]')) return;  // 只注入一次
-    const s = document.createElement("script");
-    s.src = "https://legacy.polymarketanalytics.com/widget/price-ticker.js";
-    s.async = true;
-    document.body.appendChild(s);
-  }, []);
+// 入口滚动条：本周政治盘热门交易者（hot_traders.py：579 7d 宇宙 × 581 政治 7d 盈亏）。点一个直接解码。
+function HotTraders({ onPick }) {
+  const [data, setData] = useState(null);
+  useEffect(() => { fetch(`${API}/hot-traders`).then((r) => r.json()).then(setData).catch(() => {}); }, []);
+  const traders = (data && data.traders) || [];
+  if (!traders.length) return null;
+  const loop = [...traders, ...traders];   // 两份拼接 = 无缝循环
   return (
-    <div className="ticker-wrap">
-      <div id="polymarket-price-ticker" data-theme="dark" data-transparent="false" data-show-icon="true" />
+    <div className="hot-wrap" title="本周政治盘最赚的交易者 · 点击直接解码（数据来自 581 政治盘 7 天盈亏，仅地址无昵称）">
+      <span className="hot-label">🔥 本周政治盘热门</span>
+      <div className="hot-marquee">
+        <div className="hot-track">
+          {loop.map((t, i) => (
+            <button className="hot-item" key={i} onClick={() => onPick(t.wallet)} title={t.wallet}>
+              <span className="hot-rank num">#{(i % traders.length) + 1}</span>
+              <span className="hot-addr num">{abbrev(t.wallet)}</span>
+              <span className="hot-pnl num">+{money(t.weekly_politics_pnl)}</span>
+            </button>
+          ))}
+        </div>
+      </div>
     </div>
   );
 }
 
 // 扫榜推荐（免费扫榜层）：点一个直接 decode
 const BEH_ICON = { ADD: "📈", EXIT: "📉", STATIC: "⏸" };
+const CALL_CN = { "ROOM LEFT": "还有空间", CHASED: "太迟了", "NO BASIS": "没依据" };
 function Recommendations({ onPick }) {
   const [data, setData] = useState(null);
   useEffect(() => { fetch(`${API}/recommendations`).then((r) => r.json()).then(setData).catch(() => {}); }, []);
@@ -1434,22 +1471,43 @@ function Recommendations({ onPick }) {
   if (!cands.length) return null;
   return (
     <div className="recs">
-      <div className="recs-h">值得看的聪明钱 · 扫 H-Score 质量榜（已滤机器人/运气）<span className="recs-sub">点一个直接 decode</span></div>
+      <div className="recs-h">值得看的聪明钱 · <b>政治盘专家</b>（从热门政治盘反向找的共持大户 · 政治专长筛 · ∩月榜）<span className="recs-sub">点一个直接 decode</span></div>
       <div className="recs-list">
-        {cands.map((c, i) => (
-          <button className={`rec ${c.ai_pick ? "pick" : ""}`} key={i} onClick={() => onPick(c.wallet)}>
-            <div className="rec-top">
-              {c.ai_pick && <span className="rec-aibadge">AI 精选</span>}
-              <span className="rec-addr num">{abbrev(c.wallet)}</span>
-              {c.tier && <span className="rec-tier">{c.tier}</span>}
-              {c.h_score != null && <span className="rec-h num">H{Math.round(c.h_score)}</span>}
-            </div>
-            <div className="rec-q">{c.market_question} <span className="rec-side">· 押 {c.outcome}</span></div>
-            <div className="rec-beh">{BEH_ICON[c.behavior] || "·"} {c.behavior_fact || c.behavior || "—"}</div>
-          </button>
-        ))}
+        {cands.map((c, i) => {
+          const pw = c.politics_win_rate;
+          const pwTxt = pw != null ? (pw <= 1 ? Math.round(pw * 100) : Math.round(pw)) + "%" : null;
+          return (
+            <button className={`rec ${c.ai_pick ? "pick" : ""}`} key={i} onClick={() => onPick(c.wallet)}>
+              <div className="rec-top">
+                {c.ai_pick && <span className="rec-aibadge">AI 精选</span>}
+                <span className="rec-addr num">{abbrev(c.wallet)}</span>
+                {c.cross_ref_579 && <span className="rec-cross">∩月榜</span>}
+                {c.tier && <span className="rec-tier">{c.tier}</span>}
+                {c.h_score != null && <span className="rec-h num">H{Math.round(c.h_score)}</span>}
+              </div>
+              {c.politics_pnl != null && (
+                <div className="rec-pol">政治盘 <b className="num">{money(c.politics_pnl)}</b>{pwTxt && <span> · 胜率 {pwTxt}</span>}{c.politics_trades && <span> · {c.politics_trades} 注</span>}</div>
+              )}
+              <div className="rec-q">{c.market_question} <span className="rec-side">· 押 {c.outcome}</span></div>
+              {c.disagreement && (
+                <div className="rec-disagree">⚠ 聪明钱在此盘分歧（正反都有人押）
+                  {c.disagreement_lean && <span className={c.disagreement_with_edge ? "with" : "against"}> · 我们独立倾向 <b>{c.disagreement_lean}</b> → 这注{c.disagreement_with_edge ? "顺" : "逆"} edge</span>}
+                </div>
+              )}
+              {c.source_market && <div className="rec-src">↳ 从「{c.source_market}」共持发现</div>}
+              <div className="rec-beh">{BEH_ICON[c.behavior] || "·"} {c.behavior_fact || c.behavior || "—"}</div>
+              {c.ai_pick && (
+                <div className="rec-verdict">
+                  <span className={`rec-conf ${c.ai_confidence}`}>⑥ {CONF_CN[c.ai_confidence] || c.ai_confidence} 信心</span>
+                  {c.ai_follow_call && <span className="rec-call">{CALL_CN[c.ai_follow_call] || c.ai_follow_call}</span>}
+                  {c.ai_verdict && <span className="rec-verdict-txt">{c.ai_verdict}</span>}
+                </div>
+              )}
+            </button>
+          );
+        })}
       </div>
-      <div className="recs-foot">扫榜=值得一看，<b>不是"该跟"</b> · 高盈利 ≠ 下一注好（过去≠未来）· 单边/对冲由点开后的 ⑥ 判 {data.as_of && `· 截至 ${data.as_of}`}</div>
+      <div className="recs-foot">扫榜=值得一看，<b>不是"该跟"</b> · 高盈利 ≠ 下一注好（过去≠未来）· 这注本身好不好由点开后的 ⑥ 判 {data.as_of && `· 截至 ${data.as_of}`}{data.generated_at && ` · 更新于 ${new Date(data.generated_at * 1000).toLocaleString("zh-CN", { month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit" })}`}</div>
     </div>
   );
 }
@@ -1477,7 +1535,7 @@ function BoardView() {
   const showHome = !data && !loading && !error;
   return (
     <>
-      <PriceTicker />
+      <HotTraders onPick={(w) => { setWallet(w); run(w); }} />
       {!data && !error && (
         <div className="console-sub">输入聪明钱钱包,生成 v3 统一看板:身份体量 → 这一注 → 实时盘面 → 行为×催化剂 → Edge 判断,一屏看全</div>
       )}
