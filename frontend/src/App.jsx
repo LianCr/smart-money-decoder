@@ -1037,6 +1037,7 @@ function GodModeTimeline({ d }) {
   const pos = d.position || {}, wpa = pos.what_position_actions || {};
   const act = wpa.actions || {}, un = wpa.unrealized || {}, pc = pos.price_context || {};
   const side = ((pos.meta || {}).analyzed_side || "").toUpperCase();
+  const settle = (pos.meta || {}).settle;          // "还有约55.0天" — 结算倒计时上下文
   const entryDate = act.entry_time ? act.entry_time.slice(0, 10) : null;
   const entryPrice = act.avg_entry_price, curPrice = pc.current_price;
   // 🔴 颜色按价格走势(涨绿/跌红),像 Polymarket——描述价格本身、不与"他赚没赚"混淆(后者在英雄区)
@@ -1069,9 +1070,15 @@ function GodModeTimeline({ d }) {
   const yTicks = y.ticks(4), xTicks = x.ticks(6);
 
   const hv = cross != null ? series[cross] : null;
-  const newsAt = hv ? nodes.find((n) => n.date === hv.date) : null;
   const bright = cross != null ? series.slice(0, cross + 1) : series;
   const shownPrice = hv ? hv.price : curPrice;
+  // 🔴 扫到彩点"附近"(≤26 viewBox 单位)就激活该新闻 → 不必精确落在那天，可发现性大增（旧版要求 date 精确相等，很难命中）
+  let activeNews = null;
+  if (hv && nodes.length) {
+    const cxp = x(hv.t); let bd = Infinity;
+    for (const n of nodes) { const dd = Math.abs(x(n.t) - cxp); if (dd < bd) { bd = dd; activeNews = n; } }
+    if (bd > 26) activeNews = null;
+  }
 
   function onMove(e) {
     const rect = e.currentTarget.getBoundingClientRect();
@@ -1092,10 +1099,21 @@ function GodModeTimeline({ d }) {
           {hv
             ? <span className="gmt-h-date">{hv.date.slice(5)}</span>
             : (chgPts != null && <span className={`gmt-h-delta ${dirCls}`}>{chgPts >= 0 ? "▲ +" : "▼ "}{Math.abs(chgPts)}% 区间</span>)}
+          {!hv && settle && <span className="gmt-h-settle">· 结算 {settle}</span>}
         </div>
       </div>
       <div className="gmt-wrap">
         <svg viewBox={`0 0 ${GMT_W} ${GMT_H}`} className="gmt-svg" onMouseMove={onMove} onMouseLeave={() => setCross(null)}>
+          <defs>
+            <linearGradient id="gmt-grad-pos" x1="0" x2="0" y1="0" y2="1">
+              <stop offset="0%" stopColor="var(--pos)" stopOpacity="0.28" />
+              <stop offset="100%" stopColor="var(--pos)" stopOpacity="0" />
+            </linearGradient>
+            <linearGradient id="gmt-grad-neg" x1="0" x2="0" y1="0" y2="1">
+              <stop offset="0%" stopColor="var(--neg)" stopOpacity="0.26" />
+              <stop offset="100%" stopColor="var(--neg)" stopOpacity="0" />
+            </linearGradient>
+          </defs>
           <g transform={`translate(${GMT_M.l},${GMT_M.t})`}>
             {xTicks.map((t, i) => (
               <g key={"x" + i}>
@@ -1109,7 +1127,7 @@ function GodModeTimeline({ d }) {
                 <text x={iw + 6} y={y(t)} className="gmt-ytick r" dy="0.32em">{Math.round(t * 100)}%</text>
               </g>
             ))}
-            <path d={ag(series)} className={`gmt-area ${dirCls}`} />
+            <path d={ag(series)} className="gmt-area" fill={`url(#gmt-grad-${dirCls})`} />
             {cross != null && <path d={lg(series)} className={`gmt-line ${dirCls} dim`} />}
             <path d={lg(bright)} className={`gmt-line ${dirCls}`} />
             {typeof entryPrice === "number" && <line x1="0" x2={iw} y1={y(entryPrice)} y2={y(entryPrice)} className="gmt-entry-h" />}
@@ -1120,7 +1138,8 @@ function GodModeTimeline({ d }) {
               </g>
             )}
             {nodes.map((n, i) => (
-              <circle key={i} cx={x(n.t)} cy={y(n.px)} r="5.5" fill={nodeColor(n)} className="gmt-node" />
+              <circle key={i} cx={x(n.t)} cy={y(n.px)} r={activeNews === n ? 7.5 : 5.5} fill={nodeColor(n)}
+                className={`gmt-node ${activeNews === n ? "active" : ""}`} />
             ))}
             {hv && (
               <g>
@@ -1140,25 +1159,31 @@ function GodModeTimeline({ d }) {
         {entryDate && typeof entryPrice === "number" && (
           <div className="gmt-lbl entry" style={{ left: `${sx(x(_pdate(entryDate)))}%`, top: `${sy(y(entryPrice))}%` }}>建仓 {Math.round(entryPrice * 100)}¢</div>
         )}
-        {newsAt && (() => {
-          const rc = gmtReact(newsAt.reaction);
-          const lx = sx(x(newsAt.t)), ly = sy(y(newsAt.px));
-          const cls = `${ly < 42 ? "below" : ""} ${lx > 72 ? "ar" : lx < 28 ? "al" : "ac"}`;
-          return (
-            <div className={`gmt-tip ${cls}`} style={{ left: `${lx}%`, top: `${ly}%` }}>
-              <div className="gmt-tip-top">
-                <span className="gmt-tip-date num">{newsAt.date}</span>
-                {newsAt.direction && <span className={`db-dir ${newsAt.direction}`}>{newsAt.direction === "support" ? "支持" : "威胁"}</span>}
-                <span className={`rx ${rc.cls}`}>{rc.txt}</span>
-              </div>
-              <div className="gmt-tip-title">{newsAt.title}</div>
-              {newsAt.summary && <div className="gmt-tip-sum">{newsAt.summary}</div>}
-              <div className="gmt-tip-foot">{newsAt.origin} · 时间相关·非因果</div>
-            </div>
-          );
-        })()}
       </div>
-      <div className="gmt-foot"><i className="gmt-foot-dot" />彩点 = 新闻催化（移动鼠标查看）· 与价格变动<b className="gmt-warn">时间相关、非因果</b> · 灰虚线 = 建仓成本</div>
+      {/* 🔴 催化剂读出条：固定在图下方、永不遮挡价格线（TradingView 式事件面板）。扫到彩点附近→显示该新闻；否则显示图例 */}
+      <div className={`gmt-readout ${activeNews ? "on" : ""}`}
+        style={activeNews ? { borderLeftColor: nodeColor(activeNews) } : null}>
+        {activeNews ? (() => {
+          const rc = gmtReact(activeNews.reaction);
+          return (
+            <>
+              <div className="gmt-ro-line">
+                <span className="gmt-ro-date num">{activeNews.date}</span>
+                {activeNews.direction && <span className={`db-dir ${activeNews.direction}`}>{activeNews.direction === "support" ? "支持" : "威胁"}</span>}
+                <span className={`rx ${rc.cls}`}>{rc.txt}</span>
+                <span className="gmt-ro-title">{activeNews.title}</span>
+                {activeNews.url && <a className="gmt-ro-link" href={activeNews.url} target="_blank" rel="noreferrer">原文 ↗</a>}
+              </div>
+              {activeNews.summary && <div className="gmt-ro-sum">{activeNews.summary}</div>}
+              <div className="gmt-ro-foot">{activeNews.origin} · 与价格变动<b className="gmt-warn">时间相关、非因果</b></div>
+            </>
+          );
+        })() : (
+          <div className="gmt-ro-hint">
+            <i className="gmt-foot-dot" /><b>扫过彩点</b>看催化剂 — 颜色 = 市场反应（<span className="rx-c-pos">绿印证</span> / <span className="rx-c-neg">红不买账</span> / 灰无反应）· 与价格<span className="gmt-warn">时间相关、非因果</span> · 灰虚线 = 建仓成本
+          </div>
+        )}
+      </div>
     </div>
   );
 }

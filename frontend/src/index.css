@@ -923,6 +923,20 @@ a.db-news-t:hover { color: var(--bf-accent); text-decoration: underline; }
 .gmt-warn { color: var(--neg); font-style: normal; }
 .gmt-foot { margin-top: 14px; font-size: 10.5px; color: var(--fg-4); display: flex; align-items: center; gap: 7px; line-height: 1.5; }
 .gmt-foot-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--pos); box-shadow: 0 0 5px var(--pos-glow); flex-shrink: 0; }
+.gmt-h-settle { font-family: var(--mono); font-size: 12px; color: var(--fg-4); }
+/* 催化剂读出条：固定在图下方、永不遮挡价格线 */
+.gmt-readout { margin-top: 13px; min-height: 52px; padding: 10px 13px; border: 1px solid var(--line-1); border-left: 3px solid var(--line-2); border-radius: 5px; background: rgba(255,255,255,0.018); transition: border-left-color 0.15s, background 0.15s; }
+.gmt-readout.on { background: rgba(255,255,255,0.035); }
+.gmt-ro-line { display: flex; align-items: center; gap: 9px; flex-wrap: wrap; }
+.gmt-ro-date { font-family: var(--mono); font-size: 11px; color: var(--fg-3); }
+.gmt-ro-title { font-size: 13px; font-weight: 600; color: var(--fg-1); flex: 1; min-width: 200px; }
+.gmt-ro-link { font-size: 11px; color: var(--accent); text-decoration: none; white-space: nowrap; }
+.gmt-ro-link:hover { text-decoration: underline; }
+.gmt-ro-sum { font-size: 11.5px; color: var(--fg-2); line-height: 1.55; margin-top: 6px; }
+.gmt-ro-foot { font-size: 9.5px; color: var(--fg-4); margin-top: 6px; }
+.gmt-ro-hint { font-size: 10.5px; color: var(--fg-4); display: flex; align-items: center; gap: 7px; line-height: 1.6; }
+.rx-c-pos { color: var(--pos); } .rx-c-neg { color: var(--neg); }
+.gmt-node.active { stroke-width: 2.5; filter: drop-shadow(0 0 10px currentColor); }
 .gmt-wrap { position: relative; width: 100%; }
 .gmt-svg { display: block; width: 100%; height: auto; overflow: visible; cursor: crosshair; }
 .gmt-grid { stroke: var(--line-2); stroke-width: 1; stroke-dasharray: 1 5; opacity: 0.6; vector-effect: non-scaling-stroke; }
@@ -930,8 +944,7 @@ a.db-news-t:hover { color: var(--bf-accent); text-decoration: underline; }
 .gmt-ytick { fill: var(--fg-4); font-size: 9px; font-family: var(--mono); }
 .gmt-ytick.r { text-anchor: start; }
 .gmt-xtick { fill: var(--fg-4); font-size: 9px; font-family: var(--mono); text-anchor: middle; }
-.gmt-area { opacity: 0.07; }
-.gmt-area.pos { fill: var(--pos); } .gmt-area.neg { fill: var(--neg); }
+.gmt-area { }  /* fill 由 SVG 渐变(url(#gmt-grad-*))提供——顶部浓→底部透，更高级 */
 .gmt-line { fill: none; stroke-width: 2; vector-effect: non-scaling-stroke; }
 .gmt-line.pos { stroke: var(--pos); filter: drop-shadow(0 0 4px var(--pos-glow)); }
 .gmt-line.neg { stroke: var(--neg); filter: drop-shadow(0 0 4px var(--neg-glow)); }
