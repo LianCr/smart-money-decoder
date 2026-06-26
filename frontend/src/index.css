@@ -1012,6 +1012,10 @@ a.db-news-t:hover { color: var(--bf-accent); text-decoration: underline; }
 
 @media (max-width: 680px) { .ns-split { grid-template-columns: 1fr; } }
 
+/* Polymarket 价格滚动栏（第三方 widget，自带样式，只给外框间距）*/
+.ticker-wrap { margin: -4px 0 18px; min-height: 36px; overflow: hidden; border: 1px solid var(--line-1); border-radius: 4px; }
+#polymarket-price-ticker { width: 100%; }
+
 /* ══ 扫榜推荐（输入页"值得看的聪明钱"）═════════════════════════════════════════ */
 .recs { margin-bottom: 26px; }
 .recs-h { font-size: 13px; font-weight: 700; color: var(--fg-1); margin-bottom: 14px; display: flex; align-items: baseline; gap: 9px; flex-wrap: wrap; }

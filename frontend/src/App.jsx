@@ -1409,6 +1409,22 @@ function BoardBody({ d }) {
   );
 }
 
+// Polymarket 价格滚动栏（第三方 widget：先渲 div、再注入脚本，脚本按 id 找 div 渲染）
+function PriceTicker() {
+  useEffect(() => {
+    if (document.querySelector('script[src*="price-ticker.js"]')) return;  // 只注入一次
+    const s = document.createElement("script");
+    s.src = "https://legacy.polymarketanalytics.com/widget/price-ticker.js";
+    s.async = true;
+    document.body.appendChild(s);
+  }, []);
+  return (
+    <div className="ticker-wrap">
+      <div id="polymarket-price-ticker" data-theme="dark" data-transparent="false" data-show-icon="true" />
+    </div>
+  );
+}
+
 // 扫榜推荐（免费扫榜层）：点一个直接 decode
 const BEH_ICON = { ADD: "📈", EXIT: "📉", STATIC: "⏸" };
 function Recommendations({ onPick }) {
@@ -1461,6 +1477,7 @@ function BoardView() {
   const showHome = !data && !loading && !error;
   return (
     <>
+      <PriceTicker />
       {!data && !error && (
         <div className="console-sub">输入聪明钱钱包,生成 v3 统一看板:身份体量 → 这一注 → 实时盘面 → 行为×催化剂 → Edge 判断,一屏看全</div>
       )}
