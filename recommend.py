@@ -116,6 +116,19 @@ def _mark_disagreements(cands):
                     c["disagreement_with_edge"] = (str(c.get("outcome")).upper() == str(lean).upper())
 
 
+def _mark_consensus(cands):
+    """同侧专家共识（信号 5，与分歧对称）：同一市场同一方向 ≥2 个验证过的政治专家 → 标记。
+    🔴 只在推荐层标共识、**绝不抬信心**（信心是市场级、已与钱包解耦）；是"被验证有技能者的共识"非单钱包盈亏，
+    但仍有羊群/幸存者风险（且若该盘价格被鲸控，共识可能就是同一拨人）——当弱信号看。"""
+    by_side = {}
+    for c in cands:
+        by_side.setdefault((c["market_question"], str(c.get("outcome")).lower()), []).append(c)
+    for (_mq, _side), group in by_side.items():
+        if len(group) >= 2:
+            for c in group:
+                c["consensus_count"] = len(group)
+
+
 def scan(per_market=10, gate_pnl=2000.0, enrich_top=14, keep=8, ai_top=3):
     # 0) 579 月榜（交叉信号 bonus 用）
     b579 = _retry(lambda: results(call(AGENTS["leaderboard"][0],
@@ -196,6 +209,7 @@ def scan(per_market=10, gate_pnl=2000.0, enrich_top=14, keep=8, ai_top=3):
         print(f"\n方法 C：对 top {ai_top} 跑 ⑥ AI 验证（~12k/个，命中缓存更省）…", flush=True)
         ai_verify(cands, top=ai_top)
     _mark_disagreements(cands)        # 同盘分歧检测（纯代码，0 token）
+    _mark_consensus(cands)            # 同侧专家共识（弱信号，与分歧对称）
 
     OUT.parent.mkdir(parents=True, exist_ok=True)
     method = "E_market_reverse_ai_verified" if ai_top else "E_market_reverse"

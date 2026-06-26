@@ -42,7 +42,7 @@ from briefing.organize import organize_briefing
 from fetcher.positions import get_top_political_position_hz
 from briefing.market_context import load_or_build as build_market_context
 from briefing.market_context import get_behavior_flags
-from analyzer.reasoner_v3 import reason_v3, ReasonerError
+from analyzer.reasoner_v3 import reason_v3, ReasonerError, build_facts
 from analyzer.market_thesis import build_market_thesis, map_wallet
 from fetcher.heisenberg import call as hz_call, results as hz_results, AGENTS as HZ_AGENTS
 from briefing import board_feed
@@ -335,8 +335,21 @@ def market_context(wallet: str, cid: str = "", outcome: str = ""):
     return obj
 
 
+def _code_follow_call(facts: dict) -> str:
+    """代码版跟单判定（瘦身：替掉 reason_v3 的网关 prose，省一次调用）。
+    判定本质是价格位移数学（应归代码，红线）：无证据→NO BASIS；价已大幅走过(入场后≥8%)→CHASED；否则 ROOM LEFT。
+    信心改由 market_thesis 直出，这里只出 follow_call + 透传代码 facts。"""
+    if not (facts.get("support_catalysts") or facts.get("threat_catalysts")):
+        return "NO BASIS"
+    moved = facts.get("price_already_moved")
+    if moved is not None and moved >= 8:
+        return "CHASED"
+    return "ROOM LEFT"
+
+
 def _reasoner_cached(briefing: dict, behavior: dict, wallet: str) -> dict:
-    """⑥ reasoner 独立缓存（按 钱包,as_of）：改 ⑤/② 重建看板时不重烧 ⑥。守卫拦截存为降级态。"""
+    """⑥ 代码层（瘦身后不再调网关）：build_facts(代码矩阵/价格/时长) + 代码 follow_call。
+    信心/倾向/理由由 dashboard 用 market_thesis 覆盖。按 钱包,as_of 缓存。"""
     REASONER_CACHE.mkdir(parents=True, exist_ok=True)
     p = REASONER_CACHE / f"{wallet.lower()}_{BRIEFING_AS_OF}.json"
     if p.exists():
@@ -345,10 +358,12 @@ def _reasoner_cached(briefing: dict, behavior: dict, wallet: str) -> dict:
         except Exception:
             pass
     try:
-        r = reason_v3(briefing, behavior, BRIEFING_AS_OF)
-    except ReasonerError as e:
+        facts = build_facts(briefing, behavior, BRIEFING_AS_OF)
+        r = {"follow_call": _code_follow_call(facts), "confidence": facts.get("confidence"),
+             "reasoning": None, "confidence_reasons": facts.get("confidence_reasons"), "facts": facts}
+    except Exception as e:
         r = {"follow_call": None, "confidence": None, "reasoning": None,
-             "guard_tripped": e.reason, "guard_message": e.message}
+             "guard_tripped": "FACTS_BUILD_FAILED", "guard_message": f"{type(e).__name__}: {e}"}
     try:
         p.write_text(json.dumps(r, ensure_ascii=False, indent=2), encoding="utf-8")
     except Exception:
@@ -487,6 +502,7 @@ def dashboard(wallet: str):
                 "reasoning": f"{thesis.get('rationale') or ''} 这一注押 {outcome}，{algn['alignment']}。".strip(),
                 "thesis_audit": thesis.get("_audit"),
                 "input_trust": (thesis.get("input_trust") or {}).get("lines"),   # Phase 1 可信度修正（价格深度/犹豫度/距结算）
+                "event_structure": thesis.get("event_structure"),                # Phase 2 多结局结构
             }
         except Exception as e:
             _log(f"   ⚠ market_thesis 失败，⑥ 退回旧矩阵：{type(e).__name__}: {e}")

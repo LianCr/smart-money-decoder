@@ -1304,6 +1304,11 @@ function VerdictHero({ d }) {
         <div className="vh-edge">
           市场倾向 <b>{r.market_lean}</b>{r.lean_strength != null && <span className="vh-edge-str"> {r.lean_strength}/100</span>}
           {r.alignment && <span className={`vh-align ${r.alignment.includes("逆") ? "against" : "with"}`}> · 这一注 {r.alignment}</span>}
+          {r.event_structure && r.event_structure.multi && (
+            <span className="vh-multi" title={`${r.event_structure.n_candidates} 个候选，基线≈${r.event_structure.baseline_pct}%；隐含概率非二元`}>
+              · 多结局 {r.event_structure.n_candidates} 选 1（基线 {r.event_structure.baseline_pct}%）
+            </span>
+          )}
         </div>
       )}
 
@@ -1452,7 +1457,7 @@ function HotTraders({ onPick }) {
             <button className="hot-item" key={i} onClick={() => onPick(t.wallet)} title={t.wallet}>
               <span className="hot-rank num">#{(i % traders.length) + 1}</span>
               <span className="hot-addr num">{abbrev(t.wallet)}</span>
-              <span className="hot-pnl num">+{money(t.weekly_politics_pnl)}</span>
+              <span className="hot-pnl num">{money(t.weekly_politics_pnl)}</span>
             </button>
           ))}
         </div>
@@ -1493,6 +1498,9 @@ function Recommendations({ onPick }) {
                 <div className="rec-disagree">⚠ 聪明钱在此盘分歧（正反都有人押）
                   {c.disagreement_lean && <span className={c.disagreement_with_edge ? "with" : "against"}> · 我们独立倾向 <b>{c.disagreement_lean}</b> → 这注{c.disagreement_with_edge ? "顺" : "逆"} edge</span>}
                 </div>
+              )}
+              {c.consensus_count >= 2 && (
+                <div className="rec-consensus">🤝 {c.consensus_count} 个政治专家同押此方向（弱信号 · 技能共识非盈亏 · 仍有羊群风险）</div>
               )}
               {c.source_market && <div className="rec-src">↳ 从「{c.source_market}」共持发现</div>}
               <div className="rec-beh">{BEH_ICON[c.behavior] || "·"} {c.behavior_fact || c.behavior || "—"}</div>
