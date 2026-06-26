@@ -283,7 +283,7 @@ _Q_STOP = {"will", "the", "a", "an", "be", "is", "are", "by", "out", "as", "of",
 
 def _entities_from_question(q: str) -> list[str]:
     import re
-    toks = re.findall(r"[A-Za-z]{3,}", q or "")
+    toks = re.findall(r"[A-Za-z]{3,}(?:-[A-Za-z]{3,})*", q or "")   # 连字名保留整体（Jae-myung 不拆；US-Iran 仍取 Iran，US 2 字母跳过）
     ents, seen = [], set()
     for t in toks:
         low = t.lower()
