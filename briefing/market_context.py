@@ -38,6 +38,11 @@ CLASSROOM_API_URL = "https://4dm65e698a.execute-api.us-west-2.amazonaws.com/prod
 KEY = os.environ.get("CLASSROOM_API_KEY")
 GATEWAY_MODEL = "claude-sonnet-4.5"
 CACHE_DIR = Path(".cache/market_context")
+# 新闻密度开关（默认中档：4 个跳变·阈值 5%·每跳 2 条 ≈ 10 条/盘）。仍锚在真跳变上、不破红线。
+# 调密集(top=6/pick=3≈16条)更接近 Polymarket 但 +~3k token/钱包；调 top=2 回到最省的 ~6 条。
+JUMP_TOP = int(os.environ.get("GMT_JUMP_TOP", "4"))
+JUMP_MIN_DELTA = float(os.environ.get("GMT_JUMP_MIN_DELTA", "0.05"))
+JUMP_PICK = int(os.environ.get("GMT_JUMP_PICK", "2"))          # 每个跳变 LLM 重排挑几条
 # 守卫：导向词（含行为旗标可能诱发的判断词，绝不替用户拍板）
 DIRECTIVE_WORDS = ["建议跟单", "建议跟", "该跟", "别跟", "该走", "值得跟", "胜率高", "稳赚", "必赢",
                    "推荐跟", "跟单价值", "充当炮灰", "压榨殆尽", "飙升", "切勿盲目"]
@@ -132,7 +137,7 @@ def gdelt_for_jump(entity_terms, t_jump, outcome_label):
     # LLM 重排（边界1/2：挑最可能关联、时间相关非因果）
     prompt = (
         f"某预测市场「{outcome_label}」在某日价格发生显著跳变。下面是该跳变**之前/当日**的相关新闻标题。\n"
-        "请挑出 1-2 条**最可能与这次价格跳变时间上关联**的新闻（重大事件/硬结果），"
+        f"请挑出 1-{JUMP_PICK} 条**最可能与这次价格跳变时间上关联**的新闻（重大事件/硬结果），"
         "🔴 只判时间关联、**不要断定因果**。每条给**简体中文**客观一句话事实陈述(fact)。无强关联就返回空数组。\n"
         '只输出 JSON：[{"title":"逐字来自下方","source":"","fact":"简体中文客观一句话,不用导致/必然等词"}]\n\n标题：\n'
         + "\n".join(f"- [{c['src']}] {c['title']}" for c in cand[:25])
@@ -142,7 +147,7 @@ def gdelt_for_jump(entity_terms, t_jump, outcome_label):
     picked = []
     if m:
         try:
-            for p in json.loads(m.group(0))[:2]:
+            for p in json.loads(m.group(0))[:JUMP_PICK]:
                 # 回填日期/来源（从候选里按标题匹配）
                 src = next((c for c in cand if str(p.get("title", ""))[:20] in c["title"]), None)
                 picked.append({"title": p.get("title"), "source": p.get("source") or (src["src"] if src else ""),
@@ -211,7 +216,7 @@ def synthesize(cid, as_of, entity_terms, outcome="Yes", wallet=None):
 
     behavior = get_behavior_flags(wallet, cid, as_of)     # 巨鲸近48h动作流 = 最高权重信号
 
-    jumps = find_price_jumps(token, as_of)
+    jumps = find_price_jumps(token, as_of, min_delta=JUMP_MIN_DELTA, top=JUMP_TOP)
     events, tok_used = [], 0
     for j in jumps:
         cats_res = gdelt_for_jump(entity_terms, j["date"], side_label)

@@ -42,9 +42,11 @@ from briefing.organize import organize_briefing
 from fetcher.positions import get_top_political_position_hz
 from briefing.market_context import load_or_build as build_market_context
 from briefing.market_context import get_behavior_flags
-from analyzer.reasoner_v3 import reason_v3, ReasonerError
+from analyzer.reasoner_v3 import reason_v3, ReasonerError, build_facts
+from analyzer.market_thesis import build_market_thesis, map_wallet
 from fetcher.heisenberg import call as hz_call, results as hz_results, AGENTS as HZ_AGENTS
 from briefing import board_feed
+from fetcher.social import social_pulse
 import scorecard
 
 app = FastAPI(title="smart-money-decoder API", version="1.0")
@@ -105,9 +107,11 @@ BRIEFING_CACHE  = Path(".cache/briefing_api")   # 完整简报响应缓存（结
 DASHBOARD_CACHE = Path(".cache/dashboard")      # 统一看板整份响应缓存（①-⑥），命中=零 token 秒回
 REASONER_CACHE  = Path(".cache/reasoner_v3")     # ⑥ reasoner 独立缓存：改 ⑤/② 重建看板不重烧 ⑥
 BOARD_AI_CACHE  = Path(".cache/board_ai")        # ⑤综述+②what_bet 独立缓存：改新闻流结构/前端不重烧 AI
-# 🔴 数据世界的"现在"：Heisenberg/gamma 都是 2026 世界，as_of 必须用它、不能用 wall-clock date.today()。
-# 真实时产品（切 Bedrock 后跑实时数据）再改成 date.today()。
-BRIEFING_AS_OF  = os.environ.get("BRIEFING_AS_OF", "2026-06-20")
+# 🔴 里程碑（2026-06-25）：拔掉 6-20 快照钉子，推进到数据世界"现在"(6-25 固定)。
+# 一次性解锁：当前数据 + 社媒动量并排(585 仅实时) + 记分牌从今天起真实积累。
+# 暂用固定 6-25（不用 wall-clock date.today()）以免数据世界每天前进、缓存天天过期重烧；
+# 真上 Bedrock/有预算时再切 date.today() 走逐日实时。
+BRIEFING_AS_OF  = os.environ.get("BRIEFING_AS_OF", "2026-06-25")
 
 
 def _difficulty(entry_price):
@@ -321,11 +325,31 @@ def market_context(wallet: str, cid: str = "", outcome: str = ""):
         obj = build_market_context(cid, BRIEFING_AS_OF, entities, outcome, wallet=wallet)
     except Exception as e:
         return _err(502, "MARKET_CONTEXT_FAILED", f"{type(e).__name__}: {e}")
+    # 持有侧现价（供 Context「实」面板的原生赔率条，免费 568）
+    try:
+        ser = board_feed.price_series(board_feed.held_token(cid, outcome), BRIEFING_AS_OF)
+        if ser:
+            obj["market_context"]["current_price"] = ser[-1]["price"]
+    except Exception:
+        pass
     return obj
 
 
+def _code_follow_call(facts: dict) -> str:
+    """代码版跟单判定（瘦身：替掉 reason_v3 的网关 prose，省一次调用）。
+    判定本质是价格位移数学（应归代码，红线）：无证据→NO BASIS；价已大幅走过(入场后≥8%)→CHASED；否则 ROOM LEFT。
+    信心改由 market_thesis 直出，这里只出 follow_call + 透传代码 facts。"""
+    if not (facts.get("support_catalysts") or facts.get("threat_catalysts")):
+        return "NO BASIS"
+    moved = facts.get("price_already_moved")
+    if moved is not None and moved >= 8:
+        return "CHASED"
+    return "ROOM LEFT"
+
+
 def _reasoner_cached(briefing: dict, behavior: dict, wallet: str) -> dict:
-    """⑥ reasoner 独立缓存（按 钱包,as_of）：改 ⑤/② 重建看板时不重烧 ⑥。守卫拦截存为降级态。"""
+    """⑥ 代码层（瘦身后不再调网关）：build_facts(代码矩阵/价格/时长) + 代码 follow_call。
+    信心/倾向/理由由 dashboard 用 market_thesis 覆盖。按 钱包,as_of 缓存。"""
     REASONER_CACHE.mkdir(parents=True, exist_ok=True)
     p = REASONER_CACHE / f"{wallet.lower()}_{BRIEFING_AS_OF}.json"
     if p.exists():
@@ -334,10 +358,12 @@ def _reasoner_cached(briefing: dict, behavior: dict, wallet: str) -> dict:
         except Exception:
             pass
     try:
-        r = reason_v3(briefing, behavior, BRIEFING_AS_OF)
-    except ReasonerError as e:
+        facts = build_facts(briefing, behavior, BRIEFING_AS_OF)
+        r = {"follow_call": _code_follow_call(facts), "confidence": facts.get("confidence"),
+             "reasoning": None, "confidence_reasons": facts.get("confidence_reasons"), "facts": facts}
+    except Exception as e:
         r = {"follow_call": None, "confidence": None, "reasoning": None,
-             "guard_tripped": e.reason, "guard_message": e.message}
+             "guard_tripped": "FACTS_BUILD_FAILED", "guard_message": f"{type(e).__name__}: {e}"}
     try:
         p.write_text(json.dumps(r, ensure_ascii=False, indent=2), encoding="utf-8")
     except Exception:
@@ -447,8 +473,40 @@ def dashboard(wallet: str):
         world_summary, what_bet = _board_ai_cached(
             wallet, market_q, outcome, behavior, gdelt_events, tavily_cats, gamma_ctx, resolution)
 
-        # ⑥ Edge/Reasoning（代码矩阵 + reasoner，含三铁律守卫）—— 独立缓存，改 ⑤/② 不重烧
+        # 社媒情绪动量（585，免费，🔴情绪非事实、仅实时——前端与新闻视觉分开 + 刷量标显眼）
+        # max_posts=12：社媒供给充足，拉满补齐新闻列长度（两列视觉平衡）
+        social = social_pulse(_entities_from_question(market_q), max_posts=12)
+
+        # ⑥ Edge/Reasoning：reason_v3 仍供 follow_call + 代码 facts（价格/时长/对冲）；
+        # 🔴 信心改由「市场命题级对抗推理」直出（market_thesis，按 cid,as_of 缓存→两个反向钱包共享同一份市场观，
+        #    信心一致、差异挪到 顺/逆 edge），替代旧 pnl 锚定矩阵。gateway/Tavily 挂则优雅退回旧矩阵。
         reasoning = _reasoner_cached(b, behavior, wallet)
+        try:
+            pc = b.get("price_context", {}) or {}
+            cp = pc.get("current_price")
+            cp = (cp / 100.0) if (cp and cp > 1) else cp                       # 归一到 0-1
+            yes_price = cp if str(outcome).lower() == "yes" else (None if cp is None else 1 - cp)
+            implied_yes = round(yes_price * 100) if yes_price is not None else 50
+            thesis = build_market_thesis(market_q, cid, BRIEFING_AS_OF, implied_yes, social=social)
+            algn = map_wallet(thesis, outcome)
+            # ⑤ 改市场级：从 thesis 共享池重建新闻流 → 两个反向钱包看到同一批新闻（不再按方向切）
+            if thesis.get("shared_pool"):
+                news_stream = board_feed.build_market_news_stream(
+                    gdelt_events, thesis["shared_pool"], tok, BRIEFING_AS_OF)
+            reasoning = {
+                **reasoning,
+                "confidence": thesis["confidence"],                  # 单一信心，市场级
+                "market_lean": thesis["market_lean"],
+                "lean_strength": thesis["lean_strength"],
+                "pivotal_unknown": thesis["pivotal_unknown"],
+                "alignment": algn["alignment"],                      # 这一注 顺/逆 edge（与信心解耦）
+                "reasoning": f"{thesis.get('rationale') or ''} 这一注押 {outcome}，{algn['alignment']}。".strip(),
+                "thesis_audit": thesis.get("_audit"),
+                "input_trust": (thesis.get("input_trust") or {}).get("lines"),   # Phase 1 可信度修正（价格深度/犹豫度/距结算）
+                "event_structure": thesis.get("event_structure"),                # Phase 2 多结局结构
+            }
+        except Exception as e:
+            _log(f"   ⚠ market_thesis 失败，⑥ 退回旧矩阵：{type(e).__name__}: {e}")
 
         # ① 画像 + PnL 曲线（best-effort，不阻塞）
         profile = get_wallet_profile(wallet)
@@ -472,8 +530,10 @@ def dashboard(wallet: str):
             "resolution_criteria": resolution,       # 官方结算规则原文
         },
         "market": {"slug": slug, "market_id": cid},  # ③
+        "price_series": board_feed.price_series(tok, BRIEFING_AS_OF),  # 上帝视角时间轴(568日线,免费)
         "behavior": behavior,                        # ④
         "news_stream": news_stream,                  # ⑤ 三源合并时间线（source 链接 + 反应符号）
+        "social": social,                            # ⑤ 社媒情绪动量（585·情绪非事实·仅实时）
         "world_summary": world_summary,              # ⑤ 三源合并综述（巨鲸动态/事态进展）
         "reasoning": reasoning,                      # ⑥
     }
@@ -493,6 +553,34 @@ def dashboard(wallet: str):
             follow_call=reasoning["follow_call"], confidence=reasoning["confidence"],
             source="board", settle_date=(b.get("meta", {}) or {}).get("settle"))
     return response
+
+
+RECOMMEND_FILE = Path(".data/recommendations.json")
+
+
+@app.get("/recommendations")
+def recommendations():
+    """扫榜推荐：读 recommend.py 定期写的候选清单（免费扫榜层）。空=还没扫过。"""
+    if RECOMMEND_FILE.exists():
+        try:
+            return json.loads(RECOMMEND_FILE.read_text(encoding="utf-8"))
+        except Exception:
+            pass
+    return {"as_of": BRIEFING_AS_OF, "candidates": []}
+
+
+HOT_TRADERS_FILE = Path(".data/hot_traders.json")
+
+
+@app.get("/hot-traders")
+def hot_traders():
+    """入口页滚动条：本周政治盘热门交易者（hot_traders.py 定期写）。空=还没扫过。"""
+    if HOT_TRADERS_FILE.exists():
+        try:
+            return json.loads(HOT_TRADERS_FILE.read_text(encoding="utf-8"))
+        except Exception:
+            pass
+    return {"as_of": BRIEFING_AS_OF, "period": "7d", "traders": []}
 
 
 @app.get("/scorecard")

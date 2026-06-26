@@ -1,4 +1,7 @@
 import { useState, useEffect, useRef } from "react";
+import { scaleLinear, scaleTime } from "d3-scale";
+import { line as d3line, area as d3area, curveMonotoneX } from "d3-shape";
+import { extent } from "d3-array";
 
 const API = "http://localhost:8000";
 
@@ -153,7 +156,7 @@ function PnlChart({ points }) {
 }
 
 export default function App() {
-  const [tab, setTab] = useState("decode");
+  const [tab, setTab] = useState("board");   // 主页=统一看板(推荐流落地处)；Decode 降为存档，仍可经品牌 logo / 统一看板切换键到达
   // 功勋章的 W/L 取回测真值；默认 5/1（当前案例集事实），/backtest 到达后自校正、不闪
   const [wl, setWl] = useState({ w: 5, l: 1 });
   useEffect(() => {
@@ -465,6 +468,31 @@ function PolymarketEmbed({ slug }) {
   );
 }
 
+// 原生赔率条（替代 Polymarket iframe）：Yes/No 比例条，高亮钱包押的那一侧
+function OddsBar({ held, side, slug }) {
+  if (typeof held !== "number") return <div className="ctx-empty">无价,赔率不可显</div>;
+  const S = (side || "").toUpperCase();
+  const yesP = S === "NO" ? 1 - held : held;          // held=持有侧价；换算 Yes/No
+  const noP = 1 - yesP;
+  const yesHeld = S === "YES";
+  return (
+    <div className="oddsbar">
+      <div className="ob-bar">
+        <div className={`ob-seg yes ${yesHeld ? "held" : "dim"}`} style={{ width: `${Math.max(yesP * 100, 8)}%` }}>
+          <span className="ob-lab">Yes</span><span className="ob-val num">{Math.round(yesP * 100)}¢</span>
+        </div>
+        <div className={`ob-seg no ${!yesHeld ? "held" : "dim"}`} style={{ width: `${Math.max(noP * 100, 8)}%` }}>
+          <span className="ob-lab">No</span><span className="ob-val num">{Math.round(noP * 100)}¢</span>
+        </div>
+      </div>
+      <div className="ob-foot">
+        <span>他押 <b className={yesHeld ? "ob-yes" : "ob-no"}>{S}</b> · 高亮侧</span>
+        {slug && <a className="ob-jump" href={`https://polymarket.com/market/${slug}`} target="_blank" rel="noreferrer">在 Polymarket 打开 ↗</a>}
+      </div>
+    </div>
+  );
+}
+
 // 系统风险标记 → 中文（绝不把内部代码字段直接显示给用户）
 const FLAG_CN = {
   suspicious_win_rate: "异常高胜率", position_size_volatility: "仓位波动大",
@@ -753,11 +781,9 @@ function ContextBody({ d }) {
       <div className="ctx-split">
         {/* 实：实时盘面（Polymarket 直嵌） */}
         <div className="ctx-pane ctx-real">
-          <div className="ctx-pane-h"><span className="ctx-live-dot" />实时盘面 · Polymarket</div>
-          {mc.market_slug
-            ? <PolymarketEmbed slug={mc.market_slug} />
-            : <div className="ctx-empty">无 slug,实时盘面不可嵌入</div>}
-          <div className="ctx-pane-foot">实时行情由 Polymarket 提供 · 与右侧 as-of 复盘相互独立</div>
+          <div className="ctx-pane-h"><span className="ctx-live-dot" />当前赔率 · 市场定价</div>
+          <OddsBar held={mc.current_price} side={mc.analyzed_side} slug={mc.market_slug} />
+          <div className="ctx-pane-foot">市场当前对 Yes/No 的定价（高亮=钱包押的侧）· 与右侧 as-of 复盘相互独立</div>
         </div>
 
         {/* 虚：我们合成的 as-of 复盘 Context */}
@@ -905,6 +931,12 @@ function ReactionTag({ r }) {
 }
 // 方向标=dual_catalyst 已分好的正负（支持/威胁）；GDELT 未分类→不杜撰方向
 const DIR_META = { support: { txt: "支持", cls: "support" }, threat: { txt: "威胁", cls: "threat" } };
+function domainOf(url, fallback) {
+  try { return new URL(url).hostname.replace(/^www\./, ""); } catch { return fallback || ""; }
+}
+function faviconUrl(domain) { return `https://www.google.com/s2/favicons?domain=${domain}&sz=64`; }
+
+// 新闻流 · Polymarket 风格（标题 + 段落 + 底部可点 mini 来源 logo + 市场反应）
 function NewsStream({ items }) {
   if (!items || !items.length)
     return <div className="bf-empty">该时点窗内三源都没洗出对题新闻 — 如实留空</div>;
@@ -912,21 +944,221 @@ function NewsStream({ items }) {
     <div className="db-stream">
       {items.map((it, i) => {
         const dir = DIR_META[it.direction];
+        const dom = domainOf(it.url, it.source);
         return (
           <div className={`db-news ${it.direction || ""}`} key={i}>
             <div className="db-news-top">
               <span className="db-news-date num">{it.date || "—"}</span>
               {dir && <span className={`db-dir ${dir.cls}`}>{dir.txt}</span>}
-              <span className={`db-origin ${it.origin === "GDELT" ? "g" : "t"}`}>{it.origin}</span>
               <ReactionTag r={it.reaction} />
             </div>
             {it.url ? <a className="db-news-t" href={it.url} target="_blank" rel="noreferrer">{it.title}</a>
                     : <div className="db-news-t">{it.title}</div>}
             {it.summary && <div className="db-news-s">{it.summary}</div>}
-            {it.same_window && <div className="db-news-foot"><span className="db-news-sw">同日多条 · 前后变动为合计,不可归因到单条</span></div>}
+            {it.same_window && <div className="db-news-sw">同日多条 · 前后变动为合计,不可归因到单条</div>}
+            {dom && (
+              <a className="db-news-src" href={it.url} target="_blank" rel="noreferrer" title={`在 ${dom} 打开`}>
+                <img className="db-news-fav" src={faviconUrl(dom)} alt="" loading="lazy" onError={(e) => { e.currentTarget.style.display = "none"; }} />
+                <span className="db-news-dom">{dom}</span>
+              </a>
+            )}
           </div>
         );
       })}
+    </div>
+  );
+}
+
+// 社媒情绪动量（585）· 🔴 情绪非事实、视觉刻意区别于新闻、刷量标显眼
+function SocialPulse({ s }) {
+  if (!s) return <div className="bf-empty">该话题暂无社媒数据（或未配置）</div>;
+  const acc = s.acceleration;
+  const heating = typeof acc === "number" && acc > 1;
+  const div = s.author_diversity_pct;
+  const organic = s.organic;
+  return (
+    <div className="soc">
+      <div className="soc-metrics">
+        <div className="soc-m">
+          <div className="soc-m-lab">情绪动量</div>
+          <div className={`soc-m-val ${heating ? "hot" : "cold"}`}>{heating ? "🔥 升温" : "❄ 降温"} <span className="soc-acc num">{typeof acc === "number" ? acc.toFixed(2) : "—"}</span></div>
+        </div>
+        <div className="soc-m">
+          <div className="soc-m-lab">{(s.tweet_count || 0).toLocaleString()} 条讨论</div>
+          <div className={`soc-bot ${organic ? "ok" : "bad"}`}>{organic ? `✓ 有机 ${div}%` : `🤖 疑似刷量 ${div}%`}</div>
+        </div>
+      </div>
+      {!organic && (
+        <div className="soc-warn">⚠ 作者多样性 {div}% &lt; 20% —— 很可能是刷量/机器人，当噪音看，别当真情绪</div>
+      )}
+      <div className="soc-posts">
+        {(s.posts || []).map((p, i) => {
+          const eng = (p.likes || 0) + (p.retweets || 0);
+          const badge = eng >= 50 ? { txt: "🔥 热帖", cls: "hot" } : eng >= 10 ? { txt: "💬 有讨论", cls: "mid" } : null;
+          const u = (p.username || "?").replace(/^@/, "");
+          return (
+            <div className="soc-post" key={i}>
+              <div className="soc-post-top">
+                <span className="soc-av">
+                  <span className="soc-av-init">{u[0] ? u[0].toUpperCase() : "?"}</span>
+                  <img className="soc-av-img" src={`https://unavatar.io/x/${encodeURIComponent(u)}`}
+                    loading="lazy" alt="" onError={(e) => { e.currentTarget.style.display = "none"; }} />
+                </span>
+                <span className="soc-user">@{u}</span>
+                {badge && <span className={`soc-badge ${badge.cls}`}>{badge.txt}</span>}
+                <span className="soc-eng num">♥ {p.likes || 0} · ↻ {p.retweets || 0}</span>
+              </div>
+              <div className="soc-post-txt">{p.content}</div>
+              {p.url && <a className="soc-post-link" href={p.url} target="_blank" rel="noreferrer">原帖 ↗</a>}
+            </div>
+          );
+        })}
+      </div>
+      <div className="soc-foot">🔖 热帖标 = 互动热度（♥+↻），<b>非情绪判断</b>——社媒是情绪不是事实，方向请看新闻与 ⑥</div>
+    </div>
+  );
+}
+
+// 上帝视角时间轴：价格曲线 × 建仓点 × 新闻发光节点 × 剩余空间（D3 算数学，React 渲 SVG）
+const GMT_W = 760, GMT_H = 340, GMT_M = { t: 18, r: 38, b: 28, l: 14 };
+function _pdate(s) { return new Date(s + "T00:00:00Z"); }
+function gmtReact(rx) {
+  if (!rx || !rx.available) return { txt: "市场反应不可知", cls: "rx-na" };
+  const m = REACT_SYM[rx.kind] || REACT_SYM.weak;
+  return { txt: `${m.sym}${m.txt} ${rx.move_pct > 0 ? "+" : ""}${rx.move_pct}%`, cls: m.cls };
+}
+function fmtMD(dt) { return `${dt.getUTCMonth() + 1}/${dt.getUTCDate()}`; }
+function GodModeTimeline({ d }) {
+  const [cross, setCross] = useState(null);   // 鼠标所在的 series 索引（实时光标）
+  const series = (d.price_series || []).filter((p) => typeof p.price === "number")
+    .map((p) => ({ t: _pdate(p.date), date: p.date, price: p.price }));
+  if (series.length < 2)
+    return <div className="bf-empty">该盘价格日线不足(薄盘/新盘)——按"有多少画多少",暂不足以绘制时间轴</div>;
+  const pos = d.position || {}, wpa = pos.what_position_actions || {};
+  const act = wpa.actions || {}, un = wpa.unrealized || {}, pc = pos.price_context || {};
+  const side = ((pos.meta || {}).analyzed_side || "").toUpperCase();
+  const entryDate = act.entry_time ? act.entry_time.slice(0, 10) : null;
+  const entryPrice = act.avg_entry_price, curPrice = pc.current_price;
+  // 🔴 颜色按价格走势(涨绿/跌红),像 Polymarket——描述价格本身、不与"他赚没赚"混淆(后者在英雄区)
+  const firstP = series[0].price, lastP = series[series.length - 1].price;
+  const dirCls = lastP >= firstP ? "pos" : "neg";
+  const chgPts = typeof curPrice === "number" ? Math.round((curPrice - firstP) * 100) : null;
+  const iw = GMT_W - GMT_M.l - GMT_M.r, ih = GMT_H - GMT_M.t - GMT_M.b;
+  const x = scaleTime().domain(extent(series, (s) => s.t)).range([0, iw]);
+  // 🔴 Y 轴聚焦到数据实际区间（否则 80-98% 的走势在 0-100 轴上被压成顶部一条平线，看不出趋势）
+  const prices = series.map((s) => s.price).concat(typeof entryPrice === "number" ? [entryPrice] : []);
+  const pMin = Math.min(...prices), pMax = Math.max(...prices);
+  const pad = Math.max((pMax - pMin) * 0.18, 0.025);
+  const y = scaleLinear().domain([Math.max(0, pMin - pad), Math.min(1, pMax + pad)]).range([ih, 0]);
+  const lg = d3line().x((s) => x(s.t)).y((s) => y(s.price)).curve(curveMonotoneX);
+  const ag = d3area().x((s) => x(s.t)).y0(ih).y1((s) => y(s.price)).curve(curveMonotoneX);
+  const priceAt = (date) => {
+    const t = _pdate(date); let best = series[0];
+    for (const s of series) if (Math.abs(s.t - t) < Math.abs(best.t - t)) best = s;
+    return best.price;
+  };
+  const [dMin, dMax] = x.domain();
+  const nodes = (d.news_stream || []).filter((n) => n.date && _pdate(n.date) >= dMin && _pdate(n.date) <= dMax)
+    .map((n) => ({ ...n, t: _pdate(n.date), px: priceAt(n.date) }));
+  const nodeColor = (n) => {
+    const r = n.reaction || {};
+    return !r.available ? "var(--fg-4)" : r.kind === "confirm" ? "var(--pos)" : r.kind === "reject" ? "var(--neg)" : "var(--fg-3)";
+  };
+  const sx = (vx) => ((GMT_M.l + vx) / GMT_W) * 100;
+  const sy = (vy) => ((GMT_M.t + vy) / GMT_H) * 100;
+  const yTicks = y.ticks(4), xTicks = x.ticks(6);
+
+  const hv = cross != null ? series[cross] : null;
+  const newsAt = hv ? nodes.find((n) => n.date === hv.date) : null;
+  const bright = cross != null ? series.slice(0, cross + 1) : series;
+  const shownPrice = hv ? hv.price : curPrice;
+
+  function onMove(e) {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const plotX = Math.max(0, Math.min(iw, ((e.clientX - rect.left) / rect.width) * GMT_W - GMT_M.l));
+    const td = x.invert(plotX);
+    let bi = 0;
+    for (let k = 1; k < series.length; k++) if (Math.abs(series[k].t - td) < Math.abs(series[bi].t - td)) bi = k;
+    setCross(bi);
+  }
+
+  return (
+    <div className="gmt">
+      <div className="gmt-header">
+        <div className="gmt-h-side">押 {side}</div>
+        <div className="gmt-h-row">
+          <span className={`gmt-h-pct ${dirCls}`}>{typeof shownPrice === "number" ? Math.round(shownPrice * 100) + "%" : "—"}</span>
+          <span className="gmt-h-unit">隐含概率</span>
+          {hv
+            ? <span className="gmt-h-date">{hv.date.slice(5)}</span>
+            : (chgPts != null && <span className={`gmt-h-delta ${dirCls}`}>{chgPts >= 0 ? "▲ +" : "▼ "}{Math.abs(chgPts)}% 区间</span>)}
+        </div>
+      </div>
+      <div className="gmt-wrap">
+        <svg viewBox={`0 0 ${GMT_W} ${GMT_H}`} className="gmt-svg" onMouseMove={onMove} onMouseLeave={() => setCross(null)}>
+          <g transform={`translate(${GMT_M.l},${GMT_M.t})`}>
+            {xTicks.map((t, i) => (
+              <g key={"x" + i}>
+                <line x1={x(t)} x2={x(t)} y1="0" y2={ih} className="gmt-grid v" />
+                <text x={x(t)} y={ih + 15} className="gmt-xtick">{fmtMD(t)}</text>
+              </g>
+            ))}
+            {yTicks.map((t, i) => (
+              <g key={"y" + i}>
+                <line x1="0" x2={iw} y1={y(t)} y2={y(t)} className="gmt-grid" />
+                <text x={iw + 6} y={y(t)} className="gmt-ytick r" dy="0.32em">{Math.round(t * 100)}%</text>
+              </g>
+            ))}
+            <path d={ag(series)} className={`gmt-area ${dirCls}`} />
+            {cross != null && <path d={lg(series)} className={`gmt-line ${dirCls} dim`} />}
+            <path d={lg(bright)} className={`gmt-line ${dirCls}`} />
+            {typeof entryPrice === "number" && <line x1="0" x2={iw} y1={y(entryPrice)} y2={y(entryPrice)} className="gmt-entry-h" />}
+            {entryDate && typeof entryPrice === "number" && (
+              <g>
+                <line x1={x(_pdate(entryDate))} x2={x(_pdate(entryDate))} y1="0" y2={ih} className="gmt-entry-v" />
+                <circle cx={x(_pdate(entryDate))} cy={y(entryPrice)} r="4.5" className="gmt-entry-dot" />
+              </g>
+            )}
+            {nodes.map((n, i) => (
+              <circle key={i} cx={x(n.t)} cy={y(n.px)} r="5.5" fill={nodeColor(n)} className="gmt-node" />
+            ))}
+            {hv && (
+              <g>
+                <line x1={x(hv.t)} x2={x(hv.t)} y1="0" y2={ih} className="gmt-cross-v" />
+                <circle cx={x(hv.t)} cy={y(hv.price)} r="5" className={`gmt-cross-dot ${dirCls}`} />
+              </g>
+            )}
+            {!hv && typeof curPrice === "number" && <circle cx={iw} cy={y(curPrice)} r="4.5" className={`gmt-now-dot ${dirCls}`} />}
+          </g>
+        </svg>
+        {hv && <div className="gmt-cross-date" style={{ left: `${sx(x(hv.t))}%` }}>{fmtMD(hv.t)}</div>}
+        {hv && (
+          <div className={`gmt-cross-tip ${dirCls} ${sx(x(hv.t)) > 60 ? "l" : ""}`} style={{ left: `${sx(x(hv.t))}%`, top: `${sy(y(hv.price))}%` }}>
+            押 {side} {Math.round(hv.price * 100)}%
+          </div>
+        )}
+        {entryDate && typeof entryPrice === "number" && (
+          <div className="gmt-lbl entry" style={{ left: `${sx(x(_pdate(entryDate)))}%`, top: `${sy(y(entryPrice))}%` }}>建仓 {Math.round(entryPrice * 100)}¢</div>
+        )}
+        {newsAt && (() => {
+          const rc = gmtReact(newsAt.reaction);
+          const lx = sx(x(newsAt.t)), ly = sy(y(newsAt.px));
+          const cls = `${ly < 42 ? "below" : ""} ${lx > 72 ? "ar" : lx < 28 ? "al" : "ac"}`;
+          return (
+            <div className={`gmt-tip ${cls}`} style={{ left: `${lx}%`, top: `${ly}%` }}>
+              <div className="gmt-tip-top">
+                <span className="gmt-tip-date num">{newsAt.date}</span>
+                {newsAt.direction && <span className={`db-dir ${newsAt.direction}`}>{newsAt.direction === "support" ? "支持" : "威胁"}</span>}
+                <span className={`rx ${rc.cls}`}>{rc.txt}</span>
+              </div>
+              <div className="gmt-tip-title">{newsAt.title}</div>
+              {newsAt.summary && <div className="gmt-tip-sum">{newsAt.summary}</div>}
+              <div className="gmt-tip-foot">{newsAt.origin} · 时间相关·非因果</div>
+            </div>
+          );
+        })()}
+      </div>
+      <div className="gmt-foot"><i className="gmt-foot-dot" />彩点 = 新闻催化（移动鼠标查看）· 与价格变动<b className="gmt-warn">时间相关、非因果</b> · 灰虚线 = 建仓成本</div>
     </div>
   );
 }
@@ -959,13 +1191,184 @@ function BoardReasoning({ r }) {
   );
 }
 
-function BoardBody({ d }) {
+// 状态灯配色（🔴 守魂#4：判断非买入信号——CHASED 用 amber 表"谨慎,好价过了",不用红"别买";NO BASIS 灰=中性）
+const LIGHT_CLS = { "ROOM LEFT": "green", CHASED: "amber", "NO BASIS": "grey" };
+const cent = (v) => (typeof v === "number" ? Math.round(v * 100) + "¢" : "—");
+
+// 迷你 sparkline（身份徽章用，纯 SVG，零依赖）
+function MiniSpark({ points }) {
+  const n = points.length, W = 66, H = 18;
+  const ps = points.map((d) => d.p);
+  const min = Math.min(...ps), max = Math.max(...ps), span = max - min || 1;
+  const x = (i) => (i / (n - 1)) * W, y = (p) => (1 - (p - min) / span) * H;
+  const path = ps.map((p, i) => `${i ? "L" : "M"}${x(i).toFixed(1)},${y(p).toFixed(1)}`).join(" ");
+  const color = ps[n - 1] >= ps[0] ? "var(--pos)" : "var(--neg)";
+  return (
+    <svg className="vh-spark" viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="none">
+      <path d={path} fill="none" stroke={color} strokeWidth="1.5" vectorEffect="non-scaling-stroke" />
+    </svg>
+  );
+}
+
+// 身份徽章（资格审查降级成角落名片，不再霸占首屏）
+function CredBadge({ profile, rk, pnlHistory }) {
+  const nick = profile.name || profile.pseudonym || abbrev(profile.address);
+  const last = pnlHistory && pnlHistory.length ? pnlHistory[pnlHistory.length - 1].p : null;
+  return (
+    <div className="vh-badge">
+      <Avatar profile={profile} />
+      <div className="vh-badge-meta">
+        <div className="vh-badge-nick">{nick}</div>
+        <div className="vh-badge-stats num">
+          #{rk.rank ?? "—"} · 胜率 {rk.win_rate ? (Number(rk.win_rate) * 100).toFixed(0) + "%" : "—"}
+          {last != null ? " · " + fmtPnlCompact(last) : (rk.total_pnl ? " · " + money(Number(rk.total_pnl)) : "")}
+        </div>
+      </div>
+      {pnlHistory && pnlHistory.length > 1 && <MiniSpark points={pnlHistory} />}
+    </div>
+  );
+}
+
+// 把代码降级原因（R2/底座矩阵/pnl…）翻成人话（守协作纪律#5：弱化不删，原文仍在审计脚注）
+function reasonCN(s) {
+  s = String(s || "");
+  if (s.startsWith("底座矩阵")) {
+    const m = s.match(/底座矩阵:(\w+)\(pnl=([^)]+)\)/);
+    const conf = m ? ({ high: "高", medium: "中", low: "低" }[m[1]] || m[1]) : "";
+    const pnl = m ? m[2] : "—";
+    return { tag: "起步", txt: `按他这注的浮盈(${pnl})和单边/证据情况，矩阵起步给「${conf}」` };
+  }
+  if (s.startsWith("R1")) return { tag: "市场测谎", txt: s.includes("全部") ? "他押的方向有支持新闻，但市场全程反着定价（不买账）→ 打到低" : "他押的方向有支持新闻被市场部分反着定价 → 压到中" };
+  if (s.startsWith("R2")) return { tag: "对冲", txt: "他两边都压了不少（像在做市/对冲），不是单边信念 → 信心压到中" };
+  if (s.startsWith("R3")) return { tag: "退出", txt: "近 48 小时他在大额减仓离场 → 信心压到中" };
+  if (s.startsWith("R4")) return { tag: "证据双空", txt: "支持和威胁两边都没找到对题证据 → 打到低" };
+  return { tag: "", txt: s };
+}
+
+// 首屏判断英雄区：结论先行，0.5 秒拿到"还能不能跟"
+function VerdictHero({ d }) {
+  const r = d.reasoning || {};
+  const pos = d.position || {};
+  const m = pos.meta || {};
+  const wpa = pos.what_position_actions || {};
+  const act = wpa.actions || {};
+  const un = wpa.unrealized || {};
+  const pc = pos.price_context || {};
   const id = d.identity || {};
   const profile = { ...(id.profile || {}), address: id.profile?.address || d.wallet };
+  const rk = (id.who_trader_profile || {}).official_rank || {};
+  const side = (m.analyzed_side || "").toUpperCase();
+  const cls = r.follow_call ? (LIGHT_CLS[r.follow_call] || "grey") : "grey";
+  const upct = un.unrealized_pct;
+  const gain = typeof upct === "number"
+    ? upct >= 0
+    : (typeof pc.current_price === "number" && typeof act.avg_entry_price === "number"
+        ? pc.current_price >= act.avg_entry_price : true);
+  const dirCls = gain ? "pos" : "neg";
+
+  return (
+    <div className="vh">
+      <div className="vh-top">
+        <div className="vh-q">{m.market} <span className="vh-side">· 押 {side}</span></div>
+        <CredBadge profile={profile} rk={rk} pnlHistory={id.pnl_history} />
+      </div>
+
+      {(pos.what_the_bet || pos.resolution_criteria) && (
+        <div className="db-whatbet vh-whatbet">
+          <div className="db-whatbet-h">这一注在赌什么</div>
+          {pos.what_the_bet && <div className="db-whatbet-t">{renderInline(pos.what_the_bet)}</div>}
+          {pos.resolution_criteria && (
+            <details className="db-rc">
+              <summary>官方结算规则原文（什么算赢）</summary>
+              <div className="db-rc-body">{pos.resolution_criteria}</div>
+            </details>
+          )}
+        </div>
+      )}
+
+      <div className="vh-essence">
+        <div className="vh-e"><span>入场成本</span><b className="vh-from num">{cent(act.avg_entry_price)}</b></div>
+        <span className="vh-arrow">→</span>
+        <div className="vh-e vh-e-main">
+          <span>现价 · 隐含概率</span>
+          <div className="vh-now-row">
+            <b className={`vh-now num ${dirCls}`}>{cent(pc.current_price)}</b>
+            {typeof upct === "number" && (
+              <span className={`vh-delta ${dirCls}`}>{upct >= 0 ? "▲" : "▼"} {upct >= 0 ? "+" : ""}{upct}%</span>
+            )}
+          </div>
+        </div>
+        <div className="vh-e vh-room"><span>剩余空间(若赢)</span><b className="num">{pc.remaining_upside_pct_if_win != null ? pc.remaining_upside_pct_if_win + "%" : "—"}</b></div>
+      </div>
+
+      {r.guard_tripped ? (
+        <div className="vh-light guard"><span className="vh-call">🛡 守卫拦截</span>
+          <span className="vh-conf">该判断触发诚实守卫,不输出结论</span></div>
+      ) : (
+        <div className={`vh-light ${cls}`}>
+          <span className="vh-dot" />
+          <span className="vh-call">{FOLLOW_LABEL_CN[r.follow_call] || r.follow_call || "—"}</span>
+          <span className="vh-conf">信心 <b>{CONF_CN[r.confidence] || r.confidence || "—"}</b></span>
+        </div>
+      )}
+
+      {r.market_lean && (
+        <div className="vh-edge">
+          市场倾向 <b>{r.market_lean}</b>{r.lean_strength != null && <span className="vh-edge-str"> {r.lean_strength}/100</span>}
+          {r.alignment && <span className={`vh-align ${r.alignment.includes("逆") ? "against" : "with"}`}> · 这一注 {r.alignment}</span>}
+          {r.event_structure && r.event_structure.multi && (
+            <span className="vh-multi" title={`${r.event_structure.n_candidates} 个候选，基线≈${r.event_structure.baseline_pct}%；隐含概率非二元`}>
+              · 多结局 {r.event_structure.n_candidates} 选 1（基线 {r.event_structure.baseline_pct}%）
+            </span>
+          )}
+        </div>
+      )}
+
+      <div className="vh-verdict">{r.guard_tripped ? r.guard_message : r.reasoning}</div>
+
+      {!r.guard_tripped && r.pivotal_unknown && (
+        <div className="vh-pivotal">⚖ 胜负手：{r.pivotal_unknown}</div>
+      )}
+
+      {!r.guard_tripped && r.market_lean && r.thesis_audit && (
+        <details className="vh-audit">
+          <summary>信心怎么来的？（多空对抗 → 中立裁决，单一信心直出）</summary>
+          {r.input_trust && r.input_trust.length > 0 && (
+            <div className="vh-trust">
+              <div className="vh-trust-h">输入可信度（决定价格/证据该信几分）</div>
+              {r.input_trust.map((l, i) => <div className="vh-trust-l" key={i}>· {l}</div>)}
+            </div>
+          )}
+          <div className="vh-audit-th"><b>多头(押 YES)：</b>{r.thesis_audit.bull}</div>
+          <div className="vh-audit-th"><b>空头(押 NO)：</b>{r.thesis_audit.bear}</div>
+          <div className="vh-audit-foot">↑ 同一市场只算一次、两个反向钱包共享同一份市场观；信心由裁决人直出、不锚钱包盈亏 · 已记日志，待盘结算回验是否真命中</div>
+        </details>
+      )}
+
+      {!r.guard_tripped && !r.market_lean && r.confidence_reasons && r.confidence_reasons.length > 0 && (
+        <details className="vh-audit">
+          <summary>为什么是「{CONF_CN[r.confidence] || r.confidence}」信心？（点开看代码怎么算的）</summary>
+          <ul className="vh-audit-list">
+            {r.confidence_reasons.map((s, i) => {
+              const rc = reasonCN(s);
+              return <li key={i}>{rc.tag && <span className="vh-audit-tag">{rc.tag}</span>}{rc.txt}</li>;
+            })}
+          </ul>
+          <div className="vh-audit-foot">↑ 代码置信度矩阵逐条算（只降不升）、AI 不改判 · 原始：{r.confidence_reasons.join(" · ")}</div>
+        </details>
+      )}
+
+      {d.behavior && <div className="vh-whale">🐳 巨鲸动态 · {d.behavior.fact}</div>}
+      <div className="vh-disc">这是对"局势性质"的判断(还有多少空间/风险在哪/市场认不认这个方向),不替你决定跟不跟 · 天平由你裁决</div>
+    </div>
+  );
+}
+
+function BoardBody({ d }) {
+  const id = d.identity || {};
   const who = id.who_trader_profile || {};
   const rk = who.official_rank || {};
   const q = who.quality || {};
-  const pol = (who.category_specialization || []).find((c) => /Politics/i.test(c.category || ""));
   const pos = d.position || {};
   const m = pos.meta || {};
   const wpa = pos.what_position_actions || {};
@@ -978,22 +1381,34 @@ function BoardBody({ d }) {
 
   return (
     <div className="card bf db">
-      {/* ① 身份 + 体量 */}
-      <div className="db-sec-tag">① 钱包身份 · 体量</div>
-      <div className="db-id">
-        <WalletHeader profile={profile} />
-        <div className="db-id-stats">
-          <span>官方榜 <b className="num">#{rk.rank ?? "—"}</b></span>
-          <span>胜率 <b className="num">{rk.win_rate ? (Number(rk.win_rate) * 100).toFixed(1) + "%" : "—"}</b></span>
-          {pol && <span>政治盘 <b className="num">{(pol.win_rate * 100).toFixed(0)}% · {money(Number(pol.total_pnl))}</b></span>}
+      {/* 首屏：结论先行 */}
+      <VerdictHero d={d} />
+
+      {/* 局势时间轴（核心视觉，紧跟结论）*/}
+      <GodModeTimeline d={d} />
+      {d.world_summary && <div className="db-wsum gmt-summary"><Narrative text={d.world_summary} /></div>}
+
+      {/* 新闻(事实) × 社媒(情绪) 并排 —— 同一问题的两面，视觉刻意分开 */}
+      <div className="db-sec-tag">世界发生了什么 × 在怎么议论</div>
+      <div className="ns-split">
+        <div className="ns-col news">
+          <div className="ns-col-h"><span className="ns-ico">📰</span>新闻 · <b>事实</b><span className="ns-sub">世界发生了什么</span></div>
+          <NewsStream items={d.news_stream} />
+        </div>
+        <div className="ns-col social">
+          <div className="ns-col-h soc"><span className="ns-ico">💬</span>社媒 · <b>情绪</b><span className="ns-sub">小心是情绪、可能刷量</span></div>
+          <SocialPulse s={d.social} />
         </div>
       </div>
-      {id.pnl_history && id.pnl_history.length > 1 && <PnlChart points={id.pnl_history} />}
-      {wrLie && <div className="bf-lie">⚠ 胜率谎言:高胜率但净盈亏为负 — 看净盈亏,非胜率</div>}
-      {q.flagged_metrics && <div className="bf-sub db-flags">风险标记: {flagsCN(q.flagged_metrics)}</div>}
+      <div className="ns-diverge">⚖️ 最值钱的对照：新闻在涨 + 社媒在嗨，但 <b>聪明钱（行为流）信不信？市场价跟没跟？</b> 顺风只陈列，背离才是金。</div>
 
-      {/* ② 这一注 + 现状 */}
-      <div className="db-sec-tag">② 这一注 · 现状</div>
+      {/* 巨鲸 48h 行为流（折叠）*/}
+      <Fold title="巨鲸 48h 动作流" sub="加仓 / 减仓 / 没动 + 3h/24h/48h 窗口">
+        <BehaviorFlag b={d.behavior} />
+      </Fold>
+
+      {/* ② 这一注 · 明细 */}
+      <div className="db-sec-tag">② 这一注 · 明细</div>
       <div className="c-head db-pos-head">
         <div>
           <div className="q">{m.market}</div>
@@ -1001,18 +1416,6 @@ function BoardBody({ d }) {
         </div>
         <span className="outcome">{(m.analyzed_side || "").toUpperCase()}</span>
       </div>
-      {(pos.what_the_bet || pos.resolution_criteria) && (
-        <div className="db-whatbet">
-          <div className="db-whatbet-h">这一注在赌什么</div>
-          {pos.what_the_bet && <div className="db-whatbet-t">{renderInline(pos.what_the_bet)}</div>}
-          {pos.resolution_criteria && (
-            <details className="db-rc">
-              <summary>官方结算规则原文（什么算赢）</summary>
-              <div className="db-rc-body">{pos.resolution_criteria}</div>
-            </details>
-          )}
-        </div>
-      )}
       <div className="bf-grid db-grid">
         <div className="bf-mini">
           <div className="bf-mini-h">动作 · 他做了什么</div>
@@ -1029,35 +1432,102 @@ function BoardBody({ d }) {
         </div>
       </div>
 
-      {/* ③ 实时盘面 */}
-      <div className="db-sec-tag">③ 实时盘面 · Polymarket</div>
-      {d.market?.slug
-        ? <><PolymarketEmbed slug={d.market.slug} />
-            <a className="db-jump num" href={`https://polymarket.com/market/${d.market.slug}`} target="_blank" rel="noreferrer">在 Polymarket 打开 ↗</a></>
-        : <div className="ctx-empty">无 slug,实时盘面不可嵌入</div>}
+      {/* ③ 当前赔率 · 原生条（替 iframe）*/}
+      <div className="db-sec-tag">③ 当前赔率 · 市场怎么定价</div>
+      <OddsBar held={pc.current_price} side={(m.analyzed_side || "").toUpperCase()} slug={d.market?.slug} />
 
-      {/* ④⑤ 双栏对照（默认折叠）：左=钱包动作流，右=三源综述 + 时间线新闻流 */}
-      <Fold title="④⑤ 钱包动作流 × 世界催化剂" sub="点开看双栏对照（行为 vs 新闻·三源合并）">
-        <div className="db-dual">
-          <div className="db-dual-col">
-            <div className="db-dual-h">④ 钱包动作流 · 48h</div>
-            <BehaviorFlag b={d.behavior} />
-          </div>
-          <div className="db-dual-col">
-            <div className="db-dual-h">⑤ 世界催化剂 · 综述 + 时间线（GDELT·Tavily·gamma 三源）</div>
-            {d.world_summary && <div className="db-wsum"><Narrative text={d.world_summary} /></div>}
-            <div className="db-stream-note">↑印证 / ↓不买账 = 钱包持有侧价格在新闻前后窗口的涨跌（前后变动，非该新闻导致）</div>
-            <NewsStream items={d.news_stream} />
-          </div>
+      {/* 降级：钱包历史体量（资格审查，不再霸占首屏）*/}
+      <Fold title="钱包历史体量 · 身份背书" sub="累计盈亏曲线 + 风险标记（背景调查，非本注结论）">
+        {id.pnl_history && id.pnl_history.length > 1 && <PnlChart points={id.pnl_history} />}
+        {wrLie && <div className="bf-lie">⚠ 胜率谎言:高胜率但净盈亏为负 — 看净盈亏,非胜率</div>}
+        {q.flagged_metrics && <div className="bf-sub db-flags">风险标记: {flagsCN(q.flagged_metrics)}</div>}
+        <div className="db-id-stats db-id-stats-full">
+          <span>官方榜 <b className="num">#{rk.rank ?? "—"}</b></span>
+          <span>胜率 <b className="num">{rk.win_rate ? (Number(rk.win_rate) * 100).toFixed(1) + "%" : "—"}</b></span>
         </div>
       </Fold>
 
-      {/* ⑥ Edge / Reasoning */}
-      <div className="db-sec-tag last">⑥ Edge · 局势性质判断（不替你决定）</div>
-      <BoardReasoning r={d.reasoning} />
-      <div className="db-disc">⑥ 只判断"局势性质"(还有多少空间 / 风险在哪 / 市场认不认这个方向),从不替你决定跟不跟 · 天平由你裁决</div>
+      <div className="foot">结论由代码矩阵算定信心、AI 只解释不改判 · 价格为市场隐含概率(非胜率) · 公开数据整理,非投资建议</div>
+    </div>
+  );
+}
 
-      <div className="foot">①-⑤ 全部公开数据 + 代码计算,⑥ 置信度由代码矩阵算定、AI 只解释不改判 · 非投资建议</div>
+// Polymarket 价格滚动栏（第三方 widget：先渲 div、再注入脚本，脚本按 id 找 div 渲染）
+// 入口滚动条：本周政治盘热门交易者（hot_traders.py：579 7d 宇宙 × 581 政治 7d 盈亏）。点一个直接解码。
+function HotTraders({ onPick }) {
+  const [data, setData] = useState(null);
+  useEffect(() => { fetch(`${API}/hot-traders`).then((r) => r.json()).then(setData).catch(() => {}); }, []);
+  const traders = (data && data.traders) || [];
+  if (!traders.length) return null;
+  const loop = [...traders, ...traders];   // 两份拼接 = 无缝循环
+  return (
+    <div className="hot-wrap" title="本周政治盘最赚的交易者 · 点击直接解码（数据来自 581 政治盘 7 天盈亏，仅地址无昵称）">
+      <span className="hot-label">🔥 本周政治盘热门</span>
+      <div className="hot-marquee">
+        <div className="hot-track">
+          {loop.map((t, i) => (
+            <button className="hot-item" key={i} onClick={() => onPick(t.wallet)} title={t.wallet}>
+              <span className="hot-rank num">#{(i % traders.length) + 1}</span>
+              <span className="hot-addr num">{abbrev(t.wallet)}</span>
+              <span className="hot-pnl num">{money(t.weekly_politics_pnl)}</span>
+            </button>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// 扫榜推荐（免费扫榜层）：点一个直接 decode
+const BEH_ICON = { ADD: "📈", EXIT: "📉", STATIC: "⏸" };
+const CALL_CN = { "ROOM LEFT": "还有空间", CHASED: "太迟了", "NO BASIS": "没依据" };
+function Recommendations({ onPick }) {
+  const [data, setData] = useState(null);
+  useEffect(() => { fetch(`${API}/recommendations`).then((r) => r.json()).then(setData).catch(() => {}); }, []);
+  const cands = (data && data.candidates) || [];
+  if (!cands.length) return null;
+  return (
+    <div className="recs">
+      <div className="recs-h">值得看的聪明钱 · <b>政治盘专家</b>（从热门政治盘反向找的共持大户 · 政治专长筛 · ∩月榜）<span className="recs-sub">点一个直接 decode</span></div>
+      <div className="recs-list">
+        {cands.map((c, i) => {
+          const pw = c.politics_win_rate;
+          const pwTxt = pw != null ? (pw <= 1 ? Math.round(pw * 100) : Math.round(pw)) + "%" : null;
+          return (
+            <button className={`rec ${c.ai_pick ? "pick" : ""}`} key={i} onClick={() => onPick(c.wallet)}>
+              <div className="rec-top">
+                {c.ai_pick && <span className="rec-aibadge">AI 精选</span>}
+                <span className="rec-addr num">{abbrev(c.wallet)}</span>
+                {c.cross_ref_579 && <span className="rec-cross">∩月榜</span>}
+                {c.tier && <span className="rec-tier">{c.tier}</span>}
+                {c.h_score != null && <span className="rec-h num">H{Math.round(c.h_score)}</span>}
+              </div>
+              {c.politics_pnl != null && (
+                <div className="rec-pol">政治盘 <b className="num">{money(c.politics_pnl)}</b>{pwTxt && <span> · 胜率 {pwTxt}</span>}{c.politics_trades && <span> · {c.politics_trades} 注</span>}</div>
+              )}
+              <div className="rec-q">{c.market_question} <span className="rec-side">· 押 {c.outcome}</span></div>
+              {c.disagreement && (
+                <div className="rec-disagree">⚠ 聪明钱在此盘分歧（正反都有人押）
+                  {c.disagreement_lean && <span className={c.disagreement_with_edge ? "with" : "against"}> · 我们独立倾向 <b>{c.disagreement_lean}</b> → 这注{c.disagreement_with_edge ? "顺" : "逆"} edge</span>}
+                </div>
+              )}
+              {c.consensus_count >= 2 && (
+                <div className="rec-consensus">🤝 {c.consensus_count} 个政治专家同押此方向（弱信号 · 技能共识非盈亏 · 仍有羊群风险）</div>
+              )}
+              {c.source_market && <div className="rec-src">↳ 从「{c.source_market}」共持发现</div>}
+              <div className="rec-beh">{BEH_ICON[c.behavior] || "·"} {c.behavior_fact || c.behavior || "—"}</div>
+              {c.ai_pick && (
+                <div className="rec-verdict">
+                  <span className={`rec-conf ${c.ai_confidence}`}>⑥ {CONF_CN[c.ai_confidence] || c.ai_confidence} 信心</span>
+                  {c.ai_follow_call && <span className="rec-call">{CALL_CN[c.ai_follow_call] || c.ai_follow_call}</span>}
+                  {c.ai_verdict && <span className="rec-verdict-txt">{c.ai_verdict}</span>}
+                </div>
+              )}
+            </button>
+          );
+        })}
+      </div>
+      <div className="recs-foot">扫榜=值得一看，<b>不是"该跟"</b> · 高盈利 ≠ 下一注好（过去≠未来）· 这注本身好不好由点开后的 ⑥ 判 {data.as_of && `· 截至 ${data.as_of}`}{data.generated_at && ` · 更新于 ${new Date(data.generated_at * 1000).toLocaleString("zh-CN", { month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit" })}`}</div>
     </div>
   );
 }
@@ -1085,6 +1555,7 @@ function BoardView() {
   const showHome = !data && !loading && !error;
   return (
     <>
+      <HotTraders onPick={(w) => { setWallet(w); run(w); }} />
       {!data && !error && (
         <div className="console-sub">输入聪明钱钱包,生成 v3 统一看板:身份体量 → 这一注 → 实时盘面 → 行为×催化剂 → Edge 判断,一屏看全</div>
       )}
@@ -1098,9 +1569,11 @@ function BoardView() {
         </button>
       </div>
 
+      {showHome && <Recommendations onPick={(w) => { setWallet(w); run(w); }} />}
+
       {showHome && (
         <div className="monitor">
-          <div className="mon-head">试试这几个大户 · 点击生成统一看板</div>
+          <div className="mon-head">或试试这几个 demo 钱包 · 点击生成统一看板</div>
           <div className="mon-list">
             {EXAMPLES.map((e) => (
               <button className="mon-row" key={e.addr} onClick={() => { setWallet(e.addr); run(e.addr); }}>
