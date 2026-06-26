@@ -992,17 +992,29 @@ function SocialPulse({ s }) {
         <div className="soc-warn">⚠ 作者多样性 {div}% &lt; 20% —— 很可能是刷量/机器人，当噪音看，别当真情绪</div>
       )}
       <div className="soc-posts">
-        {(s.posts || []).map((p, i) => (
-          <div className="soc-post" key={i}>
-            <div className="soc-post-top">
-              <span className="soc-user">@{p.username}</span>
-              <span className="soc-eng num">♥ {p.likes || 0} · ↻ {p.retweets || 0}</span>
+        {(s.posts || []).map((p, i) => {
+          const eng = (p.likes || 0) + (p.retweets || 0);
+          const badge = eng >= 50 ? { txt: "🔥 热帖", cls: "hot" } : eng >= 10 ? { txt: "💬 有讨论", cls: "mid" } : null;
+          const u = (p.username || "?").replace(/^@/, "");
+          return (
+            <div className="soc-post" key={i}>
+              <div className="soc-post-top">
+                <span className="soc-av">
+                  <span className="soc-av-init">{u[0] ? u[0].toUpperCase() : "?"}</span>
+                  <img className="soc-av-img" src={`https://unavatar.io/x/${encodeURIComponent(u)}`}
+                    loading="lazy" alt="" onError={(e) => { e.currentTarget.style.display = "none"; }} />
+                </span>
+                <span className="soc-user">@{u}</span>
+                {badge && <span className={`soc-badge ${badge.cls}`}>{badge.txt}</span>}
+                <span className="soc-eng num">♥ {p.likes || 0} · ↻ {p.retweets || 0}</span>
+              </div>
+              <div className="soc-post-txt">{p.content}</div>
+              {p.url && <a className="soc-post-link" href={p.url} target="_blank" rel="noreferrer">原帖 ↗</a>}
             </div>
-            <div className="soc-post-txt">{p.content}</div>
-            {p.url && <a className="soc-post-link" href={p.url} target="_blank" rel="noreferrer">原帖 ↗</a>}
-          </div>
-        ))}
+          );
+        })}
       </div>
+      <div className="soc-foot">🔖 热帖标 = 互动热度（♥+↻），<b>非情绪判断</b>——社媒是情绪不是事实，方向请看新闻与 ⑥</div>
     </div>
   );
 }

@@ -474,7 +474,8 @@ def dashboard(wallet: str):
             wallet, market_q, outcome, behavior, gdelt_events, tavily_cats, gamma_ctx, resolution)
 
         # 社媒情绪动量（585，免费，🔴情绪非事实、仅实时——前端与新闻视觉分开 + 刷量标显眼）
-        social = social_pulse(_entities_from_question(market_q))
+        # max_posts=12：社媒供给充足，拉满补齐新闻列长度（两列视觉平衡）
+        social = social_pulse(_entities_from_question(market_q), max_posts=12)
 
         # ⑥ Edge/Reasoning：reason_v3 仍供 follow_call + 代码 facts（价格/时长/对冲）；
         # 🔴 信心改由「市场命题级对抗推理」直出（market_thesis，按 cid,as_of 缓存→两个反向钱包共享同一份市场观，
