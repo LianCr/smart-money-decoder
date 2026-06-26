@@ -1028,6 +1028,19 @@ function gmtReact(rx) {
   return { txt: `${m.sym}${m.txt} ${rx.move_pct > 0 ? "+" : ""}${rx.move_pct}%`, cls: m.cls };
 }
 function fmtMD(dt) { return `${dt.getUTCMonth() + 1}/${dt.getUTCDate()}`; }
+// 滚动数字（odometer）：每位 0-9 竖排，translateY 滚到目标位；挂载从 0 滚上、scrub 时滚到新值。零依赖。
+function RollingDigit({ d }) {
+  const [shown, setShown] = useState(0);
+  useEffect(() => { const id = requestAnimationFrame(() => setShown(d)); return () => cancelAnimationFrame(id); }, [d]);
+  return (
+    <span className="roll-d"><span className="roll-col" style={{ transform: `translateY(${-shown}em)` }}>
+      {Array.from({ length: 10 }, (_, n) => <span key={n} className="roll-n">{n}</span>)}
+    </span></span>
+  );
+}
+function RollingNumber({ value }) {
+  return <span className="roll">{String(value).split("").map((c, i) => <RollingDigit key={i} d={+c} />)}</span>;
+}
 function GodModeTimeline({ d }) {
   const [cross, setCross] = useState(null);   // 鼠标所在的 series 索引（实时光标）
   const series = (d.price_series || []).filter((p) => typeof p.price === "number")
@@ -1092,9 +1105,9 @@ function GodModeTimeline({ d }) {
   return (
     <div className="gmt">
       <div className="gmt-header">
-        <div className="gmt-h-side">押 {side}</div>
+        <div className={`gmt-h-side ${side === "YES" ? "yes" : "no"}`}><span className="gmt-h-side-dot" />押 {side}</div>
         <div className="gmt-h-row">
-          <span className={`gmt-h-pct ${dirCls}`}>{typeof shownPrice === "number" ? Math.round(shownPrice * 100) + "%" : "—"}</span>
+          <span className={`gmt-h-pct ${dirCls}`}>{typeof shownPrice === "number" ? <><RollingNumber value={Math.round(shownPrice * 100)} />%</> : "—"}</span>
           <span className="gmt-h-unit">隐含概率</span>
           {hv
             ? <span className="gmt-h-date">{hv.date.slice(5)}</span>
