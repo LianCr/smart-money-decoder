@@ -1217,6 +1217,22 @@ function CredBadge({ profile, rk, pnlHistory }) {
   );
 }
 
+// 把代码降级原因（R2/底座矩阵/pnl…）翻成人话（守协作纪律#5：弱化不删，原文仍在审计脚注）
+function reasonCN(s) {
+  s = String(s || "");
+  if (s.startsWith("底座矩阵")) {
+    const m = s.match(/底座矩阵:(\w+)\(pnl=([^)]+)\)/);
+    const conf = m ? ({ high: "高", medium: "中", low: "低" }[m[1]] || m[1]) : "";
+    const pnl = m ? m[2] : "—";
+    return { tag: "起步", txt: `按他这注的浮盈(${pnl})和单边/证据情况，矩阵起步给「${conf}」` };
+  }
+  if (s.startsWith("R1")) return { tag: "市场测谎", txt: s.includes("全部") ? "他押的方向有支持新闻，但市场全程反着定价（不买账）→ 打到低" : "他押的方向有支持新闻被市场部分反着定价 → 压到中" };
+  if (s.startsWith("R2")) return { tag: "对冲", txt: "他两边都压了不少（像在做市/对冲），不是单边信念 → 信心压到中" };
+  if (s.startsWith("R3")) return { tag: "退出", txt: "近 48 小时他在大额减仓离场 → 信心压到中" };
+  if (s.startsWith("R4")) return { tag: "证据双空", txt: "支持和威胁两边都没找到对题证据 → 打到低" };
+  return { tag: "", txt: s };
+}
+
 // 首屏判断英雄区：结论先行，0.5 秒拿到"还能不能跟"
 function VerdictHero({ d }) {
   const r = d.reasoning || {};
@@ -1285,6 +1301,19 @@ function VerdictHero({ d }) {
       )}
 
       <div className="vh-verdict">{r.guard_tripped ? r.guard_message : r.reasoning}</div>
+
+      {!r.guard_tripped && r.confidence_reasons && r.confidence_reasons.length > 0 && (
+        <details className="vh-audit">
+          <summary>为什么是「{CONF_CN[r.confidence] || r.confidence}」信心？（点开看代码怎么算的）</summary>
+          <ul className="vh-audit-list">
+            {r.confidence_reasons.map((s, i) => {
+              const rc = reasonCN(s);
+              return <li key={i}>{rc.tag && <span className="vh-audit-tag">{rc.tag}</span>}{rc.txt}</li>;
+            })}
+          </ul>
+          <div className="vh-audit-foot">↑ 代码置信度矩阵逐条算（只降不升）、AI 不改判 · 原始：{r.confidence_reasons.join(" · ")}</div>
+        </details>
+      )}
 
       {d.behavior && <div className="vh-whale">🐳 巨鲸动态 · {d.behavior.fact}</div>}
       <div className="vh-disc">这是对"局势性质"的判断(还有多少空间/风险在哪/市场认不认这个方向),不替你决定跟不跟 · 天平由你裁决</div>
