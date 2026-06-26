@@ -919,7 +919,7 @@ a.db-news-t:hover { color: var(--bf-accent); text-decoration: underline; }
 /* 滚动数字 odometer */
 .roll { display: inline-flex; }
 .roll-d { display: inline-block; height: 1em; overflow: hidden; vertical-align: top; }
-.roll-col { display: flex; flex-direction: column; transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1); will-change: transform; }
+.roll-col { display: flex; flex-direction: column; transition: transform 0.32s cubic-bezier(0.22, 1, 0.36, 1); will-change: transform; }
 .roll-n { height: 1em; line-height: 1em; text-align: center; }
 .gmt-h-row { display: flex; align-items: baseline; gap: 11px; }
 .gmt-h-pct { font-family: var(--sans); font-size: 42px; font-weight: 800; line-height: 1; letter-spacing: -0.025em; }
@@ -929,6 +929,7 @@ a.db-news-t:hover { color: var(--bf-accent); text-decoration: underline; }
 .gmt-h-date { font-family: var(--mono); font-size: 14px; color: var(--fg-2); }
 .gmt-h-delta { font-family: var(--mono); font-size: 14px; font-weight: 700; }
 .gmt-h-delta.pos { color: var(--pos); } .gmt-h-delta.neg { color: var(--neg); }
+.gmt-h-deltalab { font-family: var(--sans); font-size: 11px; font-weight: 400; color: var(--fg-4); }
 .gmt-warn { color: var(--neg); font-style: normal; }
 .gmt-foot { margin-top: 14px; font-size: 10.5px; color: var(--fg-4); display: flex; align-items: center; gap: 7px; line-height: 1.5; }
 .gmt-foot-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--pos); box-shadow: 0 0 5px var(--pos-glow); flex-shrink: 0; }

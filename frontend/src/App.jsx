@@ -1028,13 +1028,25 @@ function gmtReact(rx) {
   return { txt: `${m.sym}${m.txt} ${rx.move_pct > 0 ? "+" : ""}${rx.move_pct}%`, cls: m.cls };
 }
 function fmtMD(dt) { return `${dt.getUTCMonth() + 1}/${dt.getUTCDate()}`; }
-// 滚动数字（odometer）：每位 0-9 竖排，translateY 滚到目标位；挂载从 0 滚上、scrub 时滚到新值。零依赖。
+// 滚动数字（odometer）：连续 reel（0-9 重复 8 组），用**累计绝对位置**滚动，按最短方向连续过渡——
+// 9→0 向前滚(不再倒退一圈)，scrub 顺滑。挂载从 0 滚到目标。零依赖。
+const ROLL_REEL = 80, ROLL_MID = 40;
 function RollingDigit({ d }) {
-  const [shown, setShown] = useState(0);
-  useEffect(() => { const id = requestAnimationFrame(() => setShown(d)); return () => cancelAnimationFrame(id); }, [d]);
+  const posRef = useRef(ROLL_MID);          // 挂载从位置 40(显示 0)开始
+  const [pos, setPos] = useState(ROLL_MID);
+  useEffect(() => {
+    const cur = posRef.current;
+    const curMod = ((cur % 10) + 10) % 10;
+    let delta = d - curMod;                  // 最短连续方向：±5 内直接走，超过则反向更近
+    if (delta > 5) delta -= 10;
+    else if (delta < -5) delta += 10;
+    const next = cur + delta;
+    posRef.current = next;
+    setPos(next);
+  }, [d]);
   return (
-    <span className="roll-d"><span className="roll-col" style={{ transform: `translateY(${-shown}em)` }}>
-      {Array.from({ length: 10 }, (_, n) => <span key={n} className="roll-n">{n}</span>)}
+    <span className="roll-d"><span className="roll-col" style={{ transform: `translateY(${-pos}em)` }}>
+      {Array.from({ length: ROLL_REEL }, (_, n) => <span key={n} className="roll-n">{n % 10}</span>)}
     </span></span>
   );
 }
@@ -1108,10 +1120,10 @@ function GodModeTimeline({ d }) {
         <div className={`gmt-h-side ${side === "YES" ? "yes" : "no"}`}><span className="gmt-h-side-dot" />押 {side}</div>
         <div className="gmt-h-row">
           <span className={`gmt-h-pct ${dirCls}`}>{typeof shownPrice === "number" ? <><RollingNumber value={Math.round(shownPrice * 100)} />%</> : "—"}</span>
-          <span className="gmt-h-unit">隐含概率</span>
+          <span className="gmt-h-unit" title="市场赔率隐含的、对『会发生』的概率估计——不是胜率、不是收益（行话叫『隐含概率』）">市场认为「{side}」的概率</span>
           {hv
             ? <span className="gmt-h-date">{hv.date.slice(5)}</span>
-            : (chgPts != null && <span className={`gmt-h-delta ${dirCls}`}>{chgPts >= 0 ? "▲ +" : "▼ "}{Math.abs(chgPts)}% 区间</span>)}
+            : (chgPts != null && <span className={`gmt-h-delta ${dirCls}`} title="本图时间段内，这个概率涨/跌了多少个百分点">{chgPts >= 0 ? "▲ +" : "▼ "}{Math.abs(chgPts)}% <span className="gmt-h-deltalab">这段时间</span></span>)}
           {!hv && settle && <span className="gmt-h-settle">· 结算 {settle}</span>}
         </div>
       </div>
