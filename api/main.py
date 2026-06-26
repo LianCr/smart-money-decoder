@@ -510,6 +510,20 @@ def dashboard(wallet: str):
     return response
 
 
+RECOMMEND_FILE = Path(".data/recommendations.json")
+
+
+@app.get("/recommendations")
+def recommendations():
+    """扫榜推荐：读 recommend.py 定期写的候选清单（免费扫榜层）。空=还没扫过。"""
+    if RECOMMEND_FILE.exists():
+        try:
+            return json.loads(RECOMMEND_FILE.read_text(encoding="utf-8"))
+        except Exception:
+            pass
+    return {"as_of": BRIEFING_AS_OF, "candidates": []}
+
+
 @app.get("/scorecard")
 def scorecard_endpoint():
     """诚实记分牌：增量抓结算(574,免费) → 纯代码冷数字 + 行表（不调 AI、不算收益率）。"""

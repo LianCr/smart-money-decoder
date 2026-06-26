@@ -1012,6 +1012,25 @@ a.db-news-t:hover { color: var(--bf-accent); text-decoration: underline; }
 
 @media (max-width: 680px) { .ns-split { grid-template-columns: 1fr; } }
 
+/* ══ 扫榜推荐（输入页"值得看的聪明钱"）═════════════════════════════════════════ */
+.recs { margin-bottom: 26px; }
+.recs-h { font-size: 13px; font-weight: 700; color: var(--fg-1); margin-bottom: 14px; display: flex; align-items: baseline; gap: 9px; flex-wrap: wrap; }
+.recs-sub { font-size: 11px; color: var(--bf-accent); font-weight: 400; }
+.recs-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 10px; }
+.rec { text-align: left; background: var(--bg-1); border: 1px solid var(--line-1); border-radius: 4px; padding: 12px 14px; cursor: pointer; transition: border-color 0.15s, background 0.15s; }
+.rec:hover { border-color: var(--bf-accent); background: var(--bg-2); }
+.rec.pick { border-color: rgba(0,229,255,0.4); box-shadow: inset 0 0 24px var(--accent-bg); }
+.rec-top { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+.rec-aibadge { font-family: var(--mono); font-size: 9px; font-weight: 700; color: var(--bf-accent); background: var(--accent-bg); border: 1px solid rgba(0,229,255,0.3); padding: 1px 6px; border-radius: 2px; }
+.rec-addr { font-size: 11px; color: var(--fg-3); }
+.rec-tier { font-family: var(--mono); font-size: 9px; color: var(--amber); background: rgba(243,168,42,0.1); padding: 1px 6px; border-radius: 2px; }
+.rec-h { margin-left: auto; font-size: 12px; font-weight: 700; color: var(--pos); }
+.rec-q { font-size: 12.5px; line-height: 1.45; color: var(--fg-1); margin-bottom: 7px; }
+.rec-side { color: var(--bf-accent); font-weight: 600; white-space: nowrap; }
+.rec-beh { font-size: 11px; color: var(--fg-3); line-height: 1.4; }
+.recs-foot { font-size: 10.5px; color: var(--fg-4); margin-top: 12px; line-height: 1.5; }
+.recs-foot b { color: var(--fg-2); }
+
 /* ══ 诚实记分牌（Track Record 顶部）════════════════════════════════════════════ */
 .sc { max-width: 760px; margin: 0 auto 8px; background: var(--bg-1); border: 1px solid var(--line-1); border-radius: 3px; padding: 20px 22px; }
 .sc-head { margin-bottom: 16px; }

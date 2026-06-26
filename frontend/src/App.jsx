@@ -1409,6 +1409,35 @@ function BoardBody({ d }) {
   );
 }
 
+// 扫榜推荐（免费扫榜层）：点一个直接 decode
+const BEH_ICON = { ADD: "📈", EXIT: "📉", STATIC: "⏸" };
+function Recommendations({ onPick }) {
+  const [data, setData] = useState(null);
+  useEffect(() => { fetch(`${API}/recommendations`).then((r) => r.json()).then(setData).catch(() => {}); }, []);
+  const cands = (data && data.candidates) || [];
+  if (!cands.length) return null;
+  return (
+    <div className="recs">
+      <div className="recs-h">值得看的聪明钱 · 扫 H-Score 质量榜（已滤机器人/运气）<span className="recs-sub">点一个直接 decode</span></div>
+      <div className="recs-list">
+        {cands.map((c, i) => (
+          <button className={`rec ${c.ai_pick ? "pick" : ""}`} key={i} onClick={() => onPick(c.wallet)}>
+            <div className="rec-top">
+              {c.ai_pick && <span className="rec-aibadge">AI 精选</span>}
+              <span className="rec-addr num">{abbrev(c.wallet)}</span>
+              {c.tier && <span className="rec-tier">{c.tier}</span>}
+              {c.h_score != null && <span className="rec-h num">H{Math.round(c.h_score)}</span>}
+            </div>
+            <div className="rec-q">{c.market_question} <span className="rec-side">· 押 {c.outcome}</span></div>
+            <div className="rec-beh">{BEH_ICON[c.behavior] || "·"} {c.behavior_fact || c.behavior || "—"}</div>
+          </button>
+        ))}
+      </div>
+      <div className="recs-foot">扫榜=值得一看，<b>不是"该跟"</b> · 高盈利 ≠ 下一注好（过去≠未来）· 单边/对冲由点开后的 ⑥ 判 {data.as_of && `· 截至 ${data.as_of}`}</div>
+    </div>
+  );
+}
+
 function BoardView() {
   const [wallet, setWallet] = useState("");
   const [loading, setLoading] = useState(false);
@@ -1445,9 +1474,11 @@ function BoardView() {
         </button>
       </div>
 
+      {showHome && <Recommendations onPick={(w) => { setWallet(w); run(w); }} />}
+
       {showHome && (
         <div className="monitor">
-          <div className="mon-head">试试这几个大户 · 点击生成统一看板</div>
+          <div className="mon-head">或试试这几个 demo 钱包 · 点击生成统一看板</div>
           <div className="mon-list">
             {EXAMPLES.map((e) => (
               <button className="mon-row" key={e.addr} onClick={() => { setWallet(e.addr); run(e.addr); }}>
