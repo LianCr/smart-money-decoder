@@ -45,6 +45,7 @@ from briefing.market_context import get_behavior_flags
 from analyzer.reasoner_v3 import reason_v3, ReasonerError
 from fetcher.heisenberg import call as hz_call, results as hz_results, AGENTS as HZ_AGENTS
 from briefing import board_feed
+from fetcher.social import social_pulse
 import scorecard
 
 app = FastAPI(title="smart-money-decoder API", version="1.0")
@@ -105,9 +106,11 @@ BRIEFING_CACHE  = Path(".cache/briefing_api")   # 完整简报响应缓存（结
 DASHBOARD_CACHE = Path(".cache/dashboard")      # 统一看板整份响应缓存（①-⑥），命中=零 token 秒回
 REASONER_CACHE  = Path(".cache/reasoner_v3")     # ⑥ reasoner 独立缓存：改 ⑤/② 重建看板不重烧 ⑥
 BOARD_AI_CACHE  = Path(".cache/board_ai")        # ⑤综述+②what_bet 独立缓存：改新闻流结构/前端不重烧 AI
-# 🔴 数据世界的"现在"：Heisenberg/gamma 都是 2026 世界，as_of 必须用它、不能用 wall-clock date.today()。
-# 真实时产品（切 Bedrock 后跑实时数据）再改成 date.today()。
-BRIEFING_AS_OF  = os.environ.get("BRIEFING_AS_OF", "2026-06-20")
+# 🔴 里程碑（2026-06-25）：拔掉 6-20 快照钉子，推进到数据世界"现在"(6-25 固定)。
+# 一次性解锁：当前数据 + 社媒动量并排(585 仅实时) + 记分牌从今天起真实积累。
+# 暂用固定 6-25（不用 wall-clock date.today()）以免数据世界每天前进、缓存天天过期重烧；
+# 真上 Bedrock/有预算时再切 date.today() 走逐日实时。
+BRIEFING_AS_OF  = os.environ.get("BRIEFING_AS_OF", "2026-06-25")
 
 
 def _difficulty(entry_price):
@@ -454,6 +457,9 @@ def dashboard(wallet: str):
         world_summary, what_bet = _board_ai_cached(
             wallet, market_q, outcome, behavior, gdelt_events, tavily_cats, gamma_ctx, resolution)
 
+        # 社媒情绪动量（585，免费，🔴情绪非事实、仅实时——前端与新闻视觉分开 + 刷量标显眼）
+        social = social_pulse(_entities_from_question(market_q))
+
         # ⑥ Edge/Reasoning（代码矩阵 + reasoner，含三铁律守卫）—— 独立缓存，改 ⑤/② 不重烧
         reasoning = _reasoner_cached(b, behavior, wallet)
 
@@ -482,6 +488,7 @@ def dashboard(wallet: str):
         "price_series": board_feed.price_series(tok, BRIEFING_AS_OF),  # 上帝视角时间轴(568日线,免费)
         "behavior": behavior,                        # ④
         "news_stream": news_stream,                  # ⑤ 三源合并时间线（source 链接 + 反应符号）
+        "social": social,                            # ⑤ 社媒情绪动量（585·情绪非事实·仅实时）
         "world_summary": world_summary,              # ⑤ 三源合并综述（巨鲸动态/事态进展）
         "reasoning": reasoning,                      # ⑥
     }

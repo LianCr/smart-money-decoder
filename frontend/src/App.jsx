@@ -931,6 +931,12 @@ function ReactionTag({ r }) {
 }
 // 方向标=dual_catalyst 已分好的正负（支持/威胁）；GDELT 未分类→不杜撰方向
 const DIR_META = { support: { txt: "支持", cls: "support" }, threat: { txt: "威胁", cls: "threat" } };
+function domainOf(url, fallback) {
+  try { return new URL(url).hostname.replace(/^www\./, ""); } catch { return fallback || ""; }
+}
+function faviconUrl(domain) { return `https://www.google.com/s2/favicons?domain=${domain}&sz=64`; }
+
+// 新闻流 · Polymarket 风格（标题 + 段落 + 底部可点 mini 来源 logo + 市场反应）
 function NewsStream({ items }) {
   if (!items || !items.length)
     return <div className="bf-empty">该时点窗内三源都没洗出对题新闻 — 如实留空</div>;
@@ -938,21 +944,65 @@ function NewsStream({ items }) {
     <div className="db-stream">
       {items.map((it, i) => {
         const dir = DIR_META[it.direction];
+        const dom = domainOf(it.url, it.source);
         return (
           <div className={`db-news ${it.direction || ""}`} key={i}>
             <div className="db-news-top">
               <span className="db-news-date num">{it.date || "—"}</span>
               {dir && <span className={`db-dir ${dir.cls}`}>{dir.txt}</span>}
-              <span className={`db-origin ${it.origin === "GDELT" ? "g" : "t"}`}>{it.origin}</span>
               <ReactionTag r={it.reaction} />
             </div>
             {it.url ? <a className="db-news-t" href={it.url} target="_blank" rel="noreferrer">{it.title}</a>
                     : <div className="db-news-t">{it.title}</div>}
             {it.summary && <div className="db-news-s">{it.summary}</div>}
-            {it.same_window && <div className="db-news-foot"><span className="db-news-sw">同日多条 · 前后变动为合计,不可归因到单条</span></div>}
+            {it.same_window && <div className="db-news-sw">同日多条 · 前后变动为合计,不可归因到单条</div>}
+            {dom && (
+              <a className="db-news-src" href={it.url} target="_blank" rel="noreferrer" title={`在 ${dom} 打开`}>
+                <img className="db-news-fav" src={faviconUrl(dom)} alt="" loading="lazy" onError={(e) => { e.currentTarget.style.display = "none"; }} />
+                <span className="db-news-dom">{dom}</span>
+              </a>
+            )}
           </div>
         );
       })}
+    </div>
+  );
+}
+
+// 社媒情绪动量（585）· 🔴 情绪非事实、视觉刻意区别于新闻、刷量标显眼
+function SocialPulse({ s }) {
+  if (!s) return <div className="bf-empty">该话题暂无社媒数据（或未配置）</div>;
+  const acc = s.acceleration;
+  const heating = typeof acc === "number" && acc > 1;
+  const div = s.author_diversity_pct;
+  const organic = s.organic;
+  return (
+    <div className="soc">
+      <div className="soc-metrics">
+        <div className="soc-m">
+          <div className="soc-m-lab">情绪动量</div>
+          <div className={`soc-m-val ${heating ? "hot" : "cold"}`}>{heating ? "🔥 升温" : "❄ 降温"} <span className="soc-acc num">{typeof acc === "number" ? acc.toFixed(2) : "—"}</span></div>
+        </div>
+        <div className="soc-m">
+          <div className="soc-m-lab">{(s.tweet_count || 0).toLocaleString()} 条讨论</div>
+          <div className={`soc-bot ${organic ? "ok" : "bad"}`}>{organic ? `✓ 有机 ${div}%` : `🤖 疑似刷量 ${div}%`}</div>
+        </div>
+      </div>
+      {!organic && (
+        <div className="soc-warn">⚠ 作者多样性 {div}% &lt; 20% —— 很可能是刷量/机器人，当噪音看，别当真情绪</div>
+      )}
+      <div className="soc-posts">
+        {(s.posts || []).map((p, i) => (
+          <div className="soc-post" key={i}>
+            <div className="soc-post-top">
+              <span className="soc-user">@{p.username}</span>
+              <span className="soc-eng num">♥ {p.likes || 0} · ↻ {p.retweets || 0}</span>
+            </div>
+            <div className="soc-post-txt">{p.content}</div>
+            {p.url && <a className="soc-post-link" href={p.url} target="_blank" rel="noreferrer">原帖 ↗</a>}
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
@@ -1265,18 +1315,24 @@ function BoardBody({ d }) {
       {/* 局势时间轴（核心视觉，紧跟结论）*/}
       <GodModeTimeline d={d} />
       {d.world_summary && <div className="db-wsum gmt-summary"><Narrative text={d.world_summary} /></div>}
-      <Fold title="全部明细 · 巨鲸 48h 动作 + 三源新闻流（可点链接）" sub="点开看每条新闻 + 行为窗口">
-        <div className="db-dual">
-          <div className="db-dual-col">
-            <div className="db-dual-h">巨鲸动作流 · 48h</div>
-            <BehaviorFlag b={d.behavior} />
-          </div>
-          <div className="db-dual-col">
-            <div className="db-dual-h">三源新闻明细</div>
-            <div className="db-stream-note">↑印证 / ↓不买账 = 持有侧价格在新闻前后窗口的涨跌（前后变动，非该新闻导致）</div>
-            <NewsStream items={d.news_stream} />
-          </div>
+
+      {/* 新闻(事实) × 社媒(情绪) 并排 —— 同一问题的两面，视觉刻意分开 */}
+      <div className="db-sec-tag">世界发生了什么 × 在怎么议论</div>
+      <div className="ns-split">
+        <div className="ns-col news">
+          <div className="ns-col-h"><span className="ns-ico">📰</span>新闻 · <b>事实</b><span className="ns-sub">世界发生了什么</span></div>
+          <NewsStream items={d.news_stream} />
         </div>
+        <div className="ns-col social">
+          <div className="ns-col-h soc"><span className="ns-ico">💬</span>社媒 · <b>情绪</b><span className="ns-sub">小心是情绪、可能刷量</span></div>
+          <SocialPulse s={d.social} />
+        </div>
+      </div>
+      <div className="ns-diverge">⚖️ 最值钱的对照：新闻在涨 + 社媒在嗨，但 <b>聪明钱（行为流）信不信？市场价跟没跟？</b> 顺风只陈列，背离才是金。</div>
+
+      {/* 巨鲸 48h 行为流（折叠）*/}
+      <Fold title="巨鲸 48h 动作流" sub="加仓 / 减仓 / 没动 + 3h/24h/48h 窗口">
+        <BehaviorFlag b={d.behavior} />
       </Fold>
 
       {/* ② 这一注 · 明细 */}
