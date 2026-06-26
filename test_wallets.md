@@ -13,7 +13,9 @@
 |------|------|----------|--------------|
 | ★ Trump-Turkey | 0x7c3db723f1d4d8cb9c550095203b686cb11e5c6b | **@6-25**：押 "Trump 2026 访土耳其" Yes，价格 **57%→96% 一路爬升、50 点密集曲线**，⑥=**ROOM LEFT/high**(绿结论)；社媒 {donald,trump,turkey} 16.4%=疑似刷量。已缓存 | **走势图/实时十字光标 demo（最佳）**、ROOM LEFT/high 绿结论、数据密集流畅曲线、英雄区+赔率条 |
 | ★ denizz | 0xbaa2bcb5439e985ce4ccf815b4700027d1b92c73 | 富钱包(+$2.4M)、数据最全。**@6-25**：押 "US-Iran 核协议 by Aug31" No(现价 0.75，但日线仅 5 点→图短)；社媒 {iran,nuclear} 17.4%=疑似刷量。**@6-20**：押 "Iran 通行费" No、密集档实测 **16 条新闻**、⑥=CHASED。已缓存 | **新闻×社媒并排 + 🤖 刷量标 demo（最佳）**、全板冒烟、综述/新闻流密度 |
-| ImJustKen | 0x9d84ce0306f8551e02efef1680475fc0f1dc1344 | **对冲/做市玩家**(Yes/No 两侧都大额)、胜率虚高但净亏 | R2 对冲降级、"胜率谎言"旗标、对冲 vs 单边判定 |
+| ★ wan123（同盘分歧·多头侧）| 0xde7be6d489bce070a959e0cb813128ae659b5f4b | **@6-26**：押 "US-Iran 核协议 by Aug18" **Yes**、$1.26M 政治鲸；新 ⑥=信心 MED·市场倾向 **NO 82**·这一注 **逆 edge**·CHASED。与下面 cambridgeisaac 是**同一盘反向对** | **市场命题级新信心 demo（最佳）**：同盘两反向钱包**共享一份信心**、差异在顺/逆 edge；同盘分歧标；可信度修正(575 价格可信度 HIGH) |
+| ★ cambridgeisaac（同盘分歧·空头侧）| 0xb51b3beffd13cde071ed799e70a7b0b598e8b4d9 | **@6-26**：押 **同一 Iran 盘 No**、$91k 政治专家；新 ⑥=信心 MED(**与 wan123 一致**)·这一注 **顺 edge**·ROOM LEFT | **同盘分歧/同侧共识 demo**：与 wan123 对照看"老矩阵 HIGH/MEDIUM 自相矛盾 → 新法一份共享信心" |
+| ImJustKen | 0x9d84ce0306f8551e02efef1680475fc0f1dc1344 | **对冲/做市玩家**(Yes/No 两侧都大额)、胜率虚高但净亏；**@6-26 本周政治盈利榜 #1（+$257k）** | R2 对冲降级、"胜率谎言"旗标、对冲 vs 单边判定；**本周政治热门滚动条 demo** |
 | Lula | 0x6bab41a0dc40d6dd4c1a915b8c01969479fd1292 | **@6-20 旧口径**：干净单边、base high | base high → ROOM LEFT、干净方向注（6-25 未重验）|
 | Abelardo | 0x3dca854f147d9b9ecc56d37800f36b347ce23c13 | **@6-20**：旧口径选"de la Espriella"(R4 双空)；**净持仓修复后**改选 "Netanyahu out" No（活样本：买入大但已清仓的幽灵盘被剔） | R4 证据双空(旧)、**净持仓 vs 买入成本选盘修复的活样本** |
 | Newsom 案 | 0x9d84ce0306f8551e02efef1680475fc0f1dc1344 | **= ImJustKen 同一钱包**(非写串)；R3 只在 **as_of=`2026-06-23`** + 锚 Newsom-2028 盘 `0x0f49db97f71c68b1e42a6d16e3de93d85dbf7d4148e3f018eb79e88554be9f75`(24h SELL=EXIT) 触发 | R3 退出信号、R2+R3 组合封 medium |
@@ -29,7 +31,13 @@
 - **原生赔率条(替 iframe)** → 任意已缓存盘（Trump-Turkey / denizz）
 - **新闻密度**(默认中档 top=4)→ denizz @6-20 密集档实测 6→16 条
 
-**⑥ 置信度矩阵规则**（多为 @6-20 旧口径验证，6-25 实时下可能变）
+**⑥ 市场命题级信心（新，2026-06-26）** — dashboard ⑥ 信心已由 `market_thesis` 直出，下列旧 R1-R4 矩阵下沉为 fallback
+- **同盘两反向钱包共享一份信心 + 顺/逆 edge** → ★ wan123(逆) ‖ cambridgeisaac(顺)（同一 Iran 盘）
+- **可信度修正（575 价格可信度/568 波动/距结算）** → wan123/cambridgeisaac（Iran 价格可信度 HIGH·深盘）
+- **多结局事件按 1/N 基线读** → 任意 "next Prime Minister" 候选盘（11 选 1、基线 9%）
+- **本周政治热门滚动条** → ImJustKen(本周 #1)
+
+**⑥ 旧置信度矩阵规则（fallback，多为 @6-20 旧口径验证）**
 - **high/ROOM LEFT** → Lula / Trump-Turkey
 - **R2 对冲封顶** → ImJustKen / denizz
 - **R3 退出信号** → Newsom案(需 as_of=6-23)

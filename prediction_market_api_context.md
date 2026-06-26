@@ -731,3 +731,15 @@ When a developer asks you to help with this API:
 7. When paginating, increment `offset` by the `limit` value each call, stop when results returned < limit.
 8. **Social Pulse (585):** `keywords` must be comma-separated and **wrapped in curly braces**, e.g. `"{Trump,election,MAGA}"`. Do not add spaces between keywords. `hours_back` is a string (e.g. `"12"`).
 9. For social signals: `acceleration > 1.0` means rising momentum. Always check `author_diversity_pct` — if it's below 20%, the signal is likely noise regardless of acceleration.
+
+---
+
+## 🔬 实测验证补遗（2026-06-26，信心重设计 / 扫榜推荐用到的）
+
+- **575 Market Insights 是"价格可信度"现成料**（须传 `condition_id`，per-market 查、不能列）。实测返回字段含：`liquidity_percentile`/`liquidity_tier`/`liquidity_risk_flag` · `top1_wallet_pct`/`top3`/`top10` + `whale_control_flag` · `unique_traders_7d` · `volume_trend`/`volume_collapse_risk_flag` · `squeeze_risk_flag`/`trade_concentration_flag`。→ 用来给"市场价当锚"打折：薄盘/鲸控/参与稀 = 价格不可信、降权。
+- **568 K线**返回 `close/volume/trade_count/spread` 等，足以算 **outcome token 已实现波动率**（=市场自身犹豫度，与新闻无关）+ 成交量尖峰对催化剂时点。
+- **574 Markets** 记录含 **`event_slug` + `volume_total`**（无 `volume` 单字段，文档列的 `min_volume` 是过滤参不回显）。**`event_slug` 同值 ≥3 个市场 = 多结局事件**（八选一），此时某候选的隐含概率是"vs 全场"、**不可当二元 Yes/No 读**（按 1/N 基线判领跑/陪跑）。574 `offset` 翻页唯一、但覆盖前若干页，热门盘可能在后页。
+- **579 Leaderboard** `leaderboard_period` 支持 `7d`（周榜），但**硬顶 top100**（`offset` 被忽略、恒返 rank 1-100）、**无 category 参数**（全品类，政治赢家稀薄）。
+- **581 Wallet360** `window_days="7"` + `performance_by_category` → 拿得到**某钱包政治盘 7 天盈亏**（多个政治子类需求和）。本周政治热门榜靠它重建。
+- **🔴 Kalshi（565/573）政治盘零覆盖**：565 `title` 搜 Trump/Iran/president 全返 0，无过滤只返畸形体育数据。**跨场复现（Polymarket↔Kalshi 同事件对齐）在本数据世界不可行**——匹配不到或匹配错，已弃用。
+- **556 按 `condition_id` + `proxy_wallet="ALL"` + 时间窗** = 拉某盘全量成交 → 聚合**净持仓大户**（"市场反向找大户"的核心原语；无时间窗会返空）。
