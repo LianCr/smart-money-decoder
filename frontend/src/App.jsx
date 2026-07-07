@@ -1362,6 +1362,10 @@ function VerdictHero({ d }) {
         </div>
       )}
 
+      {r.confidence_source === "fallback_v2_matrix" && !r.guard_tripped && (
+        <div className="vh-fallback">⚠ 市场级推理暂不可用，本次信心来自旧的代码矩阵（锚钱包盈亏），参考价值打折</div>
+      )}
+
       {r.market_lean && (
         <div className="vh-edge">
           市场倾向 <b>{r.market_lean}</b>{r.lean_strength != null && <span className="vh-edge-str"> {r.lean_strength}/100</span>}
