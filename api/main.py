@@ -31,6 +31,7 @@ from fastapi.responses import JSONResponse
 
 load_dotenv()
 
+from core.config import BRIEFING_AS_OF
 from fetcher.polymarket import get_top_political_position
 from fetcher.activity import get_entry_time, ActivityAPIError
 from fetcher.trades import get_entry_time_v2, get_wallet_profile, get_wallet_pnl_history
@@ -106,11 +107,7 @@ BRIEFING_CACHE  = Path(".cache/briefing_api")   # 完整简报响应缓存（结
 DASHBOARD_CACHE = Path(".cache/dashboard")      # 统一看板整份响应缓存（①-⑥），命中=零 token 秒回
 REASONER_CACHE  = Path(".cache/reasoner_v3")     # ⑥ reasoner 独立缓存：改 ⑤/② 重建看板不重烧 ⑥
 BOARD_AI_CACHE  = Path(".cache/board_ai")        # ⑤综述+②what_bet 独立缓存：改新闻流结构/前端不重烧 AI
-# 🔴 里程碑（2026-06-25）：拔掉 6-20 快照钉子，推进到数据世界"现在"(6-25 固定)。
-# 一次性解锁：当前数据 + 社媒动量并排(585 仅实时) + 记分牌从今天起真实积累。
-# 暂用固定 6-25（不用 wall-clock date.today()）以免数据世界每天前进、缓存天天过期重烧；
-# 真上 Bedrock/有预算时再切 date.today() 走逐日实时。
-BRIEFING_AS_OF  = os.environ.get("BRIEFING_AS_OF", "2026-06-25")
+# 🔴 BRIEFING_AS_OF 已收口到 core/config.py（单一出口，改那边）。
 
 
 def _difficulty(entry_price):

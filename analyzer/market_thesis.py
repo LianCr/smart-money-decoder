@@ -68,7 +68,7 @@ def _ff(x):
         return None
 
 
-def price_credibility(cid):
+def price_credibility(cid, as_of):
     """575 Market Insights → 价格可信度紧凑结论。薄盘/鲸控/参与稀 → 价格作为锚要降权。
     返回 {trust:high|med|low, line, days_to_resolution, raw} 或 None。"""
     try:
@@ -97,7 +97,7 @@ def price_credibility(cid):
     ed = str(x.get("end_date", ""))[:10]
     if ed:
         try:
-            days = (datetime.strptime(ed, "%Y-%m-%d") - datetime.strptime(_AS_OF_HOLDER[0], "%Y-%m-%d")).days
+            days = (datetime.strptime(ed, "%Y-%m-%d") - datetime.strptime(as_of, "%Y-%m-%d")).days
         except Exception:
             pass
     return {"trust": trust, "line": line, "days_to_resolution": days,
@@ -128,8 +128,6 @@ def realized_vol(token, as_of, days=14):
     line = f"市场自身犹豫度={desc}：近{len(closes)}日已实现波动 {round(vol, 3)}，收盘 {[round(c0, 2) for c0 in closes[-6:]]}"
     return {"vol": vol, "desc": desc, "line": line}
 
-
-_AS_OF_HOLDER = ["2026-06-25"]   # price_credibility 算 days 用（build 时设）
 
 _EVENT_MAP = {}
 EVENT_CACHE = Path(".cache/event_structure.json")
@@ -247,8 +245,7 @@ def build_market_thesis(market_title, cid, as_of, implied_prob_yes,
     market_blob = f"市场：{market_title}\n{price_line}\n\n文章池（只许用这些）：\n{pool_txt}"
 
     # Phase 1 可信度修正（575 价格可信度 + 568 已实现波动 + 距结算）——代码算、喂 reasoner 给价格/证据打折
-    _AS_OF_HOLDER[0] = as_of
-    pc = price_credibility(cid)
+    pc = price_credibility(cid, as_of)
     rv = realized_vol(held_token(cid, a), as_of)
     cred_lines = [s for s in [pc and pc["line"], rv and rv["line"],
                               pc and pc.get("days_to_resolution") is not None and f"距结算 {pc['days_to_resolution']} 天"] if s]

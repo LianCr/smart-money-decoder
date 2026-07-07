@@ -15,6 +15,7 @@ fetcher/price.py — C·价格盘口 fetcher（v3 简报数据层 · 批4）
 
 from datetime import datetime, timezone
 
+from core.config import BRIEFING_AS_OF
 from fetcher.heisenberg import AGENTS, HeisenbergError, call, results
 
 
@@ -39,7 +40,7 @@ def price_at(token_id, date_str):
     return _f(rs[-1].get("close"))
 
 
-def get_price_context(token_id, outcome, market, entry_price=None, as_of_date="2026-06-20"):
+def get_price_context(token_id, outcome, market, entry_price=None, as_of_date=BRIEFING_AS_OF):
     """
     组装该 outcome 在 as_of 时点的价格结构。market = 574 返回的市场 dict。
     返回含：current_price / implied_probability / 剩余空间 / 赔率 / 相对入场价变化。

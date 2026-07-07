@@ -12,9 +12,10 @@ from datetime import datetime, timezone, timedelta
 from email.utils import parsedate_to_datetime
 from pathlib import Path
 
-import requests
 from dotenv import load_dotenv
 from tavily import TavilyClient
+
+from core.llm import call_gateway, GatewayError
 
 load_dotenv()
 
@@ -28,7 +29,6 @@ if not CLASSROOM_API_KEY:
     raise RuntimeError("缺少 CLASSROOM_API_KEY，请在 .env 文件里配置")
 
 # ── 配置项 ────────────────────────────────────────────────────────────────────
-CLASSROOM_API_URL = "https://4dm65e698a.execute-api.us-west-2.amazonaws.com/prod/invoke"
 # True = 跳过真实网关，用占位关键词；等课堂 key approve 后改回 False
 FAKE_MODE = os.environ.get("USE_FAKE_KEYWORDS", "false").lower() == "true"
 CACHE_DIR         = Path(".cache/news")
@@ -147,30 +147,9 @@ def _extract_keywords_via_ai(market_question: str) -> str:
     )
 
     try:
-        resp = requests.post(
-            CLASSROOM_API_URL,
-            headers={
-                "Content-Type": "application/json",
-                "x-api-key":    CLASSROOM_API_KEY,
-            },
-            json={
-                "model":     "claude-sonnet-4.5",
-                "input":     prompt,
-                "maxTokens": 100,
-            },
-            timeout=REQUEST_TIMEOUT,
-        )
-    except requests.exceptions.Timeout:
-        raise NewsError("KEYWORD_EXTRACT_FAILED", "关键词提取 API 超时，请稍后重试")
-    except requests.exceptions.ConnectionError:
-        raise NewsError("KEYWORD_EXTRACT_FAILED", "无法连接关键词提取 API，请检查网络")
-
-    if resp.status_code == 429:
-        raise NewsError("KEYWORD_EXTRACT_FAILED", "关键词提取 API 请求过于频繁，请稍后重试")
-    if resp.status_code != 200:
-        raise NewsError("KEYWORD_EXTRACT_FAILED", f"关键词提取 API 返回异常状态码：{resp.status_code}")
-
-    output = resp.json().get("output", "").strip()
+        output = call_gateway(prompt, max_tokens=100, timeout=REQUEST_TIMEOUT).strip()
+    except GatewayError as e:
+        raise NewsError("KEYWORD_EXTRACT_FAILED", f"关键词提取失败：{e.message}")
     if not output:
         raise NewsError("KEYWORD_EXTRACT_FAILED", "关键词提取 API 返回了空结果")
 
