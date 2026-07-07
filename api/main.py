@@ -36,13 +36,12 @@ from fetcher.activity import get_entry_time, ActivityAPIError
 from fetcher.trades import get_entry_time_v2, get_wallet_profile, get_wallet_pnl_history
 from fetcher.news import get_news_for_market
 from analyzer.decoder import decode_position, DecoderError
-from api.backtest_mock import MOCK_BACKTEST
 from briefing.assemble import load_or_build_briefing
 from briefing.organize import organize_briefing
 from fetcher.positions import get_top_political_position_hz
 from briefing.market_context import load_or_build as build_market_context
 from briefing.market_context import get_behavior_flags
-from analyzer.reasoner_v3 import reason_v3, ReasonerError, build_facts
+from analyzer.reasoner_v3 import build_facts
 from analyzer.market_thesis import build_market_thesis, map_wallet
 from fetcher.heisenberg import call as hz_call, results as hz_results, AGENTS as HZ_AGENTS
 from briefing import board_feed
