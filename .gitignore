@@ -27,5 +27,3 @@ verify_*.py
 截屏*.png
 *.png
 
-# 面试复习手册（私人文件，不入库）
-INTERVIEW_PREP*.md
