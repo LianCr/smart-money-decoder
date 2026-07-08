@@ -195,7 +195,7 @@ export default {
   "绿印证": "green confirms",
   "红不买账": "red rejects",
   "灰无反应": "grey none",
-  "· 与价格": ") · correlation with price is ",
+  "· 与价格": " · correlation with price is ",
   "时间相关、非因果": "time-based, not causal",
   "灰虚线 = 建仓成本": "grey dashed = entry cost",
   "· 与价格变动": " · correlates with price in ",

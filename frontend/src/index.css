@@ -1092,6 +1092,10 @@ a.db-news-t:hover { color: var(--bf-accent); text-decoration: underline; }
 .db-refresh:hover { color: var(--amber, #f0b429); border-color: var(--amber, #f0b429); }
 .db-refresh:disabled { opacity: 0.4; cursor: default; }
 .mon-q { font-size: 10px; color: var(--fg-4); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 40%; margin-left: auto; }
+/* cmdbar 强刷按钮 */
+.cmd-refresh { background: none; border: 1px solid var(--border); border-left: none; color: var(--fg-3); font-size: 15px; padding: 0 14px; cursor: pointer; align-self: stretch; }
+.cmd-refresh:hover:not(:disabled) { color: #f0b429; border-color: #f0b429; }
+.cmd-refresh:disabled { opacity: 0.35; cursor: default; }
 /* 加载诚实化：计时器 + 预期文案 */
 .pipe-timer { margin-left: 10px; font-size: 11px; color: var(--fg-3); border: 1px solid var(--border); border-radius: 3px; padding: 1px 6px; }
 .pipe-note { text-align: center; font-size: 11px; color: var(--fg-3); margin: 6px auto 0; max-width: 520px; line-height: 1.6; }

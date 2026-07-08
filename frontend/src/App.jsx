@@ -433,8 +433,8 @@ export function Card({ card, banner }) {
       </div>
 
       <div className="sec">
-        <h4>What the bet is <ZhNote /></h4>
-        <p>{card.what_bet}</p>
+        <h4>What the bet is <ZhNote text={card.what_bet} /></h4>
+        <p>{t(card.what_bet)}</p>
       </div>
 
       <div className="sec">
@@ -449,7 +449,7 @@ export function Card({ card, banner }) {
                   <span className="date num">{c.published_at}</span>
                 </div>
                 <a href={c.url} target="_blank" rel="noreferrer">{c.title}</a>
-                <div className="why">{c.why_relevant}</div>
+                <div className="why">{t(c.why_relevant)}</div>
               </div>
             );
           })
@@ -459,9 +459,9 @@ export function Card({ card, banner }) {
       </div>
 
       <div className="sec dim">
-        <h4>Edge / Reasoning <ZhNote /></h4>
-        <p>{card.edge_analysis}</p>
-        <p>{card.reasoning}</p>
+        <h4>Edge / Reasoning <ZhNote text={`${card.edge_analysis || ""}${card.reasoning || ""}`} /></h4>
+        <p>{t(card.edge_analysis)}</p>
+        <p>{t(card.reasoning)}</p>
       </div>
 
       {/* ② follow_call 大徽章 */}
@@ -579,7 +579,7 @@ function CatColumn({ title, side, items }) {
             </div>
             {c.url ? <a className="bf-cat-t" href={c.url} target="_blank" rel="noreferrer">{c.title}</a>
                    : <div className="bf-cat-t">{c.title}</div>}
-            <div className="bf-cat-why">{c.reason}</div>
+            <div className="bf-cat-why">{t(c.reason)}</div>
             <span className={`rx ${rx.cls}`}>{rx.txt}</span>
             {c.price_reaction && c.price_reaction.same_window && (
               <div className="bf-samewin">{t("同窗合计 · 不可归因到单条")}</div>
@@ -611,7 +611,7 @@ function BriefingBody({ d }) {
       <div className="c-head">
         <div>
           <div className="q">{m.market}</div>
-          <div className="meta">{m.settle} · {t("催化剂锚")} {m.catalyst_anchor === "entry_time" ? t("建仓时(复盘)") : t("现在(实战)")}</div>
+          <div className="meta">{t(m.settle)} · {t("催化剂锚")} {m.catalyst_anchor === "entry_time" ? t("建仓时(复盘)") : t("现在(实战)")}</div>
         </div>
         <span className="outcome">{(m.analyzed_side || "").toUpperCase()}</span>
       </div>
@@ -651,8 +651,8 @@ function BriefingBody({ d }) {
 
       {/* 第三个 AI 诚实整理（产品魂） */}
       <div className="bf-narr-wrap">
-        <h4>{t("AI 诚实整理 · 只陈列证据,不替你判断")} <ZhNote /></h4>
-        <Narrative text={d.organized_text} />
+        <h4>{t("AI 诚实整理 · 只陈列证据,不替你判断")} <ZhNote text={d.organized_text} /></h4>
+        <Narrative text={t(d.organized_text)} />
       </div>
 
       <div className="foot">{t("仅为公开数据 AI 整理,非投资建议")}</div>
@@ -746,7 +746,7 @@ function BehaviorFlag({ b }) {
         <span className="ctx-flag-ico">{meta.icon}</span>{t(meta.label)}
         <span className="ctx-flag-src">{t("巨鲸 48h 动作流 · 556 Trades")}</span>
       </div>
-      <div className="ctx-flag-fact">{b.fact}</div>
+      <div className="ctx-flag-fact">{t(b.fact)}</div>
       <div className="ctx-flag-win">
         {["3h", "24h", "48h"].map((k) => {
           const x = w[k] || {};
@@ -759,7 +759,7 @@ function BehaviorFlag({ b }) {
           );
         })}
       </div>
-      {b.honest_note && <div className="ctx-flag-note">{b.honest_note}</div>}
+      {b.honest_note && <div className="ctx-flag-note">{t(b.honest_note)}</div>}
     </div>
   );
 }
@@ -781,11 +781,11 @@ function Timeline({ events }) {
                 <span className="ctx-evt-date num">{e.timestamp}</span>
                 {e.price_impact_string && <span className="ctx-impact num">{e.price_impact_string}</span>}
               </div>
-              {e.title && <div className="ctx-evt-title">{e.title}</div>}
-              <div className="ctx-evt-fact">{e.fact_summary}</div>
+              {e.title && <div className="ctx-evt-title">{t(e.title)}</div>}
+              <div className="ctx-evt-fact">{t(e.fact_summary)}</div>
               <div className="ctx-evt-foot">
                 {e.source && <span className="ctx-evt-src">{e.source}</span>}
-                {e.temporal_note && <span className="ctx-evt-note">{e.temporal_note}</span>}
+                {e.temporal_note && <span className="ctx-evt-note">{t(e.temporal_note)}</span>}
               </div>
             </div>
           </div>
@@ -823,8 +823,8 @@ function ContextBody({ d }) {
           <BehaviorFlag b={mc.behavioral_flag} />
           {mc.ai_experimental_summary && (
             <div className="bf-narr-wrap ctx-summary">
-              <h4>{t("宏观综述 · 只陈列事实,不替你判断")} <ZhNote /></h4>
-              <Narrative text={mc.ai_experimental_summary} />
+              <h4>{t("宏观综述 · 只陈列事实,不替你判断")} <ZhNote text={mc.ai_experimental_summary} /></h4>
+              <Narrative text={t(mc.ai_experimental_summary)} />
             </div>
           )}
           <div className="ctx-tl-h">{t("事件时间线 · 价格异动 × 催化剂 × 巨鲸动作")}</div>
@@ -956,9 +956,9 @@ function NewsStream({ items }) {
               {dir && <span className={`db-dir ${dir.cls}`}>{t(dir.txt)}</span>}
               <ReactionTag r={it.reaction} />
             </div>
-            {it.url ? <a className="db-news-t" href={it.url} target="_blank" rel="noreferrer">{it.title}</a>
-                    : <div className="db-news-t">{it.title}</div>}
-            {it.summary && <div className="db-news-s">{it.summary}</div>}
+            {it.url ? <a className="db-news-t" href={it.url} target="_blank" rel="noreferrer">{t(it.title)}</a>
+                    : <div className="db-news-t">{t(it.title)}</div>}
+            {it.summary && <div className="db-news-s">{t(it.summary)}</div>}
             {it.same_window && <div className="db-news-sw">{t("同日多条 · 前后变动为合计,不可归因到单条")}</div>}
             {dom && (
               <a className="db-news-src" href={it.url} target="_blank" rel="noreferrer" title={dom}>
@@ -1130,7 +1130,7 @@ function GodModeTimeline({ d }) {
           {hv
             ? <span className="gmt-h-date">{hv.date.slice(5)}</span>
             : (chgPts != null && <span className={`gmt-h-delta ${dirCls}`} title={t("本图时间段内，这个概率涨/跌了多少个百分点")}>{chgPts >= 0 ? "▲ +" : "▼ "}{Math.abs(chgPts)}% <span className="gmt-h-deltalab">{t("这段时间")}</span></span>)}
-          {!hv && settle && <span className="gmt-h-settle">· {t("结算")} {settle}</span>}
+          {!hv && settle && <span className="gmt-h-settle">· {t("结算")} {t(settle)}</span>}
         </div>
       </div>
       <div className="gmt-wrap">
@@ -1202,10 +1202,10 @@ function GodModeTimeline({ d }) {
                 <span className="gmt-ro-date num">{activeNews.date}</span>
                 {activeNews.direction && <span className={`db-dir ${activeNews.direction}`}>{activeNews.direction === "support" ? t("支持") : t("威胁")}</span>}
                 <span className={`rx ${rc.cls}`}>{rc.txt}</span>
-                <span className="gmt-ro-title">{activeNews.title}</span>
+                <span className="gmt-ro-title">{t(activeNews.title)}</span>
                 {activeNews.url && <a className="gmt-ro-link" href={activeNews.url} target="_blank" rel="noreferrer">{t("原文 ↗")}</a>}
               </div>
-              {activeNews.summary && <div className="gmt-ro-sum">{activeNews.summary}</div>}
+              {activeNews.summary && <div className="gmt-ro-sum">{t(activeNews.summary)}</div>}
               <div className="gmt-ro-foot">{activeNews.origin} {t("· 与价格变动")}<b className="gmt-warn">{t("时间相关、非因果")}</b></div>
             </>
           );
@@ -1315,8 +1315,8 @@ function VerdictHero({ d }) {
 
       {(pos.what_the_bet || pos.resolution_criteria) && (
         <div className="db-whatbet vh-whatbet">
-          <div className="db-whatbet-h">{t("这一注在赌什么")} <ZhNote /></div>
-          {pos.what_the_bet && <div className="db-whatbet-t">{renderInline(pos.what_the_bet)}</div>}
+          <div className="db-whatbet-h">{t("这一注在赌什么")} <ZhNote text={pos.what_the_bet} /></div>
+          {pos.what_the_bet && <div className="db-whatbet-t">{renderInline(t(pos.what_the_bet))}</div>}
           {pos.resolution_criteria && (
             <details className="db-rc">
               <summary>{t("官方结算规则原文（什么算赢）")}</summary>
@@ -1374,10 +1374,10 @@ function VerdictHero({ d }) {
         </div>
       )}
 
-      <div className="vh-verdict">{r.guard_tripped ? r.guard_message : r.reasoning}{!r.guard_tripped && r.reasoning && <ZhNote />}</div>
+      <div className="vh-verdict">{r.guard_tripped ? r.guard_message : t(r.reasoning)}{!r.guard_tripped && r.reasoning && <ZhNote text={r.reasoning} />}</div>
 
       {!r.guard_tripped && r.pivotal_unknown && (
-        <div className="vh-pivotal">{t("⚖ 胜负手：")}{r.pivotal_unknown}</div>
+        <div className="vh-pivotal">{t("⚖ 胜负手：")}{t(r.pivotal_unknown)}</div>
       )}
 
       {!r.guard_tripped && r.market_lean && r.thesis_audit && (
@@ -1386,11 +1386,11 @@ function VerdictHero({ d }) {
           {r.input_trust && r.input_trust.length > 0 && (
             <div className="vh-trust">
               <div className="vh-trust-h">{t("输入可信度（决定价格/证据该信几分）")}</div>
-              {r.input_trust.map((l, i) => <div className="vh-trust-l" key={i}>· {l}</div>)}
+              {r.input_trust.map((l, i) => <div className="vh-trust-l" key={i}>· {t(l)}</div>)}
             </div>
           )}
-          <div className="vh-audit-th"><b>{t("多头(押 YES)：")}</b>{r.thesis_audit.bull}</div>
-          <div className="vh-audit-th"><b>{t("空头(押 NO)：")}</b>{r.thesis_audit.bear}</div>
+          <div className="vh-audit-th"><b>{t("多头(押 YES)：")}</b>{t(r.thesis_audit.bull)}</div>
+          <div className="vh-audit-th"><b>{t("空头(押 NO)：")}</b>{t(r.thesis_audit.bear)}</div>
           <div className="vh-audit-foot">{t("↑ 同一市场只算一次、两个反向钱包共享同一份市场观；信心由裁决人直出、不锚钱包盈亏 · 已记日志，待盘结算回验是否真命中")}</div>
         </details>
       )}
@@ -1408,7 +1408,7 @@ function VerdictHero({ d }) {
         </details>
       )}
 
-      {d.behavior && <div className="vh-whale">{t("🐳 巨鲸动态 ·")} {d.behavior.fact}</div>}
+      {d.behavior && <div className="vh-whale">{t("🐳 巨鲸动态 ·")} {t(d.behavior.fact)}</div>}
       <div className="vh-disc">{t("这是对\"局势性质\"的判断(还有多少空间/风险在哪/市场认不认这个方向),不替你决定跟不跟 · 天平由你裁决")}</div>
     </div>
   );
@@ -1437,7 +1437,7 @@ function BoardBody({ d }) {
 
       {/* 局势时间轴（核心视觉，紧跟结论）*/}
       <GodModeTimeline d={d} />
-      {d.world_summary && <div className="db-wsum gmt-summary"><ZhNote /><Narrative text={d.world_summary} /></div>}
+      {d.world_summary && <div className="db-wsum gmt-summary"><ZhNote text={d.world_summary} /><Narrative text={t(d.world_summary)} /></div>}
 
       {/* 新闻(事实) × 社媒(情绪) 并排 —— 同一问题的两面，视觉刻意分开 */}
       <div className="db-sec-tag">{t("世界发生了什么 × 在怎么议论")}</div>
@@ -1463,7 +1463,7 @@ function BoardBody({ d }) {
       <div className="c-head db-pos-head">
         <div>
           <div className="q">{m.market}</div>
-          <div className="meta">{m.settle} · {t("建仓")} {act.entry_time?.slice(0, 10) || "—"}</div>
+          <div className="meta">{t(m.settle)} · {t("建仓")} {act.entry_time?.slice(0, 10) || "—"}</div>
         </div>
         <span className="outcome">{(m.analyzed_side || "").toUpperCase()}</span>
       </div>
@@ -1568,12 +1568,12 @@ function Recommendations({ onPick }) {
                 <div className="rec-consensus">🤝 {c.consensus_count} {t("个政治专家同押此方向（弱信号 · 技能共识非盈亏 · 仍有羊群风险）")}</div>
               )}
               {c.source_market && <div className="rec-src">{t("↳ 从「")}{c.source_market}{t("」共持发现")}</div>}
-              <div className="rec-beh">{BEH_ICON[c.behavior] || "·"} {c.behavior_fact || c.behavior || "—"}</div>
+              <div className="rec-beh">{BEH_ICON[c.behavior] || "·"} {t(c.behavior_fact) || c.behavior || "—"}</div>
               {c.ai_pick && (
                 <div className="rec-verdict">
                   <span className={`rec-conf ${c.ai_confidence}`}>⑥ {t(CONF_CN[c.ai_confidence] || c.ai_confidence)} {t("信心")}</span>
                   {c.ai_follow_call && <span className="rec-call">{t(CALL_CN[c.ai_follow_call] || c.ai_follow_call)}</span>}
-                  {c.ai_verdict && <span className="rec-verdict-txt">{c.ai_verdict}</span>}
+                  {c.ai_verdict && <span className="rec-verdict-txt">{t(c.ai_verdict)}</span>}
                 </div>
               )}
             </button>
@@ -1612,7 +1612,7 @@ function BoardView() {
   }
 
   function refreshCurrent() {
-    const w = (data && data.wallet) || wallet;
+    const w = wallet.trim() || (data && data.wallet);
     if (!w || loading) return;
     if (!window.confirm(t("强制刷新会绕过缓存、重新调用数据源与 AI（耗时 1-3 分钟、消耗 token 额度）。确定重建吗？"))) return;
     run(w, true);
@@ -1633,6 +1633,8 @@ function BoardView() {
         <button className="cmd-trigger" onClick={() => run()} disabled={loading || !wallet.trim()}>
           {loading ? t("生成中") : t("生成看板")}
         </button>
+        <button className="cmd-refresh" onClick={refreshCurrent} disabled={loading || !(wallet.trim() || (data && data.wallet))}
+          title={t("绕过缓存重建这份看板（重新拉数据 + 重跑 AI，耗时且消耗 token）")}>↻</button>
       </div>
 
       {showHome && <Recommendations onPick={(w) => { setWallet(w); run(w); }} />}
@@ -1648,6 +1650,10 @@ function BoardView() {
                 <span className="mon-pnl"><span className="mon-pnl-lab">{t("累计盈利")}</span><span className="mon-pnl-val num">{e.pnl}</span></span>
               </button>
             ))}
+          </div>
+          <div className="mon-foot">
+            <a className="sys-cta" href={TRADERS_URL} target="_blank" rel="noreferrer">{t("想分析其他大户?浏览政治盘大户榜 ↗")}</a>
+            <a className="sys-source" href={LEADERBOARD_URL} target="_blank" rel="noreferrer">{t("数据来源:Polymarket 官方盈利榜 ↗")}</a>
           </div>
         </div>
       )}
