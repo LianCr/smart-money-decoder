@@ -1080,6 +1080,19 @@ a.db-news-t:hover { color: var(--bf-accent); text-decoration: underline; }
 .rec-disagree .with { color: var(--pos); }
 .rec-disagree .against { color: #f0b429; }
 .rec-consensus { font-size: 10px; color: var(--accent); margin: 4px 0 6px; }
+/* ── i18n：语言胶囊 / AI 中文标 / 刷新条 ─────────────────────────────── */
+.lang-pill { display: inline-flex; align-items: center; gap: 2px; margin-left: 10px; padding: 2px 6px; border: 1px solid var(--border); border-radius: 999px; background: rgba(255,255,255,0.02); }
+.lang-pill button { background: none; border: none; cursor: pointer; font-size: 11px; padding: 2px 5px; color: var(--fg-3); border-radius: 999px; font-family: inherit; }
+.lang-pill button.on { color: var(--accent); background: rgba(94,234,212,0.08); font-weight: 600; }
+.lang-pill .lang-sep { color: var(--border); font-size: 10px; }
+.zh-note { display: inline-block; margin-left: 6px; padding: 1px 6px; font-size: 9px; letter-spacing: 0.04em; color: var(--fg-3); border: 1px solid var(--border); border-radius: 3px; vertical-align: middle; white-space: nowrap; }
+.db-refresh-bar { display: flex; align-items: center; justify-content: flex-end; gap: 10px; margin: 4px 0 6px; }
+.db-refresh-asof { font-size: 10px; color: var(--fg-4); }
+.db-refresh { background: none; border: 1px solid var(--border); border-radius: 4px; color: var(--fg-3); font-size: 11px; padding: 3px 10px; cursor: pointer; font-family: inherit; }
+.db-refresh:hover { color: var(--amber, #f0b429); border-color: var(--amber, #f0b429); }
+.db-refresh:disabled { opacity: 0.4; cursor: default; }
+.mon-q { font-size: 10px; color: var(--fg-4); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 40%; margin-left: auto; }
+
 /* ⑥ 市场命题级 edge / 胜负手 / 多空对抗审计 */
 .vh-fallback { font-size: 11px; color: #f0b429; margin: 6px 0 2px; padding: 5px 10px; border-left: 2px solid #f0b429; background: rgba(240,180,41,0.06); }
 .vh-edge { font-size: 13px; color: var(--fg-2); margin: 6px 0 2px; }
