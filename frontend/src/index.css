@@ -1102,6 +1102,40 @@ a.db-news-t:hover { color: var(--bf-accent); text-decoration: underline; }
 /* ⑥ 体检 chip（代码算的输入质量提示，非守卫） */
 .vh-advisories { display: flex; flex-wrap: wrap; gap: 6px; margin: 6px 0 2px; }
 .vh-advisory { font-size: 10.5px; color: #f0b429; border: 1px solid rgba(240,180,41,0.35); border-radius: 3px; padding: 2px 8px; background: rgba(240,180,41,0.05); }
+/* ── GodMode 图表精进：未来区/成本分区/聚簇/钉住/价签/动画 ─────────────── */
+.gmt-range { display: inline-flex; gap: 2px; margin-left: auto; }
+.gmt-range button { background: none; border: 1px solid var(--border); color: var(--fg-3); font-size: 10px; padding: 2px 8px; cursor: pointer; border-radius: 3px; font-family: var(--mono); }
+.gmt-range button.on { color: var(--accent); border-color: var(--accent); background: rgba(94,234,212,0.06); }
+.gmt-h-vse.pos { color: var(--pos); } .gmt-h-vse.neg { color: var(--neg); }
+.gmt-future-bg { fill: rgba(255,255,255,0.022); }
+.gmt-future-edge { stroke: var(--border); stroke-dasharray: 2 3; }
+.gmt-future-lab { fill: var(--fg-3); font-size: 10.5px; text-anchor: middle; font-family: var(--mono); }
+.gmt-future-date { fill: var(--fg-4); font-size: 9.5px; text-anchor: middle; font-family: var(--mono); }
+.gmt-future-now { fill: var(--fg-4); font-size: 9px; font-family: var(--mono); }
+.gmt-pl.above { fill: var(--pos); opacity: 0.14; }
+.gmt-pl.below { fill: var(--neg); opacity: 0.16; }
+.gmt-cross-h { stroke: var(--fg-4); stroke-width: 1; stroke-dasharray: 3 3; opacity: 0.5; }
+.gmt-node-badge-bg { fill: var(--bg-1, #0b0f14); stroke: var(--fg-3); stroke-width: 1; }
+.gmt-node-badge { fill: var(--fg-1); font-size: 8.5px; text-anchor: middle; font-family: var(--mono); }
+.gmt-node-pin { fill: none; stroke: var(--accent); stroke-width: 1.4; stroke-dasharray: 3 2; }
+.gmt-pill { position: absolute; transform: translateY(-50%); font-family: var(--mono); font-size: 10px; padding: 1px 6px; border-radius: 3px; pointer-events: none; white-space: nowrap; }
+.gmt-pill.cur.pos { background: var(--pos); color: #04150c; font-weight: 700; }
+.gmt-pill.cur.neg { background: var(--neg); color: #190606; font-weight: 700; }
+.gmt-pill.hover.pos { background: var(--pos); color: #04150c; }
+.gmt-pill.hover.neg { background: var(--neg); color: #190606; }
+.gmt-pill.entry { border: 1px solid var(--border); color: var(--fg-3); background: rgba(10,14,18,0.9); }
+.gmt-line.draw { stroke-dasharray: 1; stroke-dashoffset: 1; animation: gmt-draw 0.9s ease-out forwards; }
+@keyframes gmt-draw { to { stroke-dashoffset: 0; } }
+.gmt-node-g { opacity: 0; animation: gmt-pop 0.35s ease-out forwards; animation-delay: calc(0.55s + var(--i) * 0.07s); }
+@keyframes gmt-pop { from { opacity: 0; } to { opacity: 1; } }
+.gmt-ro-pin { font-size: 11px; }
+.gmt-ro-more { font-size: 10.5px; color: var(--fg-3); margin: 2px 0 0 2px; }
+.gmt-tip-vse { font-size: 10px; opacity: 0.85; }
+.gmt-ro-hint.chips { display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: center; }
+.gmt-chip { display: inline-flex; align-items: center; gap: 4px; font-size: 10.5px; color: var(--fg-3); border: 1px solid var(--border); border-radius: 3px; padding: 2px 8px; white-space: nowrap; }
+.gmt-chip.strong { color: var(--fg-2); }
+.gmt-chip-dim { color: var(--fg-4); }
+
 /* 方法论面板 */
 .method-fold { margin-top: 14px; }
 .method-list { list-style: none; padding: 8px 12px; margin: 0; }

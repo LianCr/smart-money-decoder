@@ -324,6 +324,22 @@ export default {
   "判断进记分牌。": "Judgments go on the scorecard. ",
   "每个判断存档，等市场真结算后与现实对账（Track Record 页可查）。": "Every judgment is archived and reconciled against reality once markets actually settle (see Track Record).",
 
+  // ── GodMode 图表精进 ──
+  "看催化剂": " for catalysts",
+  "无反应": "none",
+  "高于成本": "above cost",
+  "低于成本": "below cost",
+  "vs 入场": "vs entry",
+  "全部": "All",
+  "距结算": "to resolution",
+  "天": "d",
+  "今天": "today",
+  "点击可钉住": "click to pin",
+  "已钉住 · 再点一次取消": "Pinned — click again to unpin",
+  "条同日新闻，见下方新闻列": "more same-day items — see the news column below",
+  "绿区=浮盈 红区=浮亏（相对建仓成本）": "green zone = above entry cost, red = below",
+  "· 与价格变动": " · correlates with price in ",
+
   // ── Track Record ──
   "别跟": "Don't follow",
   "可跟·已追高": "Followable · chased",
