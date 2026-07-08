@@ -324,6 +324,10 @@ export default {
   "判断进记分牌。": "Judgments go on the scorecard. ",
   "每个判断存档，等市场真结算后与现实对账（Track Record 页可查）。": "Every judgment is archived and reconciled against reality once markets actually settle (see Track Record).",
 
+  // ── Footer ──
+  "解码 Polymarket 聪明钱的政治押注 · 只读公开数据 · 非投资建议": "Decoding smart-money political bets on Polymarket · read-only public data · not investment advice",
+  "数字归代码，AI 只做解读": "numbers belong to code, AI only interprets",
+
   // ── GodMode 图表精进 ──
   "看催化剂": " for catalysts",
   "无反应": "none",

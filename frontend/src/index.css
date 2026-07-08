@@ -1206,3 +1206,17 @@ a.db-news-t:hover { color: var(--bf-accent); text-decoration: underline; }
   .db-dual { grid-template-columns: 1fr; }
 }
 
+
+/* ── 全局 footer ─────────────────────────────────────────────────────── */
+.site-footer { margin-top: 56px; border-top: 1px solid var(--border); padding: 22px 0 30px; }
+.sf-inner { display: flex; align-items: center; justify-content: space-between; gap: 14px 24px; flex-wrap: wrap; }
+.sf-brand { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.sf-mark { display: inline-flex; align-items: center; gap: 7px; font-family: var(--mono); font-size: 11px; letter-spacing: 0.14em; color: var(--fg-2); font-weight: 700; }
+.sf-mark .dot { width: 6px; height: 6px; }
+.sf-tag { font-size: 10.5px; color: var(--fg-4); letter-spacing: 0.02em; }
+.sf-links { display: inline-flex; align-items: center; gap: 10px; font-family: var(--mono); font-size: 11px; }
+.sf-links a { color: var(--fg-3); text-decoration: none; transition: color 0.15s; }
+.sf-links a:hover { color: var(--accent); }
+.sf-sep { color: var(--border); }
+.sf-meta { font-size: 10.5px; color: var(--fg-4); letter-spacing: 0.03em; white-space: nowrap; }
+@media (max-width: 720px) { .sf-inner { flex-direction: column; align-items: flex-start; } .sf-meta { white-space: normal; } }
