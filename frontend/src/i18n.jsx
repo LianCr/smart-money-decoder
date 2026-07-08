@@ -1,7 +1,13 @@
-// 极简 i18n：中文原文即 key。zh = 原样返回；en = 查 locales/en.js，查不到回退中文（绝不炸）。
-// AI 生成的内容（综述/推理/催化剂 reason 等）不翻——EN 模式下由使用处加 zh 小标，诚实标注。
+// 极简 i18n：中文原文即 key。zh = 原样返回；en = 三层查表（UI 词典 → AI 精确词典 → 模式引擎），
+// 全部 miss 才回退中文（绝不炸）。AI 词典由 tools/build_ai_en.py 从缓存离线生成（零 token）；
+// 模式引擎翻代码模板串（带数字，刷新出新数据也能翻）。未来新 AI 产出查不到 → 回退中文 + ZhNote 诚实标注。
 import { createContext, useContext, useState } from "react";
 import EN from "./locales/en.js";
+import AI_MAP from "./locales/ai_en.js";
+import { patternTranslate } from "./locales/ai_patterns.js";
+
+const CJK_RE = /[一-鿿]/;
+const toEN = (s) => EN[s] ?? AI_MAP.get(s) ?? patternTranslate(s) ?? s;
 
 const LangContext = createContext({ lang: "zh", t: (s) => s, setLang: () => {} });
 
@@ -9,7 +15,10 @@ export function LangProvider({ children }) {
   const [lang, setLangState] = useState(() => {
     try { return localStorage.getItem("smd_lang") || "zh"; } catch { return "zh"; }
   });
-  const t = (s) => (lang === "en" ? (EN[s] ?? s) : s);
+  const t = (s) => {
+    if (lang !== "en" || s == null) return s;
+    return typeof s === "string" ? toEN(s) : s;
+  };
   const setLang = (l) => {
     setLangState(l);
     try { localStorage.setItem("smd_lang", l); } catch { /* 隐身模式等 */ }
@@ -33,9 +42,12 @@ export function LangToggle() {
   );
 }
 
-// EN 模式下给"AI 中文原文"内容区加的小标（诚实标注：AI 输出是中文、未经翻译）
-export function ZhNote() {
+// EN 模式下 AI 内容的诚实标注：只有当该内容**确实还翻不出来**（新产出、词典未收录）时才显示。
+// 传 text = 该区块的原文；有译文 → 不标（内容已是英文）。不传 text → 恒不显示。
+export function ZhNote({ text }) {
   const { lang } = useLang();
-  if (lang !== "en") return null;
-  return <span className="zh-note" title="AI-generated analysis is produced in Chinese and shown as-is (translating it would cost tokens and risk drift).">AI output · 中文</span>;
+  if (lang !== "en" || text == null) return null;
+  const out = typeof text === "string" ? toEN(text) : String(text);
+  if (!CJK_RE.test(out)) return null;
+  return <span className="zh-note" title="This AI-generated content is newer than the offline translation layer — shown in original Chinese rather than machine-mangled.">AI output · 中文</span>;
 }

@@ -1,7 +1,10 @@
 node_modules/
-dist/
 *.local
 .vite/
+
+# 🔴 dist/ 是有意跟踪的部署产物（Render 只跑 pip install、不跑 npm——见 DEPLOY.md）。
+# 改前端后必须 `npm run build` 并把 dist 一起提交，否则线上 index.html 引用的
+# 新哈希资产 404 → 白屏（2026-07-08 实际发生过：.gitignore 挡住新哈希文件）。
 
 # 截图调试产物（Playwright 脚本与输出），不入库
 shot*.mjs

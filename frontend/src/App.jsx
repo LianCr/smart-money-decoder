@@ -158,6 +158,32 @@ function PnlChart({ points }) {
   );
 }
 
+// 全局 footer：品牌 · 链接 · 署名（所有 tab 共用，随语言切换）
+function SiteFooter() {
+  const { t } = useLang();
+  const year = new Date().getFullYear();
+  return (
+    <footer className="site-footer">
+      <div className="sf-inner">
+        <div className="sf-brand">
+          <span className="sf-mark"><span className="dot" />SMART MONEY DECODER</span>
+          <span className="sf-tag">{t("解码 Polymarket 聪明钱的政治押注 · 只读公开数据 · 非投资建议")}</span>
+        </div>
+        <nav className="sf-links">
+          <a href="https://github.com/LianCr/smart-money-decoder" target="_blank" rel="noreferrer">GitHub</a>
+          <span className="sf-sep">/</span>
+          <a href="mailto:liancr307@gmail.com">liancr307@gmail.com</a>
+          <span className="sf-sep">/</span>
+          <a href="https://polymarket.com/leaderboard/politics/all/profit" target="_blank" rel="noreferrer">Polymarket</a>
+        </nav>
+        <div className="sf-meta num">
+          © {year} Chunren Lian · {t("数字归代码，AI 只做解读")}
+        </div>
+      </div>
+    </footer>
+  );
+}
+
 export default function App() {
   const [tab, setTab] = useState("board");   // 主页=统一看板(推荐流落地处)；Decode 降为存档，仍可经品牌 logo / 统一看板切换键到达
   // 功勋章的 W/L 取回测真值；默认 5/1（当前案例集事实），/backtest 到达后自校正、不闪
@@ -213,6 +239,7 @@ export default function App() {
       {tab === "decode" ? <DecodeView /> : tab === "board" ? <BoardView />
         : tab === "briefing" ? <BriefingView />
         : tab === "context" ? <ContextView /> : <TrackRecordView />}
+      <SiteFooter />
     </div>
   );
 }
@@ -433,8 +460,8 @@ export function Card({ card, banner }) {
       </div>
 
       <div className="sec">
-        <h4>What the bet is <ZhNote /></h4>
-        <p>{card.what_bet}</p>
+        <h4>What the bet is <ZhNote text={card.what_bet} /></h4>
+        <p>{t(card.what_bet)}</p>
       </div>
 
       <div className="sec">
@@ -449,7 +476,7 @@ export function Card({ card, banner }) {
                   <span className="date num">{c.published_at}</span>
                 </div>
                 <a href={c.url} target="_blank" rel="noreferrer">{c.title}</a>
-                <div className="why">{c.why_relevant}</div>
+                <div className="why">{t(c.why_relevant)}</div>
               </div>
             );
           })
@@ -459,9 +486,9 @@ export function Card({ card, banner }) {
       </div>
 
       <div className="sec dim">
-        <h4>Edge / Reasoning <ZhNote /></h4>
-        <p>{card.edge_analysis}</p>
-        <p>{card.reasoning}</p>
+        <h4>Edge / Reasoning <ZhNote text={`${card.edge_analysis || ""}${card.reasoning || ""}`} /></h4>
+        <p>{t(card.edge_analysis)}</p>
+        <p>{t(card.reasoning)}</p>
       </div>
 
       {/* ② follow_call 大徽章 */}
@@ -579,7 +606,7 @@ function CatColumn({ title, side, items }) {
             </div>
             {c.url ? <a className="bf-cat-t" href={c.url} target="_blank" rel="noreferrer">{c.title}</a>
                    : <div className="bf-cat-t">{c.title}</div>}
-            <div className="bf-cat-why">{c.reason}</div>
+            <div className="bf-cat-why">{t(c.reason)}</div>
             <span className={`rx ${rx.cls}`}>{rx.txt}</span>
             {c.price_reaction && c.price_reaction.same_window && (
               <div className="bf-samewin">{t("同窗合计 · 不可归因到单条")}</div>
@@ -611,7 +638,7 @@ function BriefingBody({ d }) {
       <div className="c-head">
         <div>
           <div className="q">{m.market}</div>
-          <div className="meta">{m.settle} · {t("催化剂锚")} {m.catalyst_anchor === "entry_time" ? t("建仓时(复盘)") : t("现在(实战)")}</div>
+          <div className="meta">{t(m.settle)} · {t("催化剂锚")} {m.catalyst_anchor === "entry_time" ? t("建仓时(复盘)") : t("现在(实战)")}</div>
         </div>
         <span className="outcome">{(m.analyzed_side || "").toUpperCase()}</span>
       </div>
@@ -651,8 +678,8 @@ function BriefingBody({ d }) {
 
       {/* 第三个 AI 诚实整理（产品魂） */}
       <div className="bf-narr-wrap">
-        <h4>{t("AI 诚实整理 · 只陈列证据,不替你判断")} <ZhNote /></h4>
-        <Narrative text={d.organized_text} />
+        <h4>{t("AI 诚实整理 · 只陈列证据,不替你判断")} <ZhNote text={d.organized_text} /></h4>
+        <Narrative text={t(d.organized_text)} />
       </div>
 
       <div className="foot">{t("仅为公开数据 AI 整理,非投资建议")}</div>
@@ -746,7 +773,7 @@ function BehaviorFlag({ b }) {
         <span className="ctx-flag-ico">{meta.icon}</span>{t(meta.label)}
         <span className="ctx-flag-src">{t("巨鲸 48h 动作流 · 556 Trades")}</span>
       </div>
-      <div className="ctx-flag-fact">{b.fact}</div>
+      <div className="ctx-flag-fact">{t(b.fact)}</div>
       <div className="ctx-flag-win">
         {["3h", "24h", "48h"].map((k) => {
           const x = w[k] || {};
@@ -759,7 +786,7 @@ function BehaviorFlag({ b }) {
           );
         })}
       </div>
-      {b.honest_note && <div className="ctx-flag-note">{b.honest_note}</div>}
+      {b.honest_note && <div className="ctx-flag-note">{t(b.honest_note)}</div>}
     </div>
   );
 }
@@ -781,11 +808,11 @@ function Timeline({ events }) {
                 <span className="ctx-evt-date num">{e.timestamp}</span>
                 {e.price_impact_string && <span className="ctx-impact num">{e.price_impact_string}</span>}
               </div>
-              {e.title && <div className="ctx-evt-title">{e.title}</div>}
-              <div className="ctx-evt-fact">{e.fact_summary}</div>
+              {e.title && <div className="ctx-evt-title">{t(e.title)}</div>}
+              <div className="ctx-evt-fact">{t(e.fact_summary)}</div>
               <div className="ctx-evt-foot">
                 {e.source && <span className="ctx-evt-src">{e.source}</span>}
-                {e.temporal_note && <span className="ctx-evt-note">{e.temporal_note}</span>}
+                {e.temporal_note && <span className="ctx-evt-note">{t(e.temporal_note)}</span>}
               </div>
             </div>
           </div>
@@ -823,8 +850,8 @@ function ContextBody({ d }) {
           <BehaviorFlag b={mc.behavioral_flag} />
           {mc.ai_experimental_summary && (
             <div className="bf-narr-wrap ctx-summary">
-              <h4>{t("宏观综述 · 只陈列事实,不替你判断")} <ZhNote /></h4>
-              <Narrative text={mc.ai_experimental_summary} />
+              <h4>{t("宏观综述 · 只陈列事实,不替你判断")} <ZhNote text={mc.ai_experimental_summary} /></h4>
+              <Narrative text={t(mc.ai_experimental_summary)} />
             </div>
           )}
           <div className="ctx-tl-h">{t("事件时间线 · 价格异动 × 催化剂 × 巨鲸动作")}</div>
@@ -944,31 +971,52 @@ function NewsStream({ items }) {
   const { t } = useLang();
   if (!items || !items.length)
     return <div className="bf-empty">{t("该时点窗内三源都没洗出对题新闻 — 如实留空")}</div>;
+  // 按日分组：日级价格变动本就属于"这一天"而非某一条 → 反应 chip 挂组头（诚实归因层级），
+  // 组内不再逐条重复免责；"反应不可知"沉默不显示（无信号不该喊话）
+  const groups = [];
+  const gi = new Map();
+  for (const it of items) {
+    const k = it.date || "—";
+    if (!gi.has(k)) { gi.set(k, groups.length); groups.push({ date: k, items: [], reaction: null }); }
+    const g = groups[gi.get(k)];
+    g.items.push(it);
+    if (!g.reaction && it.reaction && it.reaction.available) g.reaction = it.reaction;
+  }
   return (
     <div className="db-stream">
-      {items.map((it, i) => {
-        const dir = DIR_META[it.direction];
-        const dom = domainOf(it.url, it.source);
-        return (
-          <div className={`db-news ${it.direction || ""}`} key={i}>
-            <div className="db-news-top">
-              <span className="db-news-date num">{it.date || "—"}</span>
-              {dir && <span className={`db-dir ${dir.cls}`}>{t(dir.txt)}</span>}
-              <ReactionTag r={it.reaction} />
-            </div>
-            {it.url ? <a className="db-news-t" href={it.url} target="_blank" rel="noreferrer">{it.title}</a>
-                    : <div className="db-news-t">{it.title}</div>}
-            {it.summary && <div className="db-news-s">{it.summary}</div>}
-            {it.same_window && <div className="db-news-sw">{t("同日多条 · 前后变动为合计,不可归因到单条")}</div>}
-            {dom && (
-              <a className="db-news-src" href={it.url} target="_blank" rel="noreferrer" title={dom}>
-                <img className="db-news-fav" src={faviconUrl(dom)} alt="" loading="lazy" onError={(e) => { e.currentTarget.style.display = "none"; }} />
-                <span className="db-news-dom">{dom}</span>
-              </a>
+      {groups.map((g) => (
+        <div className="db-day" key={g.date}>
+          <div className="db-day-h">
+            <span className="db-day-date num">{g.date}</span>
+            {g.items.length > 1 && <span className="db-day-n num">×{g.items.length}</span>}
+            {g.reaction && <ReactionTag r={g.reaction} />}
+            {g.reaction && g.items.length > 1 && (
+              <span className="db-day-agg" title={t("同日多条 · 前后变动为合计,不可归因到单条")}>{t("当日合计")}</span>
             )}
           </div>
-        );
-      })}
+          {g.items.map((it, i) => {
+            const dir = DIR_META[it.direction];
+            const dom = domainOf(it.url, it.source);
+            return (
+              <div className={`db-news ${it.direction || ""}`} key={i}>
+                {it.url ? <a className="db-news-t" href={it.url} target="_blank" rel="noreferrer">{t(it.title)}</a>
+                        : <div className="db-news-t">{t(it.title)}</div>}
+                {it.summary && <div className="db-news-s">{t(it.summary)}</div>}
+                <div className="db-news-meta">
+                  {dir && <span className={`db-dir ${dir.cls}`}>{t(dir.txt)}</span>}
+                  {dom && (
+                    <a className="db-news-src" href={it.url} target="_blank" rel="noreferrer" title={dom}>
+                      <img className="db-news-fav" src={faviconUrl(dom)} alt="" loading="lazy" onError={(e) => { e.currentTarget.style.display = "none"; }} />
+                      <span className="db-news-dom">{dom}</span>
+                    </a>
+                  )}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      ))}
+      <div className="db-stream-foot">{t("反应 = 持有侧价格当日变动 · 时间相关非因果 · 同日多条共享同一变动")}</div>
     </div>
   );
 }
@@ -979,22 +1027,30 @@ function SocialPulse({ s }) {
   if (!s) return <div className="bf-empty">{t("该话题暂无社媒数据（或未配置）")}</div>;
   const acc = s.acceleration;
   const heating = typeof acc === "number" && acc > 1;
-  const div = s.author_diversity_pct;
+  const div = s.author_diversity_pct;          // 语义：每 100 条讨论来自约 N 个不同账号
   const organic = s.organic;
+  const per100 = typeof div === "number" ? Math.max(1, Math.round(div)) : null;
   return (
     <div className="soc">
       <div className="soc-metrics">
         <div className="soc-m">
-          <div className="soc-m-lab">{t("情绪动量")}</div>
-          <div className={`soc-m-val ${heating ? "hot" : "cold"}`}>{heating ? t("🔥 升温") : t("❄ 降温")} <span className="soc-acc num">{typeof acc === "number" ? acc.toFixed(2) : "—"}</span></div>
+          <div className="soc-m-lab">{t("讨论热度")}</div>
+          <div className={`soc-m-val ${heating ? "hot" : "cold"}`}>
+            {typeof acc !== "number" ? "—"
+              : acc < 0.1 ? `❄ ${t("讨论几乎停了")}`
+              : heating ? `🔥 ${t("升温中")}` : `❄ ${t("降温中")}`}
+          </div>
+          {typeof acc === "number" && acc >= 0.1 && (
+            <div className="soc-m-sub"><span className="num">{acc.toFixed(1)}×</span> {t("平时讨论量")}</div>
+          )}
         </div>
         <div className="soc-m">
           <div className="soc-m-lab">{(s.tweet_count || 0).toLocaleString()} {t("条讨论")}</div>
-          <div className={`soc-bot ${organic ? "ok" : "bad"}`}>{organic ? `${t("✓ 有机")} ${div}%` : `${t("🤖 疑似刷量")} ${div}%`}</div>
+          <div className={`soc-bot ${organic ? "ok" : "bad"}`} title={organic ? t("✓ 账号分散 · 像真人讨论") : t("🤖 账号集中 · 像刷量")}>{organic ? t("✓ 像真人讨论") : t("🤖 像刷量")}</div>
         </div>
       </div>
-      {!organic && (
-        <div className="soc-warn">{t("⚠ 作者多样性")} {div}% {t("< 20% —— 很可能是刷量/机器人，当噪音看，别当真情绪")}</div>
+      {!organic && per100 != null && (
+        <div className="soc-warn">{t("⚠ 每 100 条讨论只来自约")} {per100} {t("个账号——这种热闹很可能是刷出来的：当氛围看，别当民意")}</div>
       )}
       <div className="soc-posts">
         {(s.posts || []).map((p, i) => {
@@ -1019,7 +1075,7 @@ function SocialPulse({ s }) {
           );
         })}
       </div>
-      <div className="soc-foot">🔖 {t("热帖标 = 互动热度（♥+↻），")}<b>{t("非情绪判断")}</b>{t("——社媒是情绪不是事实，方向请看新闻与 ⑥")}</div>
+      <div className="soc-foot">{t("社媒反映的是情绪和声量、不是事实——方向判断请看左列新闻与顶部结论")}</div>
     </div>
   );
 }
@@ -1060,65 +1116,115 @@ function RollingNumber({ value }) {
 }
 function GodModeTimeline({ d }) {
   const { t } = useLang();
-  const [cross, setCross] = useState(null);   // 鼠标所在的 series 索引（实时光标）
-  const series = (d.price_series || []).filter((p) => typeof p.price === "number")
+  const [cross, setCross] = useState(null);     // 鼠标所在的 series 索引（实时光标）
+  const [pinned, setPinned] = useState(null);   // 点击彩点钉住的新闻组（date 为键）
+  const [range, setRange] = useState("all");    // all | 30 | 7 天窗
+  const allSeries = (d.price_series || []).filter((p) => typeof p.price === "number")
     .map((p) => ({ t: _pdate(p.date), date: p.date, price: p.price }));
-  if (series.length < 2)
+  if (allSeries.length < 2)
     return <div className="bf-empty">{t("该盘价格日线不足(薄盘/新盘)——按\"有多少画多少\",暂不足以绘制时间轴")}</div>;
+  const rangeN = range === "30" ? 30 : range === "7" ? 7 : allSeries.length;
+  const series = allSeries.slice(-Math.max(rangeN, 2));
+
   const pos = d.position || {}, wpa = pos.what_position_actions || {};
   const act = wpa.actions || {}, un = wpa.unrealized || {}, pc = pos.price_context || {};
   const side = ((pos.meta || {}).analyzed_side || "").toUpperCase();
-  const settle = (pos.meta || {}).settle;          // "还有约55.0天" — 结算倒计时上下文
+  const settle = (pos.meta || {}).settle;                      // "还有约55.0天"
+  const settleDays = (() => { const m = String(settle || "").match(/还有约([\d.]+)天/); return m ? Math.round(+m[1]) : null; })();
   const entryDate = act.entry_time ? act.entry_time.slice(0, 10) : null;
   const entryPrice = act.avg_entry_price, curPrice = pc.current_price;
   // 🔴 颜色按价格走势(涨绿/跌红),像 Polymarket——描述价格本身、不与"他赚没赚"混淆(后者在英雄区)
   const firstP = series[0].price, lastP = series[series.length - 1].price;
   const dirCls = lastP >= firstP ? "pos" : "neg";
   const chgPts = typeof curPrice === "number" ? Math.round((curPrice - firstP) * 100) : null;
+
+  // ── 布局：右侧留未来区（距结算倒计时，非线性、定宽 22%，天数如实标注）──────
   const iw = GMT_W - GMT_M.l - GMT_M.r, ih = GMT_H - GMT_M.t - GMT_M.b;
-  const x = scaleTime().domain(extent(series, (s) => s.t)).range([0, iw]);
-  // 🔴 Y 轴聚焦到数据实际区间（否则 80-98% 的走势在 0-100 轴上被压成顶部一条平线，看不出趋势）
+  const fw = settleDays != null && settleDays > 0 ? Math.round(iw * 0.22) : 0;
+  const pw = iw - fw;                                          // 价格数据绘图宽
+  const x = scaleTime().domain(extent(series, (s) => s.t)).range([0, pw]);
+  // 🔴 Y 轴聚焦到数据实际区间（否则 80-98% 的走势被压成顶部一条平线）
   const prices = series.map((s) => s.price).concat(typeof entryPrice === "number" ? [entryPrice] : []);
   const pMin = Math.min(...prices), pMax = Math.max(...prices);
   const pad = Math.max((pMax - pMin) * 0.18, 0.025);
   const y = scaleLinear().domain([Math.max(0, pMin - pad), Math.min(1, pMax + pad)]).range([ih, 0]);
   const lg = d3line().x((s) => x(s.t)).y((s) => y(s.price)).curve(curveMonotoneX);
   const ag = d3area().x((s) => x(s.t)).y0(ih).y1((s) => y(s.price)).curve(curveMonotoneX);
+  // 成本分区：曲线与入场成本线之间的面积，高于成本=绿、低于=红（持有侧视角，纯代码数学）
+  const hasEntryPx = typeof entryPrice === "number";
+  const agEntry = hasEntryPx ? d3area().x((s) => x(s.t)).y0(y(entryPrice)).y1((s) => y(s.price)).curve(curveMonotoneX) : null;
+
   const priceAt = (date) => {
-    const t = _pdate(date); let best = series[0];
-    for (const s of series) if (Math.abs(s.t - t) < Math.abs(best.t - t)) best = s;
+    const dt = _pdate(date); let best = series[0];
+    for (const s of series) if (Math.abs(s.t - dt) < Math.abs(best.t - dt)) best = s;
     return best.price;
   };
   const [dMin, dMax] = x.domain();
-  const nodes = (d.news_stream || []).filter((n) => n.date && _pdate(n.date) >= dMin && _pdate(n.date) <= dMax)
-    .map((n) => ({ ...n, t: _pdate(n.date), px: priceAt(n.date) }));
-  const nodeColor = (n) => {
-    const r = n.reaction || {};
-    return !r.available ? "var(--fg-4)" : r.kind === "confirm" ? "var(--pos)" : r.kind === "reject" ? "var(--neg)" : "var(--fg-3)";
-  };
+
+  // ── 新闻聚簇：同日多条合并为一个节点（count 徽章），方向一致时用 ▲/▼ 形状 ────
+  const inWin = (d.news_stream || []).filter((n) => n.date && _pdate(n.date) >= dMin && _pdate(n.date) <= dMax);
+  const byDate = new Map();
+  for (const n of inWin) {
+    if (!byDate.has(n.date)) byDate.set(n.date, []);
+    byDate.get(n.date).push(n);
+  }
+  const RANK = { reject: 3, confirm: 2, weak: 1 };
+  const groups = [...byDate.entries()].map(([date, items]) => {
+    let kind = null, best = 0;
+    for (const n of items) {
+      const k = n.reaction && n.reaction.available ? n.reaction.kind : null;
+      if (k && (RANK[k] || 0) > best) { best = RANK[k] || 0; kind = k; }
+    }
+    const dirs = new Set(items.map((n) => n.direction).filter(Boolean));
+    return { date, items, t: _pdate(date), px: priceAt(date), kind,
+             dir: dirs.size === 1 ? [...dirs][0] : null };
+  });
+  const groupColor = (g) => g.kind === "confirm" ? "var(--pos)" : g.kind === "reject" ? "var(--neg)" : g.kind === "weak" ? "var(--fg-3)" : "var(--fg-4)";
+
   const sx = (vx) => ((GMT_M.l + vx) / GMT_W) * 100;
   const sy = (vy) => ((GMT_M.t + vy) / GMT_H) * 100;
-  const yTicks = y.ticks(4), xTicks = x.ticks(6);
+  const yTicks = y.ticks(4), xTicks = x.ticks(Math.min(6, series.length));
 
   const hv = cross != null ? series[cross] : null;
   const bright = cross != null ? series.slice(0, cross + 1) : series;
   const shownPrice = hv ? hv.price : curPrice;
-  // 🔴 扫到彩点"附近"(≤26 viewBox 单位)就激活该新闻 → 不必精确落在那天，可发现性大增（旧版要求 date 精确相等，很难命中）
-  let activeNews = null;
-  if (hv && nodes.length) {
+  // 悬停点 vs 入场成本的浮动（纯代码数学：百分点差）
+  const hvVsEntry = hv && hasEntryPx ? Math.round((hv.price - entryPrice) * 100) : null;
+
+  // 🔴 扫到彩点"附近"(≤26 viewBox 单位)就激活该新闻组 → 可发现性大增；点击则钉住
+  let hoverGroup = null;
+  if (hv && groups.length) {
     const cxp = x(hv.t); let bd = Infinity;
-    for (const n of nodes) { const dd = Math.abs(x(n.t) - cxp); if (dd < bd) { bd = dd; activeNews = n; } }
-    if (bd > 26) activeNews = null;
+    for (const g of groups) { const dd = Math.abs(x(g.t) - cxp); if (dd < bd) { bd = dd; hoverGroup = g; } }
+    if (bd > 26) hoverGroup = null;
   }
+  const activeGroup = pinned ? groups.find((g) => g.date === pinned) || null : hoverGroup;
 
   function onMove(e) {
     const rect = e.currentTarget.getBoundingClientRect();
-    const plotX = Math.max(0, Math.min(iw, ((e.clientX - rect.left) / rect.width) * GMT_W - GMT_M.l));
+    const plotX = Math.max(0, Math.min(pw, ((e.clientX - rect.left) / rect.width) * GMT_W - GMT_M.l));
     const td = x.invert(plotX);
     let bi = 0;
     for (let k = 1; k < series.length; k++) if (Math.abs(series[k].t - td) < Math.abs(series[bi].t - td)) bi = k;
     setCross(bi);
   }
+  function onClick() {
+    if (hoverGroup) setPinned(pinned === hoverGroup.date ? null : hoverGroup.date);
+    else if (pinned) setPinned(null);
+  }
+
+  // 入场标记：可能早于本图窗口 → 竖线钳到左缘并注明
+  const entryT = entryDate ? _pdate(entryDate) : null;
+  const entryInWin = entryT && entryT >= dMin && entryT <= dMax;
+  const entryX = entryT ? Math.max(0, Math.min(pw, x(entryT))) : null;
+  const asOfLabel = series[series.length - 1].date;
+
+  // 结算日期 = as_of + 剩余天数（前端代码日期数学，供未来区旗标；AI 从不参与）
+  const settleDateStr = (() => {
+    if (settleDays == null) return null;
+    const dt = new Date(_pdate(asOfLabel).getTime() + settleDays * 86400e3);
+    return `${dt.getUTCMonth() + 1}/${dt.getUTCDate()}`;
+  })();
 
   return (
     <div className="gmt">
@@ -1128,13 +1234,20 @@ function GodModeTimeline({ d }) {
           <span className={`gmt-h-pct ${dirCls}`}>{typeof shownPrice === "number" ? <><RollingNumber value={Math.round(shownPrice * 100)} />%</> : "—"}</span>
           <span className="gmt-h-unit" title={t("市场赔率隐含的、对『会发生』的概率估计——不是胜率、不是收益（行话叫『隐含概率』）")}>{t("市场认为「")}{side}{t("」的概率")}</span>
           {hv
-            ? <span className="gmt-h-date">{hv.date.slice(5)}</span>
+            ? <span className="gmt-h-date">{hv.date.slice(5)}{hvVsEntry != null && <span className={`gmt-h-vse ${hvVsEntry >= 0 ? "pos" : "neg"}`}> · {t("vs 入场")} {hvVsEntry >= 0 ? "+" : ""}{hvVsEntry}pt</span>}</span>
             : (chgPts != null && <span className={`gmt-h-delta ${dirCls}`} title={t("本图时间段内，这个概率涨/跌了多少个百分点")}>{chgPts >= 0 ? "▲ +" : "▼ "}{Math.abs(chgPts)}% <span className="gmt-h-deltalab">{t("这段时间")}</span></span>)}
-          {!hv && settle && <span className="gmt-h-settle">· {t("结算")} {settle}</span>}
+          {allSeries.length > 15 && (
+            <span className="gmt-range">
+              {[["7", "7D"], ["30", "30D"], ["all", t("全部")]].map(([k, lab]) => (
+                <button key={k} className={range === k ? "on" : ""} onClick={() => { setRange(k); setCross(null); setPinned(null); }}>{lab}</button>
+              ))}
+            </span>
+          )}
         </div>
       </div>
       <div className="gmt-wrap">
-        <svg viewBox={`0 0 ${GMT_W} ${GMT_H}`} className="gmt-svg" onMouseMove={onMove} onMouseLeave={() => setCross(null)}>
+        <svg viewBox={`0 0 ${GMT_W} ${GMT_H}`} className="gmt-svg" onMouseMove={onMove}
+          onMouseLeave={() => setCross(null)} onClick={onClick}>
           <defs>
             <linearGradient id="gmt-grad-pos" x1="0" x2="0" y1="0" y2="1">
               <stop offset="0%" stopColor="var(--pos)" stopOpacity="0.28" />
@@ -1144,74 +1257,146 @@ function GodModeTimeline({ d }) {
               <stop offset="0%" stopColor="var(--neg)" stopOpacity="0.26" />
               <stop offset="100%" stopColor="var(--neg)" stopOpacity="0" />
             </linearGradient>
+            {hasEntryPx && (
+              <>
+                <clipPath id="gmt-clip-above"><rect x="0" y={-GMT_M.t} width={pw} height={y(entryPrice) + GMT_M.t} /></clipPath>
+                <clipPath id="gmt-clip-below"><rect x="0" y={y(entryPrice)} width={pw} height={ih - y(entryPrice) + GMT_M.b} /></clipPath>
+              </>
+            )}
           </defs>
           <g transform={`translate(${GMT_M.l},${GMT_M.t})`}>
-            {xTicks.map((t, i) => (
+            {xTicks.map((tk, i) => (
               <g key={"x" + i}>
-                <line x1={x(t)} x2={x(t)} y1="0" y2={ih} className="gmt-grid v" />
-                <text x={x(t)} y={ih + 15} className="gmt-xtick">{fmtMD(t)}</text>
+                <line x1={x(tk)} x2={x(tk)} y1="0" y2={ih} className="gmt-grid v" />
+                <text x={x(tk)} y={ih + 15} className="gmt-xtick">{fmtMD(tk)}</text>
               </g>
             ))}
-            {yTicks.map((t, i) => (
+            {yTicks.map((tk, i) => (
               <g key={"y" + i}>
-                <line x1="0" x2={iw} y1={y(t)} y2={y(t)} className="gmt-grid" />
-                <text x={iw + 6} y={y(t)} className="gmt-ytick r" dy="0.32em">{Math.round(t * 100)}%</text>
+                <line x1="0" x2={iw} y1={y(tk)} y2={y(tk)} className="gmt-grid" />
+                <text x={iw + 6} y={y(tk)} className="gmt-ytick r" dy="0.32em">{Math.round(tk * 100)}%</text>
               </g>
             ))}
-            <path d={ag(series)} className="gmt-area" fill={`url(#gmt-grad-${dirCls})`} />
-            {cross != null && <path d={lg(series)} className={`gmt-line ${dirCls} dim`} />}
-            <path d={lg(bright)} className={`gmt-line ${dirCls}`} />
-            {typeof entryPrice === "number" && <line x1="0" x2={iw} y1={y(entryPrice)} y2={y(entryPrice)} className="gmt-entry-h" />}
-            {entryDate && typeof entryPrice === "number" && (
-              <g>
-                <line x1={x(_pdate(entryDate))} x2={x(_pdate(entryDate))} y1="0" y2={ih} className="gmt-entry-v" />
-                <circle cx={x(_pdate(entryDate))} cy={y(entryPrice)} r="4.5" className="gmt-entry-dot" />
+
+            {/* 未来区：距结算倒计时（定宽、非线性，天数如实标注） */}
+            {fw > 0 && (
+              <g className="gmt-future">
+                <rect x={pw} y="0" width={fw} height={ih} className="gmt-future-bg" />
+                <line x1={pw} x2={pw} y1="0" y2={ih} className="gmt-future-edge" />
+                <text x={pw + fw / 2} y={16} className="gmt-future-lab">⏱ {t("距结算")} ≈{settleDays}{t("天")}</text>
+                {settleDateStr && <text x={pw + fw / 2} y={30} className="gmt-future-date">{settleDateStr}</text>}
+                <text x={pw + 4} y={ih - 6} className="gmt-future-now">{t("今天")} {asOfLabel.slice(5)}</text>
               </g>
             )}
-            {nodes.map((n, i) => (
-              <circle key={i} cx={x(n.t)} cy={y(n.px)} r={activeNews === n ? 7.5 : 5.5} fill={nodeColor(n)}
-                className={`gmt-node ${activeNews === n ? "active" : ""}`} />
-            ))}
+
+            {/* 成本分区着色：高于入场成本=绿、低于=红；无成本价则退回走势渐变 */}
+            {hasEntryPx ? (
+              <>
+                <path d={agEntry(series)} className="gmt-pl above" clipPath="url(#gmt-clip-above)" />
+                <path d={agEntry(series)} className="gmt-pl below" clipPath="url(#gmt-clip-below)" />
+              </>
+            ) : (
+              <path d={ag(series)} className="gmt-area" fill={`url(#gmt-grad-${dirCls})`} />
+            )}
+
+            {cross != null && <path d={lg(series)} className={`gmt-line ${dirCls} dim`} />}
+            <path d={lg(bright)} className={`gmt-line ${dirCls} draw`} pathLength="1" />
+
+            {/* 入场成本线 + 入场时点 */}
+            {hasEntryPx && <line x1="0" x2={pw} y1={y(entryPrice)} y2={y(entryPrice)} className="gmt-entry-h" />}
+            {entryX != null && hasEntryPx && (
+              <g>
+                <line x1={entryX} x2={entryX} y1="0" y2={ih} className="gmt-entry-v" />
+                {entryInWin && <circle cx={entryX} cy={y(entryPrice)} r="4.5" className="gmt-entry-dot" />}
+              </g>
+            )}
+
+            {/* 新闻节点：▲支持 ▼威胁 ●未分类；同日聚簇带数字徽章；点击钉住 */}
+            {groups.map((g, i) => {
+              const gx = x(g.t), gy = y(g.px), on = activeGroup === g;
+              const r = on ? 7.5 : 5.5, c = groupColor(g);
+              const pinnedThis = pinned === g.date;
+              return (
+                <g key={g.date} className="gmt-node-g" style={{ "--i": i }}>
+                  {g.dir === "support" && <path d={`M${gx},${gy - r} L${gx + r},${gy + r * 0.9} L${gx - r},${gy + r * 0.9} Z`} fill={c} className={`gmt-node ${on ? "active" : ""}`} />}
+                  {g.dir === "threat" && <path d={`M${gx},${gy + r} L${gx + r},${gy - r * 0.9} L${gx - r},${gy - r * 0.9} Z`} fill={c} className={`gmt-node ${on ? "active" : ""}`} />}
+                  {!g.dir && <circle cx={gx} cy={gy} r={r} fill={c} className={`gmt-node ${on ? "active" : ""}`} />}
+                  {g.items.length > 1 && (
+                    <>
+                      <circle cx={gx + 7} cy={gy - 8} r="6.5" className="gmt-node-badge-bg" />
+                      <text x={gx + 7} y={gy - 8} dy="0.34em" className="gmt-node-badge">{g.items.length}</text>
+                    </>
+                  )}
+                  {pinnedThis && <circle cx={gx} cy={gy} r={r + 4} className="gmt-node-pin" />}
+                </g>
+              );
+            })}
+
+            {/* 悬停十字光标（横+竖）*/}
             {hv && (
               <g>
                 <line x1={x(hv.t)} x2={x(hv.t)} y1="0" y2={ih} className="gmt-cross-v" />
+                <line x1="0" x2={iw} y1={y(hv.price)} y2={y(hv.price)} className="gmt-cross-h" />
                 <circle cx={x(hv.t)} cy={y(hv.price)} r="5" className={`gmt-cross-dot ${dirCls}`} />
               </g>
             )}
-            {!hv && typeof curPrice === "number" && <circle cx={iw} cy={y(curPrice)} r="4.5" className={`gmt-now-dot ${dirCls}`} />}
+            {!hv && typeof curPrice === "number" && <circle cx={pw} cy={y(curPrice)} r="4.5" className={`gmt-now-dot ${dirCls}`} />}
           </g>
         </svg>
+
+        {/* 右缘价签：现价（彩）+ 入场成本（灰）+ 悬停价（跟随）*/}
+        {typeof curPrice === "number" && !hv && (
+          <div className={`gmt-pill cur ${dirCls}`} style={{ left: `${sx(pw) + 0.4}%`, top: `${sy(y(Math.max(y.domain()[0], Math.min(y.domain()[1], curPrice))))}%` }}>{Math.round(curPrice * 100)}¢</div>
+        )}
+        {hasEntryPx && (
+          <div className="gmt-pill entry" style={{ left: `${sx(pw) + 0.4}%`, top: `${sy(y(entryPrice))}%` }}>{t("建仓")} {Math.round(entryPrice * 100)}¢</div>
+        )}
+        {hv && (
+          <div className={`gmt-pill hover ${dirCls}`} style={{ left: `${sx(pw) + 0.4}%`, top: `${sy(y(hv.price))}%` }}>{Math.round(hv.price * 100)}¢</div>
+        )}
+
         {hv && <div className="gmt-cross-date" style={{ left: `${sx(x(hv.t))}%` }}>{fmtMD(hv.t)}</div>}
         {hv && (
           <div className={`gmt-cross-tip ${dirCls} ${sx(x(hv.t)) > 60 ? "l" : ""}`} style={{ left: `${sx(x(hv.t))}%`, top: `${sy(y(hv.price))}%` }}>
-            {t("押")} {side} {Math.round(hv.price * 100)}%
+            {t("押")} {side} {Math.round(hv.price * 100)}%{hvVsEntry != null && <span className="gmt-tip-vse"> · {hvVsEntry >= 0 ? "+" : ""}{hvVsEntry}pt {t("vs 入场")}</span>}
           </div>
         )}
-        {entryDate && typeof entryPrice === "number" && (
-          <div className="gmt-lbl entry" style={{ left: `${sx(x(_pdate(entryDate)))}%`, top: `${sy(y(entryPrice))}%` }}>{t("建仓")} {Math.round(entryPrice * 100)}¢</div>
+        {entryX != null && hasEntryPx && !entryInWin && (
+          <div className="gmt-lbl entry" style={{ left: `${sx(entryX)}%`, top: `${sy(y(entryPrice))}%` }}>
+            ◂ {t("建仓")} {entryDate.slice(5)} · {Math.round(entryPrice * 100)}¢
+          </div>
         )}
       </div>
-      {/* 🔴 催化剂读出条：固定在图下方、永不遮挡价格线（TradingView 式事件面板）。扫到彩点附近→显示该新闻；否则显示图例 */}
-      <div className={`gmt-readout ${activeNews ? "on" : ""}`}
-        style={activeNews ? { borderLeftColor: nodeColor(activeNews) } : null}>
-        {activeNews ? (() => {
-          const rc = gmtReact(activeNews.reaction, t);
-          return (
-            <>
-              <div className="gmt-ro-line">
-                <span className="gmt-ro-date num">{activeNews.date}</span>
-                {activeNews.direction && <span className={`db-dir ${activeNews.direction}`}>{activeNews.direction === "support" ? t("支持") : t("威胁")}</span>}
-                <span className={`rx ${rc.cls}`}>{rc.txt}</span>
-                <span className="gmt-ro-title">{activeNews.title}</span>
-                {activeNews.url && <a className="gmt-ro-link" href={activeNews.url} target="_blank" rel="noreferrer">{t("原文 ↗")}</a>}
-              </div>
-              {activeNews.summary && <div className="gmt-ro-sum">{activeNews.summary}</div>}
-              <div className="gmt-ro-foot">{activeNews.origin} {t("· 与价格变动")}<b className="gmt-warn">{t("时间相关、非因果")}</b></div>
-            </>
-          );
-        })() : (
-          <div className="gmt-ro-hint">
-            <i className="gmt-foot-dot" /><b>{t("扫过彩点")}</b>{t("看催化剂 — 颜色 = 市场反应（")}<span className="rx-c-pos">{t("绿印证")}</span> / <span className="rx-c-neg">{t("红不买账")}</span> / {t("灰无反应")}）{t("· 与价格")}<span className="gmt-warn">{t("时间相关、非因果")}</span> · {t("灰虚线 = 建仓成本")}
+
+      {/* 🔴 催化剂读出条：固定图下方、永不遮挡价格线；点击彩点可钉住（演示时不会因移开鼠标丢失） */}
+      <div className={`gmt-readout ${activeGroup ? "on" : ""}`}
+        style={activeGroup ? { borderLeftColor: groupColor(activeGroup) } : null}>
+        {activeGroup ? (
+          <>
+            {activeGroup.items.slice(0, 3).map((n, i) => {
+              const rc = gmtReact(n.reaction, t);
+              return (
+                <div className="gmt-ro-line" key={i}>
+                  {i === 0 && <span className="gmt-ro-date num">{activeGroup.date}</span>}
+                  {i === 0 && pinned === activeGroup.date && <span className="gmt-ro-pin" title={t("已钉住 · 再点一次取消")}>📌</span>}
+                  {n.direction && <span className={`db-dir ${n.direction}`}>{n.direction === "support" ? t("支持") : t("威胁")}</span>}
+                  <span className={`rx ${rc.cls}`}>{rc.txt}</span>
+                  <span className="gmt-ro-title">{t(n.title)}</span>
+                  {n.url && <a className="gmt-ro-link" href={n.url} target="_blank" rel="noreferrer" onClick={(e) => e.stopPropagation()}>{t("原文 ↗")}</a>}
+                </div>
+              );
+            })}
+            {activeGroup.items.length > 3 && <div className="gmt-ro-more">+{activeGroup.items.length - 3} {t("条同日新闻，见下方新闻列")}</div>}
+            {activeGroup.items.length === 1 && activeGroup.items[0].summary && <div className="gmt-ro-sum">{t(activeGroup.items[0].summary)}</div>}
+            <div className="gmt-ro-foot">{activeGroup.items[0].origin} {t("· 与价格变动")}<b className="gmt-warn">{t("时间相关、非因果")}</b>{activeGroup.items.length > 1 && <span> · {t("同日多条 · 前后变动为合计,不可归因到单条")}</span>}</div>
+          </>
+        ) : (
+          <div className="gmt-ro-hint chips">
+            <span className="gmt-chip strong"><i className="gmt-foot-dot" /><b>{t("扫过彩点")}</b>{t("看催化剂")} · {t("点击可钉住")}</span>
+            <span className="gmt-chip"><span className="rx-c-pos">●{t("印证")}</span> <span className="rx-c-neg">●{t("不买账")}</span> <span className="gmt-chip-dim">●{t("无反应")}</span></span>
+            <span className="gmt-chip">▲{t("支持")} ▼{t("威胁")}</span>
+            <span className="gmt-chip"><span className="rx-c-pos">■</span>{t("高于成本")} <span className="rx-c-neg">■</span>{t("低于成本")}</span>
+            <span className="gmt-chip gmt-warn">{t("时间相关、非因果")}</span>
           </div>
         )}
       </div>
@@ -1315,8 +1500,8 @@ function VerdictHero({ d }) {
 
       {(pos.what_the_bet || pos.resolution_criteria) && (
         <div className="db-whatbet vh-whatbet">
-          <div className="db-whatbet-h">{t("这一注在赌什么")} <ZhNote /></div>
-          {pos.what_the_bet && <div className="db-whatbet-t">{renderInline(pos.what_the_bet)}</div>}
+          <div className="db-whatbet-h">{t("这一注在赌什么")} <ZhNote text={pos.what_the_bet} /></div>
+          {pos.what_the_bet && <div className="db-whatbet-t">{renderInline(t(pos.what_the_bet))}</div>}
           {pos.resolution_criteria && (
             <details className="db-rc">
               <summary>{t("官方结算规则原文（什么算赢）")}</summary>
@@ -1374,10 +1559,10 @@ function VerdictHero({ d }) {
         </div>
       )}
 
-      <div className="vh-verdict">{r.guard_tripped ? r.guard_message : r.reasoning}{!r.guard_tripped && r.reasoning && <ZhNote />}</div>
+      <div className="vh-verdict">{r.guard_tripped ? r.guard_message : t(r.reasoning)}{!r.guard_tripped && r.reasoning && <ZhNote text={r.reasoning} />}</div>
 
       {!r.guard_tripped && r.pivotal_unknown && (
-        <div className="vh-pivotal">{t("⚖ 胜负手：")}{r.pivotal_unknown}</div>
+        <div className="vh-pivotal">{t("⚖ 胜负手：")}{t(r.pivotal_unknown)}</div>
       )}
 
       {!r.guard_tripped && r.market_lean && r.thesis_audit && (
@@ -1386,11 +1571,11 @@ function VerdictHero({ d }) {
           {r.input_trust && r.input_trust.length > 0 && (
             <div className="vh-trust">
               <div className="vh-trust-h">{t("输入可信度（决定价格/证据该信几分）")}</div>
-              {r.input_trust.map((l, i) => <div className="vh-trust-l" key={i}>· {l}</div>)}
+              {r.input_trust.map((l, i) => <div className="vh-trust-l" key={i}>· {t(l)}</div>)}
             </div>
           )}
-          <div className="vh-audit-th"><b>{t("多头(押 YES)：")}</b>{r.thesis_audit.bull}</div>
-          <div className="vh-audit-th"><b>{t("空头(押 NO)：")}</b>{r.thesis_audit.bear}</div>
+          <div className="vh-audit-th"><b>{t("多头(押 YES)：")}</b>{t(r.thesis_audit.bull)}</div>
+          <div className="vh-audit-th"><b>{t("空头(押 NO)：")}</b>{t(r.thesis_audit.bear)}</div>
           <div className="vh-audit-foot">{t("↑ 同一市场只算一次、两个反向钱包共享同一份市场观；信心由裁决人直出、不锚钱包盈亏 · 已记日志，待盘结算回验是否真命中")}</div>
         </details>
       )}
@@ -1408,7 +1593,7 @@ function VerdictHero({ d }) {
         </details>
       )}
 
-      {d.behavior && <div className="vh-whale">{t("🐳 巨鲸动态 ·")} {d.behavior.fact}</div>}
+      {d.behavior && <div className="vh-whale">{t("🐳 巨鲸动态 ·")} {t(d.behavior.fact)}</div>}
       <div className="vh-disc">{t("这是对\"局势性质\"的判断(还有多少空间/风险在哪/市场认不认这个方向),不替你决定跟不跟 · 天平由你裁决")}</div>
     </div>
   );
@@ -1437,7 +1622,7 @@ function BoardBody({ d }) {
 
       {/* 局势时间轴（核心视觉，紧跟结论）*/}
       <GodModeTimeline d={d} />
-      {d.world_summary && <div className="db-wsum gmt-summary"><ZhNote /><Narrative text={d.world_summary} /></div>}
+      {d.world_summary && <div className="db-wsum gmt-summary"><ZhNote text={d.world_summary} /><Narrative text={t(d.world_summary)} /></div>}
 
       {/* 新闻(事实) × 社媒(情绪) 并排 —— 同一问题的两面，视觉刻意分开 */}
       <div className="db-sec-tag">{t("世界发生了什么 × 在怎么议论")}</div>
@@ -1463,7 +1648,7 @@ function BoardBody({ d }) {
       <div className="c-head db-pos-head">
         <div>
           <div className="q">{m.market}</div>
-          <div className="meta">{m.settle} · {t("建仓")} {act.entry_time?.slice(0, 10) || "—"}</div>
+          <div className="meta">{t(m.settle)} · {t("建仓")} {act.entry_time?.slice(0, 10) || "—"}</div>
         </div>
         <span className="outcome">{(m.analyzed_side || "").toUpperCase()}</span>
       </div>
@@ -1536,12 +1721,40 @@ const CALL_CN = { "ROOM LEFT": "还有空间", CHASED: "太迟了", "NO BASIS": 
 function Recommendations({ onPick }) {
   const { t, lang } = useLang();
   const [data, setData] = useState(null);
-  useEffect(() => { fetch(`${API}/recommendations`).then((r) => r.json()).then(setData).catch(() => {}); }, []);
+  const [scanSecs, setScanSecs] = useState(0);
+  const pollRef = useRef(null);
+  useEffect(() => {
+    fetch(`${API}/recommendations`).then((r) => r.json()).then(setData).catch(() => {});
+    return () => clearInterval(pollRef.current);
+  }, []);
+  const refreshing = !!(data && data.refreshing);
+  useEffect(() => {                                   // 扫榜期间：10s 轮询 + 计时
+    clearInterval(pollRef.current);
+    if (!refreshing) return;
+    const t0 = Date.now();
+    pollRef.current = setInterval(() => {
+      setScanSecs(Math.floor((Date.now() - t0) / 1000));
+      fetch(`${API}/recommendations`).then((r) => r.json()).then(setData).catch(() => {});
+    }, 10000);
+    return () => clearInterval(pollRef.current);
+  }, [refreshing]);
+  function rescan() {
+    if (refreshing) return;
+    if (!window.confirm(t("重新扫榜会重跑全流程找最新推荐（几分钟、AI 验证消耗 token 额度）。确定？"))) return;
+    setScanSecs(0);
+    fetch(`${API}/recommendations?refresh=1`).then((r) => r.json()).then(setData).catch(() => {});
+  }
   const cands = (data && data.candidates) || [];
-  if (!cands.length) return null;
+  if (!cands.length && !refreshing) return null;
   return (
     <div className="recs">
-      <div className="recs-h">{t("值得看的聪明钱 ·")} <b>{t("政治盘专家")}</b>{t("（从热门政治盘反向找的共持大户 · 政治专长筛 · ∩月榜）")}<span className="recs-sub">{t("点一个直接 decode")}</span></div>
+      <div className="recs-h">{t("值得看的聪明钱 ·")} <b>{t("政治盘专家")}</b>{t("（从热门政治盘反向找的共持大户 · 政治专长筛 · ∩月榜）")}<span className="recs-sub">{t("点一个直接 decode")}</span>
+        <button className="recs-refresh" onClick={rescan} disabled={refreshing}
+          title={t("重扫热门政治盘找最新的值得看钱包（几分钟 + AI 验证烧 token）")}>
+          {refreshing ? `⟳ ${t("扫榜中")}… ${scanSecs}s` : `↻ ${t("刷新推荐榜")}`}
+        </button>
+      </div>
+      {data && data.refresh_error && <div className="recs-err">⚠ {t("上次刷新失败：")}{data.refresh_error}</div>}
       <div className="recs-list">
         {cands.map((c, i) => {
           const pw = c.politics_win_rate;
@@ -1568,12 +1781,12 @@ function Recommendations({ onPick }) {
                 <div className="rec-consensus">🤝 {c.consensus_count} {t("个政治专家同押此方向（弱信号 · 技能共识非盈亏 · 仍有羊群风险）")}</div>
               )}
               {c.source_market && <div className="rec-src">{t("↳ 从「")}{c.source_market}{t("」共持发现")}</div>}
-              <div className="rec-beh">{BEH_ICON[c.behavior] || "·"} {c.behavior_fact || c.behavior || "—"}</div>
+              <div className="rec-beh">{BEH_ICON[c.behavior] || "·"} {t(c.behavior_fact) || c.behavior || "—"}</div>
               {c.ai_pick && (
                 <div className="rec-verdict">
                   <span className={`rec-conf ${c.ai_confidence}`}>⑥ {t(CONF_CN[c.ai_confidence] || c.ai_confidence)} {t("信心")}</span>
                   {c.ai_follow_call && <span className="rec-call">{t(CALL_CN[c.ai_follow_call] || c.ai_follow_call)}</span>}
-                  {c.ai_verdict && <span className="rec-verdict-txt">{c.ai_verdict}</span>}
+                  {c.ai_verdict && <span className="rec-verdict-txt">{t(c.ai_verdict)}</span>}
                 </div>
               )}
             </button>
@@ -1612,7 +1825,7 @@ function BoardView() {
   }
 
   function refreshCurrent() {
-    const w = (data && data.wallet) || wallet;
+    const w = (data && data.wallet) || wallet.trim();
     if (!w || loading) return;
     if (!window.confirm(t("强制刷新会绕过缓存、重新调用数据源与 AI（耗时 1-3 分钟、消耗 token 额度）。确定重建吗？"))) return;
     run(w, true);
@@ -1648,6 +1861,10 @@ function BoardView() {
                 <span className="mon-pnl"><span className="mon-pnl-lab">{t("累计盈利")}</span><span className="mon-pnl-val num">{e.pnl}</span></span>
               </button>
             ))}
+          </div>
+          <div className="mon-foot">
+            <a className="sys-cta" href={TRADERS_URL} target="_blank" rel="noreferrer">{t("想分析其他大户?浏览政治盘大户榜 ↗")}</a>
+            <a className="sys-source" href={LEADERBOARD_URL} target="_blank" rel="noreferrer">{t("数据来源:Polymarket 官方盈利榜 ↗")}</a>
           </div>
         </div>
       )}
@@ -1849,7 +2066,7 @@ function CaseRow({ c }) {
       <div className="bt-drawer" style={{ height: h }}>
         <div className="bt-drawer-inner" ref={ref}>
           <div className="case-concl">{concl} · {t("市场结算")} {c.resolved}（{c.resolved_date}）</div>
-          <div className="case-take">{c.takeaway}</div>
+          <div className="case-take">{t(c.takeaway)}</div>
 
           <div className="case-evo">
             {tps.map(([lab, pt], i) => (
@@ -1864,8 +2081,8 @@ function CaseRow({ c }) {
           {tps.map(([lab, pt]) => (
             <div className="case-tp" key={lab}>
               <div className="case-tp-h">{lab} · {pt.date} · {t("信心")} {CONF_LABEL[pt.conf] || pt.conf}</div>
-              <ul className="case-cat">{pt.catalysts.map((cat, j) => <li key={j}>{cat}</li>)}</ul>
-              <div className="case-reason"><span className="case-reason-lab">{t("AI 当时推理")}<ZhNote /></span>{pt.reasoning}</div>
+              <ul className="case-cat">{pt.catalysts.map((cat, j) => <li key={j}>{t(cat)}</li>)}</ul>
+              <div className="case-reason"><span className="case-reason-lab">{t("AI 当时推理")}<ZhNote text={pt.reasoning} /></span>{t(pt.reasoning)}</div>
             </div>
           ))}
         </div>

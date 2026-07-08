@@ -195,7 +195,7 @@ export default {
   "绿印证": "green confirms",
   "红不买账": "red rejects",
   "灰无反应": "grey none",
-  "· 与价格": ") · correlation with price is ",
+  "· 与价格": " · correlation with price is ",
   "时间相关、非因果": "time-based, not causal",
   "灰虚线 = 建仓成本": "grey dashed = entry cost",
   "· 与价格变动": " · correlates with price in ",
@@ -323,6 +323,49 @@ export default {
   "空栏目是诚实不是 bug，绝不用幻觉填充。": "Empty sections are honesty, not bugs — never filled with hallucinations.",
   "判断进记分牌。": "Judgments go on the scorecard. ",
   "每个判断存档，等市场真结算后与现实对账（Track Record 页可查）。": "Every judgment is archived and reconciled against reality once markets actually settle (see Track Record).",
+
+  // ── 新闻分组 / 社媒大白话 ──
+  "当日合计": "day total",
+  "反应 = 持有侧价格当日变动 · 时间相关非因果 · 同日多条共享同一变动": "Reaction = held-side price move that day · time-correlated, not causal · same-day items share one move",
+  "讨论热度": "Buzz",
+  "讨论几乎停了": "Discussion has nearly stopped",
+  "升温中": "Heating up",
+  "降温中": "Cooling down",
+  "平时讨论量": "the usual volume",
+  "✓ 账号分散 · 像真人讨论": "✓ Many different accounts — looks like real people",
+  "✓ 像真人讨论": "✓ Looks organic",
+  "🤖 像刷量": "🤖 Looks botted",
+  "🤖 账号集中 · 像刷量": "🤖 Few accounts posting a lot — looks manufactured",
+  "⚠ 每 100 条讨论只来自约": "⚠ Every 100 posts come from only ~",
+  "个账号——这种热闹很可能是刷出来的：当氛围看，别当民意": "accounts — this buzz is likely manufactured: read it as atmosphere, not public opinion",
+  "社媒反映的是情绪和声量、不是事实——方向判断请看左列新闻与顶部结论": "Social shows emotion and volume, not facts — for direction, see the news column and the verdict above",
+
+  // ── 推荐榜刷新 ──
+  "重新扫榜会重跑全流程找最新推荐（几分钟、AI 验证消耗 token 额度）。确定？": "Rescanning re-runs the full discovery pipeline for fresh picks (takes minutes; AI verification consumes token quota). Proceed?",
+  "重扫热门政治盘找最新的值得看钱包（几分钟 + AI 验证烧 token）": "Re-scan hot politics markets for the latest wallets worth watching (minutes + AI verification burns tokens)",
+  "扫榜中": "Scanning",
+  "刷新推荐榜": "Refresh picks",
+  "上次刷新失败：": "Last refresh failed: ",
+
+  // ── Footer ──
+  "解码 Polymarket 聪明钱的政治押注 · 只读公开数据 · 非投资建议": "Decoding smart-money political bets on Polymarket · read-only public data · not investment advice",
+  "数字归代码，AI 只做解读": "numbers belong to code, AI only interprets",
+
+  // ── GodMode 图表精进 ──
+  "看催化剂": " for catalysts",
+  "无反应": "none",
+  "高于成本": "above cost",
+  "低于成本": "below cost",
+  "vs 入场": "vs entry",
+  "全部": "All",
+  "距结算": "to resolution",
+  "天": "d",
+  "今天": "today",
+  "点击可钉住": "click to pin",
+  "已钉住 · 再点一次取消": "Pinned — click again to unpin",
+  "条同日新闻，见下方新闻列": "more same-day items — see the news column below",
+  "绿区=浮盈 红区=浮亏（相对建仓成本）": "green zone = above entry cost, red = below",
+  "· 与价格变动": " · correlates with price in ",
 
   // ── Track Record ──
   "别跟": "Don't follow",
