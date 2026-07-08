@@ -1984,7 +1984,7 @@ function CaseRow({ c }) {
       <div className="bt-drawer" style={{ height: h }}>
         <div className="bt-drawer-inner" ref={ref}>
           <div className="case-concl">{concl} · {t("市场结算")} {c.resolved}（{c.resolved_date}）</div>
-          <div className="case-take">{c.takeaway}</div>
+          <div className="case-take">{t(c.takeaway)}</div>
 
           <div className="case-evo">
             {tps.map(([lab, pt], i) => (
@@ -1999,8 +1999,8 @@ function CaseRow({ c }) {
           {tps.map(([lab, pt]) => (
             <div className="case-tp" key={lab}>
               <div className="case-tp-h">{lab} · {pt.date} · {t("信心")} {CONF_LABEL[pt.conf] || pt.conf}</div>
-              <ul className="case-cat">{pt.catalysts.map((cat, j) => <li key={j}>{cat}</li>)}</ul>
-              <div className="case-reason"><span className="case-reason-lab">{t("AI 当时推理")}<ZhNote /></span>{pt.reasoning}</div>
+              <ul className="case-cat">{pt.catalysts.map((cat, j) => <li key={j}>{t(cat)}</li>)}</ul>
+              <div className="case-reason"><span className="case-reason-lab">{t("AI 当时推理")}<ZhNote text={pt.reasoning} /></span>{t(pt.reasoning)}</div>
             </div>
           ))}
         </div>
