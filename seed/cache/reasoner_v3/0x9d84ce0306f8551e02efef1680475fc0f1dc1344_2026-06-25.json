@@ -1,0 +1,67 @@
+{
+  "follow_call": "CHASED",
+  "confidence": "low",
+  "reasoning": "这个钱包两边都有仓位，不是单纯押一个方向。支持面有多条硬催化（包括当事人直接宣布辞职），市场已经完全消化并确认了这些消息，价格从钱包入场时已经跑了一大截，现在跟进的空间只剩一点点。近48小时他没有动作。信心度为低，因为虽然方向上有实质进展，但这个钱包本身的收益结构（对冲仓位+已经涨了很多）意味着现在追进去的人面对的局面和他当初完全不同。",
+  "confidence_reasons": [
+    "底座矩阵:low(pnl=+164.1%)"
+  ],
+  "facts": {
+    "market_question": "Will Keir Starmer be the next leader out before 2027?",
+    "outcome": "Yes",
+    "today": "2026-06-25",
+    "price_room_left": 12.36,
+    "price_already_moved": 164.17,
+    "resolution_date_human": "还有约189.0天",
+    "position_type": "hedged",
+    "recent_action": "flat_no_movement",
+    "support_catalysts": [
+      {
+        "title": "Starmer Announces Resignation; Burnham Wins Key Endorsement - The New York Times",
+        "material_tag": "当事人直接表态",
+        "market_reaction": "confirmed",
+        "move_pct": 105.0,
+        "same_window": true
+      },
+      {
+        "title": "Why the forces that felled Keir Starmer threaten so many Western leaders - CNN",
+        "material_tag": "当事人直接表态",
+        "market_reaction": "confirmed",
+        "move_pct": 105.0,
+        "same_window": true
+      },
+      {
+        "title": "UK minister says PM Starmer is considering 'political realities' amid leadership pressure - CNBC",
+        "material_tag": "周边压力情绪信号",
+        "market_reaction": "confirmed",
+        "move_pct": 50.94,
+        "same_window": false
+      },
+      {
+        "title": "UK Prime Minister Keir Starmer Has Resigned - Industrial Equipment News",
+        "material_tag": "当事人直接表态",
+        "market_reaction": "confirmed",
+        "move_pct": 105.0,
+        "same_window": true
+      },
+      {
+        "title": "Keir Starmer says he will quit as U.K. prime minister after facing rebellion from his own MPs - NBC News",
+        "material_tag": "当事人直接表态",
+        "market_reaction": "confirmed",
+        "move_pct": 105.0,
+        "same_window": true
+      },
+      {
+        "title": "Keir Starmer announces he'll resign as UK prime minister, kicking off contest for Labour successor - AP News",
+        "material_tag": "当事人直接表态",
+        "market_reaction": "confirmed",
+        "move_pct": 105.0,
+        "same_window": true
+      }
+    ],
+    "threat_catalysts": [],
+    "confidence": "low",
+    "confidence_reasons": [
+      "底座矩阵:low(pnl=+164.1%)"
+    ]
+  }
+}

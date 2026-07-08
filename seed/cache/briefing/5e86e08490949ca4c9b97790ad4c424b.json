@@ -1,0 +1,284 @@
+{
+  "meta": {
+    "wallet": "0xb51b3beffd13cde071ed799e70a7b0b598e8b4d9",
+    "market": "US-Iran Final Nuclear Deal by August 18, 2026?",
+    "analyzed_side": "No",
+    "as_of": "2026-06-25",
+    "mode": "live",
+    "catalyst_anchor": "2026-06-25",
+    "settle": "还有约55.0天"
+  },
+  "who_trader_profile": {
+    "wallet": "0xb51b3beffd13cde071ed799e70a7b0b598e8b4d9",
+    "quality": {
+      "combined_risk_score": 10,
+      "max_drawdown": 2.5719,
+      "drawdown_frequency": 0.0667,
+      "avg_trade_size": 134.75,
+      "markets_traded": 155,
+      "num_markets_traded": 155,
+      "category_diversity_score": 1.1733,
+      "market_concentration_ratio": 0.311,
+      "annualized_return": null,
+      "gain_to_pain_ratio": 23.9753,
+      "equity_curve_pattern": "steady",
+      "perfect_timing_flag": false,
+      "flagged_metrics": "{position_size_volatility}",
+      "losing_trades": 113,
+      "best_market_pnl": 37683.76,
+      "dominant_market_pnl": 37683.76,
+      "window_days": "15"
+    },
+    "category_specialization": [
+      {
+        "category": "Other",
+        "roi": 39.2633,
+        "win_rate": 0.723,
+        "total_pnl": 91880.04,
+        "total_trades": 1717
+      },
+      {
+        "category": "Politics",
+        "roi": 42.5769,
+        "win_rate": 0.7212,
+        "total_pnl": 91346.0,
+        "total_trades": 1622
+      },
+      {
+        "category": "Politics / Global",
+        "roi": 45.7237,
+        "win_rate": 0.7202,
+        "total_pnl": 91318.44,
+        "total_trades": 1540
+      },
+      {
+        "category": "Politics / US",
+        "roi": 43.5104,
+        "win_rate": 0.849,
+        "total_pnl": 46668.61,
+        "total_trades": 1014
+      },
+      {
+        "category": "Politics / US / Trump",
+        "roi": 51.4891,
+        "win_rate": 0.8468,
+        "total_pnl": 44959.57,
+        "total_trades": 871
+      },
+      {
+        "category": "Politics / US / Elections",
+        "roi": 8.5936,
+        "win_rate": 0.9091,
+        "total_pnl": 1713.19,
+        "total_trades": 141
+      },
+      {
+        "category": "Finance & Markets",
+        "roi": 3.0382,
+        "win_rate": 0.7778,
+        "total_pnl": 389.34,
+        "total_trades": 68
+      },
+      {
+        "category": "Tech & AI",
+        "roi": 3.0774,
+        "win_rate": 0.8333,
+        "total_pnl": 326.75,
+        "total_trades": 78
+      },
+      {
+        "category": "Weather & Science",
+        "roi": 30.3608,
+        "win_rate": 0.6667,
+        "total_pnl": 209.47,
+        "total_trades": 11
+      },
+      {
+        "category": "Sports / Soccer",
+        "roi": 0.6078,
+        "win_rate": 0.7,
+        "total_pnl": 117.46,
+        "total_trades": 95
+      },
+      {
+        "category": "Sports",
+        "roi": 0.6078,
+        "win_rate": 0.7,
+        "total_pnl": 117.46,
+        "total_trades": 95
+      },
+      {
+        "category": "Crypto / Prices",
+        "roi": 0.0,
+        "win_rate": 1.0,
+        "total_pnl": 22.31,
+        "total_trades": 1
+      },
+      {
+        "category": "Crypto",
+        "roi": 0.0,
+        "win_rate": 1.0,
+        "total_pnl": 22.31,
+        "total_trades": 1
+      },
+      {
+        "category": "Culture & Entertainment",
+        "roi": 0.0,
+        "win_rate": 0.0,
+        "total_pnl": 0.0,
+        "total_trades": 61
+      }
+    ],
+    "official_rank": {
+      "period": "30d",
+      "rank": 372,
+      "roi": "0.221326",
+      "win_rate": "0.6481",
+      "sharpe_ratio": "0.0510",
+      "total_pnl": "71735.2194",
+      "total_invested": "324115.12",
+      "total_trades": 3205,
+      "markets_traded": 247
+    },
+    "realized_pnl_recent": {
+      "window": [
+        "2026-05-20",
+        "2026-06-20"
+      ],
+      "days_returned": 11,
+      "realized_pnl_sum": -13988.55
+    },
+    "h_score": {
+      "available": false,
+      "note": "不在 H-Score 榜首页（584 无按地址查，官方排名见 official_rank/579）"
+    }
+  },
+  "what_position_actions": {
+    "wallet": "0xb51b3beffd13cde071ed799e70a7b0b598e8b4d9",
+    "condition_id": "0xc0aed6d5d893988b4bef5a8242435bbc7c3b45b1e438bcffc9e9bf71d173ae46",
+    "analyzed_side": "No",
+    "market": {
+      "question": "US-Iran Final Nuclear Deal by August 18, 2026?",
+      "winning_outcome": null,
+      "closed": false,
+      "settle_date": "2026-08-18",
+      "days_to_settlement": 55.0,
+      "settle_note": "还有约55.0天"
+    },
+    "two_side_distribution": {
+      "hedged": false,
+      "by_outcome": {
+        "No": {
+          "trades": 15,
+          "shares": 19533.9
+        }
+      },
+      "note": "仅单边建仓"
+    },
+    "actions": {
+      "entry_time": "2026-06-22 13:08",
+      "last_add_time": "2026-06-25 17:58",
+      "num_buys": 15,
+      "num_sells": 0,
+      "added_over_time": true,
+      "avg_entry_price": 0.7935,
+      "net_shares": 19533.9,
+      "net_cost_usd": 15500.0
+    },
+    "unrealized": {
+      "current_price": 0.78,
+      "price_source": "568最新close",
+      "current_value_usd": 15236.47,
+      "unrealized_pnl_usd": -263.53,
+      "unrealized_pct": -1.7,
+      "note": "持仓中浮盈亏"
+    }
+  },
+  "price_context": {
+    "as_of": "2026-06-25",
+    "analyzed_side": "No",
+    "price_source": "568历史close",
+    "current_price": 0.78,
+    "implied_probability_pct": 78.0,
+    "remaining_upside_per_share_usd": 0.22,
+    "remaining_upside_pct_if_win": 28.21,
+    "downside_per_share_usd": 0.78,
+    "odds_to_one": 0.28,
+    "entry_price": 0.7935,
+    "price_delta": -0.0135,
+    "price_delta_pct": -1.7
+  },
+  "catalysts": {
+    "positive": [
+      {
+        "title": "Interim US-Iran deal leaves the thorniest issue still to be negotiated: Tehran's nuclear program - AP News",
+        "url": "https://apnews.com/article/trump-iran-war-nuclear-talks-d8e5c8ada80c35446d4194201d9a7502",
+        "date": "2026-06-17",
+        "reason": "文章标题明确指出伊朗核计划这一最棘手问题仍有待谈判，说明截至6月17日最终核协议尚未达成",
+        "type": "其他背景",
+        "price_reaction": {
+          "available": false,
+          "reason": "no_price",
+          "note": "新闻时点拿不到价(市场未创建/无成交) → 反应不可知，不编造",
+          "market_check": "市场反应不可知"
+        }
+      },
+      {
+        "title": "Breaking down the billions Iran could receive under Trump's deal - Axios",
+        "url": "https://www.axios.com/2026/06/16/trump-iran-deal-billions-frozen-funds",
+        "date": "2026-06-16",
+        "reason": "文章说明该协议预期在60天谈判窗口期允许伊朗自由售油，且更广泛制裁解除和重建基金取决于'if a final nuclear agreement is reached'，表明最终核协议尚未达成",
+        "type": "其他背景",
+        "price_reaction": {
+          "available": false,
+          "reason": "no_price",
+          "note": "新闻时点拿不到价(市场未创建/无成交) → 反应不可知，不编造",
+          "market_check": "市场反应不可知"
+        }
+      },
+      {
+        "title": "Trump Signs US-Iran Peace Deal At Versailles - Newsweek",
+        "url": "https://www.newsweek.com/videos/trump-signs-us-iran-peace-deal-at-versailles",
+        "date": "2026-06-18",
+        "snippet": "Iran WarRussia-UkraineMiddle EastChina And AsiaLive BlogBetter PlanetAll World News. Trump Signs US-Iran Peace Deal At Versailles. JUN 18, 2026 at 04:39 AM EDT. The United States and Iran have reached a draft agreement to halt the war and restart nuclear negotiations. The deal pauses a Middle East c",
+        "reason": "文章明确提到协议是'draft agreement to halt the war and restart nuclear negotiations'，说明6月18日签署的是重启核谈判的协议草案，而非最终核协议本身",
+        "type": "已生效硬事件",
+        "price_reaction": {
+          "available": false,
+          "reason": "no_price",
+          "note": "新闻时点拿不到价(市场未创建/无成交) → 反应不可知，不编造",
+          "market_check": "市场反应不可知"
+        }
+      }
+    ],
+    "negative": [],
+    "balance_summary": "正向证据按类型陈列：其他背景×2、已生效硬事件×1；负向证据按类型陈列：无。每条已刻明客观事实类型（材质）——系统不替你称量轻重，不同材质的份量请自行掂量。 系统已完成证据陈述，天平由你裁决。",
+    "honesty_caveat": {
+      "positive_side": "fully_backed",
+      "negative_side": "true_clearance"
+    },
+    "guards": {
+      "relevance_dropped": [],
+      "type_deviations": [],
+      "weight_word_hits": [],
+      "weight_in_reason_hits": [],
+      "fear_lexicon_hits": [],
+      "directive_hits": []
+    }
+  },
+  "_audit": {
+    "teacher_tokens_approx": 3343,
+    "free_sources": [
+      "581",
+      "579",
+      "569",
+      "556",
+      "568",
+      "574"
+    ],
+    "catalyst_window": [
+      "2026-06-15",
+      "2026-06-25"
+    ]
+  }
+}

@@ -277,10 +277,15 @@ def synthesize(cid, as_of, entity_terms, outcome="Yes", wallet=None):
     }
 
 
+def cache_file(cid, as_of, outcome="Yes", wallet=None):
+    """该 (盘,as_of,侧,钱包) 的缓存文件路径（refresh 强制重建时由 api 层删除）。"""
+    key = hashlib.md5(f"{cid}|{as_of}|{outcome}|{(wallet or '').lower()}".encode()).hexdigest()
+    return CACHE_DIR / f"{key}.json"
+
+
 def load_or_build(cid, as_of, entity_terms, outcome="Yes", wallet=None):
     CACHE_DIR.mkdir(parents=True, exist_ok=True)
-    key = hashlib.md5(f"{cid}|{as_of}|{outcome}|{(wallet or '').lower()}".encode()).hexdigest()
-    p = CACHE_DIR / f"{key}.json"
+    p = cache_file(cid, as_of, outcome, wallet)
     if p.exists():
         return json.loads(p.read_text(encoding="utf-8"))
     obj = synthesize(cid, as_of, entity_terms, outcome, wallet=wallet)

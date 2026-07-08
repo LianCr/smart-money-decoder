@@ -1,0 +1,282 @@
+{
+  "meta": {
+    "wallet": "0x3c593aeb73ebdadbc9ce76d4264a6a2af4011766",
+    "market": "Will Trump agree to Iranian enrichment of uranium by June 30?",
+    "analyzed_side": "No",
+    "as_of": "2026-06-25",
+    "mode": "live",
+    "catalyst_anchor": "2026-06-25",
+    "settle": "还有约5.0天"
+  },
+  "who_trader_profile": {
+    "wallet": "0x3c593aeb73ebdadbc9ce76d4264a6a2af4011766",
+    "quality": {
+      "combined_risk_score": 10,
+      "max_drawdown": 0.8978,
+      "drawdown_frequency": 0.1333,
+      "avg_trade_size": 305.36,
+      "markets_traded": 42,
+      "num_markets_traded": 42,
+      "category_diversity_score": 0.9358,
+      "market_concentration_ratio": 0.4149,
+      "annualized_return": null,
+      "gain_to_pain_ratio": 13.5396,
+      "equity_curve_pattern": "volatile",
+      "perfect_timing_flag": false,
+      "flagged_metrics": "{position_size_volatility}",
+      "losing_trades": 108,
+      "best_market_pnl": 94619.34,
+      "dominant_market_pnl": 94619.34,
+      "window_days": "15"
+    },
+    "category_specialization": [
+      {
+        "category": "Politics / Global",
+        "roi": 90.4466,
+        "win_rate": 0.4639,
+        "total_pnl": 196827.97,
+        "total_trades": 691
+      },
+      {
+        "category": "Other",
+        "roi": 89.9008,
+        "win_rate": 0.4615,
+        "total_pnl": 196797.88,
+        "total_trades": 689
+      },
+      {
+        "category": "Politics",
+        "roi": 89.8958,
+        "win_rate": 0.4615,
+        "total_pnl": 196797.88,
+        "total_trades": 693
+      },
+      {
+        "category": "Politics / US / Trump",
+        "roi": 92.1528,
+        "win_rate": 0.5909,
+        "total_pnl": 130597.11,
+        "total_trades": 503
+      },
+      {
+        "category": "Politics / US",
+        "roi": 92.1316,
+        "win_rate": 0.5865,
+        "total_pnl": 130567.02,
+        "total_trades": 503
+      },
+      {
+        "category": "Politics / US / Elections",
+        "roi": 0.0,
+        "win_rate": 0.0,
+        "total_pnl": -30.09,
+        "total_trades": 0
+      },
+      {
+        "category": "Finance & Markets",
+        "roi": -0.5526,
+        "win_rate": 0.5,
+        "total_pnl": -239.19,
+        "total_trades": 64
+      },
+      {
+        "category": "Tech & AI",
+        "roi": -5.4618,
+        "win_rate": 0.5,
+        "total_pnl": -239.19,
+        "total_trades": 36
+      },
+      {
+        "category": "Weather & Science",
+        "roi": -7.7674,
+        "win_rate": 0.5,
+        "total_pnl": -239.19,
+        "total_trades": 34
+      }
+    ],
+    "official_rank": {
+      "period": "30d",
+      "rank": 160,
+      "roi": "0.449577",
+      "win_rate": "0.5292",
+      "sharpe_ratio": "0.1088",
+      "total_pnl": "162511.5576",
+      "total_invested": "361476.24",
+      "total_trades": 1466,
+      "markets_traded": 64
+    },
+    "realized_pnl_recent": {
+      "window": [
+        "2026-05-20",
+        "2026-06-20"
+      ],
+      "days_returned": 11,
+      "realized_pnl_sum": -35025.38
+    },
+    "h_score": {
+      "available": true,
+      "h_score": "66.547",
+      "tier": "Sharp",
+      "leaderboard_rank": 1888
+    }
+  },
+  "what_position_actions": {
+    "wallet": "0x3c593aeb73ebdadbc9ce76d4264a6a2af4011766",
+    "condition_id": "0x41ba322441190c465ec75e5866c6a5a3d429cf4d1efe2682026e8dcd5dbc37db",
+    "analyzed_side": "No",
+    "market": {
+      "question": "Will Trump agree to Iranian enrichment of uranium by June 30?",
+      "winning_outcome": null,
+      "closed": false,
+      "settle_date": "2026-06-30",
+      "days_to_settlement": 5.0,
+      "settle_note": "还有约5.0天"
+    },
+    "two_side_distribution": {
+      "hedged": false,
+      "by_outcome": {
+        "No": {
+          "trades": 39,
+          "shares": 17277.7
+        }
+      },
+      "note": "仅单边建仓"
+    },
+    "actions": {
+      "entry_time": "2026-06-20 06:17",
+      "last_add_time": "2026-06-21 16:39",
+      "num_buys": 39,
+      "num_sells": 0,
+      "added_over_time": true,
+      "avg_entry_price": 0.952,
+      "net_shares": 17277.7,
+      "net_cost_usd": 16449.22
+    },
+    "unrealized": {
+      "current_price": 0.979,
+      "price_source": "568最新close",
+      "current_value_usd": 16914.87,
+      "unrealized_pnl_usd": 465.65,
+      "unrealized_pct": 2.83,
+      "note": "持仓中浮盈亏"
+    }
+  },
+  "price_context": {
+    "as_of": "2026-06-25",
+    "analyzed_side": "No",
+    "price_source": "568历史close",
+    "current_price": 0.979,
+    "implied_probability_pct": 97.9,
+    "remaining_upside_per_share_usd": 0.021,
+    "remaining_upside_pct_if_win": 2.15,
+    "downside_per_share_usd": 0.979,
+    "odds_to_one": 0.02,
+    "entry_price": 0.952,
+    "price_delta": 0.027,
+    "price_delta_pct": 2.84
+  },
+  "catalysts": {
+    "positive": [],
+    "negative": [
+      {
+        "title": "Live Updates: Trump signs MoU as Iran says it will not let enriched uranium leave country. US President Donald Trump (front), who attended the G7 summit in France, boards Air Force One at Paris Orly Airport, 13 kilometres (8 miles) south of Paris, in the early hours of June 18, 2026.",
+        "url": "https://www.jpost.com/middle-east/iran-news/2026-06-18/live-updates-899769",
+        "date": "2026-06-18",
+        "reason": "Trump signed a memorandum of understanding with Iran, and Iran simultaneously stated it will not allow enriched uranium to leave the country. If Iran retains the right to keep enriched uranium domestically, this could constitute a form of agreement to enrichment activity continuing within Iran's borders.",
+        "type": "已生效硬事件",
+        "price_reaction": {
+          "available": true,
+          "window": [
+            "2026-06-17",
+            "2026-06-19"
+          ],
+          "price_before": 0.8569,
+          "price_after": 0.95,
+          "move_pct": 10.86,
+          "direction": "▲",
+          "caveat": "该新闻发布前后市场变动，时间相关非因果",
+          "market_check": "⚠️市场反应与该分类不一致"
+        }
+      },
+      {
+        "title": "US-Iran deal: Officials reveal details of agreement as Trump says it will be signed 'shortly' - BBC",
+        "url": "https://www.bbc.com/news/live/c8j2ewl0dpxt",
+        "date": "2026-06-17",
+        "reason": "Trump announced a US-Iran agreement would be signed shortly. Officials revealed a 14-paragraph agreement stating Iran will never have a nuclear weapon, but the details do not explicitly prohibit enrichment itself—only weaponization. If the agreement permits civilian enrichment, outcome No would not materialize.",
+        "type": "当事人直接表态",
+        "price_reaction": {
+          "available": true,
+          "window": [
+            "2026-06-16",
+            "2026-06-18"
+          ],
+          "price_before": 0.8154,
+          "price_after": 0.917,
+          "move_pct": 12.46,
+          "direction": "▲",
+          "caveat": "该新闻发布前后市场变动，时间相关非因果",
+          "market_check": "⚠️市场反应与该分类不一致",
+          "same_window": "同窗2条新闻，变动为合计、不可归因到单条"
+        }
+      },
+      {
+        "title": "Trump's Iran Nuclear Deal Risks Falling Short of Obama Version - Yahoo Finance",
+        "url": "https://finance.yahoo.com/economy/policy/articles/trump-iran-nuclear-deal-risks-113618017.html",
+        "date": "2026-06-17",
+        "reason": "Analysis suggests Trump's emerging nuclear accord with Iran may secure fewer restrictions than Obama's deal. The Obama-era JCPOA permitted limited enrichment under caps; if Trump's deal similarly allows enrichment—even with fewer restrictions—outcome No would not hold.",
+        "type": "其他背景",
+        "price_reaction": {
+          "available": true,
+          "window": [
+            "2026-06-16",
+            "2026-06-18"
+          ],
+          "price_before": 0.8154,
+          "price_after": 0.917,
+          "move_pct": 12.46,
+          "direction": "▲",
+          "caveat": "该新闻发布前后市场变动，时间相关非因果",
+          "market_check": "⚠️市场反应与该分类不一致",
+          "same_window": "同窗2条新闻，变动为合计、不可归因到单条"
+        }
+      }
+    ],
+    "balance_summary": "正向证据按类型陈列：无；负向证据按类型陈列：已生效硬事件×1、当事人直接表态×1、其他背景×1。每条已刻明客观事实类型（材质）——系统不替你称量轻重，不同材质的份量请自行掂量。 系统已完成证据陈述，天平由你裁决。",
+    "honesty_caveat": {
+      "positive_side": "search_vacuum",
+      "negative_side": "fully_backed"
+    },
+    "guards": {
+      "relevance_dropped": [
+        {
+          "title": "Live Updates: Latest from Israel, Iran, and Middle East - The Jerusalem Post",
+          "reason": "核心实体不在标题=边角混入"
+        },
+        {
+          "title": "'We will not give up our right to enrichment': Iran's Pezeshkian - Reuters",
+          "reason": "核心实体不在标题=边角混入"
+        }
+      ],
+      "type_deviations": [],
+      "weight_word_hits": [],
+      "weight_in_reason_hits": [],
+      "fear_lexicon_hits": [],
+      "directive_hits": []
+    }
+  },
+  "_audit": {
+    "teacher_tokens_approx": 3130,
+    "free_sources": [
+      "581",
+      "579",
+      "569",
+      "556",
+      "568",
+      "574"
+    ],
+    "catalyst_window": [
+      "2026-06-15",
+      "2026-06-25"
+    ]
+  }
+}

@@ -1,0 +1,687 @@
+{
+  "profile": {
+    "address": "0x24c8cf69a0e0a17eee21f69d29752bfa32e823e1",
+    "name": "debased",
+    "pseudonym": "Broken-Dogwood",
+    "profile_image": "https://polymarket-upload.s3.us-east-2.amazonaws.com/trump_farmer_b64c6dcd-13e2-4dda-b1c2-0fb46389fb22_1743074825403.png"
+  },
+  "pnl_history": [
+    {
+      "t": 1732752000,
+      "p": 233647.6
+    },
+    {
+      "t": 1733011200,
+      "p": 239172.47
+    },
+    {
+      "t": 1733356800,
+      "p": 255799.72
+    },
+    {
+      "t": 1733616000,
+      "p": 266039.84
+    },
+    {
+      "t": 1733961600,
+      "p": 270179.6
+    },
+    {
+      "t": 1734220800,
+      "p": 276699.25
+    },
+    {
+      "t": 1734566400,
+      "p": 283124.6
+    },
+    {
+      "t": 1734825600,
+      "p": 303745.7
+    },
+    {
+      "t": 1735171200,
+      "p": 316370.47
+    },
+    {
+      "t": 1735516800,
+      "p": 324216.38
+    },
+    {
+      "t": 1735776000,
+      "p": 329538.5
+    },
+    {
+      "t": 1736121600,
+      "p": 337014.44
+    },
+    {
+      "t": 1736380800,
+      "p": 341926.44
+    },
+    {
+      "t": 1736726400,
+      "p": 346334.03
+    },
+    {
+      "t": 1736985600,
+      "p": 354423.28
+    },
+    {
+      "t": 1737331200,
+      "p": 361305.34
+    },
+    {
+      "t": 1737590400,
+      "p": 382937.9
+    },
+    {
+      "t": 1737936000,
+      "p": 392781.62
+    },
+    {
+      "t": 1738281600,
+      "p": 394811.03
+    },
+    {
+      "t": 1738540800,
+      "p": 398857.8
+    },
+    {
+      "t": 1738886400,
+      "p": 404027.7
+    },
+    {
+      "t": 1739145600,
+      "p": 408182.53
+    },
+    {
+      "t": 1739491200,
+      "p": 412888.9
+    },
+    {
+      "t": 1739750400,
+      "p": 417610.22
+    },
+    {
+      "t": 1740096000,
+      "p": 422134.88
+    },
+    {
+      "t": 1740355200,
+      "p": 423957.97
+    },
+    {
+      "t": 1740700800,
+      "p": 426373.34
+    },
+    {
+      "t": 1741046400,
+      "p": 432387.03
+    },
+    {
+      "t": 1741305600,
+      "p": 432857.47
+    },
+    {
+      "t": 1741651200,
+      "p": 439642.28
+    },
+    {
+      "t": 1741910400,
+      "p": 444603.7
+    },
+    {
+      "t": 1742256000,
+      "p": 450951.66
+    },
+    {
+      "t": 1742515200,
+      "p": 458135.88
+    },
+    {
+      "t": 1742860800,
+      "p": 460326.53
+    },
+    {
+      "t": 1743206400,
+      "p": 465097.84
+    },
+    {
+      "t": 1743465600,
+      "p": 468461.6
+    },
+    {
+      "t": 1743811200,
+      "p": 498921.2
+    },
+    {
+      "t": 1744070400,
+      "p": 488214.94
+    },
+    {
+      "t": 1744416000,
+      "p": 493574.84
+    },
+    {
+      "t": 1744675200,
+      "p": 494671.3
+    },
+    {
+      "t": 1745020800,
+      "p": 508413.9
+    },
+    {
+      "t": 1745280000,
+      "p": 515787.56
+    },
+    {
+      "t": 1745625600,
+      "p": 526520.9
+    },
+    {
+      "t": 1745971200,
+      "p": 558879.3
+    },
+    {
+      "t": 1746230400,
+      "p": 570603.06
+    },
+    {
+      "t": 1746576000,
+      "p": 599375.94
+    },
+    {
+      "t": 1746835200,
+      "p": 609236.44
+    },
+    {
+      "t": 1747180800,
+      "p": 623879.5
+    },
+    {
+      "t": 1747440000,
+      "p": 627256.56
+    },
+    {
+      "t": 1747785600,
+      "p": 697115.25
+    },
+    {
+      "t": 1748044800,
+      "p": 685999.25
+    },
+    {
+      "t": 1748390400,
+      "p": 766991.2
+    },
+    {
+      "t": 1748736000,
+      "p": 870141.25
+    },
+    {
+      "t": 1748995200,
+      "p": 760125.75
+    },
+    {
+      "t": 1749340800,
+      "p": 754774.1
+    },
+    {
+      "t": 1749600000,
+      "p": 747921.25
+    },
+    {
+      "t": 1749945600,
+      "p": 731763.25
+    },
+    {
+      "t": 1750204800,
+      "p": 730709.06
+    },
+    {
+      "t": 1750550400,
+      "p": 722008.5
+    },
+    {
+      "t": 1750896000,
+      "p": 745576.44
+    },
+    {
+      "t": 1751155200,
+      "p": 757386.25
+    },
+    {
+      "t": 1751500800,
+      "p": 767305.75
+    },
+    {
+      "t": 1751760000,
+      "p": 772949.75
+    },
+    {
+      "t": 1752105600,
+      "p": 788366.8
+    },
+    {
+      "t": 1752364800,
+      "p": 790282.5
+    },
+    {
+      "t": 1752710400,
+      "p": 789884.2
+    },
+    {
+      "t": 1752969600,
+      "p": 791015.4
+    },
+    {
+      "t": 1753315200,
+      "p": 793305.9
+    },
+    {
+      "t": 1753660800,
+      "p": 794650.0
+    },
+    {
+      "t": 1753920000,
+      "p": 801257.5
+    },
+    {
+      "t": 1754265600,
+      "p": 804449.3
+    },
+    {
+      "t": 1754524800,
+      "p": 806381.5
+    },
+    {
+      "t": 1754870400,
+      "p": 807593.0
+    },
+    {
+      "t": 1755129600,
+      "p": 806869.8
+    },
+    {
+      "t": 1755475200,
+      "p": 812096.2
+    },
+    {
+      "t": 1755734400,
+      "p": 822261.2
+    },
+    {
+      "t": 1756080000,
+      "p": 830142.56
+    },
+    {
+      "t": 1756425600,
+      "p": 836715.7
+    },
+    {
+      "t": 1756684800,
+      "p": 841761.8
+    },
+    {
+      "t": 1757030400,
+      "p": 852996.4
+    },
+    {
+      "t": 1757289600,
+      "p": 861345.3
+    },
+    {
+      "t": 1757635200,
+      "p": 879209.94
+    },
+    {
+      "t": 1757894400,
+      "p": 885519.3
+    },
+    {
+      "t": 1758240000,
+      "p": 920810.5
+    },
+    {
+      "t": 1758585600,
+      "p": 933752.56
+    },
+    {
+      "t": 1758844800,
+      "p": 939713.44
+    },
+    {
+      "t": 1759190400,
+      "p": 943825.3
+    },
+    {
+      "t": 1759449600,
+      "p": 951392.25
+    },
+    {
+      "t": 1759795200,
+      "p": 956711.9
+    },
+    {
+      "t": 1760054400,
+      "p": 966292.5
+    },
+    {
+      "t": 1760400000,
+      "p": 977412.5
+    },
+    {
+      "t": 1760659200,
+      "p": 979873.4
+    },
+    {
+      "t": 1761004800,
+      "p": 990387.94
+    },
+    {
+      "t": 1761350400,
+      "p": 1011612.7
+    },
+    {
+      "t": 1761609600,
+      "p": 1030201.8
+    },
+    {
+      "t": 1761955200,
+      "p": 1047484.44
+    },
+    {
+      "t": 1762214400,
+      "p": 1073614.2
+    },
+    {
+      "t": 1762560000,
+      "p": 1027936.4
+    },
+    {
+      "t": 1762819200,
+      "p": 1033673.3
+    },
+    {
+      "t": 1763164800,
+      "p": 1042367.7
+    },
+    {
+      "t": 1763424000,
+      "p": 1046218.06
+    },
+    {
+      "t": 1763769600,
+      "p": 1050877.2
+    },
+    {
+      "t": 1764115200,
+      "p": 1057072.2
+    },
+    {
+      "t": 1764374400,
+      "p": 1061169.2
+    },
+    {
+      "t": 1764720000,
+      "p": 1077480.5
+    },
+    {
+      "t": 1764979200,
+      "p": 1085355.4
+    },
+    {
+      "t": 1765324800,
+      "p": 1093898.8
+    },
+    {
+      "t": 1765584000,
+      "p": 1098634.0
+    },
+    {
+      "t": 1765929600,
+      "p": 1098902.4
+    },
+    {
+      "t": 1766275200,
+      "p": 1103683.6
+    },
+    {
+      "t": 1766534400,
+      "p": 1106032.8
+    },
+    {
+      "t": 1766880000,
+      "p": 1115921.2
+    },
+    {
+      "t": 1767139200,
+      "p": 1117280.0
+    },
+    {
+      "t": 1767484800,
+      "p": 1108354.1
+    },
+    {
+      "t": 1767744000,
+      "p": 1111095.8
+    },
+    {
+      "t": 1768089600,
+      "p": 1106313.1
+    },
+    {
+      "t": 1768348800,
+      "p": 1110528.4
+    },
+    {
+      "t": 1768694400,
+      "p": 1118519.2
+    },
+    {
+      "t": 1769040000,
+      "p": 1131879.1
+    },
+    {
+      "t": 1769299200,
+      "p": 1139457.9
+    },
+    {
+      "t": 1769644800,
+      "p": 1147470.4
+    },
+    {
+      "t": 1769904000,
+      "p": 1180682.1
+    },
+    {
+      "t": 1770249600,
+      "p": 1201585.2
+    },
+    {
+      "t": 1770508800,
+      "p": 1212492.4
+    },
+    {
+      "t": 1770854400,
+      "p": 1227807.8
+    },
+    {
+      "t": 1771113600,
+      "p": 1232551.8
+    },
+    {
+      "t": 1771459200,
+      "p": 1234833.4
+    },
+    {
+      "t": 1771804800,
+      "p": 1236304.8
+    },
+    {
+      "t": 1772064000,
+      "p": 1236891.9
+    },
+    {
+      "t": 1772409600,
+      "p": 1250319.6
+    },
+    {
+      "t": 1772668800,
+      "p": 1299935.6
+    },
+    {
+      "t": 1773014400,
+      "p": 1308879.1
+    },
+    {
+      "t": 1773273600,
+      "p": 1316604.9
+    },
+    {
+      "t": 1773619200,
+      "p": 1317637.9
+    },
+    {
+      "t": 1773964800,
+      "p": 1324393.0
+    },
+    {
+      "t": 1774224000,
+      "p": 1328221.1
+    },
+    {
+      "t": 1774569600,
+      "p": 1339922.2
+    },
+    {
+      "t": 1774828800,
+      "p": 1345255.5
+    },
+    {
+      "t": 1775174400,
+      "p": 1356304.1
+    },
+    {
+      "t": 1775433600,
+      "p": 1359742.9
+    },
+    {
+      "t": 1775779200,
+      "p": 1383377.4
+    },
+    {
+      "t": 1776038400,
+      "p": 1393017.8
+    },
+    {
+      "t": 1776384000,
+      "p": 1400140.2
+    },
+    {
+      "t": 1776729600,
+      "p": 1409954.6
+    },
+    {
+      "t": 1776988800,
+      "p": 1416302.8
+    },
+    {
+      "t": 1777334400,
+      "p": 1421451.5
+    },
+    {
+      "t": 1777593600,
+      "p": 1614092.9
+    },
+    {
+      "t": 1777939200,
+      "p": 1448392.9
+    },
+    {
+      "t": 1778198400,
+      "p": 1441178.9
+    },
+    {
+      "t": 1778544000,
+      "p": 1684914.5
+    },
+    {
+      "t": 1778803200,
+      "p": 1487360.5
+    },
+    {
+      "t": 1779148800,
+      "p": 1494162.6
+    },
+    {
+      "t": 1779494400,
+      "p": 1475776.4
+    },
+    {
+      "t": 1779753600,
+      "p": 1482531.0
+    },
+    {
+      "t": 1780099200,
+      "p": 1480964.6
+    },
+    {
+      "t": 1780358400,
+      "p": 1480798.6
+    },
+    {
+      "t": 1780704000,
+      "p": 1513219.5
+    },
+    {
+      "t": 1780963200,
+      "p": 1534791.2
+    },
+    {
+      "t": 1781308800,
+      "p": 1651113.4
+    },
+    {
+      "t": 1781546400,
+      "p": 1684219.9
+    }
+  ],
+  "market_question": "Will J.D. Vance win the 2028 Republican presidential nomination?",
+  "outcome": "No",
+  "resolution_date": "2028-11-07T00:00:00Z",
+  "entry_time": null,
+  "time_anchored": false,
+  "search_query": "J.D. Vance 2028 Republican presidential nomination",
+  "price_info": {
+    "entry_price": 0.5,
+    "current_price": 0.6675,
+    "position_value": 333750.0,
+    "cash_pnl": 83750.0,
+    "pnl_pct": 33.5
+  },
+  "what_bet": "The wallet is betting that J.D. Vance will NOT win and accept the 2028 Republican presidential nomination. Under the resolution criteria, the market resolves Yes only if Vance wins and accepts the nomination at the Republican convention; any other outcome—losing the primary, declining the nomination, or the party selecting someone else—pays the wallet. The position wins unless Vance becomes the official GOP nominee.",
+  "catalyst": [
+    {
+      "title": "Marco Rubio Surges in 2028 Republican Presidential Primary Poll - Newsweek",
+      "url": "https://www.newsweek.com/marco-rubio-2028-republican-presidential-primary-poll-12003385",
+      "published_at": "2026-05-28",
+      "relation": "UNANCHORED",
+      "why_relevant": "National polling shows Marco Rubio climbing into a near tie with Vance (36 percent for Vance), directly indicating a contested path to the nomination and raising the probability that Vance does not win it."
+    },
+    {
+      "title": "The 2028 Republican race is Vance's to lose – and Rubio's to win | Opinion - USA Today",
+      "url": "https://www.usatoday.com/story/opinion/columnist/2026/06/08/vance-rubio-2028-republican-primary-election-trump-legacy/90404523007/",
+      "published_at": "2026-06-08",
+      "relation": "UNANCHORED",
+      "why_relevant": "The opinion piece describes Rubio as the stronger candidate and frames the race as Vance's to lose and Rubio's to win, supporting the thesis that Vance faces a credible threat to securing the nomination."
+    }
+  ],
+  "edge_analysis": "The wallet entered at 0.5 and the position has moved 0.1675 in its favor to a current price of 0.6675, capturing two-thirds of the unrealized profit already (33.5 percent unrealized gain). A follower buying No at 0.6675 today has 0.3325 remaining upside per share if Vance loses the nomination, but risks 0.6675 per share if he wins it. The favorable repricing from emerging Rubio competition has already occurred; most of the edge the wallet captured is now priced in.",
+  "follow_call": "CHASED",
+  "confidence": "medium",
+  "reasoning": "The catalyst is credible—national polling and opinion analysis showing Rubio as a serious rival directly bear on whether Vance secures the nomination—but time_anchored is false, so the actual trigger that moved the wallet from 0.5 to 0.6675 is unknown. The 33.5 percent unrealized gain and the fact that two-thirds of the maximum move has already been captured mean a follower is buying into a thesis that the market has substantially absorbed. Medium confidence reflects solid directional evidence tempered by degraded entry timing and diminished price opportunity.",
+  "warnings": [
+    "Entry time unknown or beyond lookback window; articles are recent context, not entry catalysts."
+  ]
+}

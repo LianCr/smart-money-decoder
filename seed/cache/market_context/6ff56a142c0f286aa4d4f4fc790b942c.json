@@ -1,0 +1,85 @@
+{
+  "market_context": {
+    "market_id": "0x7586a96520578acaaaa4ea84a2582f197f84255da1f3392a7aa300386c187b37",
+    "market_slug": "will-benjamin-netanyahu-be-the-next-prime-minister-of-israel",
+    "market_question": "Will Benjamin Netanyahu be the next Prime Minister of Israel?",
+    "analyzed_side": "No",
+    "as_of": "2026-06-20",
+    "wallet": "0x74471a007ddcc488f6d57b5e86dfb35a8d48a16d",
+    "behavioral_flag": {
+      "flag": "STATIC",
+      "fact": "近 48h 仅 0 买 / 0 卖，无显著动作（沉闷持仓）",
+      "honest_note": "动态行为：基本没动",
+      "windows": {
+        "3h": {
+          "buys": 0,
+          "sells": 0,
+          "buy_usd": 0.0,
+          "sell_usd": 0.0
+        },
+        "24h": {
+          "buys": 0,
+          "sells": 0,
+          "buy_usd": 0.0,
+          "sell_usd": 0.0
+        },
+        "48h": {
+          "buys": 0,
+          "sells": 0,
+          "buy_usd": 0.0,
+          "sell_usd": 0.0
+        }
+      }
+    },
+    "ai_experimental_summary": "**市场综述（截至2026-06-20）**\n\n**钱包动态**：近48小时零买入零卖出，大额持仓者呈完全静默状态。\n\n**客观局势**：特朗普公开表示美伊协议接近达成，双方谈判进入实质阶段；同期以色列与伊朗已发生导弹互射，地区紧张局势实际升级。内塔尼亚胡作为现任总理面临外部地缘冲突与潜在外交转向的双重变量，美伊若达成协议可能重塑以色列安全环境及国内政治格局。市场对该职位延续性的定价目前处于观望阶段。\n\n（139字）",
+    "timeline_events": [
+      {
+        "timestamp": "2026-06-14",
+        "type": "catalyst",
+        "title": "trump claims iran deal close as hormuz tensions linger",
+        "source": "maitlandmercury.com.au",
+        "url": "https://www.maitlandmercury.com.au/story/9290782/trump-claims-iran-deal-close-as-hormuz-tensions-linger/",
+        "price_impact_string": "No 价格变动 +6%（66% → 72%）",
+        "fact_summary": "特朗普声称与伊朗的协议接近达成",
+        "temporal_note": "该事件与价格变动时间相关，非确证因果 · 同窗多条,合计不可归因到单条"
+      },
+      {
+        "timestamp": "2026-06-14",
+        "type": "catalyst",
+        "title": "strait showdown hormuz remains open as us and iran edge toward a deal",
+        "source": "africanews.com",
+        "url": "https://www.africanews.com/2026/06/12/strait-showdown-hormuz-remains-open-as-us-and-iran-edge-toward-a-deal/",
+        "price_impact_string": "No 价格变动 +6%（66% → 72%）",
+        "fact_summary": "美国和伊朗正在接近达成协议",
+        "temporal_note": "该事件与价格变动时间相关，非确证因果 · 同窗多条,合计不可归因到单条"
+      },
+      {
+        "timestamp": "2026-06-10",
+        "type": "catalyst",
+        "title": "israel and iran exchange missile fire threatening middle east truce",
+        "source": "wbaa.org",
+        "url": "https://newstalk1090.iheart.com/content/2026-06-08-israel-and-iran-exchange-strikes-amid-rising-tensions/",
+        "price_impact_string": "No 价格变动 -5%（66% → 61%）",
+        "fact_summary": "以色列和伊朗交换导弹袭击",
+        "temporal_note": "该事件与价格变动时间相关，非确证因果 · 同窗多条,合计不可归因到单条"
+      },
+      {
+        "timestamp": "2026-06-10",
+        "type": "catalyst",
+        "title": "06 08 israel and iran exchange strikes amid rising tensions",
+        "source": "iheart.com",
+        "url": "https://newstalk1090.iheart.com/content/2026-06-08-israel-and-iran-exchange-strikes-amid-rising-tensions/",
+        "price_impact_string": "No 价格变动 -5%（66% → 61%）",
+        "fact_summary": "以色列和伊朗在紧张局势升级中相互袭击",
+        "temporal_note": "该事件与价格变动时间相关，非确证因果 · 同窗多条,合计不可归因到单条"
+      }
+    ],
+    "_audit": {
+      "jumps_found": 2,
+      "events": 4,
+      "behavior": "STATIC",
+      "teacher_tokens_approx": 1784,
+      "boundaries": "因果→时间相关 · 无催化剂留白(行为感知内幕) · 价格窗≤as_of · 行为=事实非判断 · 综述无判断"
+    }
+  }
+}

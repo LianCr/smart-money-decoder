@@ -1,0 +1,44 @@
+{
+  "market_context": {
+    "market_id": "0xdf8e2dc5860027decbe6164555c3c1c9645c3bd33e16b9dc57ca87125047d4a8",
+    "market_slug": "will-luiz-incio-lula-da-silva-win-the-2026-brazilian-presidential-election",
+    "market_question": "Will Luiz Inácio Lula da Silva win the 2026 Brazilian presidential election?",
+    "analyzed_side": "Yes",
+    "as_of": "2026-06-25",
+    "wallet": "0x6bab41a0dc40d6dd4c1a915b8c01969479fd1292",
+    "behavioral_flag": {
+      "flag": "STATIC",
+      "fact": "近 48h 仅 0 买 / 0 卖，无显著动作（沉闷持仓）",
+      "honest_note": "动态行为：基本没动",
+      "windows": {
+        "3h": {
+          "buys": 0,
+          "sells": 0,
+          "buy_usd": 0.0,
+          "sell_usd": 0.0
+        },
+        "24h": {
+          "buys": 0,
+          "sells": 0,
+          "buy_usd": 0.0,
+          "sell_usd": 0.0
+        },
+        "48h": {
+          "buys": 0,
+          "sells": 0,
+          "buy_usd": 0.0,
+          "sell_usd": 0.0
+        }
+      }
+    },
+    "ai_experimental_summary": "",
+    "timeline_events": [],
+    "_audit": {
+      "jumps_found": 0,
+      "events": 0,
+      "behavior": "STATIC",
+      "teacher_tokens_approx": 0,
+      "boundaries": "因果→时间相关 · 无催化剂留白(行为感知内幕) · 价格窗≤as_of · 行为=事实非判断 · 综述无判断"
+    }
+  }
+}

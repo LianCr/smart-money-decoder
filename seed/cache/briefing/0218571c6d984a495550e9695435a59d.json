@@ -1,0 +1,296 @@
+{
+  "meta": {
+    "wallet": "0x74471a007ddcc488f6d57b5e86dfb35a8d48a16d",
+    "market": "Will Benjamin Netanyahu be the next Prime Minister of Israel?",
+    "analyzed_side": "No",
+    "as_of": "2026-06-20",
+    "mode": "live",
+    "catalyst_anchor": "2026-06-20",
+    "settle": "还有约194.0天"
+  },
+  "who_trader_profile": {
+    "wallet": "0x74471a007ddcc488f6d57b5e86dfb35a8d48a16d",
+    "quality": {
+      "combined_risk_score": 10,
+      "max_drawdown": 9.9786,
+      "drawdown_frequency": 0.1333,
+      "avg_trade_size": 552.65,
+      "markets_traded": 90,
+      "num_markets_traded": 90,
+      "category_diversity_score": 0.6082,
+      "market_concentration_ratio": 0.6191,
+      "annualized_return": null,
+      "gain_to_pain_ratio": 6.705,
+      "equity_curve_pattern": "volatile",
+      "perfect_timing_flag": false,
+      "flagged_metrics": "{position_size_volatility}",
+      "losing_trades": 221,
+      "best_market_pnl": 521463.16,
+      "dominant_market_pnl": 521463.16,
+      "window_days": "15"
+    },
+    "category_specialization": [
+      {
+        "category": "Politics / US / Trump",
+        "roi": 109.3392,
+        "win_rate": 0.4831,
+        "total_pnl": 528709.93,
+        "total_trades": 862
+      },
+      {
+        "category": "Politics / US",
+        "roi": 107.2485,
+        "win_rate": 0.4831,
+        "total_pnl": 528709.93,
+        "total_trades": 894
+      },
+      {
+        "category": "Politics",
+        "roi": 53.4123,
+        "win_rate": 0.4096,
+        "total_pnl": 482580.87,
+        "total_trades": 1610
+      },
+      {
+        "category": "Politics / Global",
+        "roi": 54.8127,
+        "win_rate": 0.4096,
+        "total_pnl": 482580.87,
+        "total_trades": 1603
+      },
+      {
+        "category": "Other",
+        "roi": 52.4559,
+        "win_rate": 0.382,
+        "total_pnl": 463247.67,
+        "total_trades": 1602
+      },
+      {
+        "category": "Politics / US / Elections",
+        "roi": 0.0,
+        "win_rate": 0.0,
+        "total_pnl": 0.0,
+        "total_trades": 32
+      },
+      {
+        "category": "Finance & Markets",
+        "roi": -56.2763,
+        "win_rate": 0.0,
+        "total_pnl": -44691.24,
+        "total_trades": 312
+      }
+    ],
+    "official_rank": {
+      "period": "30d",
+      "rank": 71,
+      "roi": "0.320309",
+      "win_rate": "0.4277",
+      "sharpe_ratio": "0.0572",
+      "total_pnl": "398624.3934",
+      "total_invested": "1244499.50",
+      "total_trades": 3423,
+      "markets_traded": 139
+    },
+    "realized_pnl_recent": {
+      "window": [
+        "2026-05-20",
+        "2026-06-20"
+      ],
+      "days_returned": 11,
+      "realized_pnl_sum": -16447.85
+    },
+    "h_score": {
+      "available": false,
+      "note": "不在 H-Score 榜首页（584 无按地址查，官方排名见 official_rank/579）"
+    }
+  },
+  "what_position_actions": {
+    "wallet": "0x74471a007ddcc488f6d57b5e86dfb35a8d48a16d",
+    "condition_id": "0x7586a96520578acaaaa4ea84a2582f197f84255da1f3392a7aa300386c187b37",
+    "analyzed_side": "No",
+    "market": {
+      "question": "Will Benjamin Netanyahu be the next Prime Minister of Israel?",
+      "winning_outcome": null,
+      "closed": false,
+      "settle_date": "2026-12-31",
+      "days_to_settlement": 194.0,
+      "settle_note": "还有约194.0天"
+    },
+    "two_side_distribution": {
+      "hedged": false,
+      "by_outcome": {
+        "No": {
+          "trades": 18,
+          "shares": 48338.7
+        }
+      },
+      "note": "仅单边建仓"
+    },
+    "actions": {
+      "entry_time": "2026-04-26 13:14",
+      "last_add_time": "2026-06-22 14:58",
+      "num_buys": 18,
+      "num_sells": 0,
+      "added_over_time": true,
+      "avg_entry_price": 0.652,
+      "net_shares": 48338.7,
+      "net_cost_usd": 31517.27
+    },
+    "unrealized": {
+      "current_price": 0.67,
+      "price_source": "568最新close",
+      "current_value_usd": 32386.95,
+      "unrealized_pnl_usd": 869.67,
+      "unrealized_pct": 2.76,
+      "note": "持仓中浮盈亏"
+    }
+  },
+  "price_context": {
+    "as_of": "2026-06-20",
+    "analyzed_side": "No",
+    "price_source": "568历史close",
+    "current_price": 0.67,
+    "implied_probability_pct": 67.0,
+    "remaining_upside_per_share_usd": 0.33,
+    "remaining_upside_pct_if_win": 49.25,
+    "downside_per_share_usd": 0.67,
+    "odds_to_one": 0.49,
+    "entry_price": 0.652,
+    "price_delta": 0.018,
+    "price_delta_pct": 2.76
+  },
+  "catalysts": {
+    "positive": [
+      {
+        "title": "Israel's Next Leader - The Times of Israel",
+        "url": "https://blogs.timesofisrael.com/israels-next-leader/",
+        "date": "2026-06-17",
+        "reason": "民调显示Netanyahu在即将到来的大选中将无法获得足够席位组建右翼联盟",
+        "type": "民调数据",
+        "price_reaction": {
+          "available": true,
+          "window": [
+            "2026-06-16",
+            "2026-06-18"
+          ],
+          "price_before": 0.67,
+          "price_after": 0.64,
+          "move_pct": -4.48,
+          "direction": "▼",
+          "caveat": "该新闻发布前后市场变动，时间相关非因果",
+          "market_check": "市场反应微弱(<5%)",
+          "same_window": "同窗2条新闻，变动为合计、不可归因到单条"
+        }
+      },
+      {
+        "title": "Likud insists Netanyahu will run and win election after Trump doubts political future - Ynetnews",
+        "url": "https://www.ynetnews.com/article/tq4vuxawj",
+        "date": "2026-06-10",
+        "reason": "美国总统Trump公开质疑Netanyahu是否想继续从政，反映外部对其政治前途的不确定性",
+        "type": "周边压力情绪信号",
+        "price_reaction": {
+          "available": true,
+          "window": [
+            "2026-06-09",
+            "2026-06-11"
+          ],
+          "price_before": 0.66,
+          "price_after": 0.65,
+          "move_pct": -1.52,
+          "direction": "▼",
+          "caveat": "该新闻发布前后市场变动，时间相关非因果",
+          "market_check": "市场反应微弱(<5%)"
+        }
+      },
+      {
+        "title": "Benjamin Netanyahu's election hopes 'undermined' if conflict with Lebanon continues - Sky News Australia",
+        "url": "https://www.skynews.com.au/world-news/global-affairs/benjamin-netanyahus-election-hopes-undermined-if-conflict-with-lebanon-continues/video/2a4c97eff79ed1bb0bcd053886ec4043?amp",
+        "date": "2026-06-20",
+        "reason": "中东专家警告与黎巴嫩的持续冲突可能严重削弱Netanyahu的连任前景",
+        "type": "周边压力情绪信号",
+        "price_reaction": {
+          "available": false,
+          "reason": "as_of_leak_guard",
+          "note": "新闻后价格尚未发生(回测防泄漏)，反应不可知",
+          "market_check": "市场反应不可知"
+        }
+      },
+      {
+        "title": "Netanyahu, Israel's arch-survivor, set to face voter fury over Iran deal - Yahoo",
+        "url": "https://www.yahoo.com/news/articles/netanyahu-israels-arch-survivor-set-100650583.html",
+        "date": "2026-06-17",
+        "reason": "报道指Netanyahu将面临选民对伊朗协议的愤怒",
+        "type": "周边压力情绪信号",
+        "price_reaction": {
+          "available": true,
+          "window": [
+            "2026-06-16",
+            "2026-06-18"
+          ],
+          "price_before": 0.67,
+          "price_after": 0.64,
+          "move_pct": -4.48,
+          "direction": "▼",
+          "caveat": "该新闻发布前后市场变动，时间相关非因果",
+          "market_check": "市场反应微弱(<5%)",
+          "same_window": "同窗2条新闻，变动为合计、不可归因到单条"
+        }
+      }
+    ],
+    "negative": [
+      {
+        "title": "Trump says not clear Netanyahu will run in upcoming elections, remain in politics - Ynetnews",
+        "url": "https://www.ynetnews.com/article/syk0064i11me",
+        "date": "2026-06-10",
+        "reason": "Trump expressed doubt that Netanyahu would continue in politics, stating 'not clear' if he will run in upcoming elections. If Netanyahu does not run, he cannot become the next Prime Minister, which would make outcome=No correct.",
+        "type": "周边压力情绪信号",
+        "price_reaction": {
+          "available": true,
+          "window": [
+            "2026-06-09",
+            "2026-06-11"
+          ],
+          "price_before": 0.66,
+          "price_after": 0.65,
+          "move_pct": -1.52,
+          "direction": "▼",
+          "caveat": "该新闻发布前后市场变动，时间相关非因果",
+          "market_check": "市场反应微弱(<5%)"
+        }
+      }
+    ],
+    "balance_summary": "正向证据按类型陈列：民调数据×1、周边压力情绪信号×3；负向证据按类型陈列：周边压力情绪信号×1。每条已刻明客观事实类型（材质）——系统不替你称量轻重，不同材质的份量请自行掂量。 系统已完成证据陈述，天平由你裁决。",
+    "honesty_caveat": {
+      "positive_side": "fully_backed",
+      "negative_side": "fully_backed"
+    },
+    "guards": {
+      "relevance_dropped": [
+        {
+          "title": "Gadi Eisenkot becomes largest opposition party leader in KAN Knesset election poll - The Jerusalem Post",
+          "reason": "核心实体不在标题=边角混入"
+        }
+      ],
+      "type_deviations": [],
+      "weight_word_hits": [],
+      "weight_in_reason_hits": [],
+      "fear_lexicon_hits": [],
+      "directive_hits": []
+    }
+  },
+  "_audit": {
+    "teacher_tokens_approx": 3059,
+    "free_sources": [
+      "581",
+      "579",
+      "569",
+      "556",
+      "568",
+      "574"
+    ],
+    "catalyst_window": [
+      "2026-06-10",
+      "2026-06-20"
+    ]
+  }
+}

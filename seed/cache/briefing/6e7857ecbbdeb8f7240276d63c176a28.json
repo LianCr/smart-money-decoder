@@ -1,0 +1,240 @@
+{
+  "meta": {
+    "wallet": "0x2d2b732a3dba4b7f790d8b08666e5707bff7b548",
+    "market": "Lee Jae-myung out as president of South Korea in 2026?",
+    "analyzed_side": "No",
+    "as_of": "2026-06-25",
+    "mode": "live",
+    "catalyst_anchor": "2026-06-25",
+    "settle": "还有约189.0天"
+  },
+  "who_trader_profile": {
+    "wallet": "0x2d2b732a3dba4b7f790d8b08666e5707bff7b548",
+    "quality": {
+      "combined_risk_score": 10,
+      "max_drawdown": 0.0032,
+      "drawdown_frequency": 0,
+      "avg_trade_size": 61.18,
+      "markets_traded": 18,
+      "num_markets_traded": 18,
+      "category_diversity_score": 0.6703,
+      "market_concentration_ratio": 0.846,
+      "annualized_return": null,
+      "gain_to_pain_ratio": 6.412,
+      "equity_curve_pattern": "volatile",
+      "perfect_timing_flag": false,
+      "flagged_metrics": "{single_market_dependence}",
+      "losing_trades": 11,
+      "best_market_pnl": 4967.5,
+      "dominant_market_pnl": 4967.5,
+      "window_days": "15"
+    },
+    "category_specialization": [
+      {
+        "category": "Politics / US",
+        "roi": 306.1342,
+        "win_rate": 0.9231,
+        "total_pnl": 5158.9,
+        "total_trades": 21
+      },
+      {
+        "category": "Politics / US / Trump",
+        "roi": 306.1342,
+        "win_rate": 0.9231,
+        "total_pnl": 5158.9,
+        "total_trades": 21
+      },
+      {
+        "category": "Politics",
+        "roi": 82.6732,
+        "win_rate": 0.6,
+        "total_pnl": 4906.97,
+        "total_trades": 97
+      },
+      {
+        "category": "Politics / Global",
+        "roi": 141.2905,
+        "win_rate": 0.7778,
+        "total_pnl": 4762.86,
+        "total_trades": 27
+      },
+      {
+        "category": "Other",
+        "roi": 93.9006,
+        "win_rate": 0.4762,
+        "total_pnl": 4403.38,
+        "total_trades": 96
+      },
+      {
+        "category": "Finance & Markets",
+        "roi": -79.5299,
+        "win_rate": 0.5,
+        "total_pnl": -388.59,
+        "total_trades": 8
+      },
+      {
+        "category": "Tech & AI",
+        "roi": -99.9952,
+        "win_rate": 0.0,
+        "total_pnl": -408.49,
+        "total_trades": 7
+      }
+    ],
+    "official_rank": {
+      "period": "30d",
+      "rank": 3253,
+      "roi": "0.368399",
+      "win_rate": "0.7317",
+      "sharpe_ratio": "0.1963",
+      "total_pnl": "5902.7137",
+      "total_invested": "16022.63",
+      "total_trades": 209,
+      "markets_traded": 31
+    },
+    "realized_pnl_recent": {
+      "window": [
+        "2026-05-20",
+        "2026-06-20"
+      ],
+      "days_returned": 10,
+      "realized_pnl_sum": 126.82
+    },
+    "h_score": {
+      "available": false,
+      "note": "不在 H-Score 榜首页（584 无按地址查，官方排名见 official_rank/579）"
+    }
+  },
+  "what_position_actions": {
+    "wallet": "0x2d2b732a3dba4b7f790d8b08666e5707bff7b548",
+    "condition_id": "0xf4c72ff42c3f1ee9f25e835e62ca52d71a9cafbcc11f93c01af709af8ee5ff09",
+    "analyzed_side": "No",
+    "market": {
+      "question": "Lee Jae-myung out as president of South Korea in 2026?",
+      "winning_outcome": null,
+      "closed": false,
+      "settle_date": "2026-12-31",
+      "days_to_settlement": 189.0,
+      "settle_note": "还有约189.0天"
+    },
+    "two_side_distribution": {
+      "hedged": false,
+      "by_outcome": {
+        "No": {
+          "trades": 3,
+          "shares": 1600.0
+        }
+      },
+      "note": "仅单边建仓"
+    },
+    "actions": {
+      "entry_time": "2026-06-16 03:05",
+      "last_add_time": "2026-06-22 23:59",
+      "num_buys": 3,
+      "num_sells": 0,
+      "added_over_time": true,
+      "avg_entry_price": 0.8379,
+      "net_shares": 1600.0,
+      "net_cost_usd": 1340.59
+    },
+    "unrealized": {
+      "current_price": 0.936,
+      "price_source": "568最新close",
+      "current_value_usd": 1497.59,
+      "unrealized_pnl_usd": 157.0,
+      "unrealized_pct": 11.71,
+      "note": "持仓中浮盈亏"
+    }
+  },
+  "price_context": {
+    "as_of": "2026-06-25",
+    "analyzed_side": "No",
+    "price_source": "568历史close",
+    "current_price": 0.936,
+    "implied_probability_pct": 93.6,
+    "remaining_upside_per_share_usd": 0.064,
+    "remaining_upside_pct_if_win": 6.84,
+    "downside_per_share_usd": 0.936,
+    "odds_to_one": 0.07,
+    "entry_price": 0.8379,
+    "price_delta": 0.0981,
+    "price_delta_pct": 11.71
+  },
+  "catalysts": {
+    "positive": [
+      {
+        "title": "South Korea's Lee leaves G7 with Trump's pen after talks about peace on the peninsula - Reuters",
+        "url": "https://www.reuters.com/world/asia-pacific/south-koreas-lee-leaves-g7-with-trumps-pen-after-talks-about-peace-peninsula-2026-06-18/",
+        "date": "2026-06-18",
+        "reason": "报道显示Lee Jae-myung以韩国总统身份参加2026年6月的G7峰会并与特朗普会谈，证实他在2026年继续担任总统。",
+        "type": "已生效硬事件",
+        "price_reaction": {
+          "available": true,
+          "window": [
+            "2026-06-17",
+            "2026-06-19"
+          ],
+          "price_before": 0.893,
+          "price_after": 0.8928,
+          "move_pct": -0.02,
+          "direction": "▼",
+          "caveat": "该新闻发布前后市场变动，时间相关非因果",
+          "market_check": "市场反应微弱(<5%)"
+        }
+      },
+      {
+        "title": "Rebuilding Korea Party Condemns Han Chan-sik's Anti-Reform Record - 조선일보",
+        "url": "https://www.chosun.com/english/national-en/2026/06/21/G7OZJP6MTZEDNJNN2TLVXCLKOA/",
+        "date": "2026-06-21",
+        "reason": "文章报道Lee Jae-myung总统在6月21日进行高级幕僚人事调整，显示他在2026年仍在执行总统职权。",
+        "type": "已生效硬事件",
+        "price_reaction": {
+          "available": true,
+          "window": [
+            "2026-06-20",
+            "2026-06-22"
+          ],
+          "price_before": 0.908,
+          "price_after": 0.85,
+          "move_pct": -6.39,
+          "direction": "▼",
+          "caveat": "该新闻发布前后市场变动，时间相关非因果",
+          "market_check": "⚠️市场反应与该分类不一致"
+        }
+      }
+    ],
+    "negative": [],
+    "balance_summary": "正向证据按类型陈列：已生效硬事件×2；负向证据按类型陈列：无。每条已刻明客观事实类型（材质）——系统不替你称量轻重，不同材质的份量请自行掂量。 系统已完成证据陈述，天平由你裁决。",
+    "honesty_caveat": {
+      "positive_side": "fully_backed",
+      "negative_side": "true_clearance"
+    },
+    "guards": {
+      "relevance_dropped": [
+        {
+          "title": "President Lee Jae Myung: A Year in Power - Carnegie Endowment for International Peace",
+          "reason": "核心实体不在标题=边角混入"
+        }
+      ],
+      "type_deviations": [],
+      "weight_word_hits": [],
+      "weight_in_reason_hits": [],
+      "fear_lexicon_hits": [],
+      "directive_hits": []
+    }
+  },
+  "_audit": {
+    "teacher_tokens_approx": 2427,
+    "free_sources": [
+      "581",
+      "579",
+      "569",
+      "556",
+      "568",
+      "574"
+    ],
+    "catalyst_window": [
+      "2026-06-15",
+      "2026-06-25"
+    ]
+  }
+}

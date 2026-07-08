@@ -1,0 +1,522 @@
+{
+  "profile": {
+    "address": "0xde7be6d489bce070a959e0cb813128ae659b5f4b",
+    "name": "wan123",
+    "pseudonym": "True-Grandparent",
+    "profile_image": null
+  },
+  "pnl_history": [
+    {
+      "t": 1771718400,
+      "p": 0.005
+    },
+    {
+      "t": 1771804800,
+      "p": -5948.4917
+    },
+    {
+      "t": 1771891200,
+      "p": -3621.651
+    },
+    {
+      "t": 1771977600,
+      "p": -2875.9949
+    },
+    {
+      "t": 1772064000,
+      "p": -9008.594
+    },
+    {
+      "t": 1772150400,
+      "p": 4527.98
+    },
+    {
+      "t": 1772236800,
+      "p": 41293.71
+    },
+    {
+      "t": 1772323200,
+      "p": 262873.28
+    },
+    {
+      "t": 1772409600,
+      "p": 321695.25
+    },
+    {
+      "t": 1772496000,
+      "p": 318347.88
+    },
+    {
+      "t": 1772582400,
+      "p": 302896.0
+    },
+    {
+      "t": 1772668800,
+      "p": 398858.16
+    },
+    {
+      "t": 1772755200,
+      "p": 400965.22
+    },
+    {
+      "t": 1772841600,
+      "p": 413130.22
+    },
+    {
+      "t": 1772928000,
+      "p": 415235.75
+    },
+    {
+      "t": 1773014400,
+      "p": 403003.62
+    },
+    {
+      "t": 1773100800,
+      "p": 537832.7
+    },
+    {
+      "t": 1773187200,
+      "p": 487067.53
+    },
+    {
+      "t": 1773273600,
+      "p": 458770.66
+    },
+    {
+      "t": 1773360000,
+      "p": 419844.94
+    },
+    {
+      "t": 1773446400,
+      "p": 376864.25
+    },
+    {
+      "t": 1773532800,
+      "p": 358492.44
+    },
+    {
+      "t": 1773619200,
+      "p": 355762.03
+    },
+    {
+      "t": 1773705600,
+      "p": 366303.88
+    },
+    {
+      "t": 1773792000,
+      "p": 347837.12
+    },
+    {
+      "t": 1773878400,
+      "p": 315860.84
+    },
+    {
+      "t": 1773964800,
+      "p": 254220.45
+    },
+    {
+      "t": 1774051200,
+      "p": 242949.38
+    },
+    {
+      "t": 1774137600,
+      "p": 264293.72
+    },
+    {
+      "t": 1774224000,
+      "p": 293466.4
+    },
+    {
+      "t": 1774310400,
+      "p": 367565.75
+    },
+    {
+      "t": 1774396800,
+      "p": 394823.53
+    },
+    {
+      "t": 1774483200,
+      "p": 325844.44
+    },
+    {
+      "t": 1774569600,
+      "p": 255918.89
+    },
+    {
+      "t": 1774656000,
+      "p": 225372.5
+    },
+    {
+      "t": 1774742400,
+      "p": 203252.33
+    },
+    {
+      "t": 1774828800,
+      "p": 150581.06
+    },
+    {
+      "t": 1774915200,
+      "p": 152646.48
+    },
+    {
+      "t": 1775001600,
+      "p": 222056.72
+    },
+    {
+      "t": 1775088000,
+      "p": 238778.73
+    },
+    {
+      "t": 1775174400,
+      "p": 126221.51
+    },
+    {
+      "t": 1775260800,
+      "p": 55342.37
+    },
+    {
+      "t": 1775347200,
+      "p": 35216.47
+    },
+    {
+      "t": 1775433600,
+      "p": 42723.47
+    },
+    {
+      "t": 1775520000,
+      "p": 68711.99
+    },
+    {
+      "t": 1775606400,
+      "p": 735876.9
+    },
+    {
+      "t": 1775692800,
+      "p": 715940.6
+    },
+    {
+      "t": 1775779200,
+      "p": 745740.1
+    },
+    {
+      "t": 1775865600,
+      "p": 746548.0
+    },
+    {
+      "t": 1775952000,
+      "p": 775273.44
+    },
+    {
+      "t": 1776038400,
+      "p": 735574.44
+    },
+    {
+      "t": 1776124800,
+      "p": 762833.25
+    },
+    {
+      "t": 1776211200,
+      "p": 791306.56
+    },
+    {
+      "t": 1776297600,
+      "p": 768087.3
+    },
+    {
+      "t": 1776384000,
+      "p": 819168.94
+    },
+    {
+      "t": 1776470400,
+      "p": 910531.7
+    },
+    {
+      "t": 1776556800,
+      "p": 800944.44
+    },
+    {
+      "t": 1776643200,
+      "p": 754533.56
+    },
+    {
+      "t": 1776729600,
+      "p": 743394.75
+    },
+    {
+      "t": 1776816000,
+      "p": 629406.0
+    },
+    {
+      "t": 1776902400,
+      "p": 563215.56
+    },
+    {
+      "t": 1776988800,
+      "p": 548422.25
+    },
+    {
+      "t": 1777075200,
+      "p": 571694.75
+    },
+    {
+      "t": 1777161600,
+      "p": 483003.28
+    },
+    {
+      "t": 1777248000,
+      "p": 459150.0
+    },
+    {
+      "t": 1777334400,
+      "p": 451168.8
+    },
+    {
+      "t": 1777420800,
+      "p": 424934.94
+    },
+    {
+      "t": 1777507200,
+      "p": 427241.2
+    },
+    {
+      "t": 1777593600,
+      "p": 420891.84
+    },
+    {
+      "t": 1777680000,
+      "p": 409696.25
+    },
+    {
+      "t": 1777766400,
+      "p": 399738.78
+    },
+    {
+      "t": 1777852800,
+      "p": 410135.2
+    },
+    {
+      "t": 1777939200,
+      "p": 407286.78
+    },
+    {
+      "t": 1778025600,
+      "p": 494835.97
+    },
+    {
+      "t": 1778112000,
+      "p": 543484.7
+    },
+    {
+      "t": 1778198400,
+      "p": 550739.06
+    },
+    {
+      "t": 1778284800,
+      "p": 720891.2
+    },
+    {
+      "t": 1778371200,
+      "p": 1276232.6
+    },
+    {
+      "t": 1778457600,
+      "p": 1189941.2
+    },
+    {
+      "t": 1778544000,
+      "p": 1227573.9
+    },
+    {
+      "t": 1778630400,
+      "p": 1168136.9
+    },
+    {
+      "t": 1778716800,
+      "p": 1148257.4
+    },
+    {
+      "t": 1778803200,
+      "p": 1121169.8
+    },
+    {
+      "t": 1778889600,
+      "p": 1116766.4
+    },
+    {
+      "t": 1778976000,
+      "p": 1068543.2
+    },
+    {
+      "t": 1779062400,
+      "p": 1078791.8
+    },
+    {
+      "t": 1779148800,
+      "p": 1138757.1
+    },
+    {
+      "t": 1779235200,
+      "p": 1064084.8
+    },
+    {
+      "t": 1779321600,
+      "p": 1203684.5
+    },
+    {
+      "t": 1779408000,
+      "p": 1199434.4
+    },
+    {
+      "t": 1779494400,
+      "p": 1112439.2
+    },
+    {
+      "t": 1779580800,
+      "p": 1788930.2
+    },
+    {
+      "t": 1779667200,
+      "p": 1173993.1
+    },
+    {
+      "t": 1779753600,
+      "p": 1229099.4
+    },
+    {
+      "t": 1779840000,
+      "p": 1087958.4
+    },
+    {
+      "t": 1779926400,
+      "p": 885121.7
+    },
+    {
+      "t": 1780012800,
+      "p": 817444.9
+    },
+    {
+      "t": 1780099200,
+      "p": 674448.8
+    },
+    {
+      "t": 1780185600,
+      "p": 529577.7
+    },
+    {
+      "t": 1780272000,
+      "p": 344783.53
+    },
+    {
+      "t": 1780358400,
+      "p": 387000.28
+    },
+    {
+      "t": 1780444800,
+      "p": 371714.78
+    },
+    {
+      "t": 1780531200,
+      "p": 387082.94
+    },
+    {
+      "t": 1780617600,
+      "p": 376343.53
+    },
+    {
+      "t": 1780704000,
+      "p": 337999.12
+    },
+    {
+      "t": 1780790400,
+      "p": 305058.28
+    },
+    {
+      "t": 1780876800,
+      "p": 307816.9
+    },
+    {
+      "t": 1780963200,
+      "p": 290663.0
+    },
+    {
+      "t": 1781049600,
+      "p": 287850.5
+    },
+    {
+      "t": 1781136000,
+      "p": 258637.38
+    },
+    {
+      "t": 1781222400,
+      "p": 416192.84
+    },
+    {
+      "t": 1781308800,
+      "p": 467545.2
+    },
+    {
+      "t": 1781395200,
+      "p": 591093.25
+    },
+    {
+      "t": 1781481600,
+      "p": 1405339.8
+    },
+    {
+      "t": 1781568000,
+      "p": 1653635.2
+    },
+    {
+      "t": 1781654400,
+      "p": 1712553.0
+    },
+    {
+      "t": 1781740800,
+      "p": 1743500.8
+    },
+    {
+      "t": 1781827200,
+      "p": 1700755.9
+    },
+    {
+      "t": 1781913600,
+      "p": 1648675.8
+    },
+    {
+      "t": 1782000000,
+      "p": 1647221.8
+    },
+    {
+      "t": 1782010800,
+      "p": 1653315.1
+    }
+  ],
+  "market_question": "Will the Iranian regime fall before 2027?",
+  "outcome": "No",
+  "resolution_date": "2026-12-31T00:00:00Z",
+  "entry_time": 1772270477,
+  "time_anchored": true,
+  "search_query": "Iranian regime fall",
+  "price_info": {
+    "entry_price": 0.4131,
+    "current_price": 0.905,
+    "position_value": 96920.1131,
+    "cash_pnl": 52678.2768,
+    "pnl_pct": 119.0689
+  },
+  "what_bet": "The wallet is betting No on the Iranian regime falling before December 31, 2026. To win, the Islamic Republic's core governing structures—the office of the Supreme Leader, the Guardian Council, and IRGC control under clerical authority—must remain in de facto power over a majority of Iran's population through the resolution date. The settlement rules exclude routine succession, internal power shifts that preserve the regime's framework, and partial territorial loss; only a complete break in continuity qualifies as a fall.",
+  "catalyst": [
+    {
+      "title": "'The day is approaching for Iran's regime to fall': Netanyahu at Beit Shemesh strike site - Ynetnews",
+      "url": "https://www.ynetnets.com/article/b18xyexk11e",
+      "published_at": "2026-03-02",
+      "relation": "BEFORE_ENTRY",
+      "why_relevant": "Netanyahu's statement at a missile-strike site frames regime-fall rhetoric as an approaching event, which may have prompted the wallet to fade political optimism and bet on regime durability through year-end."
+    }
+  ],
+  "edge_analysis": "The wallet entered at 0.4131 and has captured a favorable price move of 0.4919, reflecting market consensus that regime collapse by year-end is now significantly less probable. A follower buying No today at 0.905 has 0.095 of upside remaining if the regime survives and faces 0.905 of downside if the regime falls. The bulk of the directional move has already occurred.",
+  "follow_call": "CHASED",
+  "confidence": "low",
+  "reasoning": "The catalyst is rhetorical—a political statement about future likelihood, not a concrete event that directly shifts resolution probability. The wallet has already harvested a 119.07% gain as the market repriced toward regime stability. Time anchoring confirms the entry preceded the statement, but the 0.095 of remaining upside offers poor risk-reward at this late price, and the single opinion-piece catalyst provides no structural evidence of regime durability through December 31, 2026.",
+  "warnings": []
+}

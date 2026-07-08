@@ -1,0 +1,101 @@
+{
+  "profile": {
+    "address": "0x7bc14171ccb0d3e6bac219ec6a76211826e28db4",
+    "name": "coali10",
+    "pseudonym": "Defiant-Competence-Initiative",
+    "profile_image": null
+  },
+  "pnl_history": [
+    {
+      "t": 1780444800,
+      "p": 3692.49
+    },
+    {
+      "t": 1780531200,
+      "p": 190179.1
+    },
+    {
+      "t": 1780617600,
+      "p": 130813.07
+    },
+    {
+      "t": 1780704000,
+      "p": 107989.78
+    },
+    {
+      "t": 1780790400,
+      "p": 82079.016
+    },
+    {
+      "t": 1780876800,
+      "p": 80214.555
+    },
+    {
+      "t": 1780963200,
+      "p": 76681.55
+    },
+    {
+      "t": 1781049600,
+      "p": 83601.71
+    },
+    {
+      "t": 1781136000,
+      "p": 93901.08
+    },
+    {
+      "t": 1781222400,
+      "p": 121560.92
+    },
+    {
+      "t": 1781308800,
+      "p": 129541.75
+    },
+    {
+      "t": 1781395200,
+      "p": 126402.805
+    },
+    {
+      "t": 1781481600,
+      "p": 402857.53
+    },
+    {
+      "t": 1781560800,
+      "p": 430928.56
+    }
+  ],
+  "market_question": "US x Iran permanent peace deal by June 15, 2026?",
+  "outcome": "Yes",
+  "resolution_date": "2026-12-31T00:00:00Z",
+  "entry_time": 1781473141,
+  "time_anchored": true,
+  "search_query": "US Iran peace deal",
+  "price_info": {
+    "entry_price": 0.8154,
+    "current_price": 0.939,
+    "position_value": 347115.3933,
+    "cash_pnl": 45661.3849,
+    "pnl_pct": 15.147
+  },
+  "what_bet": "The wallet is betting that the United States and Iran will sign and publicly confirm a permanent peace deal—an agreement explicitly ending military hostilities on a lasting basis, not merely a temporary ceasefire—by June 15, 2026, 11:59 PM ET. The market title names June 15, 2026 as the deadline; resolution_date_human is December 31, 2026, but resolution_criteria explicitly states the agreement must occur 'by the specified date, 11:59 PM ET,' meaning June 15, 2026 is the operative cutoff for a Yes outcome.",
+  "catalyst": [
+    {
+      "title": "U.S.-Iran Peace Deal Expected To Be Signed Sunday, Trump Says - Forbes",
+      "url": "https://www.forbes.com/sites/antoniopequenoiv/2026/06/13/us-iran-peace-deal-expected-to-be-signed-sunday-trump-says/",
+      "published_at": "2026-06-13",
+      "relation": "BEFORE_ENTRY",
+      "why_relevant": "President Trump announced Saturday that a peace agreement between the U.S. and Iran is scheduled for signing Sunday, marking a potential end to hostilities—directly addressing the requirement for a definitive agreement by the June 15 deadline."
+    },
+    {
+      "title": "US, Iran reach peace deal, signing set for Friday, Pakistan says - Reuters",
+      "url": "https://www.reuters.com/world/asia-pacific/us-iran-reach-peace-deal-signing-set-friday-pakistan-says-2026-06-14/",
+      "published_at": "2026-06-14",
+      "relation": "BEFORE_ENTRY",
+      "why_relevant": "Reports that the United States and Iran have reached a deal to end conflict, with a signing set for Friday June 14, satisfy the resolution criteria of both governments providing clear public confirmation of a qualifying agreement before the June 15 cutoff."
+    }
+  ],
+  "edge_analysis": "The wallet entered at 0.8154 and has captured a price_delta of 0.1236 as the market moved to 0.939. A follower buying today at 0.939 has follower_max_upside of 0.061 per share if the deal is officially confirmed by June 15, 2026, but faces follower_max_loss of 0.939 if the agreement fails to meet resolution criteria or is not finalized by the deadline. Most of the favorable move has already occurred; the wallet captured fifteen cents of upside, leaving six cents for new entrants.",
+  "follow_call": "CHASED",
+  "confidence": "high",
+  "reasoning": "Multiple credible sources published before entry confirm that both governments announced a peace deal with signing ceremonies scheduled at or before the June 15 deadline, directly satisfying the resolution criteria. The time_anchored catalyst is unambiguous. However, the wallet's 15.147% gain reflects a price_delta of 0.1236, leaving only 0.061 follower_max_upside—the market has already priced in the likelihood of formal confirmation, and a follower today is paying for an outcome the wallet bought at a steep discount.",
+  "warnings": []
+}

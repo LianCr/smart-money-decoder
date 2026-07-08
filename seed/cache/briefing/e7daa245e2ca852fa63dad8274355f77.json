@@ -1,0 +1,361 @@
+{
+  "meta": {
+    "wallet": "0x9d84ce0306f8551e02efef1680475fc0f1dc1344",
+    "market": "Will Keir Starmer be the next leader out before 2027?",
+    "analyzed_side": "Yes",
+    "as_of": "2026-06-25",
+    "mode": "live",
+    "catalyst_anchor": "2026-06-25",
+    "settle": "还有约189.0天"
+  },
+  "who_trader_profile": {
+    "wallet": "0x9d84ce0306f8551e02efef1680475fc0f1dc1344",
+    "quality": {
+      "combined_risk_score": 35,
+      "max_drawdown": 0,
+      "drawdown_frequency": 0,
+      "avg_trade_size": 179.19,
+      "markets_traded": 60,
+      "num_markets_traded": 60,
+      "category_diversity_score": 0.8278,
+      "market_concentration_ratio": 0.4985,
+      "annualized_return": null,
+      "gain_to_pain_ratio": 100,
+      "equity_curve_pattern": "volatile",
+      "perfect_timing_flag": false,
+      "flagged_metrics": "{suspicious_win_rate,position_size_volatility}",
+      "losing_trades": 26,
+      "best_market_pnl": 94301.35,
+      "dominant_market_pnl": 94301.35,
+      "window_days": "15"
+    },
+    "category_specialization": [
+      {
+        "category": "Other",
+        "roi": 25.0234,
+        "win_rate": 0.9226,
+        "total_pnl": 137298.19,
+        "total_trades": 3068
+      },
+      {
+        "category": "Politics",
+        "roi": 29.0785,
+        "win_rate": 0.9431,
+        "total_pnl": 135290.88,
+        "total_trades": 1015
+      },
+      {
+        "category": "Politics / Global",
+        "roi": 29.282,
+        "win_rate": 0.9559,
+        "total_pnl": 133553.75,
+        "total_trades": 854
+      },
+      {
+        "category": "Politics / US",
+        "roi": 4.1425,
+        "win_rate": 0.9397,
+        "total_pnl": 16504.93,
+        "total_trades": 587
+      },
+      {
+        "category": "Politics / US / Trump",
+        "roi": 3.9564,
+        "win_rate": 0.9737,
+        "total_pnl": 15585.59,
+        "total_trades": 303
+      },
+      {
+        "category": "Sports / Soccer",
+        "roi": 4.7921,
+        "win_rate": 1.0,
+        "total_pnl": 3090.0,
+        "total_trades": 2028
+      },
+      {
+        "category": "Sports",
+        "roi": 4.7921,
+        "win_rate": 1.0,
+        "total_pnl": 3090.0,
+        "total_trades": 2028
+      },
+      {
+        "category": "Tech & AI",
+        "roi": 0.0,
+        "win_rate": 0.4167,
+        "total_pnl": 846.97,
+        "total_trades": 0
+      },
+      {
+        "category": "Politics / US / Elections",
+        "roi": 10.064,
+        "win_rate": 0.85,
+        "total_pnl": 452.97,
+        "total_trades": 284
+      },
+      {
+        "category": "Finance & Markets",
+        "roi": 0.0,
+        "win_rate": 0.3636,
+        "total_pnl": 389.03,
+        "total_trades": 0
+      },
+      {
+        "category": "Weather & Science",
+        "roi": 0.0,
+        "win_rate": 0.0,
+        "total_pnl": -88.8,
+        "total_trades": 0
+      },
+      {
+        "category": "Culture & Entertainment",
+        "roi": -1.0147,
+        "win_rate": 0.0,
+        "total_pnl": -207.19,
+        "total_trades": 27
+      }
+    ],
+    "official_rank": {
+      "period": "30d",
+      "rank": 252,
+      "roi": "0.179205",
+      "win_rate": "0.8988",
+      "sharpe_ratio": "0.0731",
+      "total_pnl": "104553.3067",
+      "total_invested": "583429.28",
+      "total_trades": 4178,
+      "markets_traded": 86
+    },
+    "realized_pnl_recent": {
+      "window": [
+        "2026-05-20",
+        "2026-06-20"
+      ],
+      "days_returned": 5,
+      "realized_pnl_sum": -46048.54
+    },
+    "h_score": {
+      "available": true,
+      "h_score": "79.417",
+      "tier": "Elite",
+      "leaderboard_rank": 296
+    }
+  },
+  "what_position_actions": {
+    "wallet": "0x9d84ce0306f8551e02efef1680475fc0f1dc1344",
+    "condition_id": "0xc8aaa82e283d68aba57ce829af58ce6ed3d5e94e23e9395b50dd579b2c657708",
+    "analyzed_side": "Yes",
+    "market": {
+      "question": "Will Keir Starmer be the next leader out before 2027?",
+      "winning_outcome": null,
+      "closed": false,
+      "settle_date": "2026-12-31",
+      "days_to_settlement": 189.0,
+      "settle_note": "还有约189.0天"
+    },
+    "two_side_distribution": {
+      "hedged": true,
+      "by_outcome": {
+        "Yes": {
+          "trades": 26,
+          "shares": 10061.2
+        },
+        "No": {
+          "trades": 8,
+          "shares": 3039.6
+        }
+      },
+      "note": "两边都大额建仓 = 做市/对冲玩家（非单边赌徒，接 #28）"
+    },
+    "actions": {
+      "entry_time": "2026-06-21 17:23",
+      "last_add_time": "2026-06-22 08:47",
+      "num_buys": 26,
+      "num_sells": 0,
+      "added_over_time": true,
+      "avg_entry_price": 0.3369,
+      "net_shares": 10061.2,
+      "net_cost_usd": 3390.05
+    },
+    "unrealized": {
+      "current_price": 0.89,
+      "price_source": "568最新close",
+      "current_value_usd": 8954.49,
+      "unrealized_pnl_usd": 5564.43,
+      "unrealized_pct": 164.14,
+      "note": "持仓中浮盈亏"
+    }
+  },
+  "price_context": {
+    "as_of": "2026-06-25",
+    "analyzed_side": "Yes",
+    "price_source": "568历史close",
+    "current_price": 0.89,
+    "implied_probability_pct": 89.0,
+    "remaining_upside_per_share_usd": 0.11,
+    "remaining_upside_pct_if_win": 12.36,
+    "downside_per_share_usd": 0.89,
+    "odds_to_one": 0.12,
+    "entry_price": 0.3369,
+    "price_delta": 0.5531,
+    "price_delta_pct": 164.17
+  },
+  "catalysts": {
+    "positive": [
+      {
+        "title": "Starmer Announces Resignation; Burnham Wins Key Endorsement - The New York Times",
+        "url": "https://www.nytimes.com/live/2026/06/22/world/uk-keir-starmer-resign",
+        "date": "2026-06-22",
+        "reason": "Keir Starmer 宣布辞去工党领袖职务，时间在2027年之前",
+        "type": "当事人直接表态",
+        "price_reaction": {
+          "available": true,
+          "window": [
+            "2026-06-21",
+            "2026-06-23"
+          ],
+          "price_before": 0.4,
+          "price_after": 0.82,
+          "move_pct": 105.0,
+          "direction": "▲",
+          "caveat": "该新闻发布前后市场变动，时间相关非因果",
+          "market_check": "市场印证该分类",
+          "same_window": "同窗5条新闻，变动为合计、不可归因到单条"
+        }
+      },
+      {
+        "title": "Why the forces that felled Keir Starmer threaten so many Western leaders - CNN",
+        "url": "https://www.cnn.com/2026/06/22/politics/keir-starmer-western-leaders-voter-anger",
+        "date": "2026-06-22",
+        "reason": "Keir Starmer 于2026年6月22日宣布辞去英国首相和工党领袖职务",
+        "type": "当事人直接表态",
+        "price_reaction": {
+          "available": true,
+          "window": [
+            "2026-06-21",
+            "2026-06-23"
+          ],
+          "price_before": 0.4,
+          "price_after": 0.82,
+          "move_pct": 105.0,
+          "direction": "▲",
+          "caveat": "该新闻发布前后市场变动，时间相关非因果",
+          "market_check": "市场印证该分类",
+          "same_window": "同窗5条新闻，变动为合计、不可归因到单条"
+        }
+      },
+      {
+        "title": "UK minister says PM Starmer is considering 'political realities' amid leadership pressure - CNBC",
+        "url": "https://www.cnbc.com/2026/06/21/uk-minister-is-considering-political-realities.html",
+        "date": "2026-06-21",
+        "reason": "英国部长表示 Starmer 面临领导层压力，正在考虑政治现实，且可能很快面临正式的领导权挑战",
+        "type": "周边压力情绪信号",
+        "price_reaction": {
+          "available": true,
+          "window": [
+            "2026-06-20",
+            "2026-06-22"
+          ],
+          "price_before": 0.53,
+          "price_after": 0.8,
+          "move_pct": 50.94,
+          "direction": "▲",
+          "caveat": "该新闻发布前后市场变动，时间相关非因果",
+          "market_check": "市场印证该分类"
+        }
+      },
+      {
+        "title": "UK Prime Minister Keir Starmer Has Resigned - Industrial Equipment News",
+        "url": "https://www.ien.com/supply-chain/news/22969299/uk-prime-minister-keir-starmer-has-resigned",
+        "date": "2026-06-22",
+        "reason": "Keir Starmer 于2026年6月22日在唐宁街10号宣布辞职",
+        "type": "当事人直接表态",
+        "price_reaction": {
+          "available": true,
+          "window": [
+            "2026-06-21",
+            "2026-06-23"
+          ],
+          "price_before": 0.4,
+          "price_after": 0.82,
+          "move_pct": 105.0,
+          "direction": "▲",
+          "caveat": "该新闻发布前后市场变动，时间相关非因果",
+          "market_check": "市场印证该分类",
+          "same_window": "同窗5条新闻，变动为合计、不可归因到单条"
+        }
+      },
+      {
+        "title": "Keir Starmer says he will quit as U.K. prime minister after facing rebellion from his own MPs - NBC News",
+        "url": "https://www.nbcnews.com/world/united-kingdom/keir-starmer-resigns-prime-minister-andy-burnham-labour-party-britain-rcna257534",
+        "date": "2026-06-22",
+        "reason": "Keir Starmer 宣布将辞去英国首相职务，时间在2027年之前",
+        "type": "当事人直接表态",
+        "price_reaction": {
+          "available": true,
+          "window": [
+            "2026-06-21",
+            "2026-06-23"
+          ],
+          "price_before": 0.4,
+          "price_after": 0.82,
+          "move_pct": 105.0,
+          "direction": "▲",
+          "caveat": "该新闻发布前后市场变动，时间相关非因果",
+          "market_check": "市场印证该分类",
+          "same_window": "同窗5条新闻，变动为合计、不可归因到单条"
+        }
+      },
+      {
+        "title": "Keir Starmer announces he'll resign as UK prime minister, kicking off contest for Labour successor - AP News",
+        "url": "https://apnews.com/article/keir-starmer-resignation-pressure-burnham-uk-politics-8aa1c427418c487fe644f5d5c40d1518",
+        "date": "2026-06-22",
+        "reason": "Keir Starmer 于2026年6月22日在伦敦唐宁街10号宣布辞职",
+        "type": "当事人直接表态",
+        "price_reaction": {
+          "available": true,
+          "window": [
+            "2026-06-21",
+            "2026-06-23"
+          ],
+          "price_before": 0.4,
+          "price_after": 0.82,
+          "move_pct": 105.0,
+          "direction": "▲",
+          "caveat": "该新闻发布前后市场变动，时间相关非因果",
+          "market_check": "市场印证该分类",
+          "same_window": "同窗5条新闻，变动为合计、不可归因到单条"
+        }
+      }
+    ],
+    "negative": [],
+    "balance_summary": "正向证据按类型陈列：当事人直接表态×5、周边压力情绪信号×1；负向证据按类型陈列：无。每条已刻明客观事实类型（材质）——系统不替你称量轻重，不同材质的份量请自行掂量。 系统已完成证据陈述，天平由你裁决。",
+    "honesty_caveat": {
+      "positive_side": "fully_backed",
+      "negative_side": "true_clearance"
+    },
+    "guards": {
+      "relevance_dropped": [],
+      "type_deviations": [],
+      "weight_word_hits": [],
+      "weight_in_reason_hits": [],
+      "fear_lexicon_hits": [],
+      "directive_hits": []
+    }
+  },
+  "_audit": {
+    "teacher_tokens_approx": 3017,
+    "free_sources": [
+      "581",
+      "579",
+      "569",
+      "556",
+      "568",
+      "574"
+    ],
+    "catalyst_window": [
+      "2026-06-15",
+      "2026-06-25"
+    ]
+  }
+}

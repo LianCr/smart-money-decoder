@@ -1,0 +1,44 @@
+{
+  "market_context": {
+    "market_id": "0x0de4c5e098c5101f7cce39d11dd3294873381b78c2794b6c6aea3142117f03a1",
+    "market_slug": "will-wes-streeting-be-the-next-prime-minister-of-the-united-kingdom-in-2026-137",
+    "market_question": "Will Wes Streeting be the next Prime Minister of the United Kingdom in 2026?",
+    "analyzed_side": "No",
+    "as_of": "2026-06-20",
+    "wallet": "0x9d84ce0306f8551e02efef1680475fc0f1dc1344",
+    "behavioral_flag": {
+      "flag": "STATIC",
+      "fact": "近 48h 仅 0 买 / 0 卖，无显著动作（沉闷持仓）",
+      "honest_note": "动态行为：基本没动",
+      "windows": {
+        "3h": {
+          "buys": 0,
+          "sells": 0,
+          "buy_usd": 0.0,
+          "sell_usd": 0.0
+        },
+        "24h": {
+          "buys": 0,
+          "sells": 0,
+          "buy_usd": 0.0,
+          "sell_usd": 0.0
+        },
+        "48h": {
+          "buys": 0,
+          "sells": 0,
+          "buy_usd": 0.0,
+          "sell_usd": 0.0
+        }
+      }
+    },
+    "ai_experimental_summary": "",
+    "timeline_events": [],
+    "_audit": {
+      "jumps_found": 0,
+      "events": 0,
+      "behavior": "STATIC",
+      "teacher_tokens_approx": 0,
+      "boundaries": "因果→时间相关 · 无催化剂留白(行为感知内幕) · 价格窗≤as_of · 行为=事实非判断 · 综述无判断"
+    }
+  }
+}

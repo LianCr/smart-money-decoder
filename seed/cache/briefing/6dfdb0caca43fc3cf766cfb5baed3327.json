@@ -1,0 +1,288 @@
+{
+  "meta": {
+    "wallet": "0x6bab41a0dc40d6dd4c1a915b8c01969479fd1292",
+    "market": "Will Luiz Inácio Lula da Silva win the 2026 Brazilian presidential election?",
+    "analyzed_side": "Yes",
+    "as_of": "2026-06-25",
+    "mode": "live",
+    "catalyst_anchor": "2026-06-25",
+    "settle": "还有约101.0天"
+  },
+  "who_trader_profile": {
+    "wallet": "0x6bab41a0dc40d6dd4c1a915b8c01969479fd1292",
+    "quality": {
+      "combined_risk_score": 35,
+      "max_drawdown": 0.0088,
+      "drawdown_frequency": 0,
+      "avg_trade_size": 618.35,
+      "markets_traded": 28,
+      "num_markets_traded": 28,
+      "category_diversity_score": 0.5316,
+      "market_concentration_ratio": 0.6061,
+      "annualized_return": null,
+      "gain_to_pain_ratio": 100,
+      "equity_curve_pattern": "volatile",
+      "perfect_timing_flag": false,
+      "flagged_metrics": "{suspicious_win_rate,position_size_volatility}",
+      "losing_trades": 13,
+      "best_market_pnl": 134173.29,
+      "dominant_market_pnl": 134173.29,
+      "window_days": "15"
+    },
+    "category_specialization": [
+      {
+        "category": "Other",
+        "roi": 47.9861,
+        "win_rate": 0.9015,
+        "total_pnl": 176743.12,
+        "total_trades": 597
+      },
+      {
+        "category": "Politics",
+        "roi": 74.5349,
+        "win_rate": 0.9141,
+        "total_pnl": 176382.01,
+        "total_trades": 394
+      },
+      {
+        "category": "Politics / Global",
+        "roi": 72.2602,
+        "win_rate": 0.9194,
+        "total_pnl": 167458.06,
+        "total_trades": 382
+      },
+      {
+        "category": "Politics / US / Trump",
+        "roi": 90.9667,
+        "win_rate": 0.9429,
+        "total_pnl": 160567.47,
+        "total_trades": 213
+      },
+      {
+        "category": "Politics / US",
+        "roi": 90.9667,
+        "win_rate": 0.9429,
+        "total_pnl": 160567.47,
+        "total_trades": 213
+      },
+      {
+        "category": "Sports / Soccer",
+        "roi": 6.7267,
+        "win_rate": 0.7143,
+        "total_pnl": 9285.08,
+        "total_trades": 216
+      },
+      {
+        "category": "Sports",
+        "roi": 6.7267,
+        "win_rate": 0.625,
+        "total_pnl": 9285.06,
+        "total_trades": 216
+      },
+      {
+        "category": "Culture & Entertainment",
+        "roi": 182.1015,
+        "win_rate": 0.75,
+        "total_pnl": 8923.95,
+        "total_trades": 12
+      },
+      {
+        "category": "Finance & Markets",
+        "roi": 6.6451,
+        "win_rate": 0.8182,
+        "total_pnl": 1455.51,
+        "total_trades": 97
+      },
+      {
+        "category": "Esports / Counter-Strike",
+        "roi": 0.0,
+        "win_rate": 0.0,
+        "total_pnl": -0.02,
+        "total_trades": 0
+      },
+      {
+        "category": "Esports",
+        "roi": 0.0,
+        "win_rate": 0.0,
+        "total_pnl": -0.02,
+        "total_trades": 0
+      }
+    ],
+    "official_rank": {
+      "period": "30d",
+      "rank": 87,
+      "roi": "0.225582",
+      "win_rate": "0.8762",
+      "sharpe_ratio": "0.1085",
+      "total_pnl": "320104.5538",
+      "total_invested": "1419014.82",
+      "total_trades": 1501,
+      "markets_traded": 50
+    },
+    "realized_pnl_recent": {
+      "window": [
+        "2026-05-20",
+        "2026-06-20"
+      ],
+      "days_returned": 11,
+      "realized_pnl_sum": -11409.5
+    },
+    "h_score": {
+      "available": true,
+      "h_score": "74.629",
+      "tier": "Elite",
+      "leaderboard_rank": 792
+    }
+  },
+  "what_position_actions": {
+    "wallet": "0x6bab41a0dc40d6dd4c1a915b8c01969479fd1292",
+    "condition_id": "0xdf8e2dc5860027decbe6164555c3c1c9645c3bd33e16b9dc57ca87125047d4a8",
+    "analyzed_side": "Yes",
+    "market": {
+      "question": "Will Luiz Inácio Lula da Silva win the 2026 Brazilian presidential election?",
+      "winning_outcome": null,
+      "closed": false,
+      "settle_date": "2026-10-04",
+      "days_to_settlement": 101.0,
+      "settle_note": "还有约101.0天"
+    },
+    "two_side_distribution": {
+      "hedged": false,
+      "by_outcome": {
+        "Yes": {
+          "trades": 168,
+          "shares": 9289.9
+        }
+      },
+      "note": "仅单边建仓"
+    },
+    "actions": {
+      "entry_time": "2026-05-13 19:59",
+      "last_add_time": "2026-06-10 02:55",
+      "num_buys": 168,
+      "num_sells": 0,
+      "added_over_time": true,
+      "avg_entry_price": 0.438,
+      "net_shares": 9289.9,
+      "net_cost_usd": 4069.24
+    },
+    "unrealized": {
+      "current_price": 0.56,
+      "price_source": "568最新close",
+      "current_value_usd": 5202.35,
+      "unrealized_pnl_usd": 1133.11,
+      "unrealized_pct": 27.85,
+      "note": "持仓中浮盈亏"
+    }
+  },
+  "price_context": {
+    "as_of": "2026-06-25",
+    "analyzed_side": "Yes",
+    "price_source": "568历史close",
+    "current_price": 0.56,
+    "implied_probability_pct": 56.0,
+    "remaining_upside_per_share_usd": 0.44,
+    "remaining_upside_pct_if_win": 78.57,
+    "downside_per_share_usd": 0.56,
+    "odds_to_one": 0.79,
+    "entry_price": 0.438,
+    "price_delta": 0.122,
+    "price_delta_pct": 27.85
+  },
+  "catalysts": {
+    "positive": [
+      {
+        "title": "Brazil's Lula warns Trump not to meddle in Brazil's elections - The Washington Post",
+        "url": "https://www.washingtonpost.com/world/2026/06/17/brazil-us-lula-trump/d8e4a1a2-6a8c-11f1-830e-133d20cadd28_story.html",
+        "date": "2026-06-17",
+        "reason": "文章显示Lula在2026年6月作为现任总统就即将到来的总统选举发表警告，表明他仍在位并参与选举相关事务",
+        "type": "其他背景",
+        "price_reaction": {
+          "available": true,
+          "window": [
+            "2026-06-16",
+            "2026-06-18"
+          ],
+          "price_before": 0.52,
+          "price_after": 0.51,
+          "move_pct": -1.92,
+          "direction": "▼",
+          "caveat": "该新闻发布前后市场变动，时间相关非因果",
+          "market_check": "市场反应微弱(<5%)",
+          "same_window": "同窗2条新闻，变动为合计、不可归因到单条"
+        }
+      },
+      {
+        "title": "Brazil's Lula warns Trump not to meddle in Brazil's elections - AP News",
+        "url": "https://apnews.com/article/brazil-us-lula-trump-58191e76e4b65f16d24f7d0b8cc61755",
+        "date": "2026-06-17",
+        "reason": "文章确认Lula在2026年6月以巴西总统身份就选举发表声明，显示他在选举前夕仍担任总统职位",
+        "type": "其他背景",
+        "price_reaction": {
+          "available": true,
+          "window": [
+            "2026-06-16",
+            "2026-06-18"
+          ],
+          "price_before": 0.52,
+          "price_after": 0.51,
+          "move_pct": -1.92,
+          "direction": "▼",
+          "caveat": "该新闻发布前后市场变动，时间相关非因果",
+          "market_check": "市场反应微弱(<5%)",
+          "same_window": "同窗2条新闻，变动为合计、不可归因到单条"
+        }
+      }
+    ],
+    "negative": [
+      {
+        "title": "Brazil executes warrant against Lula ally in widening financial scandal - Al Jazeera",
+        "url": "https://www.aljazeera.com/news/2026/6/18/brazil-executes-warrant-against-lula-ally-in-widening-financial-scandal",
+        "date": "2026-06-18",
+        "reason": "Federal police raided a senator closely allied with Lula as part of corruption investigations into Banco Master. Corruption scandals involving close allies can reduce incumbent support and electoral performance in Brazilian presidential elections.",
+        "type": "已生效硬事件",
+        "price_reaction": {
+          "available": true,
+          "window": [
+            "2026-06-17",
+            "2026-06-19"
+          ],
+          "price_before": 0.51,
+          "price_after": 0.52,
+          "move_pct": 1.96,
+          "direction": "▲",
+          "caveat": "该新闻发布前后市场变动，时间相关非因果",
+          "market_check": "市场反应微弱(<5%)"
+        }
+      }
+    ],
+    "balance_summary": "正向证据按类型陈列：其他背景×2；负向证据按类型陈列：已生效硬事件×1。每条已刻明客观事实类型（材质）——系统不替你称量轻重，不同材质的份量请自行掂量。 系统已完成证据陈述，天平由你裁决。",
+    "honesty_caveat": {
+      "positive_side": "fully_backed",
+      "negative_side": "fully_backed"
+    },
+    "guards": {
+      "relevance_dropped": [],
+      "type_deviations": [],
+      "weight_word_hits": [],
+      "weight_in_reason_hits": [],
+      "fear_lexicon_hits": [],
+      "directive_hits": []
+    }
+  },
+  "_audit": {
+    "teacher_tokens_approx": 2766,
+    "free_sources": [
+      "581",
+      "579",
+      "569",
+      "556",
+      "568",
+      "574"
+    ],
+    "catalyst_window": [
+      "2026-06-15",
+      "2026-06-25"
+    ]
+  }
+}

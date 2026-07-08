@@ -1,0 +1,1018 @@
+{
+  "wallet": "0x71edffd0d70a1da823ff07a3c6fc81457294d338",
+  "as_of": "2026-06-20",
+  "identity": {
+    "profile": {
+      "address": "0x71edffd0d70a1da823ff07a3c6fc81457294d338",
+      "name": "pako",
+      "pseudonym": "Evergreen-Wifi",
+      "profile_image": null
+    },
+    "pnl_history": [
+      {
+        "t": 1732752000,
+        "p": 22366.652
+      },
+      {
+        "t": 1733011200,
+        "p": 23286.822
+      },
+      {
+        "t": 1733356800,
+        "p": 22693.922
+      },
+      {
+        "t": 1733616000,
+        "p": 29383.947
+      },
+      {
+        "t": 1733961600,
+        "p": 32859.668
+      },
+      {
+        "t": 1734307200,
+        "p": 35297.688
+      },
+      {
+        "t": 1734566400,
+        "p": 39199.402
+      },
+      {
+        "t": 1734912000,
+        "p": 39982.63
+      },
+      {
+        "t": 1735171200,
+        "p": 40732.406
+      },
+      {
+        "t": 1735516800,
+        "p": 41283.867
+      },
+      {
+        "t": 1735862400,
+        "p": 41806.24
+      },
+      {
+        "t": 1736121600,
+        "p": 41756.34
+      },
+      {
+        "t": 1736467200,
+        "p": 41677.863
+      },
+      {
+        "t": 1736726400,
+        "p": 43633.18
+      },
+      {
+        "t": 1737072000,
+        "p": 44789.05
+      },
+      {
+        "t": 1737417600,
+        "p": 47022.355
+      },
+      {
+        "t": 1737676800,
+        "p": 47486.35
+      },
+      {
+        "t": 1738022400,
+        "p": 46758.785
+      },
+      {
+        "t": 1738281600,
+        "p": 50322.92
+      },
+      {
+        "t": 1738627200,
+        "p": 50512.605
+      },
+      {
+        "t": 1738972800,
+        "p": 62814.473
+      },
+      {
+        "t": 1739232000,
+        "p": 63119.348
+      },
+      {
+        "t": 1739577600,
+        "p": 71594.17
+      },
+      {
+        "t": 1739923200,
+        "p": 72798.85
+      },
+      {
+        "t": 1740182400,
+        "p": 68945.14
+      },
+      {
+        "t": 1740528000,
+        "p": 68367.58
+      },
+      {
+        "t": 1740787200,
+        "p": 67529.84
+      },
+      {
+        "t": 1741132800,
+        "p": 65434.867
+      },
+      {
+        "t": 1741478400,
+        "p": 72661.73
+      },
+      {
+        "t": 1741737600,
+        "p": 71637.82
+      },
+      {
+        "t": 1742083200,
+        "p": 76452.75
+      },
+      {
+        "t": 1742342400,
+        "p": 77862.734
+      },
+      {
+        "t": 1742688000,
+        "p": 77445.1
+      },
+      {
+        "t": 1743033600,
+        "p": 85911.04
+      },
+      {
+        "t": 1743292800,
+        "p": 78874.16
+      },
+      {
+        "t": 1743638400,
+        "p": 63339.188
+      },
+      {
+        "t": 1743897600,
+        "p": 54452.965
+      },
+      {
+        "t": 1744243200,
+        "p": 107201.72
+      },
+      {
+        "t": 1744588800,
+        "p": 80298.2
+      },
+      {
+        "t": 1744848000,
+        "p": 115525.45
+      },
+      {
+        "t": 1745193600,
+        "p": 128115.36
+      },
+      {
+        "t": 1745539200,
+        "p": 132094.55
+      },
+      {
+        "t": 1745798400,
+        "p": 124240.1
+      },
+      {
+        "t": 1746144000,
+        "p": 148822.06
+      },
+      {
+        "t": 1746403200,
+        "p": 160332.64
+      },
+      {
+        "t": 1746748800,
+        "p": 169824.8
+      },
+      {
+        "t": 1747094400,
+        "p": 187087.44
+      },
+      {
+        "t": 1747353600,
+        "p": 176721.56
+      },
+      {
+        "t": 1747699200,
+        "p": 183489.45
+      },
+      {
+        "t": 1747958400,
+        "p": 199156.7
+      },
+      {
+        "t": 1748304000,
+        "p": 204692.98
+      },
+      {
+        "t": 1748649600,
+        "p": 217083.05
+      },
+      {
+        "t": 1748908800,
+        "p": 234877.12
+      },
+      {
+        "t": 1749254400,
+        "p": 247316.0
+      },
+      {
+        "t": 1749513600,
+        "p": 243746.56
+      },
+      {
+        "t": 1749859200,
+        "p": 240215.05
+      },
+      {
+        "t": 1750204800,
+        "p": 245732.5
+      },
+      {
+        "t": 1750464000,
+        "p": 242219.88
+      },
+      {
+        "t": 1750809600,
+        "p": 193200.9
+      },
+      {
+        "t": 1751068800,
+        "p": 189722.62
+      },
+      {
+        "t": 1751414400,
+        "p": 193382.53
+      },
+      {
+        "t": 1751760000,
+        "p": 259418.39
+      },
+      {
+        "t": 1752019200,
+        "p": 259814.97
+      },
+      {
+        "t": 1752364800,
+        "p": 260577.4
+      },
+      {
+        "t": 1752710400,
+        "p": 283055.2
+      },
+      {
+        "t": 1752969600,
+        "p": 278965.38
+      },
+      {
+        "t": 1753315200,
+        "p": 278583.34
+      },
+      {
+        "t": 1753574400,
+        "p": 272797.1
+      },
+      {
+        "t": 1753920000,
+        "p": 308867.16
+      },
+      {
+        "t": 1754265600,
+        "p": 220787.4
+      },
+      {
+        "t": 1754524800,
+        "p": 207902.48
+      },
+      {
+        "t": 1754870400,
+        "p": 213577.36
+      },
+      {
+        "t": 1755129600,
+        "p": 194632.25
+      },
+      {
+        "t": 1755475200,
+        "p": 249425.34
+      },
+      {
+        "t": 1755820800,
+        "p": 304715.84
+      },
+      {
+        "t": 1756080000,
+        "p": 239585.92
+      },
+      {
+        "t": 1756425600,
+        "p": 240135.69
+      },
+      {
+        "t": 1756684800,
+        "p": 244390.06
+      },
+      {
+        "t": 1757030400,
+        "p": 255548.28
+      },
+      {
+        "t": 1757376000,
+        "p": 251598.47
+      },
+      {
+        "t": 1757635200,
+        "p": 257343.84
+      },
+      {
+        "t": 1757980800,
+        "p": 260619.81
+      },
+      {
+        "t": 1758326400,
+        "p": 285811.16
+      },
+      {
+        "t": 1758585600,
+        "p": 277838.97
+      },
+      {
+        "t": 1758931200,
+        "p": 268378.28
+      },
+      {
+        "t": 1759190400,
+        "p": 269585.53
+      },
+      {
+        "t": 1759536000,
+        "p": 304859.2
+      },
+      {
+        "t": 1759881600,
+        "p": 303337.72
+      },
+      {
+        "t": 1760140800,
+        "p": 312248.12
+      },
+      {
+        "t": 1760486400,
+        "p": 325702.25
+      },
+      {
+        "t": 1760745600,
+        "p": 329693.88
+      },
+      {
+        "t": 1761091200,
+        "p": 337289.9
+      },
+      {
+        "t": 1761436800,
+        "p": 348606.53
+      },
+      {
+        "t": 1761696000,
+        "p": 346505.34
+      },
+      {
+        "t": 1762041600,
+        "p": 351852.5
+      },
+      {
+        "t": 1762300800,
+        "p": 347911.6
+      },
+      {
+        "t": 1762646400,
+        "p": 351945.38
+      },
+      {
+        "t": 1762992000,
+        "p": 360952.94
+      },
+      {
+        "t": 1763251200,
+        "p": 361892.12
+      },
+      {
+        "t": 1763596800,
+        "p": 362852.03
+      },
+      {
+        "t": 1763942400,
+        "p": 362144.97
+      },
+      {
+        "t": 1764201600,
+        "p": 394599.16
+      },
+      {
+        "t": 1764547200,
+        "p": 405494.94
+      },
+      {
+        "t": 1764806400,
+        "p": 428526.56
+      },
+      {
+        "t": 1765152000,
+        "p": 425629.7
+      },
+      {
+        "t": 1765497600,
+        "p": 459915.7
+      },
+      {
+        "t": 1765756800,
+        "p": 461790.06
+      },
+      {
+        "t": 1766102400,
+        "p": 456054.38
+      },
+      {
+        "t": 1766361600,
+        "p": 456275.47
+      },
+      {
+        "t": 1766707200,
+        "p": 464234.22
+      },
+      {
+        "t": 1767052800,
+        "p": 467334.72
+      },
+      {
+        "t": 1767312000,
+        "p": 474251.9
+      },
+      {
+        "t": 1767657600,
+        "p": 473945.03
+      },
+      {
+        "t": 1767916800,
+        "p": 485401.3
+      },
+      {
+        "t": 1768262400,
+        "p": 472176.8
+      },
+      {
+        "t": 1768608000,
+        "p": 483219.44
+      },
+      {
+        "t": 1768867200,
+        "p": 482678.6
+      },
+      {
+        "t": 1769212800,
+        "p": 495066.97
+      },
+      {
+        "t": 1769472000,
+        "p": 497809.75
+      },
+      {
+        "t": 1769817600,
+        "p": 501362.4
+      },
+      {
+        "t": 1770163200,
+        "p": 494229.4
+      },
+      {
+        "t": 1770422400,
+        "p": 467561.88
+      },
+      {
+        "t": 1770768000,
+        "p": 449928.56
+      },
+      {
+        "t": 1771113600,
+        "p": 517725.44
+      },
+      {
+        "t": 1771372800,
+        "p": 519090.53
+      },
+      {
+        "t": 1771718400,
+        "p": 538947.4
+      },
+      {
+        "t": 1771977600,
+        "p": 545925.6
+      },
+      {
+        "t": 1772323200,
+        "p": 531249.44
+      },
+      {
+        "t": 1772668800,
+        "p": 568923.25
+      },
+      {
+        "t": 1772928000,
+        "p": 563296.2
+      },
+      {
+        "t": 1773273600,
+        "p": 569571.1
+      },
+      {
+        "t": 1773532800,
+        "p": 576228.5
+      },
+      {
+        "t": 1773878400,
+        "p": 587715.4
+      },
+      {
+        "t": 1774224000,
+        "p": 565486.94
+      },
+      {
+        "t": 1774483200,
+        "p": 549949.2
+      },
+      {
+        "t": 1774828800,
+        "p": 577840.2
+      },
+      {
+        "t": 1775088000,
+        "p": 591776.25
+      },
+      {
+        "t": 1775433600,
+        "p": 603134.25
+      },
+      {
+        "t": 1775779200,
+        "p": 416540.03
+      },
+      {
+        "t": 1776038400,
+        "p": 423863.22
+      },
+      {
+        "t": 1776384000,
+        "p": 441853.0
+      },
+      {
+        "t": 1776729600,
+        "p": 448002.06
+      },
+      {
+        "t": 1776988800,
+        "p": 447055.25
+      },
+      {
+        "t": 1777334400,
+        "p": 453559.78
+      },
+      {
+        "t": 1777593600,
+        "p": 458063.38
+      },
+      {
+        "t": 1777939200,
+        "p": 461873.28
+      },
+      {
+        "t": 1778284800,
+        "p": 441994.72
+      },
+      {
+        "t": 1778544000,
+        "p": 439895.44
+      },
+      {
+        "t": 1778889600,
+        "p": 436903.6
+      },
+      {
+        "t": 1779148800,
+        "p": 429203.47
+      },
+      {
+        "t": 1779494400,
+        "p": 422919.28
+      },
+      {
+        "t": 1779840000,
+        "p": 428857.25
+      },
+      {
+        "t": 1780099200,
+        "p": 430128.7
+      },
+      {
+        "t": 1780444800,
+        "p": 415014.47
+      },
+      {
+        "t": 1780704000,
+        "p": 390929.4
+      },
+      {
+        "t": 1781049600,
+        "p": 388618.9
+      },
+      {
+        "t": 1781395200,
+        "p": 402216.75
+      },
+      {
+        "t": 1781654400,
+        "p": 407776.8
+      },
+      {
+        "t": 1782000000,
+        "p": 365217.88
+      },
+      {
+        "t": 1782248400,
+        "p": 368270.47
+      }
+    ],
+    "who_trader_profile": {
+      "wallet": "0x71edffd0d70a1da823ff07a3c6fc81457294d338",
+      "quality": {
+        "combined_risk_score": 10,
+        "max_drawdown": 0.0758,
+        "drawdown_frequency": 0.0833,
+        "avg_trade_size": 598.33,
+        "markets_traded": 37,
+        "num_markets_traded": 37,
+        "category_diversity_score": 0.8441,
+        "market_concentration_ratio": 0.6911,
+        "annualized_return": 5.1445,
+        "gain_to_pain_ratio": 68.8749,
+        "equity_curve_pattern": "volatile",
+        "perfect_timing_flag": false,
+        "flagged_metrics": "{position_size_volatility}",
+        "losing_trades": 39,
+        "best_market_pnl": 30673.99,
+        "dominant_market_pnl": 30673.99,
+        "window_days": "15"
+      },
+      "category_specialization": [
+        {
+          "category": "Politics",
+          "roi": 19.6763,
+          "win_rate": 0.95,
+          "total_pnl": 38051.64,
+          "total_trades": 264
+        },
+        {
+          "category": "Other",
+          "roi": 15.3895,
+          "win_rate": 0.6337,
+          "total_pnl": 37065.93,
+          "total_trades": 390
+        },
+        {
+          "category": "Finance & Markets",
+          "roi": 21.9278,
+          "win_rate": 0.8529,
+          "total_pnl": 34638.97,
+          "total_trades": 317
+        },
+        {
+          "category": "Politics / Global",
+          "roi": 8.981,
+          "win_rate": 0.9545,
+          "total_pnl": 7202.48,
+          "total_trades": 51
+        },
+        {
+          "category": "Tech & AI",
+          "roi": 2.1186,
+          "win_rate": 0.8,
+          "total_pnl": 139.2,
+          "total_trades": 15
+        },
+        {
+          "category": "Weather & Science",
+          "roi": 0.0,
+          "win_rate": 0.75,
+          "total_pnl": 86.72,
+          "total_trades": 4
+        },
+        {
+          "category": "Politics / US / Trump",
+          "roi": -0.0123,
+          "win_rate": 0.5,
+          "total_pnl": -9.45,
+          "total_trades": 7
+        },
+        {
+          "category": "Politics / US",
+          "roi": -0.0123,
+          "win_rate": 0.5,
+          "total_pnl": -9.45,
+          "total_trades": 7
+        },
+        {
+          "category": "Sports",
+          "roi": -12.5427,
+          "win_rate": 0.5,
+          "total_pnl": -367.5,
+          "total_trades": 3
+        },
+        {
+          "category": "Sports / Soccer",
+          "roi": -12.5427,
+          "win_rate": 0.5,
+          "total_pnl": -367.5,
+          "total_trades": 3
+        },
+        {
+          "category": "Crypto",
+          "roi": 0.0,
+          "win_rate": 0.0,
+          "total_pnl": -691.24,
+          "total_trades": 31
+        },
+        {
+          "category": "Crypto / Prices",
+          "roi": 0.0,
+          "win_rate": 0.0,
+          "total_pnl": -691.24,
+          "total_trades": 31
+        }
+      ],
+      "official_rank": {
+        "period": "30d",
+        "rank": 840,
+        "roi": "0.110917",
+        "win_rate": "0.5161",
+        "sharpe_ratio": "0.0868",
+        "total_pnl": "28618.1736",
+        "total_invested": "258014.36",
+        "total_trades": 488,
+        "markets_traded": 45
+      },
+      "realized_pnl_recent": {
+        "window": [
+          "2026-05-20",
+          "2026-06-20"
+        ],
+        "days_returned": 9,
+        "realized_pnl_sum": -984.67
+      },
+      "h_score": {
+        "available": false,
+        "note": "不在 H-Score 榜首页（584 无按地址查，官方排名见 official_rank/579）"
+      }
+    }
+  },
+  "position": {
+    "meta": {
+      "wallet": "0x71edffd0d70a1da823ff07a3c6fc81457294d338",
+      "market": "Fed rate hike in 2026?",
+      "analyzed_side": "No",
+      "as_of": "2026-06-20",
+      "mode": "live",
+      "catalyst_anchor": "2026-06-20",
+      "settle": "还有约172.0天"
+    },
+    "what_position_actions": {
+      "wallet": "0x71edffd0d70a1da823ff07a3c6fc81457294d338",
+      "condition_id": "0x80b3af88cb991980e8da1ce86b9794a0957f96ec98c29319dd7ba65e9744d82b",
+      "analyzed_side": "No",
+      "market": {
+        "question": "Fed rate hike in 2026?",
+        "winning_outcome": null,
+        "closed": false,
+        "settle_date": "2026-12-09",
+        "days_to_settlement": 172.0,
+        "settle_note": "还有约172.0天"
+      },
+      "two_side_distribution": {
+        "hedged": false,
+        "by_outcome": {
+          "No": {
+            "trades": 82,
+            "shares": 136234.3
+          }
+        },
+        "note": "仅单边建仓"
+      },
+      "actions": {
+        "entry_time": "2026-04-18 12:03",
+        "last_add_time": "2026-06-22 13:33",
+        "num_buys": 82,
+        "num_sells": 2,
+        "added_over_time": true,
+        "avg_entry_price": 0.6824,
+        "net_shares": 135643.8,
+        "net_cost_usd": 92561.19
+      },
+      "unrealized": {
+        "current_price": 0.38,
+        "price_source": "568最新close",
+        "current_value_usd": 51544.66,
+        "unrealized_pnl_usd": -41016.53,
+        "unrealized_pct": -44.31,
+        "note": "持仓中浮盈亏"
+      }
+    },
+    "price_context": {
+      "as_of": "2026-06-20",
+      "analyzed_side": "No",
+      "price_source": "568历史close",
+      "current_price": 0.38,
+      "implied_probability_pct": 38.0,
+      "remaining_upside_per_share_usd": 0.62,
+      "remaining_upside_pct_if_win": 163.16,
+      "downside_per_share_usd": 0.38,
+      "odds_to_one": 1.63,
+      "entry_price": 0.6824,
+      "price_delta": -0.3024,
+      "price_delta_pct": -44.31
+    },
+    "what_the_bet": "押注**2026年全年（1月1日至12月议息会议）美联储都不会上调联邦基金利率目标区间上限**，只有全年没有任何一次加息才算赢。",
+    "resolution_criteria": "This market will resolve to “Yes” if the upper bound of the target federal funds rate is increased at any point between January 1, 2026 and the Fed's December 2026 meeting, currently scheduled for December 8-9, 2026. Otherwise, this market will resolve to “No”.\n\nThis market may not resolve to \"No\" until the Fed has released its rate change decision following its December meeting.\n\nThe primary resolution source for this market will be the official website of the Federal Reserve (https://www.federalreserve.gov/monetarypolicy/openmarket.htm), however a consensus of credible reporting may also be used."
+  },
+  "market": {
+    "slug": "fed-rate-hike-in-2026",
+    "market_id": "0x80b3af88cb991980e8da1ce86b9794a0957f96ec98c29319dd7ba65e9744d82b"
+  },
+  "behavior": {
+    "flag": "STATIC",
+    "fact": "近 48h 仅 1 买 / 0 卖，无显著动作（沉闷持仓）",
+    "honest_note": "动态行为：基本没动",
+    "windows": {
+      "3h": {
+        "buys": 0,
+        "sells": 0,
+        "buy_usd": 0.0,
+        "sell_usd": 0.0
+      },
+      "24h": {
+        "buys": 0,
+        "sells": 0,
+        "buy_usd": 0.0,
+        "sell_usd": 0.0
+      },
+      "48h": {
+        "buys": 1,
+        "sells": 0,
+        "buy_usd": 1541.0,
+        "sell_usd": 0.0
+      }
+    }
+  },
+  "news_stream": [
+    {
+      "date": "2026-06-17",
+      "title": "46194 euro to dollar forecast traders brace for key signals from fed chair warsh",
+      "summary": "交易员等待美联储主席沃什发出关键信号",
+      "url": "https://www.currencynews.co.uk/forecast/20260615-46194_euro-to-dollar-forecast-traders-brace-for-key-signals-from-fed-chair-warsh.html",
+      "origin": "GDELT",
+      "direction": null,
+      "reaction": {
+        "available": true,
+        "kind": "reject",
+        "move_pct": -29.69,
+        "window": [
+          "2026-06-16",
+          "2026-06-18"
+        ]
+      },
+      "same_window": true
+    },
+    {
+      "date": "2026-06-17",
+      "title": "will the fed blink markets enter high stakes week of global rate decisions",
+      "summary": "市场进入全球利率决策的关键一周",
+      "url": "https://www.actionforex.com/action-insight/market-overview/643835-will-the-fed-blink-markets-enter-high-stakes-week-of-global-rate-decisions/",
+      "origin": "GDELT",
+      "direction": null,
+      "reaction": {
+        "available": true,
+        "kind": "reject",
+        "move_pct": -29.69,
+        "window": [
+          "2026-06-16",
+          "2026-06-18"
+        ]
+      },
+      "same_window": true
+    },
+    {
+      "date": "2026-06-17",
+      "title": "Fed 'dot plot': Almost half of FOMC members project at least one interest rate hike this year - Yahoo Finance",
+      "summary": "Nine out of 18 FOMC policymakers project higher rates before the end of 2026, showing institutional support within the Fed for a rate hike in 2026, directly contradicting the No outcome.",
+      "url": "https://finance.yahoo.com/economy/policy/article/fed-dot-plot-almost-half-of-fomc-members-project-at-least-one-interest-rate-hike-this-year-183645064.html",
+      "origin": "Tavily",
+      "direction": "threat",
+      "reaction": {
+        "available": true,
+        "kind": "reject",
+        "move_pct": -29.69,
+        "window": [
+          "2026-06-16",
+          "2026-06-18"
+        ]
+      },
+      "same_window": true
+    },
+    {
+      "date": "2026-06-17",
+      "title": "Nearly half of Fed policymakers see a 2026 rate hike in the cards - Reuters",
+      "summary": "Nearly half of Federal Reserve policymakers project the need for a rate hike in 2026, indicating material internal momentum toward raising rates this year.",
+      "url": "https://www.reuters.com/business/nearly-half-fed-policymakers-see-2026-rate-hike-cards-2026-06-17/",
+      "origin": "Tavily",
+      "direction": "threat",
+      "reaction": {
+        "available": true,
+        "kind": "reject",
+        "move_pct": -29.69,
+        "window": [
+          "2026-06-16",
+          "2026-06-18"
+        ]
+      },
+      "same_window": true
+    },
+    {
+      "date": "2026-06-17",
+      "title": "Fed leans toward possible rate hike this year, in shift on inflation - NewsBreak: Local News & Alerts",
+      "summary": "Federal Reserve officials suggested an interest rate increase is on the table in 2026 as reflected in quarterly economic forecasts, representing a policy stance shift that increases probability of a hike.",
+      "url": "https://www.newsbreak.com/politico-560779/4716640593599-fed-leans-toward-possible-rate-hike-this-year-in-shift-on-inflation",
+      "origin": "Tavily",
+      "direction": "threat",
+      "reaction": {
+        "available": true,
+        "kind": "reject",
+        "move_pct": -29.69,
+        "window": [
+          "2026-06-16",
+          "2026-06-18"
+        ]
+      },
+      "same_window": true
+    },
+    {
+      "date": "2026-06-17",
+      "title": "Traders now see Fed raising rates by September - KITCO",
+      "summary": "Short-term interest-rate futures now price in a higher probability of a Fed rate hike by September 2026 than unchanged rates, reflecting market expectation of a 2026 hike.",
+      "url": "https://www.kitco.com/news/off-the-wire/2026-06-17/traders-now-see-fed-raising-rates-september",
+      "origin": "Tavily",
+      "direction": "threat",
+      "reaction": {
+        "available": true,
+        "kind": "reject",
+        "move_pct": -29.69,
+        "window": [
+          "2026-06-16",
+          "2026-06-18"
+        ]
+      },
+      "same_window": true
+    },
+    {
+      "date": "2026-06-07",
+      "title": "strong us jobs data pushes fed cut to december",
+      "summary": "强劲的美国就业数据使美联储降息时间被推迟至12月",
+      "url": "https://www.newsghana.com.gh/strong-us-jobs-data-pushes-fed-cut-to-december/",
+      "origin": "GDELT",
+      "direction": null,
+      "reaction": {
+        "available": true,
+        "kind": "reject",
+        "move_pct": -10.85,
+        "window": [
+          "2026-06-06",
+          "2026-06-08"
+        ]
+      },
+      "same_window": false
+    }
+  ],
+  "world_summary": "# 市场综述：2026年加息预期升温\n\n**巨鲸动态**  \n近48小时仅录得1笔买入、0笔卖出，持仓处于静默状态。\n\n**事态进展**  \n美联储6月会议维持利率在3.50%-3.75%区间不变，但点阵图显示18位FOMC官员中9位预测2026年底前将加息。利率期货市场目前对9月前加息的定价概率约66%，高于维持不变的预期。5月CPI升至4.2%（受中东能源影响），同期就业数据稳健，市场关注新任主席沃什后续信号。本周多国央行进入利率决策窗口期，经济学家共识仍倾向全年按兵不动，呈现政策预期与市场定价的分歧状态。",
+  "reasoning": {
+    "follow_call": null,
+    "confidence": null,
+    "reasoning": null,
+    "guard_tripped": "DURATION_COMPUTED",
+    "guard_message": "reasoning 出现时长推算（禁止日期/时长数学）"
+  }
+}

@@ -1,0 +1,254 @@
+{
+  "meta": {
+    "wallet": "0xa022ba0a68e11a78348382ff168601012d4d77f8",
+    "market": "Will no next Prime Minister of the United Kingdom be appointed in 2026?",
+    "analyzed_side": "Yes",
+    "as_of": "2026-06-25",
+    "mode": "live",
+    "catalyst_anchor": "2026-06-25",
+    "settle": "还有约189.0天"
+  },
+  "who_trader_profile": {
+    "wallet": "0xa022ba0a68e11a78348382ff168601012d4d77f8",
+    "quality": {
+      "combined_risk_score": 10,
+      "max_drawdown": 0.0073,
+      "drawdown_frequency": 0,
+      "avg_trade_size": 1250.93,
+      "markets_traded": 34,
+      "num_markets_traded": 34,
+      "category_diversity_score": 0.522,
+      "market_concentration_ratio": 0.2756,
+      "annualized_return": null,
+      "gain_to_pain_ratio": 100,
+      "equity_curve_pattern": "steady",
+      "perfect_timing_flag": false,
+      "flagged_metrics": "{position_size_volatility}",
+      "losing_trades": 35,
+      "best_market_pnl": 70719.19,
+      "dominant_market_pnl": 58829.75,
+      "window_days": "15"
+    },
+    "category_specialization": [
+      {
+        "category": "Politics / US",
+        "roi": 43.2507,
+        "win_rate": 0.931,
+        "total_pnl": 162423.58,
+        "total_trades": 273
+      },
+      {
+        "category": "Politics / US / Trump",
+        "roi": 44.84,
+        "win_rate": 0.931,
+        "total_pnl": 162423.58,
+        "total_trades": 271
+      },
+      {
+        "category": "Other",
+        "roi": 31.4719,
+        "win_rate": 0.8232,
+        "total_pnl": 149114.19,
+        "total_trades": 378
+      },
+      {
+        "category": "Politics / Global",
+        "roi": 31.2234,
+        "win_rate": 0.8343,
+        "total_pnl": 147936.59,
+        "total_trades": 377
+      },
+      {
+        "category": "Politics",
+        "roi": 31.2234,
+        "win_rate": 0.8343,
+        "total_pnl": 147936.59,
+        "total_trades": 377
+      },
+      {
+        "category": "Politics / US / Elections",
+        "roi": 0.0,
+        "win_rate": 0.0,
+        "total_pnl": 0.0,
+        "total_trades": 2
+      },
+      {
+        "category": "Sports",
+        "roi": -14039.25,
+        "win_rate": 0.0,
+        "total_pnl": -140.39,
+        "total_trades": 1
+      },
+      {
+        "category": "Sports / Soccer",
+        "roi": -14039.25,
+        "win_rate": 0.0,
+        "total_pnl": -140.39,
+        "total_trades": 1
+      },
+      {
+        "category": "Weather & Science",
+        "roi": -1366.3695,
+        "win_rate": 0.0,
+        "total_pnl": -4098.94,
+        "total_trades": 1
+      },
+      {
+        "category": "Tech & AI",
+        "roi": -1366.3695,
+        "win_rate": 0.0,
+        "total_pnl": -4098.94,
+        "total_trades": 1
+      },
+      {
+        "category": "Finance & Markets",
+        "roi": -14.0592,
+        "win_rate": 0.32,
+        "total_pnl": -5065.92,
+        "total_trades": 71
+      }
+    ],
+    "official_rank": {
+      "period": "30d",
+      "rank": 292,
+      "roi": "0.069947",
+      "win_rate": "0.7843",
+      "sharpe_ratio": "0.0301",
+      "total_pnl": "89345.5587",
+      "total_invested": "1277329.61",
+      "total_trades": 1355,
+      "markets_traded": 76
+    },
+    "realized_pnl_recent": {
+      "window": [
+        "2026-05-20",
+        "2026-06-20"
+      ],
+      "days_returned": 11,
+      "realized_pnl_sum": -24589.91
+    },
+    "h_score": {
+      "available": true,
+      "h_score": "62.424",
+      "tier": "Sharp",
+      "leaderboard_rank": 2462
+    }
+  },
+  "what_position_actions": {
+    "wallet": "0xa022ba0a68e11a78348382ff168601012d4d77f8",
+    "condition_id": "0x360229ef7e200995eeedfab6fd63514c8a43fcee803e8ac6dbe17065bd024d60",
+    "analyzed_side": "Yes",
+    "market": {
+      "question": "Will no next Prime Minister of the United Kingdom be appointed in 2026?",
+      "winning_outcome": null,
+      "closed": false,
+      "settle_date": "2026-12-31",
+      "days_to_settlement": 189.0,
+      "settle_note": "还有约189.0天"
+    },
+    "two_side_distribution": {
+      "hedged": false,
+      "by_outcome": {
+        "Yes": {
+          "trades": 9,
+          "shares": 29153.4
+        }
+      },
+      "note": "仅单边建仓"
+    },
+    "actions": {
+      "entry_time": "2026-05-17 23:23",
+      "last_add_time": "2026-06-05 08:58",
+      "num_buys": 9,
+      "num_sells": 0,
+      "added_over_time": true,
+      "avg_entry_price": 0.145,
+      "net_shares": 29153.4,
+      "net_cost_usd": 4225.97
+    },
+    "unrealized": {
+      "current_price": 0.001,
+      "price_source": "568最新close",
+      "current_value_usd": 29.15,
+      "unrealized_pnl_usd": -4196.82,
+      "unrealized_pct": -99.31,
+      "note": "持仓中浮盈亏"
+    }
+  },
+  "price_context": {
+    "as_of": "2026-06-25",
+    "analyzed_side": "Yes",
+    "price_source": "568历史close",
+    "current_price": 0.001,
+    "implied_probability_pct": 0.1,
+    "remaining_upside_per_share_usd": 0.999,
+    "remaining_upside_pct_if_win": 99900.0,
+    "downside_per_share_usd": 0.001,
+    "odds_to_one": 999.0,
+    "entry_price": 0.145,
+    "price_delta": -0.144,
+    "price_delta_pct": -99.31
+  },
+  "catalysts": {
+    "positive": [],
+    "negative": [
+      {
+        "title": "Why has Keir Starmer resigned as UK prime minister, and who will take over? - Al Jazeera",
+        "url": "https://www.aljazeera.com/news/2026/6/22/why-has-keir-starmer-resigned-as-uk-prime-minister-and-who-will-take-over",
+        "date": "2026-06-22",
+        "reason": "Confirms Starmer has announced he will step down as UK prime minister in 2026, with the article discussing who will take over. A resignation followed by a succession process would lead to appointment of a next Prime Minister within 2026.",
+        "type": "已生效硬事件",
+        "price_reaction": {
+          "available": true,
+          "window": [
+            "2026-06-21",
+            "2026-06-23"
+          ],
+          "price_before": 0.01,
+          "price_after": 0.001,
+          "move_pct": -90.0,
+          "direction": "▼",
+          "caveat": "该新闻发布前后市场变动，时间相关非因果",
+          "market_check": "市场印证该分类"
+        }
+      }
+    ],
+    "balance_summary": "正向证据按类型陈列：无；负向证据按类型陈列：已生效硬事件×1。每条已刻明客观事实类型（材质）——系统不替你称量轻重，不同材质的份量请自行掂量。 系统已完成证据陈述，天平由你裁决。",
+    "honesty_caveat": {
+      "positive_side": "search_vacuum",
+      "negative_side": "fully_backed"
+    },
+    "guards": {
+      "relevance_dropped": [
+        {
+          "title": "Andy Burnham sworn in as MP after Keir Starmer announces resignation - live updates - BBC",
+          "reason": "核心实体不在标题=边角混入"
+        },
+        {
+          "title": "Andy Burnham likely to replace Reeves if he becomes PM - BBC",
+          "reason": "核心实体不在标题=边角混入"
+        }
+      ],
+      "type_deviations": [],
+      "weight_word_hits": [],
+      "weight_in_reason_hits": [],
+      "fear_lexicon_hits": [],
+      "directive_hits": []
+    }
+  },
+  "_audit": {
+    "teacher_tokens_approx": 3502,
+    "free_sources": [
+      "581",
+      "579",
+      "569",
+      "556",
+      "568",
+      "574"
+    ],
+    "catalyst_window": [
+      "2026-06-15",
+      "2026-06-25"
+    ]
+  }
+}

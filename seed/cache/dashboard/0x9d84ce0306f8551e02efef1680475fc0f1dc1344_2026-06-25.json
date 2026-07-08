@@ -1,0 +1,1428 @@
+{
+  "wallet": "0x9d84ce0306f8551e02efef1680475fc0f1dc1344",
+  "as_of": "2026-06-25",
+  "identity": {
+    "profile": {
+      "address": "0x9d84ce0306f8551e02efef1680475fc0f1dc1344",
+      "name": "ImJustKen",
+      "pseudonym": "Ample-Instance",
+      "profile_image": "https://polymarket-upload.s3.us-east-2.amazonaws.com/profile-image-82662-8ddbc8e8-0500-44b7-bb13-c0b32a40a45d.jpg"
+    },
+    "pnl_history": [
+      {
+        "t": 1732752000,
+        "p": 2181960.2
+      },
+      {
+        "t": 1733011200,
+        "p": 2191062.8
+      },
+      {
+        "t": 1733356800,
+        "p": 2198969.2
+      },
+      {
+        "t": 1733616000,
+        "p": 2199478.2
+      },
+      {
+        "t": 1733961600,
+        "p": 2206882.5
+      },
+      {
+        "t": 1734307200,
+        "p": 2216861.8
+      },
+      {
+        "t": 1734566400,
+        "p": 2219295.0
+      },
+      {
+        "t": 1734912000,
+        "p": 2218499.0
+      },
+      {
+        "t": 1735171200,
+        "p": 2220754.5
+      },
+      {
+        "t": 1735516800,
+        "p": 2219424.8
+      },
+      {
+        "t": 1735862400,
+        "p": 2234875.5
+      },
+      {
+        "t": 1736121600,
+        "p": 2167552.5
+      },
+      {
+        "t": 1736467200,
+        "p": 2162409.2
+      },
+      {
+        "t": 1736812800,
+        "p": 2172680.5
+      },
+      {
+        "t": 1737072000,
+        "p": 2171775.8
+      },
+      {
+        "t": 1737417600,
+        "p": 2166830.0
+      },
+      {
+        "t": 1737676800,
+        "p": 2169365.2
+      },
+      {
+        "t": 1738022400,
+        "p": 2165131.0
+      },
+      {
+        "t": 1738368000,
+        "p": 2170473.0
+      },
+      {
+        "t": 1738627200,
+        "p": 2144908.8
+      },
+      {
+        "t": 1738972800,
+        "p": 2149668.0
+      },
+      {
+        "t": 1739318400,
+        "p": 2155954.8
+      },
+      {
+        "t": 1739577600,
+        "p": 2155350.2
+      },
+      {
+        "t": 1739923200,
+        "p": 2157089.0
+      },
+      {
+        "t": 1740182400,
+        "p": 2154156.2
+      },
+      {
+        "t": 1740528000,
+        "p": 2156071.0
+      },
+      {
+        "t": 1740873600,
+        "p": 2150339.8
+      },
+      {
+        "t": 1741132800,
+        "p": 2144029.8
+      },
+      {
+        "t": 1741478400,
+        "p": 2127235.5
+      },
+      {
+        "t": 1741824000,
+        "p": 2131488.0
+      },
+      {
+        "t": 1742083200,
+        "p": 2134513.8
+      },
+      {
+        "t": 1742428800,
+        "p": 2128406.5
+      },
+      {
+        "t": 1742688000,
+        "p": 2134589.0
+      },
+      {
+        "t": 1743033600,
+        "p": 2133007.5
+      },
+      {
+        "t": 1743379200,
+        "p": 2136496.2
+      },
+      {
+        "t": 1743638400,
+        "p": 2144009.2
+      },
+      {
+        "t": 1743984000,
+        "p": 2148038.2
+      },
+      {
+        "t": 1744329600,
+        "p": 2146903.2
+      },
+      {
+        "t": 1744588800,
+        "p": 2147561.8
+      },
+      {
+        "t": 1744934400,
+        "p": 2147662.2
+      },
+      {
+        "t": 1745193600,
+        "p": 2147827.5
+      },
+      {
+        "t": 1745539200,
+        "p": 2147748.8
+      },
+      {
+        "t": 1745884800,
+        "p": 2152437.8
+      },
+      {
+        "t": 1746144000,
+        "p": 2153172.5
+      },
+      {
+        "t": 1746489600,
+        "p": 2146827.5
+      },
+      {
+        "t": 1746835200,
+        "p": 2206636.5
+      },
+      {
+        "t": 1747094400,
+        "p": 2205621.2
+      },
+      {
+        "t": 1747440000,
+        "p": 2171532.5
+      },
+      {
+        "t": 1747699200,
+        "p": 2075542.0
+      },
+      {
+        "t": 1748044800,
+        "p": 2075450.5
+      },
+      {
+        "t": 1748390400,
+        "p": 2075449.9
+      },
+      {
+        "t": 1748649600,
+        "p": 2075416.2
+      },
+      {
+        "t": 1748995200,
+        "p": 2075458.2
+      },
+      {
+        "t": 1749340800,
+        "p": 2075458.2
+      },
+      {
+        "t": 1749600000,
+        "p": 2075459.0
+      },
+      {
+        "t": 1749945600,
+        "p": 2075496.8
+      },
+      {
+        "t": 1750204800,
+        "p": 2076189.4
+      },
+      {
+        "t": 1750550400,
+        "p": 2070152.0
+      },
+      {
+        "t": 1750896000,
+        "p": 2070212.9
+      },
+      {
+        "t": 1751155200,
+        "p": 2070173.0
+      },
+      {
+        "t": 1751500800,
+        "p": 2070355.9
+      },
+      {
+        "t": 1751760000,
+        "p": 2070391.5
+      },
+      {
+        "t": 1752105600,
+        "p": 2070430.9
+      },
+      {
+        "t": 1752451200,
+        "p": 2070429.0
+      },
+      {
+        "t": 1752710400,
+        "p": 2071000.4
+      },
+      {
+        "t": 1753056000,
+        "p": 2084883.2
+      },
+      {
+        "t": 1753401600,
+        "p": 2082649.5
+      },
+      {
+        "t": 1753660800,
+        "p": 2081099.1
+      },
+      {
+        "t": 1754006400,
+        "p": 2079893.4
+      },
+      {
+        "t": 1754265600,
+        "p": 2081839.4
+      },
+      {
+        "t": 1754611200,
+        "p": 2074282.5
+      },
+      {
+        "t": 1754956800,
+        "p": 2068357.0
+      },
+      {
+        "t": 1755216000,
+        "p": 2080971.6
+      },
+      {
+        "t": 1755561600,
+        "p": 2097932.5
+      },
+      {
+        "t": 1755907200,
+        "p": 2109791.0
+      },
+      {
+        "t": 1756166400,
+        "p": 2113495.2
+      },
+      {
+        "t": 1756512000,
+        "p": 2112383.0
+      },
+      {
+        "t": 1756771200,
+        "p": 2110877.0
+      },
+      {
+        "t": 1757116800,
+        "p": 2113242.0
+      },
+      {
+        "t": 1757462400,
+        "p": 2179635.0
+      },
+      {
+        "t": 1757721600,
+        "p": 2202577.8
+      },
+      {
+        "t": 1758067200,
+        "p": 2226280.2
+      },
+      {
+        "t": 1758412800,
+        "p": 2239097.5
+      },
+      {
+        "t": 1758672000,
+        "p": 2257661.2
+      },
+      {
+        "t": 1759017600,
+        "p": 2280393.2
+      },
+      {
+        "t": 1759276800,
+        "p": 2248376.0
+      },
+      {
+        "t": 1759622400,
+        "p": 2277465.5
+      },
+      {
+        "t": 1759968000,
+        "p": 2348056.8
+      },
+      {
+        "t": 1760227200,
+        "p": 2371162.8
+      },
+      {
+        "t": 1760572800,
+        "p": 2386311.0
+      },
+      {
+        "t": 1760918400,
+        "p": 2393829.5
+      },
+      {
+        "t": 1761177600,
+        "p": 2392478.5
+      },
+      {
+        "t": 1761523200,
+        "p": 2386557.5
+      },
+      {
+        "t": 1761782400,
+        "p": 2391119.5
+      },
+      {
+        "t": 1762128000,
+        "p": 2396390.2
+      },
+      {
+        "t": 1762473600,
+        "p": 2404948.0
+      },
+      {
+        "t": 1762732800,
+        "p": 2412119.0
+      },
+      {
+        "t": 1763078400,
+        "p": 2431420.0
+      },
+      {
+        "t": 1763424000,
+        "p": 2444948.2
+      },
+      {
+        "t": 1763683200,
+        "p": 2461987.0
+      },
+      {
+        "t": 1764028800,
+        "p": 2466313.0
+      },
+      {
+        "t": 1764288000,
+        "p": 2465040.8
+      },
+      {
+        "t": 1764633600,
+        "p": 2454953.8
+      },
+      {
+        "t": 1764979200,
+        "p": 2446787.0
+      },
+      {
+        "t": 1765238400,
+        "p": 2446570.0
+      },
+      {
+        "t": 1765584000,
+        "p": 2532121.2
+      },
+      {
+        "t": 1765929600,
+        "p": 2549025.0
+      },
+      {
+        "t": 1766188800,
+        "p": 2542921.5
+      },
+      {
+        "t": 1766534400,
+        "p": 2524213.5
+      },
+      {
+        "t": 1766793600,
+        "p": 2561372.2
+      },
+      {
+        "t": 1767139200,
+        "p": 2561505.8
+      },
+      {
+        "t": 1767484800,
+        "p": 2613284.2
+      },
+      {
+        "t": 1767744000,
+        "p": 2609327.0
+      },
+      {
+        "t": 1768089600,
+        "p": 2591250.0
+      },
+      {
+        "t": 1768348800,
+        "p": 2597041.2
+      },
+      {
+        "t": 1768694400,
+        "p": 2733492.8
+      },
+      {
+        "t": 1769040000,
+        "p": 2737997.2
+      },
+      {
+        "t": 1769299200,
+        "p": 2700447.8
+      },
+      {
+        "t": 1769644800,
+        "p": 2757229.0
+      },
+      {
+        "t": 1769990400,
+        "p": 3024147.2
+      },
+      {
+        "t": 1770249600,
+        "p": 2936605.5
+      },
+      {
+        "t": 1770595200,
+        "p": 2924005.5
+      },
+      {
+        "t": 1770854400,
+        "p": 2965353.8
+      },
+      {
+        "t": 1771200000,
+        "p": 2965304.2
+      },
+      {
+        "t": 1771545600,
+        "p": 2910423.5
+      },
+      {
+        "t": 1771804800,
+        "p": 2909162.8
+      },
+      {
+        "t": 1772150400,
+        "p": 2925627.0
+      },
+      {
+        "t": 1772496000,
+        "p": 2790931.8
+      },
+      {
+        "t": 1772755200,
+        "p": 2959788.2
+      },
+      {
+        "t": 1773100800,
+        "p": 2878647.0
+      },
+      {
+        "t": 1773360000,
+        "p": 2891129.2
+      },
+      {
+        "t": 1773705600,
+        "p": 2845169.0
+      },
+      {
+        "t": 1774051200,
+        "p": 2858043.8
+      },
+      {
+        "t": 1774310400,
+        "p": 2848291.2
+      },
+      {
+        "t": 1774656000,
+        "p": 2845495.8
+      },
+      {
+        "t": 1775001600,
+        "p": 2849835.0
+      },
+      {
+        "t": 1775260800,
+        "p": 2812806.5
+      },
+      {
+        "t": 1775606400,
+        "p": 2840696.8
+      },
+      {
+        "t": 1775865600,
+        "p": 2863045.8
+      },
+      {
+        "t": 1776211200,
+        "p": 2862516.0
+      },
+      {
+        "t": 1776556800,
+        "p": 2906941.0
+      },
+      {
+        "t": 1776816000,
+        "p": 2906590.0
+      },
+      {
+        "t": 1777161600,
+        "p": 2912136.2
+      },
+      {
+        "t": 1777507200,
+        "p": 2933256.8
+      },
+      {
+        "t": 1777766400,
+        "p": 2919588.2
+      },
+      {
+        "t": 1778112000,
+        "p": 2936101.0
+      },
+      {
+        "t": 1778371200,
+        "p": 3092251.8
+      },
+      {
+        "t": 1778716800,
+        "p": 3096498.8
+      },
+      {
+        "t": 1779062400,
+        "p": 3147611.0
+      },
+      {
+        "t": 1779321600,
+        "p": 3099698.2
+      },
+      {
+        "t": 1779667200,
+        "p": 3117884.5
+      },
+      {
+        "t": 1780012800,
+        "p": 3116214.5
+      },
+      {
+        "t": 1780272000,
+        "p": 3114779.0
+      },
+      {
+        "t": 1780617600,
+        "p": 3104151.5
+      },
+      {
+        "t": 1780876800,
+        "p": 3119004.8
+      },
+      {
+        "t": 1781222400,
+        "p": 3120851.2
+      },
+      {
+        "t": 1781568000,
+        "p": 3131302.8
+      },
+      {
+        "t": 1781827200,
+        "p": 3171915.8
+      },
+      {
+        "t": 1782172800,
+        "p": 3307422.8
+      },
+      {
+        "t": 1782428400,
+        "p": 3313795.0
+      }
+    ],
+    "who_trader_profile": {
+      "wallet": "0x9d84ce0306f8551e02efef1680475fc0f1dc1344",
+      "quality": {
+        "combined_risk_score": 35,
+        "max_drawdown": 0,
+        "drawdown_frequency": 0,
+        "avg_trade_size": 179.19,
+        "markets_traded": 60,
+        "num_markets_traded": 60,
+        "category_diversity_score": 0.8278,
+        "market_concentration_ratio": 0.4985,
+        "annualized_return": null,
+        "gain_to_pain_ratio": 100,
+        "equity_curve_pattern": "volatile",
+        "perfect_timing_flag": false,
+        "flagged_metrics": "{suspicious_win_rate,position_size_volatility}",
+        "losing_trades": 26,
+        "best_market_pnl": 94301.35,
+        "dominant_market_pnl": 94301.35,
+        "window_days": "15"
+      },
+      "category_specialization": [
+        {
+          "category": "Other",
+          "roi": 25.0234,
+          "win_rate": 0.9226,
+          "total_pnl": 137298.19,
+          "total_trades": 3068
+        },
+        {
+          "category": "Politics",
+          "roi": 29.0785,
+          "win_rate": 0.9431,
+          "total_pnl": 135290.88,
+          "total_trades": 1015
+        },
+        {
+          "category": "Politics / Global",
+          "roi": 29.282,
+          "win_rate": 0.9559,
+          "total_pnl": 133553.75,
+          "total_trades": 854
+        },
+        {
+          "category": "Politics / US",
+          "roi": 4.1425,
+          "win_rate": 0.9397,
+          "total_pnl": 16504.93,
+          "total_trades": 587
+        },
+        {
+          "category": "Politics / US / Trump",
+          "roi": 3.9564,
+          "win_rate": 0.9737,
+          "total_pnl": 15585.59,
+          "total_trades": 303
+        },
+        {
+          "category": "Sports / Soccer",
+          "roi": 4.7921,
+          "win_rate": 1.0,
+          "total_pnl": 3090.0,
+          "total_trades": 2028
+        },
+        {
+          "category": "Sports",
+          "roi": 4.7921,
+          "win_rate": 1.0,
+          "total_pnl": 3090.0,
+          "total_trades": 2028
+        },
+        {
+          "category": "Tech & AI",
+          "roi": 0.0,
+          "win_rate": 0.4167,
+          "total_pnl": 846.97,
+          "total_trades": 0
+        },
+        {
+          "category": "Politics / US / Elections",
+          "roi": 10.064,
+          "win_rate": 0.85,
+          "total_pnl": 452.97,
+          "total_trades": 284
+        },
+        {
+          "category": "Finance & Markets",
+          "roi": 0.0,
+          "win_rate": 0.3636,
+          "total_pnl": 389.03,
+          "total_trades": 0
+        },
+        {
+          "category": "Weather & Science",
+          "roi": 0.0,
+          "win_rate": 0.0,
+          "total_pnl": -88.8,
+          "total_trades": 0
+        },
+        {
+          "category": "Culture & Entertainment",
+          "roi": -1.0147,
+          "win_rate": 0.0,
+          "total_pnl": -207.19,
+          "total_trades": 27
+        }
+      ],
+      "official_rank": {
+        "period": "30d",
+        "rank": 252,
+        "roi": "0.179205",
+        "win_rate": "0.8988",
+        "sharpe_ratio": "0.0731",
+        "total_pnl": "104553.3067",
+        "total_invested": "583429.28",
+        "total_trades": 4178,
+        "markets_traded": 86
+      },
+      "realized_pnl_recent": {
+        "window": [
+          "2026-05-20",
+          "2026-06-20"
+        ],
+        "days_returned": 5,
+        "realized_pnl_sum": -46048.54
+      },
+      "h_score": {
+        "available": true,
+        "h_score": "79.417",
+        "tier": "Elite",
+        "leaderboard_rank": 296
+      }
+    }
+  },
+  "position": {
+    "meta": {
+      "wallet": "0x9d84ce0306f8551e02efef1680475fc0f1dc1344",
+      "market": "Will Keir Starmer be the next leader out before 2027?",
+      "analyzed_side": "Yes",
+      "as_of": "2026-06-25",
+      "mode": "live",
+      "catalyst_anchor": "2026-06-25",
+      "settle": "还有约189.0天"
+    },
+    "what_position_actions": {
+      "wallet": "0x9d84ce0306f8551e02efef1680475fc0f1dc1344",
+      "condition_id": "0xc8aaa82e283d68aba57ce829af58ce6ed3d5e94e23e9395b50dd579b2c657708",
+      "analyzed_side": "Yes",
+      "market": {
+        "question": "Will Keir Starmer be the next leader out before 2027?",
+        "winning_outcome": null,
+        "closed": false,
+        "settle_date": "2026-12-31",
+        "days_to_settlement": 189.0,
+        "settle_note": "还有约189.0天"
+      },
+      "two_side_distribution": {
+        "hedged": true,
+        "by_outcome": {
+          "Yes": {
+            "trades": 26,
+            "shares": 10061.2
+          },
+          "No": {
+            "trades": 8,
+            "shares": 3039.6
+          }
+        },
+        "note": "两边都大额建仓 = 做市/对冲玩家（非单边赌徒，接 #28）"
+      },
+      "actions": {
+        "entry_time": "2026-06-21 17:23",
+        "last_add_time": "2026-06-22 08:47",
+        "num_buys": 26,
+        "num_sells": 0,
+        "added_over_time": true,
+        "avg_entry_price": 0.3369,
+        "net_shares": 10061.2,
+        "net_cost_usd": 3390.05
+      },
+      "unrealized": {
+        "current_price": 0.89,
+        "price_source": "568最新close",
+        "current_value_usd": 8954.49,
+        "unrealized_pnl_usd": 5564.43,
+        "unrealized_pct": 164.14,
+        "note": "持仓中浮盈亏"
+      }
+    },
+    "price_context": {
+      "as_of": "2026-06-25",
+      "analyzed_side": "Yes",
+      "price_source": "568历史close",
+      "current_price": 0.89,
+      "implied_probability_pct": 89.0,
+      "remaining_upside_per_share_usd": 0.11,
+      "remaining_upside_pct_if_win": 12.36,
+      "downside_per_share_usd": 0.89,
+      "odds_to_one": 0.12,
+      "entry_price": 0.3369,
+      "price_delta": 0.5531,
+      "price_delta_pct": 164.17
+    },
+    "what_the_bet": "押Keir Starmer（基尔·斯塔默）会在2027年之前成为几位领导人中**第一个永久离任**的人，只有他正式且永久地离开职位才算赢，仅宣布辞职、选举失败预定离任、或临时性权力转移（如弹劾暂停、看守角色）都不算。",
+    "resolution_criteria": "This market will resolve according to the first listed individual who ceases to occupy their listed office.\n\nAn announcement of a resignation/removal, or a scheduled departure from office due to the outcome of an election, will not alone qualify.\n\nOnly permanent removal from office will qualify for resolution. Temporary removals, such as impeachment suspensions (e.g., Yoon Suk Yeol's recent impeachment), temporary invocation of the 25th Amendment, or any similar provisional transfers of power, will not count.\n\nAdditionally, if an individual continues in a caretaker or interim role (e.g., Gabriel Attal remaining as caretaker Prime Minister of France), they will not be considered to have ceased occupying the office for the purposes of this market.\n\nIf this criterion has not been met for any of the listed individuals by December 31, 2026, 11:59 PM ET, this market will resolve to “None before 2027”. No additional individuals will be added to this market after its creation.\n\nThe resolution source for this market will be a consensus of credible reporting."
+  },
+  "market": {
+    "slug": "will-keir-starmer-be-the-next-leader-out-before-2027-565",
+    "market_id": "0xc8aaa82e283d68aba57ce829af58ce6ed3d5e94e23e9395b50dd579b2c657708"
+  },
+  "price_series": [
+    {
+      "date": "2026-04-28",
+      "price": 0.06
+    },
+    {
+      "date": "2026-05-01",
+      "price": 0.11
+    },
+    {
+      "date": "2026-05-02",
+      "price": 0.11
+    },
+    {
+      "date": "2026-05-03",
+      "price": 0.12
+    },
+    {
+      "date": "2026-05-04",
+      "price": 0.11
+    },
+    {
+      "date": "2026-05-05",
+      "price": 0.1
+    },
+    {
+      "date": "2026-05-06",
+      "price": 0.13
+    },
+    {
+      "date": "2026-05-07",
+      "price": 0.11
+    },
+    {
+      "date": "2026-05-08",
+      "price": 0.11
+    },
+    {
+      "date": "2026-05-09",
+      "price": 0.07
+    },
+    {
+      "date": "2026-05-10",
+      "price": 0.34
+    },
+    {
+      "date": "2026-05-11",
+      "price": 0.64
+    },
+    {
+      "date": "2026-05-12",
+      "price": 0.52
+    },
+    {
+      "date": "2026-05-13",
+      "price": 0.42
+    },
+    {
+      "date": "2026-05-14",
+      "price": 0.39
+    },
+    {
+      "date": "2026-05-15",
+      "price": 0.26
+    },
+    {
+      "date": "2026-05-16",
+      "price": 0.5
+    },
+    {
+      "date": "2026-05-17",
+      "price": 0.51
+    },
+    {
+      "date": "2026-05-18",
+      "price": 0.24
+    },
+    {
+      "date": "2026-05-19",
+      "price": 0.25
+    },
+    {
+      "date": "2026-05-20",
+      "price": 0.2039
+    },
+    {
+      "date": "2026-05-21",
+      "price": 0.18
+    },
+    {
+      "date": "2026-05-22",
+      "price": 0.1639
+    },
+    {
+      "date": "2026-05-23",
+      "price": 0.18
+    },
+    {
+      "date": "2026-05-24",
+      "price": 0.18
+    },
+    {
+      "date": "2026-05-25",
+      "price": 0.15
+    },
+    {
+      "date": "2026-05-26",
+      "price": 0.14
+    },
+    {
+      "date": "2026-05-27",
+      "price": 0.13
+    },
+    {
+      "date": "2026-05-28",
+      "price": 0.16
+    },
+    {
+      "date": "2026-05-29",
+      "price": 0.21
+    },
+    {
+      "date": "2026-05-30",
+      "price": 0.22
+    },
+    {
+      "date": "2026-05-31",
+      "price": 0.29
+    },
+    {
+      "date": "2026-06-01",
+      "price": 0.23
+    },
+    {
+      "date": "2026-06-02",
+      "price": 0.22
+    },
+    {
+      "date": "2026-06-03",
+      "price": 0.21
+    },
+    {
+      "date": "2026-06-04",
+      "price": 0.24
+    },
+    {
+      "date": "2026-06-05",
+      "price": 0.25
+    },
+    {
+      "date": "2026-06-06",
+      "price": 0.27
+    },
+    {
+      "date": "2026-06-07",
+      "price": 0.26
+    },
+    {
+      "date": "2026-06-08",
+      "price": 0.24
+    },
+    {
+      "date": "2026-06-09",
+      "price": 0.24
+    },
+    {
+      "date": "2026-06-10",
+      "price": 0.21
+    },
+    {
+      "date": "2026-06-11",
+      "price": 0.2428
+    },
+    {
+      "date": "2026-06-12",
+      "price": 0.21
+    },
+    {
+      "date": "2026-06-13",
+      "price": 0.27
+    },
+    {
+      "date": "2026-06-14",
+      "price": 0.29
+    },
+    {
+      "date": "2026-06-15",
+      "price": 0.28
+    },
+    {
+      "date": "2026-06-16",
+      "price": 0.31
+    },
+    {
+      "date": "2026-06-17",
+      "price": 0.31
+    },
+    {
+      "date": "2026-06-18",
+      "price": 0.33
+    },
+    {
+      "date": "2026-06-19",
+      "price": 0.69
+    },
+    {
+      "date": "2026-06-20",
+      "price": 0.53
+    },
+    {
+      "date": "2026-06-21",
+      "price": 0.4
+    },
+    {
+      "date": "2026-06-22",
+      "price": 0.8
+    },
+    {
+      "date": "2026-06-23",
+      "price": 0.82
+    },
+    {
+      "date": "2026-06-24",
+      "price": 0.9
+    },
+    {
+      "date": "2026-06-25",
+      "price": 0.89
+    }
+  ],
+  "behavior": {
+    "flag": "STATIC",
+    "fact": "近 48h 仅 0 买 / 0 卖，无显著动作（沉闷持仓）",
+    "honest_note": "动态行为：基本没动",
+    "windows": {
+      "3h": {
+        "buys": 0,
+        "sells": 0,
+        "buy_usd": 0.0,
+        "sell_usd": 0.0
+      },
+      "24h": {
+        "buys": 0,
+        "sells": 0,
+        "buy_usd": 0.0,
+        "sell_usd": 0.0
+      },
+      "48h": {
+        "buys": 0,
+        "sells": 0,
+        "buy_usd": 0.0,
+        "sell_usd": 0.0
+      }
+    }
+  },
+  "news_stream": [
+    {
+      "date": "2026-06-22",
+      "title": "starmer reflecting on political realities amid pressure to resign",
+      "summary": "有报道称斯塔默在压力下反思政治现实并面临辞职压力",
+      "url": "https://www.kentonline.co.uk/news/national/starmer-reflecting-on-political-realities-amid-pressure-to-resign-168286/",
+      "origin": "GDELT",
+      "direction": null,
+      "reaction": {
+        "available": true,
+        "kind": "confirm",
+        "move_pct": 105.0,
+        "window": [
+          "2026-06-21",
+          "2026-06-23"
+        ]
+      },
+      "same_window": true
+    },
+    {
+      "date": "2026-06-22",
+      "title": "Starmer Announces Resignation; Burnham Wins Key Endorsement - The New York Times",
+      "summary": "Keir Starmer 宣布辞去工党领袖职务，时间在2027年之前",
+      "url": "https://www.nytimes.com/live/2026/06/22/world/uk-keir-starmer-resign",
+      "origin": "Tavily",
+      "direction": "support",
+      "reaction": {
+        "available": true,
+        "kind": "confirm",
+        "move_pct": 105.0,
+        "window": [
+          "2026-06-21",
+          "2026-06-23"
+        ]
+      },
+      "same_window": true
+    },
+    {
+      "date": "2026-06-22",
+      "title": "Why the forces that felled Keir Starmer threaten so many Western leaders - CNN",
+      "summary": "Keir Starmer 于2026年6月22日宣布辞去英国首相和工党领袖职务",
+      "url": "https://www.cnn.com/2026/06/22/politics/keir-starmer-western-leaders-voter-anger",
+      "origin": "Tavily",
+      "direction": "support",
+      "reaction": {
+        "available": true,
+        "kind": "confirm",
+        "move_pct": 105.0,
+        "window": [
+          "2026-06-21",
+          "2026-06-23"
+        ]
+      },
+      "same_window": true
+    },
+    {
+      "date": "2026-06-22",
+      "title": "UK Prime Minister Keir Starmer Has Resigned - Industrial Equipment News",
+      "summary": "Keir Starmer 于2026年6月22日在唐宁街10号宣布辞职",
+      "url": "https://www.ien.com/supply-chain/news/22969299/uk-prime-minister-keir-starmer-has-resigned",
+      "origin": "Tavily",
+      "direction": "support",
+      "reaction": {
+        "available": true,
+        "kind": "confirm",
+        "move_pct": 105.0,
+        "window": [
+          "2026-06-21",
+          "2026-06-23"
+        ]
+      },
+      "same_window": true
+    },
+    {
+      "date": "2026-06-22",
+      "title": "Keir Starmer says he will quit as U.K. prime minister after facing rebellion from his own MPs - NBC News",
+      "summary": "Keir Starmer 宣布将辞去英国首相职务，时间在2027年之前",
+      "url": "https://www.nbcnews.com/world/united-kingdom/keir-starmer-resigns-prime-minister-andy-burnham-labour-party-britain-rcna257534",
+      "origin": "Tavily",
+      "direction": "support",
+      "reaction": {
+        "available": true,
+        "kind": "confirm",
+        "move_pct": 105.0,
+        "window": [
+          "2026-06-21",
+          "2026-06-23"
+        ]
+      },
+      "same_window": true
+    },
+    {
+      "date": "2026-06-22",
+      "title": "Keir Starmer announces he'll resign as UK prime minister, kicking off contest for Labour successor - AP News",
+      "summary": "Keir Starmer 于2026年6月22日在伦敦唐宁街10号宣布辞职",
+      "url": "https://apnews.com/article/keir-starmer-resignation-pressure-burnham-uk-politics-8aa1c427418c487fe644f5d5c40d1518",
+      "origin": "Tavily",
+      "direction": "support",
+      "reaction": {
+        "available": true,
+        "kind": "confirm",
+        "move_pct": 105.0,
+        "window": [
+          "2026-06-21",
+          "2026-06-23"
+        ]
+      },
+      "same_window": true
+    },
+    {
+      "date": "2026-06-21",
+      "title": "starmer insists he will stand in any leadership contest following burnham win",
+      "summary": "斯塔默在伯纳姆胜选后表示他将参加任何领导权竞争",
+      "url": "https://www.lynnnews.co.uk/national/starmer-insists-he-will-stand-in-any-leadership-contest-following-burnham-win-168228/",
+      "origin": "GDELT",
+      "direction": null,
+      "reaction": {
+        "available": true,
+        "kind": "confirm",
+        "move_pct": 50.94,
+        "window": [
+          "2026-06-20",
+          "2026-06-22"
+        ]
+      },
+      "same_window": true
+    },
+    {
+      "date": "2026-06-21",
+      "title": "UK minister says PM Starmer is considering 'political realities' amid leadership pressure - CNBC",
+      "summary": "英国部长表示 Starmer 面临领导层压力，正在考虑政治现实，且可能很快面临正式的领导权挑战",
+      "url": "https://www.cnbc.com/2026/06/21/uk-minister-is-considering-political-realities.html",
+      "origin": "Tavily",
+      "direction": "support",
+      "reaction": {
+        "available": true,
+        "kind": "confirm",
+        "move_pct": 50.94,
+        "window": [
+          "2026-06-20",
+          "2026-06-22"
+        ]
+      },
+      "same_window": true
+    },
+    {
+      "date": "2026-06-20",
+      "title": "labours andy burnham wins a special election setting up a showdown with starmer to lead britain",
+      "summary": "工党的安迪·伯纳姆赢得了一场补选",
+      "url": "https://radio.wpsu.org/2026-06-19/labours-andy-burnham-wins-a-special-election-setting-up-a-showdown-with-starmer-to-lead-britain",
+      "origin": "GDELT",
+      "direction": null,
+      "reaction": {
+        "available": true,
+        "kind": "reject",
+        "move_pct": -42.03,
+        "window": [
+          "2026-06-19",
+          "2026-06-21"
+        ]
+      },
+      "same_window": false
+    },
+    {
+      "date": "2026-06-19",
+      "title": "streeting prepared to trigger leadership contest as early as next week",
+      "summary": "Streeting准备最早在下周发起领导权竞选",
+      "url": "https://www.breakingnews.ie/world/streeting-prepared-to-trigger-leadership-contest-as-early-as-next-week-1914673.html",
+      "origin": "GDELT",
+      "direction": null,
+      "reaction": {
+        "available": true,
+        "kind": "confirm",
+        "move_pct": 60.61,
+        "window": [
+          "2026-06-18",
+          "2026-06-20"
+        ]
+      },
+      "same_window": true
+    },
+    {
+      "date": "2026-06-19",
+      "title": "former uk minister could challenge pm starmer soon",
+      "summary": "英国前部长可能很快挑战首相Starmer",
+      "url": "https://www.newcastleherald.com.au/story/9294317/former-uk-minister-could-challenge-pm-starmer-soon/",
+      "origin": "GDELT",
+      "direction": null,
+      "reaction": {
+        "available": true,
+        "kind": "confirm",
+        "move_pct": 60.61,
+        "window": [
+          "2026-06-18",
+          "2026-06-20"
+        ]
+      },
+      "same_window": true
+    }
+  ],
+  "social": {
+    "keywords": "{keir,starmer}",
+    "acceleration": 0.0,
+    "author_diversity_pct": 23.5,
+    "tweet_count": 366,
+    "organic": true,
+    "posts": [
+      {
+        "username": "jeremycorbyn",
+        "content": "Keir Starmer could have ended child poverty, homelessness and the grotesque levels of inequality in this country.\n\nInstead, he abandoned those in need, destroyed our civil liberties and facilitated genocide in Gaza.\n\nTha",
+        "url": "https://x.com/jeremycorbyn/status/2068997385158611369",
+        "likes": 22425.0,
+        "retweets": 5470.0,
+        "created_on": "2026-06-22T09:59:51Z"
+      },
+      {
+        "username": "ZelenskyyUa",
+        "content": "Keir, thank you for all our cooperation, your support, and the joint decisions that have helped make our Europe and our protection of life stronger.\n\nThe United Kingdom has been, is, and will remain among the world’s lea",
+        "url": "https://x.com/ZelenskyyUa/status/2069013990080917574",
+        "likes": 15690.0,
+        "retweets": 1919.0,
+        "created_on": "2026-06-22T11:05:50Z"
+      },
+      {
+        "username": "bennyjohnson",
+        "content": "Keir Starmer has officially RESIGNED as British Prime Minister. Here’s a quick breakdown of what he accomplished over the past two years:\n\n- Allowed an Islamic third-world invasion of the UK and the destruction of Wester",
+        "url": "https://x.com/bennyjohnson/status/2069043325735182486",
+        "likes": 4580.0,
+        "retweets": 853.0,
+        "created_on": "2026-06-22T13:02:24Z"
+      },
+      {
+        "username": "OptaJoe",
+        "content": "159 - Since Sir Keir Starmer became UK Prime Minister, Arsenal have won more games (46) and points (159) than any other Premier League side.\n\nLandslide. https://t.co/zoXTBoaChs",
+        "url": "https://x.com/OptaJoe/status/2068985727530983736",
+        "likes": 3285.0,
+        "retweets": 564.0,
+        "created_on": "2026-06-22T09:13:31Z"
+      }
+    ],
+    "note": "社媒=情绪非事实，可能被刷量；author_diversity<20% 当噪音看。仅实时，不进回测。"
+  },
+  "world_summary": "# 市场综述：Starmer 2027前离任押注\n\n**巨鲸动态**  \n近48小时0买0卖，持仓陷入沉闷观望。\n\n**事态进展**  \n多源信息显示Starmer于2026年6月22日在唐宁街宣布辞去首相及工党领袖职务。GDELT追踪显示，前卫生大臣Streeting准备最早下周发起领导权竞选，工党安迪·伯纳姆赢得补选后获得挑战资格，Starmer本人表态将参加任何领导权竞争。Polymarket盘面显示Starmer以30.5%概率排第二，仅次于哥伦比亚总统Petro（51.5%，任期固定至2026年8月7日），其支持率持续维持在-45附近，地方选举受挫及党内辞职压力或加速其在2029大选前离任。",
+  "reasoning": {
+    "follow_call": "CHASED",
+    "confidence": "low",
+    "reasoning": "这个钱包两边都有仓位，不是单纯押一个方向。支持面有多条硬催化（包括当事人直接宣布辞职），市场已经完全消化并确认了这些消息，价格从钱包入场时已经跑了一大截，现在跟进的空间只剩一点点。近48小时他没有动作。信心度为低，因为虽然方向上有实质进展，但这个钱包本身的收益结构（对冲仓位+已经涨了很多）意味着现在追进去的人面对的局面和他当初完全不同。",
+    "confidence_reasons": [
+      "底座矩阵:low(pnl=+164.1%)"
+    ],
+    "facts": {
+      "market_question": "Will Keir Starmer be the next leader out before 2027?",
+      "outcome": "Yes",
+      "today": "2026-06-25",
+      "price_room_left": 12.36,
+      "price_already_moved": 164.17,
+      "resolution_date_human": "还有约189.0天",
+      "position_type": "hedged",
+      "recent_action": "flat_no_movement",
+      "support_catalysts": [
+        {
+          "title": "Starmer Announces Resignation; Burnham Wins Key Endorsement - The New York Times",
+          "material_tag": "当事人直接表态",
+          "market_reaction": "confirmed",
+          "move_pct": 105.0,
+          "same_window": true
+        },
+        {
+          "title": "Why the forces that felled Keir Starmer threaten so many Western leaders - CNN",
+          "material_tag": "当事人直接表态",
+          "market_reaction": "confirmed",
+          "move_pct": 105.0,
+          "same_window": true
+        },
+        {
+          "title": "UK minister says PM Starmer is considering 'political realities' amid leadership pressure - CNBC",
+          "material_tag": "周边压力情绪信号",
+          "market_reaction": "confirmed",
+          "move_pct": 50.94,
+          "same_window": false
+        },
+        {
+          "title": "UK Prime Minister Keir Starmer Has Resigned - Industrial Equipment News",
+          "material_tag": "当事人直接表态",
+          "market_reaction": "confirmed",
+          "move_pct": 105.0,
+          "same_window": true
+        },
+        {
+          "title": "Keir Starmer says he will quit as U.K. prime minister after facing rebellion from his own MPs - NBC News",
+          "material_tag": "当事人直接表态",
+          "market_reaction": "confirmed",
+          "move_pct": 105.0,
+          "same_window": true
+        },
+        {
+          "title": "Keir Starmer announces he'll resign as UK prime minister, kicking off contest for Labour successor - AP News",
+          "material_tag": "当事人直接表态",
+          "market_reaction": "confirmed",
+          "move_pct": 105.0,
+          "same_window": true
+        }
+      ],
+      "threat_catalysts": [],
+      "confidence": "low",
+      "confidence_reasons": [
+        "底座矩阵:low(pnl=+164.1%)"
+      ]
+    }
+  }
+}

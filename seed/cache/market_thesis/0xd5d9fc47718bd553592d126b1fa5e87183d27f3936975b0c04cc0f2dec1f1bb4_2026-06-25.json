@@ -1,0 +1,97 @@
+{
+  "market_lean": "unclear",
+  "lean_strength": 50,
+  "confidence": "low",
+  "pivotal_unknown": "2026年11月中期选举的实际投票结果和最终席位分布尚未发生",
+  "rationale": "所有证据均来自2026年6月初选阶段，距11月大选还有5个月、距结算131天。多头仅能展示民主党初选动员力和个别议题优势，但初选表现与大选结果historically相关性有限；空头完全无证据支撑。虽然市场价格流动性极高且共识稳定在82%，但这个预测窗口内的核心变量（经济、丑闻、投票率、swing districts实际对决）全部未定，价格更多反映当前sentiment而非hard data。高流动性不能弥补时间维度的根本不确定性。",
+  "implied_prob_yes": 82,
+  "shared_pool": [
+    {
+      "title": "Mamdani’s success in New York City tests Democratic Party’s willingness to change - The Times of Israel",
+      "url": "https://www.timesofisrael.com/mamdanis-success-in-new-york-city-tests-democratic-partys-willingness-to-change/",
+      "date": "2026-06-25",
+      "summary": "# Mamdani’s success in New York City tests Democratic Party’s willingness to change. As progressives cheered across the nation, some of the most powerful Democrats in the country, including House Minority Leader Hakeem Jeffries, also of New York City, downplayed the impact of Mamdani’s victories on"
+    },
+    {
+      "title": "Sen. Elizabeth Warren: \"Thank you Donald Trump\" for the issue that will decide the midterms - CNN",
+      "url": "https://www.cnn.com/2026/06/24/politics/video/elizabeth-warren-donald-trump-housing-crisis-affordability-kaitlan-collins-midterm-elections-senate-republicans",
+      "date": "2026-06-25",
+      "summary": "Your effort and contribution in providing this feedback is much appreciated. Your CNN account Sign in to your CNN account. Elections 2026   Trump   Facts First   CNN Polls   Redistricting Tracker   Epstein Files. # Sen. Elizabeth Warren: ‘Thank you Donald Trump’ for the issue that will decide the mi"
+    },
+    {
+      "title": "Admiral fired in Hegseth purge wins Democratic primary in South Carolina - The Guardian",
+      "url": "https://www.theguardian.com/us-news/2026/jun/23/admiral-nancy-lacore-democratic-primary-south-carolina",
+      "date": "2026-06-24",
+      "summary": "# Admiral fired in Hegseth purge wins Democratic primary in South Carolina. Nancy Lacore will spearhead effort to flip Republican House seat in November’s midterm elections. A three-star navy rear-admiral fired by Pete Hegseth last year in the defense secretary’s purge of senior US military official"
+    },
+    {
+      "title": "Stephen Miller Has Fox News Meltdown After Democratic Socialists Prevail In Primaries - HuffPost",
+      "url": "https://www.huffpost.com/entry/stephen-miller-fox-news-meltdown-primary-elections_n_6a3b6dfbe4b0810d44234272",
+      "date": "2026-06-24",
+      "summary": "White House deputy chief of staff Stephen Miller engaged in a lengthy Fox News rant after several democratic socialist candidates prevailed in New York’s primary elections on Tuesday. “Over time, the Democrat party has abandoned all of that, and they have instead adopted this radical, revolutionary,"
+    },
+    {
+      "title": "James Carville Predicts Exact Date By Which Donald Trump Will ‘F**king Walk Away’ - HuffPost",
+      "url": "https://www.huffpost.com/entry/james-carville-donald-trump-prediction-end_n_6a30f886e4b07f7766eaadc5",
+      "date": "2026-06-16",
+      "summary": "Longtime Democratic strategist James Carville has doubled down on his R-rated prediction for exactly how, and by when, Donald Trump’s presidency will come to an end. Back in March, Carville predicted that Trump would simply “fucking walk away” from the White House by that time in 2027 after, he argu"
+    },
+    {
+      "title": "Mamdani’s hat-trick in New York, Trump’s hedged bet in South Carolina, and other takeaways from Tuesday’s primaries - CNN",
+      "url": "https://www.cnn.com/2026/06/24/politics/takeaways-new-york-south-carolina-primary-elections",
+      "date": "2026-06-24",
+      "summary": "# Mamdani’s hat trick in New York, Trump’s hedged bet in South Carolina, and other takeaways from Tuesday’s primaries. New York City Mayor Zohran Mamdani saw a clean sweep Tuesday, with House candidates backed by the democratic socialist mayor winning three congressional primaries — ousting two incu"
+    },
+    {
+      "title": "Judge Blocks Trump’s Order to Impose New Limits on Mail Voting - Bloomberg Law News",
+      "url": "https://news.bloomberglaw.com/us-law-week/judge-blocks-trumps-order-to-impose-new-limits-on-mail-voting",
+      "date": "2026-06-25",
+      "summary": "# Judge Blocks Trump’s Order to Impose New Limits on Mail Voting. June 25, 2026, 1:33 PM UTC. A federal judge in Boston blocked US officials from carrying out President Donald Trump’s executive order to impose new restrictions on mail-in voting in federal elections while the legal fight moves forwar"
+    },
+    {
+      "title": "Mayor’s Race in South Dakota’s Largest City Rests on 2 Votes - The New York Times",
+      "url": "https://www.nytimes.com/2026/06/24/us/mayor-sioux-falls-south-dakota.html",
+      "date": "2026-06-24",
+      "summary": "U.S.|Mayor’s Race in South Dakota’s Largest City Rests on 2 Votes. You have a preview view of this article while we are checking your access. With nearly all votes counted, a former Republican legislator was leading a Democratic state senator to be mayor of Sioux Falls, S.D. The candidates for mayor"
+    }
+  ],
+  "input_trust": {
+    "price": {
+      "trust": "high",
+      "line": "价格可信度=HIGH：流动性 Top 5%(99.39百分位) · 头部集中 top1=15.53% top10=65.5% · 近7天 401 人参与 · 成交量 Normal · ⚠squeeze_risk_flag",
+      "days_to_resolution": 131,
+      "raw": {
+        "liquidity_percentile": 99.39,
+        "top1_wallet_pct": 15.53,
+        "unique_traders_7d": 401,
+        "volume_trend": "Normal",
+        "flags": [
+          "squeeze_risk_flag"
+        ]
+      }
+    },
+    "vol": {
+      "vol": 0.013474107094734854,
+      "desc": "低(共识已稳)",
+      "line": "市场自身犹豫度=低(共识已稳)：近14日已实现波动 0.013，收盘 [0.81, 0.81, 0.81, 0.8, 0.8, 0.81]"
+    },
+    "lines": [
+      "价格可信度=HIGH：流动性 Top 5%(99.39百分位) · 头部集中 top1=15.53% top10=65.5% · 近7天 401 人参与 · 成交量 Normal · ⚠squeeze_risk_flag",
+      "市场自身犹豫度=低(共识已稳)：近14日已实现波动 0.013，收盘 [0.81, 0.81, 0.81, 0.8, 0.8, 0.81]",
+      "距结算 131 天"
+    ]
+  },
+  "event_structure": {
+    "multi": false,
+    "n_candidates": 2,
+    "baseline_pct": 50.0,
+    "event_slug": "which-party-will-win-the-house-in-2026"
+  },
+  "_audit": {
+    "bull": "# 多头论证（YES：民主党将控制众议院）\n\n民主党支持的候选人在2026年初选中展现强劲势头，纽约市长Mamdani支持的三名众议院候选人全部赢得初选，其中两人击败了现任议员，显示民主党内部动员能力和基层支持正在加强。前海军少将Nancy Lacore在南卡罗来纳州赢得民主党初选，将在11月中期选举中努力翻转共和党众议院席位，表明民主党在传统红州也在积极进攻并具备竞争力。参议员Elizabeth Warren公开表示住房危机议题将决定中期选举结果，民主党已识别出对特朗普政府有利的攻击点并将其作为竞选核心议题。联邦法官阻止特朗普限制邮寄投票的行政命令，保护了民主党选民历来依赖的投票方式，有利于提高民主党投票率。\n\n**引用：**\n- Mamdani's hat-trick in New York, Trump's hedged bet in South Carolina, and other takeaways from Tuesday's primaries - CNN\n- Admiral fired in Hegseth purge wins Democratic primary in South Carolina - The Guardian\n- Sen. Elizabeth Warren: \"Thank you Donald Trump\" for the issue that will decide the midterms - CNN\n- Judge Blocks Trump's Order to Impose New Limits on Mail Voting - Bloomberg Law News",
+    "bear": "可用证据稀薄，无法有效论证 NO。\n\n现有文章均来自 2026 年 6 月（中期选举前数月），仅涉及初选动态和个别特殊选举，**没有任何文章提供 2026 年 11 月中期选举的实际结果或众议院控制权归属信息**。文章显示民主党内进步派在纽约初选中获胜、民主党挑战南卡罗来纳州共和党席位的尝试，但这些初选胜利不能推断最终大选结果。市场当前定价 Yes 82% 表明普遍预期民主党将赢得众议院，而我作为空头需要的恰恰是**证明共和党保持控制权的证据**——这在给定文章中完全缺失。\n\n**引用：** 无有效引用（所有文章均为选举前初选报道，无最终结果）",
+    "n_articles": 8,
+    "as_of": "2026-06-25",
+    "raw_reasoner": "```json\n{\n  \"market_lean\": \"unclear\",\n  \"lean_strength_0_100\": 50,\n  \"confidence\": \"low\",\n  \"pivotal_unknown\": \"2026年11月中期选举的实际投票结果和最终席位分布尚未发生\",\n  \"rationale\": \"所有证据均来自2026年6月初选阶段，距11月大选还有5个月、距结算131天。多头仅能展示民主党初选动员力和个别议题优势，但初选表现与大选结果historically相关性有限；空头完全无证据支撑。虽然市场价格流动性极高且共识稳定在82%，但这个预测窗口内的核心变量（经济、丑闻、投票率、swing districts实际对决）全部未定，价格更多反映当前sentiment而非hard data。高流动性不能弥补时间维度的根本不确定性。\"\n}\n```"
+  }
+}

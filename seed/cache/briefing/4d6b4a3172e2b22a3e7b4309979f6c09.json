@@ -1,0 +1,296 @@
+{
+  "meta": {
+    "wallet": "0xf1ef8705e9f63c790c6fffd6329aea7011718cd6",
+    "market": "Will the Democratic Party control the House after the 2026 Midterm elections?",
+    "analyzed_side": "Yes",
+    "as_of": "2026-06-25",
+    "mode": "live",
+    "catalyst_anchor": "2026-06-25",
+    "settle": "还有约131.0天"
+  },
+  "who_trader_profile": {
+    "wallet": "0xf1ef8705e9f63c790c6fffd6329aea7011718cd6",
+    "quality": {
+      "combined_risk_score": 0,
+      "max_drawdown": 0.1597,
+      "drawdown_frequency": 0.1333,
+      "avg_trade_size": 272.08,
+      "markets_traded": 163,
+      "num_markets_traded": 163,
+      "category_diversity_score": 1.871,
+      "market_concentration_ratio": 0.1727,
+      "annualized_return": null,
+      "gain_to_pain_ratio": 4.9736,
+      "equity_curve_pattern": "steady",
+      "perfect_timing_flag": false,
+      "flagged_metrics": "{}",
+      "losing_trades": 68,
+      "best_market_pnl": 71279.98,
+      "dominant_market_pnl": 57694.62,
+      "window_days": "15"
+    },
+    "category_specialization": [
+      {
+        "category": "Other",
+        "roi": 24.0938,
+        "win_rate": 0.6333,
+        "total_pnl": 157748.16,
+        "total_trades": 2382
+      },
+      {
+        "category": "Politics / Global",
+        "roi": 43.8747,
+        "win_rate": 0.78,
+        "total_pnl": 84633.12,
+        "total_trades": 404
+      },
+      {
+        "category": "Politics",
+        "roi": 42.2931,
+        "win_rate": 0.6094,
+        "total_pnl": 84555.56,
+        "total_trades": 434
+      },
+      {
+        "category": "Politics / US",
+        "roi": 83.7545,
+        "win_rate": 0.9412,
+        "total_pnl": 74163.05,
+        "total_trades": 197
+      },
+      {
+        "category": "Politics / US / Trump",
+        "roi": 169.7177,
+        "win_rate": 0.9375,
+        "total_pnl": 72038.68,
+        "total_trades": 113
+      },
+      {
+        "category": "Sports",
+        "roi": 15.6452,
+        "win_rate": 0.6387,
+        "total_pnl": 71673.14,
+        "total_trades": 1991
+      },
+      {
+        "category": "Sports / Basketball",
+        "roi": 0.0,
+        "win_rate": 0.3333,
+        "total_pnl": 51289.08,
+        "total_trades": 0
+      },
+      {
+        "category": "Sports / Basketball / NBA",
+        "roi": 0.0,
+        "win_rate": 0.3333,
+        "total_pnl": 51289.08,
+        "total_trades": 0
+      },
+      {
+        "category": "Sports / Soccer",
+        "roi": 4.4915,
+        "win_rate": 0.6571,
+        "total_pnl": 19063.75,
+        "total_trades": 1820
+      },
+      {
+        "category": "Politics / US / Elections",
+        "roi": 4.608,
+        "win_rate": 1.0,
+        "total_pnl": 2124.37,
+        "total_trades": 84
+      },
+      {
+        "category": "Sports / Golf",
+        "roi": 36.2088,
+        "win_rate": 0.5,
+        "total_pnl": 1329.12,
+        "total_trades": 14
+      },
+      {
+        "category": "Esports / Counter-Strike",
+        "roi": 8.6953,
+        "win_rate": 0.5,
+        "total_pnl": 479.98,
+        "total_trades": 14
+      },
+      {
+        "category": "Esports",
+        "roi": 8.6953,
+        "win_rate": 0.5,
+        "total_pnl": 479.98,
+        "total_trades": 14
+      },
+      {
+        "category": "Finance & Markets",
+        "roi": -0.4748,
+        "win_rate": 0.0,
+        "total_pnl": -160.0,
+        "total_trades": 23
+      },
+      {
+        "category": "Sports / Combat Sports",
+        "roi": -1.996,
+        "win_rate": 0.5714,
+        "total_pnl": -488.79,
+        "total_trades": 143
+      }
+    ],
+    "official_rank": {
+      "period": "30d",
+      "rank": 217,
+      "roi": "0.170345",
+      "win_rate": "0.6432",
+      "sharpe_ratio": "0.0734",
+      "total_pnl": "121197.0227",
+      "total_invested": "711481.29",
+      "total_trades": 2648,
+      "markets_traded": 184
+    },
+    "realized_pnl_recent": {
+      "window": [
+        "2026-05-20",
+        "2026-06-20"
+      ],
+      "days_returned": 9,
+      "realized_pnl_sum": -19514.93
+    },
+    "h_score": {
+      "available": true,
+      "h_score": "84.233",
+      "tier": "Elite",
+      "leaderboard_rank": 41
+    }
+  },
+  "what_position_actions": {
+    "wallet": "0xf1ef8705e9f63c790c6fffd6329aea7011718cd6",
+    "condition_id": "0xd5d9fc47718bd553592d126b1fa5e87183d27f3936975b0c04cc0f2dec1f1bb4",
+    "analyzed_side": "Yes",
+    "market": {
+      "question": "Will the Democratic Party control the House after the 2026 Midterm elections?",
+      "winning_outcome": null,
+      "closed": false,
+      "settle_date": "2026-11-03",
+      "days_to_settlement": 131.0,
+      "settle_note": "还有约131.0天"
+    },
+    "two_side_distribution": {
+      "hedged": false,
+      "by_outcome": {
+        "Yes": {
+          "trades": 44,
+          "shares": 30000.0
+        }
+      },
+      "note": "仅单边建仓"
+    },
+    "actions": {
+      "entry_time": "2026-02-27 09:46",
+      "last_add_time": "2026-06-15 15:33",
+      "num_buys": 44,
+      "num_sells": 1,
+      "added_over_time": true,
+      "avg_entry_price": 0.8333,
+      "net_shares": 20000.0,
+      "net_cost_usd": 16599.99
+    },
+    "unrealized": {
+      "current_price": 0.82,
+      "price_source": "568最新close",
+      "current_value_usd": 16399.99,
+      "unrealized_pnl_usd": -200.0,
+      "unrealized_pct": -1.2,
+      "note": "持仓中浮盈亏"
+    }
+  },
+  "price_context": {
+    "as_of": "2026-06-25",
+    "analyzed_side": "Yes",
+    "price_source": "568历史close",
+    "current_price": 0.82,
+    "implied_probability_pct": 82.0,
+    "remaining_upside_per_share_usd": 0.18,
+    "remaining_upside_pct_if_win": 21.95,
+    "downside_per_share_usd": 0.82,
+    "odds_to_one": 0.22,
+    "entry_price": 0.8333,
+    "price_delta": -0.0133,
+    "price_delta_pct": -1.6
+  },
+  "catalysts": {
+    "positive": [
+      {
+        "title": "Sen. Elizabeth Warren: \"Thank you Donald Trump\" for the issue that will decide the midterms - CNN",
+        "url": "https://www.cnn.com/2026/06/24/politics/video/elizabeth-warren-donald-trump-housing-crisis-affordability-kaitlan-collins-midterm-elections-senate-republicans",
+        "date": "2026-06-25",
+        "reason": "民主党参议员沃伦表示特朗普在住房危机等议题上的表现将决定中期选举结果，暗示民主党认为这些议题对其有利",
+        "type": "当事人直接表态",
+        "price_reaction": {
+          "available": false,
+          "reason": "as_of_leak_guard",
+          "note": "新闻后价格尚未发生(回测防泄漏)，反应不可知",
+          "market_check": "市场反应不可知"
+        }
+      }
+    ],
+    "negative": [
+      {
+        "title": "Commentary: Gerrymanders, judges and an alley-oop: A look at the midterm fight for control of Congress - Los Angeles Times",
+        "url": "https://www.latimes.com/politics/story/2026-06-17/midterm-election-handicapping-senate-house-control-congress-democrats-republicans",
+        "date": "2026-06-17",
+        "reason": "文章指出在重新划分选区的战斗基本结束后，共和党获得了优势，尽管他们仍然面临失去众议院的风险，但选区划分结果对共和党有利的事实对民主党夺回众议院构成障碍。",
+        "type": "其他背景",
+        "price_reaction": {
+          "available": true,
+          "window": [
+            "2026-06-16",
+            "2026-06-18"
+          ],
+          "price_before": 0.82,
+          "price_after": 0.8,
+          "move_pct": -2.44,
+          "direction": "▼",
+          "caveat": "该新闻发布前后市场变动，时间相关非因果",
+          "market_check": "市场反应微弱(<5%)"
+        }
+      }
+    ],
+    "balance_summary": "正向证据按类型陈列：当事人直接表态×1；负向证据按类型陈列：其他背景×1。每条已刻明客观事实类型（材质）——系统不替你称量轻重，不同材质的份量请自行掂量。 系统已完成证据陈述，天平由你裁决。",
+    "honesty_caveat": {
+      "positive_side": "fully_backed",
+      "negative_side": "fully_backed"
+    },
+    "guards": {
+      "relevance_dropped": [
+        {
+          "title": "Mamdani's hat-trick in New York, Trump's hedged bet in South Carolina, and other takeaways from Tuesday's primaries - CNN",
+          "reason": "核心实体不在标题=边角混入"
+        },
+        {
+          "title": "2026 Redistricting Wars: The Conclusion - Daily Kos",
+          "reason": "核心实体不在标题=边角混入"
+        }
+      ],
+      "type_deviations": [],
+      "weight_word_hits": [],
+      "weight_in_reason_hits": [],
+      "fear_lexicon_hits": [],
+      "directive_hits": []
+    }
+  },
+  "_audit": {
+    "teacher_tokens_approx": 2636,
+    "free_sources": [
+      "581",
+      "579",
+      "569",
+      "556",
+      "568",
+      "574"
+    ],
+    "catalyst_window": [
+      "2026-06-15",
+      "2026-06-25"
+    ]
+  }
+}

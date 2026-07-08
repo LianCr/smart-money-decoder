@@ -1,0 +1,93 @@
+{
+  "market_context": {
+    "market_id": "0xebb9a87581bb1de91adc9bf9d1a9528cc203976a7f3ab2c9f98b8ef8ff531f30",
+    "market_slug": "will-donald-trump-visit-turkey-in-2026",
+    "market_question": "Will Donald Trump visit Turkey in 2026?",
+    "analyzed_side": "Yes",
+    "as_of": "2026-06-25",
+    "wallet": "0x7c3db723f1d4d8cb9c550095203b686cb11e5c6b",
+    "behavioral_flag": {
+      "flag": "STATIC",
+      "fact": "近 48h 仅 0 买 / 0 卖，无显著动作（沉闷持仓）",
+      "honest_note": "动态行为：基本没动",
+      "windows": {
+        "3h": {
+          "buys": 0,
+          "sells": 0,
+          "buy_usd": 0.0,
+          "sell_usd": 0.0
+        },
+        "24h": {
+          "buys": 0,
+          "sells": 0,
+          "buy_usd": 0.0,
+          "sell_usd": 0.0
+        },
+        "48h": {
+          "buys": 0,
+          "sells": 0,
+          "buy_usd": 0.0,
+          "sell_usd": 0.0
+        }
+      }
+    },
+    "ai_experimental_summary": "**市场观察综述 | 特朗普2026访土问题**\n\n**巨鲸动向**：近48小时市场呈现零交易状态，无买入卖出动作，大额持仓者保持完全静默观望。\n\n**客观事实层面**：Milo Yiannopoulos透露Kanye West计划伊斯坦布尔演出；特朗普公开提及与伊朗达成协议、结束冲突的可能性上升；土耳其-德国柏林会谈将欧洲安全置于核心议程。当前距2026年底剩余半年窗口期，尚无官方访问土耳其日程公布。市场处于信息真空期的完全静态。",
+    "timeline_events": [
+      {
+        "timestamp": "2026-05-31",
+        "type": "catalyst",
+        "title": "milo yiannopoulos says kanye west will make history at the istanbul show",
+        "source": "thenews.com.pk",
+        "url": "https://www.thenews.com.pk/latest/1404022-milo-yiannopoulos-says-kanye-west-will-make-history-at-the-istanbul-show",
+        "price_impact_string": "Yes 价格变动 +14%（71% → 85%）",
+        "fact_summary": "Milo Yiannopoulos表示Kanye West将在伊斯坦布尔演出创造历史",
+        "temporal_note": "该事件与价格变动时间相关，非确证因果"
+      },
+      {
+        "timestamp": "2026-06-14",
+        "type": "catalyst",
+        "title": ".trump raises expectations deal wind iran war may close",
+        "source": "southwalesargus.co.uk",
+        "url": "https://www.southwalesargus.co.uk/news/national/26188023.trump-raises-expectations-deal-wind-iran-war-may-close/",
+        "price_impact_string": "Yes 价格变动 -7%（94% → 87%）",
+        "fact_summary": "特朗普提高了与伊朗达成协议、结束战争可能性的预期",
+        "temporal_note": "该事件与价格变动时间相关，非确证因果 · 同窗多条,合计不可归因到单条"
+      },
+      {
+        "timestamp": "2026-06-14",
+        "type": "catalyst",
+        "title": "turkiye germany dialogue european security top agenda in berlin talks",
+        "source": "dailysabah.com",
+        "url": "https://www.dailysabah.com/politics/eu-affairs/turkiye-germany-dialogue-european-security-top-agenda-in-berlin-talks",
+        "price_impact_string": "Yes 价格变动 -7%（94% → 87%）",
+        "fact_summary": "土耳其与德国在柏林举行会谈，欧洲安全问题列为首要议程",
+        "temporal_note": "该事件与价格变动时间相关，非确证因果 · 同窗多条,合计不可归因到单条"
+      },
+      {
+        "timestamp": "2026-06-19",
+        "type": "price_only",
+        "title": null,
+        "source": null,
+        "price_impact_string": "Yes 价格变动 -7%（98% → 91%）",
+        "fact_summary": "价格异动，但该时间窗 GDELT 三层洗不出对题公开新闻（可能抢跑/薄盘/内幕，系统无法证实）。",
+        "temporal_note": "未归因（无强关联新闻）"
+      },
+      {
+        "timestamp": "2026-06-03",
+        "type": "price_only",
+        "title": null,
+        "source": null,
+        "price_impact_string": "Yes 价格变动 +7%（84% → 91%）",
+        "fact_summary": "价格异动，但该时间窗 GDELT 三层洗不出对题公开新闻（可能抢跑/薄盘/内幕，系统无法证实）。",
+        "temporal_note": "未归因（无强关联新闻）"
+      }
+    ],
+    "_audit": {
+      "jumps_found": 4,
+      "events": 5,
+      "behavior": "STATIC",
+      "teacher_tokens_approx": 3048,
+      "boundaries": "因果→时间相关 · 无催化剂留白(行为感知内幕) · 价格窗≤as_of · 行为=事实非判断 · 综述无判断"
+    }
+  }
+}

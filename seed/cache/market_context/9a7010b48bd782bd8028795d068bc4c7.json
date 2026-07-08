@@ -1,0 +1,84 @@
+{
+  "market_context": {
+    "market_id": "0x763a7f1e440693b54c56da02d338c2092053567dd865174387d06ee5612fdc9e",
+    "market_slug": "will-andy-burnham-be-the-next-prime-minister-of-the-united-kingdom-in-2026-882",
+    "market_question": "Will Andy Burnham be the next Prime Minister of the United Kingdom in 2026?",
+    "analyzed_side": "Yes",
+    "as_of": "2026-06-25",
+    "wallet": "0x85b8b010ac6e24a23625621724a15513c80d6b6a",
+    "behavioral_flag": {
+      "flag": "STATIC",
+      "fact": "近 48h 仅 1 买 / 0 卖，无显著动作（沉闷持仓）",
+      "honest_note": "动态行为：基本没动",
+      "windows": {
+        "3h": {
+          "buys": 0,
+          "sells": 0,
+          "buy_usd": 0.0,
+          "sell_usd": 0.0
+        },
+        "24h": {
+          "buys": 0,
+          "sells": 0,
+          "buy_usd": 0.0,
+          "sell_usd": 0.0
+        },
+        "48h": {
+          "buys": 1,
+          "sells": 0,
+          "buy_usd": 8177.0,
+          "sell_usd": 0.0
+        }
+      }
+    },
+    "ai_experimental_summary": "**市场综述 | Andy Burnham 2026年任首相概率**\n\n近48小时钱包动态极度沉闷：仅录得1笔买入、0笔卖出，大额持仓方无明显调仓动作。\n\n客观事态：斯塔默公开表态希望伯纳姆在工党政府中承担关键职责；斯特里廷最快下周启动党魁竞选；《卫报》报道梅克菲尔德选区民调显示选民认为工党\"已偏离轨道、需要变革\"。现任架构与潜在挑战者动向并存，但交易层面暂无资金明确押注任何方向。",
+    "timeline_events": [
+      {
+        "timestamp": "2026-06-19",
+        "type": "catalyst",
+        "title": "starmer says wants burnham play big part labour government",
+        "source": "halsteadgazette.co.uk",
+        "url": "https://www.halsteadgazette.co.uk/news/national/26201451.starmer-says-wants-burnham-play-big-part-labour-government/",
+        "price_impact_string": "Yes 价格变动 +12%（81% → 93%）",
+        "fact_summary": "斯塔默表示希望伯纳姆在工党政府中发挥重要作用",
+        "temporal_note": "该事件与价格变动时间相关，非确证因果 · 同窗多条,合计不可归因到单条"
+      },
+      {
+        "timestamp": "2026-06-19",
+        "type": "catalyst",
+        "title": "streeting prepared to trigger leadership contest as early as next week",
+        "source": "breakingnews.ie",
+        "url": "https://www.breakingnews.ie/world/streeting-prepared-to-trigger-leadership-contest-as-early-as-next-week-1914673.html",
+        "price_impact_string": "Yes 价格变动 +12%（81% → 93%）",
+        "fact_summary": "斯特里廷准备最早于下周发起领导权竞选",
+        "temporal_note": "该事件与价格变动时间相关，非确证因果 · 同窗多条,合计不可归因到单条"
+      },
+      {
+        "timestamp": "2026-06-17",
+        "type": "price_only",
+        "title": null,
+        "source": null,
+        "price_impact_string": "Yes 价格变动 +7%（69% → 76%）",
+        "fact_summary": "价格异动，但该时间窗 GDELT 三层洗不出对题公开新闻（可能抢跑/薄盘/内幕，系统无法证实）。",
+        "temporal_note": "未归因（无强关联新闻）"
+      },
+      {
+        "timestamp": "2026-06-01",
+        "type": "catalyst",
+        "title": "labour have lost their way voters in makerfield say its time for a change",
+        "source": "theguardian.com",
+        "url": "https://www.theguardian.com/politics/2026/may/31/labour-have-lost-their-way-voters-in-makerfield-say-its-time-for-a-change",
+        "price_impact_string": "Yes 价格变动 +7%（57% → 63%）",
+        "fact_summary": "英国卫报报道梅克菲尔德选区选民表示工党已迷失方向、是时候改变了",
+        "temporal_note": "该事件与价格变动时间相关，非确证因果"
+      }
+    ],
+    "_audit": {
+      "jumps_found": 3,
+      "events": 4,
+      "behavior": "STATIC",
+      "teacher_tokens_approx": 2273,
+      "boundaries": "因果→时间相关 · 无催化剂留白(行为感知内幕) · 价格窗≤as_of · 行为=事实非判断 · 综述无判断"
+    }
+  }
+}

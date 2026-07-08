@@ -1,0 +1,1008 @@
+{
+  "wallet": "0xbaa2bcb5439e985ce4ccf815b4700027d1b92c73",
+  "as_of": "2026-06-25",
+  "identity": {
+    "profile": {
+      "address": "0xbaa2bcb5439e985ce4ccf815b4700027d1b92c73",
+      "name": "denizz",
+      "pseudonym": "Illustrious-Spectacles",
+      "profile_image": null
+    },
+    "pnl_history": [
+      {
+        "t": 1732752000,
+        "p": 60870.375
+      },
+      {
+        "t": 1733011200,
+        "p": 66857.53
+      },
+      {
+        "t": 1733356800,
+        "p": 65633.07
+      },
+      {
+        "t": 1733616000,
+        "p": 110471.125
+      },
+      {
+        "t": 1733961600,
+        "p": 130638.67
+      },
+      {
+        "t": 1734307200,
+        "p": 126597.016
+      },
+      {
+        "t": 1734566400,
+        "p": 128790.414
+      },
+      {
+        "t": 1734912000,
+        "p": 70220.38
+      },
+      {
+        "t": 1735171200,
+        "p": 69378.24
+      },
+      {
+        "t": 1735516800,
+        "p": 71655.9
+      },
+      {
+        "t": 1735862400,
+        "p": 68088.01
+      },
+      {
+        "t": 1736121600,
+        "p": 70386.22
+      },
+      {
+        "t": 1736467200,
+        "p": 71271.62
+      },
+      {
+        "t": 1736812800,
+        "p": 104686.8
+      },
+      {
+        "t": 1737072000,
+        "p": 104080.3
+      },
+      {
+        "t": 1737417600,
+        "p": 227735.05
+      },
+      {
+        "t": 1737676800,
+        "p": 231036.58
+      },
+      {
+        "t": 1738022400,
+        "p": 233138.83
+      },
+      {
+        "t": 1738368000,
+        "p": 240512.56
+      },
+      {
+        "t": 1738627200,
+        "p": 238260.05
+      },
+      {
+        "t": 1738972800,
+        "p": 246483.64
+      },
+      {
+        "t": 1739318400,
+        "p": 244521.84
+      },
+      {
+        "t": 1739577600,
+        "p": 254848.95
+      },
+      {
+        "t": 1739923200,
+        "p": 271089.7
+      },
+      {
+        "t": 1740182400,
+        "p": 256303.44
+      },
+      {
+        "t": 1740528000,
+        "p": 273072.97
+      },
+      {
+        "t": 1740873600,
+        "p": 275381.97
+      },
+      {
+        "t": 1741132800,
+        "p": 286985.8
+      },
+      {
+        "t": 1741478400,
+        "p": 312655.44
+      },
+      {
+        "t": 1741824000,
+        "p": 308808.28
+      },
+      {
+        "t": 1742083200,
+        "p": 322831.12
+      },
+      {
+        "t": 1742428800,
+        "p": 340947.9
+      },
+      {
+        "t": 1742688000,
+        "p": 359199.5
+      },
+      {
+        "t": 1743033600,
+        "p": 390860.8
+      },
+      {
+        "t": 1743379200,
+        "p": 404194.56
+      },
+      {
+        "t": 1743638400,
+        "p": 410341.3
+      },
+      {
+        "t": 1743984000,
+        "p": 439197.84
+      },
+      {
+        "t": 1744329600,
+        "p": 462404.78
+      },
+      {
+        "t": 1744588800,
+        "p": 485946.66
+      },
+      {
+        "t": 1744934400,
+        "p": 430170.4
+      },
+      {
+        "t": 1745193600,
+        "p": 430270.3
+      },
+      {
+        "t": 1745539200,
+        "p": 431579.7
+      },
+      {
+        "t": 1745884800,
+        "p": 432320.97
+      },
+      {
+        "t": 1746144000,
+        "p": 466009.44
+      },
+      {
+        "t": 1746489600,
+        "p": 443164.78
+      },
+      {
+        "t": 1746835200,
+        "p": 452494.53
+      },
+      {
+        "t": 1747094400,
+        "p": 477311.72
+      },
+      {
+        "t": 1747440000,
+        "p": 413406.03
+      },
+      {
+        "t": 1747699200,
+        "p": 420877.66
+      },
+      {
+        "t": 1748044800,
+        "p": 380146.22
+      },
+      {
+        "t": 1748390400,
+        "p": 402120.47
+      },
+      {
+        "t": 1748649600,
+        "p": 385769.53
+      },
+      {
+        "t": 1748995200,
+        "p": 361440.06
+      },
+      {
+        "t": 1749340800,
+        "p": 356117.53
+      },
+      {
+        "t": 1749600000,
+        "p": 364781.53
+      },
+      {
+        "t": 1749945600,
+        "p": 323460.56
+      },
+      {
+        "t": 1750204800,
+        "p": 313935.25
+      },
+      {
+        "t": 1750550400,
+        "p": 265827.22
+      },
+      {
+        "t": 1750896000,
+        "p": 319962.12
+      },
+      {
+        "t": 1751155200,
+        "p": 338226.97
+      },
+      {
+        "t": 1751500800,
+        "p": 347483.88
+      },
+      {
+        "t": 1751760000,
+        "p": 362129.03
+      },
+      {
+        "t": 1752105600,
+        "p": 360877.72
+      },
+      {
+        "t": 1752451200,
+        "p": 288945.12
+      },
+      {
+        "t": 1752710400,
+        "p": 312851.44
+      },
+      {
+        "t": 1753056000,
+        "p": 301355.9
+      },
+      {
+        "t": 1753401600,
+        "p": 225810.45
+      },
+      {
+        "t": 1753660800,
+        "p": 221725.39
+      },
+      {
+        "t": 1754006400,
+        "p": 186953.27
+      },
+      {
+        "t": 1754265600,
+        "p": 179745.16
+      },
+      {
+        "t": 1754611200,
+        "p": 178443.2
+      },
+      {
+        "t": 1754956800,
+        "p": 179902.03
+      },
+      {
+        "t": 1755216000,
+        "p": 182704.17
+      },
+      {
+        "t": 1755561600,
+        "p": 195136.3
+      },
+      {
+        "t": 1755907200,
+        "p": 190276.48
+      },
+      {
+        "t": 1756166400,
+        "p": 190894.17
+      },
+      {
+        "t": 1756512000,
+        "p": 198798.9
+      },
+      {
+        "t": 1756771200,
+        "p": 203019.25
+      },
+      {
+        "t": 1757116800,
+        "p": 206964.98
+      },
+      {
+        "t": 1757462400,
+        "p": 209623.12
+      },
+      {
+        "t": 1757721600,
+        "p": 213905.7
+      },
+      {
+        "t": 1758067200,
+        "p": 215074.48
+      },
+      {
+        "t": 1758412800,
+        "p": 215148.73
+      },
+      {
+        "t": 1758672000,
+        "p": 216260.02
+      },
+      {
+        "t": 1759017600,
+        "p": 218324.72
+      },
+      {
+        "t": 1759276800,
+        "p": 203579.75
+      },
+      {
+        "t": 1759622400,
+        "p": 187908.56
+      },
+      {
+        "t": 1759968000,
+        "p": 354709.66
+      },
+      {
+        "t": 1760227200,
+        "p": 378048.56
+      },
+      {
+        "t": 1760572800,
+        "p": 405196.47
+      },
+      {
+        "t": 1760918400,
+        "p": 417254.84
+      },
+      {
+        "t": 1761177600,
+        "p": 433919.5
+      },
+      {
+        "t": 1761523200,
+        "p": 447483.9
+      },
+      {
+        "t": 1761782400,
+        "p": 442943.8
+      },
+      {
+        "t": 1762128000,
+        "p": 458284.78
+      },
+      {
+        "t": 1762473600,
+        "p": 460109.88
+      },
+      {
+        "t": 1762732800,
+        "p": 475252.2
+      },
+      {
+        "t": 1763078400,
+        "p": 479412.5
+      },
+      {
+        "t": 1763424000,
+        "p": 483756.12
+      },
+      {
+        "t": 1763683200,
+        "p": 479530.28
+      },
+      {
+        "t": 1764028800,
+        "p": 472332.47
+      },
+      {
+        "t": 1764288000,
+        "p": 481129.8
+      },
+      {
+        "t": 1764633600,
+        "p": 452086.53
+      },
+      {
+        "t": 1764979200,
+        "p": 463812.38
+      },
+      {
+        "t": 1765238400,
+        "p": 473818.03
+      },
+      {
+        "t": 1765584000,
+        "p": 479142.12
+      },
+      {
+        "t": 1765929600,
+        "p": 485807.12
+      },
+      {
+        "t": 1766188800,
+        "p": 501212.34
+      },
+      {
+        "t": 1766534400,
+        "p": 507473.16
+      },
+      {
+        "t": 1766793600,
+        "p": 495826.56
+      },
+      {
+        "t": 1767139200,
+        "p": 519789.25
+      },
+      {
+        "t": 1767484800,
+        "p": 420661.22
+      },
+      {
+        "t": 1767744000,
+        "p": 504284.56
+      },
+      {
+        "t": 1768089600,
+        "p": 434370.66
+      },
+      {
+        "t": 1768348800,
+        "p": 435687.7
+      },
+      {
+        "t": 1768694400,
+        "p": 530177.56
+      },
+      {
+        "t": 1769040000,
+        "p": 550682.1
+      },
+      {
+        "t": 1769299200,
+        "p": 546789.25
+      },
+      {
+        "t": 1769644800,
+        "p": 561902.06
+      },
+      {
+        "t": 1769990400,
+        "p": 605866.6
+      },
+      {
+        "t": 1770249600,
+        "p": 640245.06
+      },
+      {
+        "t": 1770595200,
+        "p": 628710.25
+      },
+      {
+        "t": 1770854400,
+        "p": 633961.6
+      },
+      {
+        "t": 1771200000,
+        "p": 655118.1
+      },
+      {
+        "t": 1771545600,
+        "p": 587872.25
+      },
+      {
+        "t": 1771804800,
+        "p": 593940.44
+      },
+      {
+        "t": 1772150400,
+        "p": 595190.6
+      },
+      {
+        "t": 1772496000,
+        "p": 820940.8
+      },
+      {
+        "t": 1772755200,
+        "p": 817297.8
+      },
+      {
+        "t": 1773100800,
+        "p": 916042.75
+      },
+      {
+        "t": 1773360000,
+        "p": 895198.75
+      },
+      {
+        "t": 1773705600,
+        "p": 865252.5
+      },
+      {
+        "t": 1774051200,
+        "p": 862344.3
+      },
+      {
+        "t": 1774310400,
+        "p": 901183.25
+      },
+      {
+        "t": 1774656000,
+        "p": 886537.2
+      },
+      {
+        "t": 1775001600,
+        "p": 944771.9
+      },
+      {
+        "t": 1775260800,
+        "p": 842365.5
+      },
+      {
+        "t": 1775606400,
+        "p": 1472274.4
+      },
+      {
+        "t": 1775865600,
+        "p": 1570970.9
+      },
+      {
+        "t": 1776211200,
+        "p": 1757597.1
+      },
+      {
+        "t": 1776556800,
+        "p": 1775779.6
+      },
+      {
+        "t": 1776816000,
+        "p": 1720804.2
+      },
+      {
+        "t": 1777161600,
+        "p": 1679291.2
+      },
+      {
+        "t": 1777507200,
+        "p": 1727205.4
+      },
+      {
+        "t": 1777766400,
+        "p": 1788522.9
+      },
+      {
+        "t": 1778112000,
+        "p": 1798893.6
+      },
+      {
+        "t": 1778371200,
+        "p": 1826896.4
+      },
+      {
+        "t": 1778716800,
+        "p": 1751641.8
+      },
+      {
+        "t": 1779062400,
+        "p": 1754870.6
+      },
+      {
+        "t": 1779321600,
+        "p": 1791180.4
+      },
+      {
+        "t": 1779667200,
+        "p": 1712711.5
+      },
+      {
+        "t": 1780012800,
+        "p": 1570509.8
+      },
+      {
+        "t": 1780272000,
+        "p": 1451600.1
+      },
+      {
+        "t": 1780617600,
+        "p": 1413327.5
+      },
+      {
+        "t": 1780876800,
+        "p": 1399141.6
+      },
+      {
+        "t": 1781222400,
+        "p": 1592598.5
+      },
+      {
+        "t": 1781568000,
+        "p": 2560648.5
+      },
+      {
+        "t": 1781827200,
+        "p": 2627883.8
+      },
+      {
+        "t": 1782172800,
+        "p": 2415413.0
+      },
+      {
+        "t": 1782428400,
+        "p": 2426441.5
+      }
+    ],
+    "who_trader_profile": {
+      "wallet": "0xbaa2bcb5439e985ce4ccf815b4700027d1b92c73",
+      "quality": {
+        "combined_risk_score": 10,
+        "max_drawdown": 0.0871,
+        "drawdown_frequency": 0.2,
+        "avg_trade_size": 533.38,
+        "markets_traded": 94,
+        "num_markets_traded": 94,
+        "category_diversity_score": 0.76,
+        "market_concentration_ratio": 0.4928,
+        "annualized_return": null,
+        "gain_to_pain_ratio": 12.0631,
+        "equity_curve_pattern": "volatile",
+        "perfect_timing_flag": false,
+        "flagged_metrics": "{position_size_volatility}",
+        "losing_trades": 740,
+        "best_market_pnl": 832259.67,
+        "dominant_market_pnl": 832259.67,
+        "window_days": "15"
+      },
+      "category_specialization": [
+        {
+          "category": "Politics",
+          "roi": 49.1192,
+          "win_rate": 0.4066,
+          "total_pnl": 1057918.48,
+          "total_trades": 4038
+        },
+        {
+          "category": "Politics / Global",
+          "roi": 49.1255,
+          "win_rate": 0.4066,
+          "total_pnl": 1057918.48,
+          "total_trades": 4035
+        },
+        {
+          "category": "Other",
+          "roi": 49.2036,
+          "win_rate": 0.4056,
+          "total_pnl": 1057263.03,
+          "total_trades": 4017
+        },
+        {
+          "category": "Politics / US",
+          "roi": 110.5388,
+          "win_rate": 0.439,
+          "total_pnl": 825258.66,
+          "total_trades": 2236
+        },
+        {
+          "category": "Politics / US / Trump",
+          "roi": 110.5388,
+          "win_rate": 0.439,
+          "total_pnl": 825258.66,
+          "total_trades": 2236
+        },
+        {
+          "category": "Finance & Markets",
+          "roi": -14.8607,
+          "win_rate": 0.2085,
+          "total_pnl": -1311.46,
+          "total_trades": 266
+        }
+      ],
+      "official_rank": {
+        "period": "30d",
+        "rank": 31,
+        "roi": "0.237321",
+        "win_rate": "0.3073",
+        "sharpe_ratio": "0.0355",
+        "total_pnl": "737359.9499",
+        "total_invested": "3107015.03",
+        "total_trades": 7046,
+        "markets_traded": 132
+      },
+      "realized_pnl_recent": {
+        "window": [
+          "2026-05-20",
+          "2026-06-20"
+        ],
+        "days_returned": 11,
+        "realized_pnl_sum": -268035.55
+      },
+      "h_score": {
+        "available": false,
+        "note": "不在 H-Score 榜首页（584 无按地址查，官方排名见 official_rank/579）"
+      }
+    }
+  },
+  "position": {
+    "meta": {
+      "wallet": "0xbaa2bcb5439e985ce4ccf815b4700027d1b92c73",
+      "market": "US-Iran Final Nuclear Deal by August 31, 2026?",
+      "analyzed_side": "No",
+      "as_of": "2026-06-25",
+      "mode": "live",
+      "catalyst_anchor": "2026-06-25",
+      "settle": "还有约68.0天"
+    },
+    "what_position_actions": {
+      "wallet": "0xbaa2bcb5439e985ce4ccf815b4700027d1b92c73",
+      "condition_id": "0xa1b3158fedfddaf2a0d8b364f6a57ee68146fb6ad458222aa8e02bcf0abbb099",
+      "analyzed_side": "No",
+      "market": {
+        "question": "US-Iran Final Nuclear Deal by August 31, 2026?",
+        "winning_outcome": null,
+        "closed": false,
+        "settle_date": "2026-08-31",
+        "days_to_settlement": 68.0,
+        "settle_note": "还有约68.0天"
+      },
+      "two_side_distribution": {
+        "hedged": true,
+        "by_outcome": {
+          "Yes": {
+            "trades": 1,
+            "shares": 202534.4
+          },
+          "No": {
+            "trades": 72,
+            "shares": 586765.0
+          }
+        },
+        "note": "两边都大额建仓 = 做市/对冲玩家（非单边赌徒，接 #28）"
+      },
+      "actions": {
+        "entry_time": "2026-06-22 01:32",
+        "last_add_time": "2026-06-24 05:29",
+        "num_buys": 72,
+        "num_sells": 34,
+        "added_over_time": true,
+        "avg_entry_price": 0.737,
+        "net_shares": 438149.2,
+        "net_cost_usd": 318609.52
+      },
+      "unrealized": {
+        "current_price": 0.75,
+        "price_source": "568最新close",
+        "current_value_usd": 328611.91,
+        "unrealized_pnl_usd": 10002.4,
+        "unrealized_pct": 3.14,
+        "note": "持仓中浮盈亏"
+      }
+    },
+    "price_context": {
+      "as_of": "2026-06-25",
+      "analyzed_side": "No",
+      "price_source": "568历史close",
+      "current_price": 0.75,
+      "implied_probability_pct": 75.0,
+      "remaining_upside_per_share_usd": 0.25,
+      "remaining_upside_pct_if_win": 33.33,
+      "downside_per_share_usd": 0.75,
+      "odds_to_one": 0.33,
+      "entry_price": 0.737,
+      "price_delta": 0.013,
+      "price_delta_pct": 1.76
+    },
+    "what_the_bet": "押注到2026年8月31日美东时间晚上11:59前，美国和伊朗**不会**相互签署或正式通过关于伊朗核计划的最终书面外交协议——如果到期没有签署或通过这样的协议就赢。",
+    "resolution_criteria": "On June 14, 2026, the United States and Iran announced a written diplomatic agreement, including a 60-day extendable period in which both countries committed to negotiate toward a “final deal” regarding Iran’s nuclear program and other topics.\n\nThis market resolves to “Yes” if a qualifying written diplomatic instrument between the United States and Iran has been mutually signed or adopted by the specified date, 11:59 PM ET. Otherwise, this market resolves to “No.”\n\nUnless the written instrument is formally adopted without signature as described below, the instrument must be signed by both the United States and Iran. Both parties must either sign the same document or sign individual documents that substantively and directly indicate acceptance of the same underlying instrument, regardless of minor formatting, wording, or translation differences between the signed versions. Both physical signatures and officially-issued electronic signatures will qualify as signatures.\n\nIf the written instrument is recognized by the United States and Iran as not requiring signature for execution, formal adoption of the instrument by both countries without signature will qualify. Formal adoption may be established by official actions, including:\n\n(i) an official joint statement announcing that the United States and Iran have adopted, approved, executed, concluded, or otherwise finalized the instrument;\n(ii) mutual official confirmation that the same published instrument has been agreed to, adopted, approved, executed, or concluded by both countries;\n(iii) adoption, approval, or endorsement through an official resolution, ministerial decision, executive decision, or equivalent institutional act, where that act is the mechanism by which the relevant country adopts the instrument; or\n(iv) an exchange of official diplomatic notes or letters confirming acceptance of the same instrument.\n\nA qualifying written diplomatic instrument must:\n\n(i) Be identified as the final deal contemplated by the June 14, 2026, memorandum of understanding, either in official United States or Iranian communications, or by a consensus of credible reporting;\n(ii) Establish at least one specific obligation limiting Iran's nuclear program through a concrete, measurable benchmark against which compliance could be tested, which may take the form of a defined limit, prohibition, or quantity (e.g., a specific cap on the purity level to which Iran may enrich uranium, or an explicit commitment for Iran to surrender, destroy, or dilute its enriched uranium stockpile). Non-specific or vague restrictions, with no defined metric (e.g., a pledge not to pursue nuclear weapons, a commitment to maintain the status quo, or an agreement to abide IAEA monitoring or inspections requirements that do not specifically restrict Iran’s nuclear program) will not qualify.\n\nThe content of the qualifying instrument must be expressed as an agreed obligation to be implemented. The following do not qualify: \n\n(i) a provision the substantive obligation of which remains explicitly subject to a future agreement, negotiation process, or mutually agreed follow-on instrument; \n(ii) a provision explicitly framed as a minimum requirement for a future negotiation, rather than a present obligation; \n(iii) a floor, placeholder, or minimum standard established explicitly for the purpose of structuring ongoing or future talks. \n\nA definite and unconditional obligation may qualify, even if technical or procedural details, including the exact implementation date, timeframe, or sequencing, remain subject to future arrangements, provided that the obligation still establishes a concrete, measurable benchmark against which compliance could be tested. Conditional obligations do not qualify.\n\nWhether an instrument qualifies will be primarily determined by its officially released text. A qualifying instrument must be signed or formally adopted by both the United States and Iran by the specified date, 11:59 PM ET. If such an instrument is signed or formally adopted by that time, but the complete text has not been released, and genuine material ambiguity remains as to whether it satisfies this market’s requirements, this market may remain open for up to 28 calendar days after the specified date pending release of the text. If the text has still not been released after 28 calendar days, official and definitive announcements from the United States or Iran, and a consensus of credible reporting, will be used to determine whether the instrument qualifies.\n\nAn instrument to which parties other than the United States and Iran are also party will qualify, provided that both the United States and Iran are parties to the instrument and all other requirements are satisfied. \n\nOnce a diplomatic instrument has been signed or formally adopted without signature by both the United States and Iran and confirmed to satisfy the requirements of a qualifying written diplomatic instrument, this market’s condition is met, regardless of whether the instrument later enters into force, is ratified, receives legislative or treaty consent, or is subsequently repudiated, withdrawn from, or not implemented by the United States or Iran.\n\nThe primary resolution sources for this market will be official communications from the governments of the United States and Iran, or their authorized representatives. A consensus of credible reporting from major news agencies of record may also be used."
+  },
+  "market": {
+    "slug": "us-iran-final-nuclear-deal-by-august-31-2026-20260621201255154",
+    "market_id": "0xa1b3158fedfddaf2a0d8b364f6a57ee68146fb6ad458222aa8e02bcf0abbb099"
+  },
+  "price_series": [
+    {
+      "date": "2026-06-21",
+      "price": 0.7
+    },
+    {
+      "date": "2026-06-22",
+      "price": 0.74
+    },
+    {
+      "date": "2026-06-23",
+      "price": 0.72
+    },
+    {
+      "date": "2026-06-24",
+      "price": 0.76
+    },
+    {
+      "date": "2026-06-25",
+      "price": 0.75
+    }
+  ],
+  "behavior": {
+    "flag": "STATIC",
+    "fact": "近 48h 仅 5 买 / 34 卖，无显著动作（沉闷持仓）",
+    "honest_note": "动态行为：基本没动",
+    "windows": {
+      "3h": {
+        "buys": 0,
+        "sells": 0,
+        "buy_usd": 0.0,
+        "sell_usd": 0.0
+      },
+      "24h": {
+        "buys": 1,
+        "sells": 0,
+        "buy_usd": 48608.0,
+        "sell_usd": 0.0
+      },
+      "48h": {
+        "buys": 5,
+        "sells": 34,
+        "buy_usd": 464914.0,
+        "sell_usd": 113859.0
+      }
+    }
+  },
+  "news_stream": [
+    {
+      "date": "2026-06-23",
+      "title": "Trump says Iran agreed to nuclear inspections, Tehran denies U.S. claims - Haaretz",
+      "summary": "Trump claims Iran agreed to nuclear inspections and asset arrangements, indicating active negotiations on substantive deal terms two months before the August 31 deadline. If both sides continue to narrow differences, a final deal could be reached within the timeframe.",
+      "url": "https://www.haaretz.com/middle-east-news/iran/2026-06-23/ty-article/trump-says-iran-agreed-to-nuclear-inspections-tehran-denies-u-s-claims/0000019e-f4a9-d803-abdf-fcb942f90000",
+      "origin": "Tavily",
+      "direction": "threat",
+      "reaction": {
+        "available": true,
+        "kind": "weak",
+        "move_pct": 2.7,
+        "window": [
+          "2026-06-22",
+          "2026-06-24"
+        ]
+      },
+      "same_window": false
+    },
+    {
+      "date": "2026-06-22",
+      "title": "Is Iran Resuming Nuclear Inspections? Trump And Iran Offer Different Answers - Forbes",
+      "summary": "美国与伊朗对核查承诺存在公开分歧，伊朗否认新承诺，显示双方在条款上尚未达成一致",
+      "url": "https://www.forbes.com/sites/saradorn/2026/06/22/trump-says-iran-will-allow-nuclear-inspections-but-iran-denies-new-commitments/",
+      "origin": "Tavily",
+      "direction": "support",
+      "reaction": {
+        "available": true,
+        "kind": "weak",
+        "move_pct": 2.86,
+        "window": [
+          "2026-06-21",
+          "2026-06-23"
+        ]
+      },
+      "same_window": false
+    },
+    {
+      "date": "2026-06-17",
+      "title": "US-Iran deal: Officials reveal details of agreement as Trump says it will be signed 'shortly' - BBC",
+      "summary": "Trump states the US-Iran agreement will be signed 'shortly' and officials reveal a 14-paragraph agreement committing Iran to never have nuclear weapons and establishing a $300bn reconstruction fund. A签署 before August 31 would constitute a final nuclear deal within the market timeframe.",
+      "url": "https://www.bbc.com/news/live/c8j2ewl0dpxt",
+      "origin": "Tavily",
+      "direction": "threat",
+      "reaction": {
+        "available": false
+      },
+      "same_window": false
+    }
+  ],
+  "social": {
+    "keywords": "{iran,nuclear}",
+    "acceleration": 0.86,
+    "author_diversity_pct": 17.4,
+    "tweet_count": 1434,
+    "organic": false,
+    "posts": [
+      {
+        "username": "PopCrave",
+        "content": "FIFA will allow Pride rainbow flags at the Egypt-Iran World Cup game in Seattle:\n\n“The FIFA World Cup 2026 is an inclusive event that welcomes people from all backgrounds. Fans of all sexual orientations and gender ident",
+        "url": "https://x.com/PopCrave/status/2070263417470886099",
+        "likes": 5927.0,
+        "retweets": 291.0,
+        "created_on": "2026-06-25T21:50:37Z"
+      },
+      {
+        "username": "FoxNews",
+        "content": "Across Tehran, Iranian women are increasingly defying the regime's mandatory hijab laws, removing their headscarves in public despite the threat of arrest, violence, and harsh punishment.\n\nDr. Sheila Nazarian, who fled I",
+        "url": "https://x.com/FoxNews/status/2069865681600786578",
+        "likes": 2835.0,
+        "retweets": 648.0,
+        "created_on": "2026-06-24T19:30:09Z"
+      },
+      {
+        "username": "WatcherGuru",
+        "content": "JUST IN: 🇮🇷🇺🇸 Iran moved $3.84 billion through CoinEx crypto exchange to bypass US sanctions, WSJ reports.",
+        "url": "https://x.com/WatcherGuru/status/2069961115300200649",
+        "likes": 1418.0,
+        "retweets": 147.0,
+        "created_on": "2026-06-25T01:49:22Z"
+      },
+      {
+        "username": "narendramodi",
+        "content": "Earlier today, I was delighted to receive a phone call from Prime Minister Nikol Pashinyan.\n\nCongratulated him and his party on their victory in the recently held Parliamentary elections in Armenia. Thanked him for facil",
+        "url": "https://x.com/narendramodi/status/2069840249719820756",
+        "likes": 1086.0,
+        "retweets": 147.0,
+        "created_on": "2026-06-24T17:49:05Z"
+      }
+    ],
+    "note": "社媒=情绪非事实，可能被刷量；author_diversity<20% 当噪音看。仅实时，不进回测。"
+  },
+  "world_summary": "# 市场综述：US-Iran Final Nuclear Deal by August 31, 2026?（No 侧视角）\n\n## 巨鲸动态\n近48小时内记录5笔买入与34笔卖出，未见集中押注，持仓状态较为沉闷。\n\n## 事态进展\n**谈判框架**：美伊双方6月中旬签署谅解备忘录，设定约60天技术谈判窗口（截至8月中旬），涉及铀浓缩上限、高浓铀库存稀释及国际原子能机构核查机制。原定瑞士后续会谈因地区紧张局势推迟。\n\n**分歧焦点**：伊朗公开否认做出新核查承诺，美国则声称伊朗已同意核查安排；特朗普称协议将\"很快\"签署，官员透露14段协议文本涉及3000亿美元重建基金。\n\n**时间节点**：距8月31日截止日期剩余约两个月。",
+  "reasoning": {
+    "follow_call": "NO BASIS",
+    "confidence": "medium",
+    "reasoning": "这个钱包两边都押了不少筹码，不是单纯赌一个方向，更像是对冲或做市策略。近48小时他基本没动仓位。支持'不会达成协议'的消息和威胁这个方向的消息都有，但市场对双方的反应都很弱，没有明确的价格信号显示市场当前站在哪一边。信心定为中等，是因为虽然钱包自己这笔单子账面盈利还不错，但对冲仓位的性质把信心上限封住了——跟单的人拿不到他那套完整的风险结构。",
+    "confidence_reasons": [
+      "底座矩阵:high(pnl=+3.1%)",
+      "R2:两侧均衡(对冲/做市)→封medium"
+    ],
+    "facts": {
+      "market_question": "US-Iran Final Nuclear Deal by August 31, 2026?",
+      "outcome": "No",
+      "today": "2026-06-25",
+      "price_room_left": 33.33,
+      "price_already_moved": 1.76,
+      "resolution_date_human": "还有约68.0天",
+      "position_type": "hedged",
+      "recent_action": "flat_no_movement",
+      "support_catalysts": [
+        {
+          "title": "Is Iran Resuming Nuclear Inspections? Trump And Iran Offer Different Answers - Forbes",
+          "material_tag": "当事人直接表态",
+          "market_reaction": "weak",
+          "move_pct": 2.86,
+          "same_window": false
+        }
+      ],
+      "threat_catalysts": [
+        {
+          "title": "Trump says Iran agreed to nuclear inspections, Tehran denies U.S. claims - Haaretz",
+          "material_tag": "当事人直接表态",
+          "market_reaction": "weak",
+          "move_pct": 2.7,
+          "same_window": false
+        },
+        {
+          "title": "US-Iran deal: Officials reveal details of agreement as Trump says it will be signed 'shortly' - BBC",
+          "material_tag": "当事人直接表态",
+          "market_reaction": "unknown",
+          "move_pct": null,
+          "same_window": false
+        }
+      ],
+      "confidence": "medium",
+      "confidence_reasons": [
+        "底座矩阵:high(pnl=+3.1%)",
+        "R2:两侧均衡(对冲/做市)→封medium"
+      ]
+    }
+  }
+}

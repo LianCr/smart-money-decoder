@@ -1,0 +1,63 @@
+{
+  "market_context": {
+    "market_id": "0x360229ef7e200995eeedfab6fd63514c8a43fcee803e8ac6dbe17065bd024d60",
+    "market_slug": "will-no-next-prime-minister-of-the-united-kingdom-be-appointed-in-2026",
+    "market_question": "Will no next Prime Minister of the United Kingdom be appointed in 2026?",
+    "analyzed_side": "Yes",
+    "as_of": "2026-06-25",
+    "wallet": "0xa022ba0a68e11a78348382ff168601012d4d77f8",
+    "behavioral_flag": {
+      "flag": "STATIC",
+      "fact": "近 48h 仅 0 买 / 0 卖，无显著动作（沉闷持仓）",
+      "honest_note": "动态行为：基本没动",
+      "windows": {
+        "3h": {
+          "buys": 0,
+          "sells": 0,
+          "buy_usd": 0.0,
+          "sell_usd": 0.0
+        },
+        "24h": {
+          "buys": 0,
+          "sells": 0,
+          "buy_usd": 0.0,
+          "sell_usd": 0.0
+        },
+        "48h": {
+          "buys": 0,
+          "sells": 0,
+          "buy_usd": 0.0,
+          "sell_usd": 0.0
+        }
+      }
+    },
+    "ai_experimental_summary": "",
+    "timeline_events": [
+      {
+        "timestamp": "2026-06-19",
+        "type": "price_only",
+        "title": null,
+        "source": null,
+        "price_impact_string": "Yes 价格变动 -9%（12% → 3%）",
+        "fact_summary": "价格异动，但该时间窗 GDELT 三层洗不出对题公开新闻（可能抢跑/薄盘/内幕，系统无法证实）。",
+        "temporal_note": "未归因（无强关联新闻）"
+      },
+      {
+        "timestamp": "2026-06-11",
+        "type": "price_only",
+        "title": null,
+        "source": null,
+        "price_impact_string": "Yes 价格变动 -7%（22% → 15%）",
+        "fact_summary": "价格异动，但该时间窗 GDELT 三层洗不出对题公开新闻（可能抢跑/薄盘/内幕，系统无法证实）。",
+        "temporal_note": "未归因（无强关联新闻）"
+      }
+    ],
+    "_audit": {
+      "jumps_found": 2,
+      "events": 2,
+      "behavior": "STATIC",
+      "teacher_tokens_approx": 1414,
+      "boundaries": "因果→时间相关 · 无催化剂留白(行为感知内幕) · 价格窗≤as_of · 行为=事实非判断 · 综述无判断"
+    }
+  }
+}

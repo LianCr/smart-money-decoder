@@ -1,0 +1,21 @@
+# Render 一键部署蓝图（Blueprint）。
+# 用法：render.com → New → Blueprint → 选本仓库 → 按提示填 3 个 API key → Apply。
+# 免费档注意：闲置 15 分钟休眠（冷启动约 1 分钟，demo 前先打开热身）；磁盘 ephemeral，
+# 冷启动时由 api/main.py 从 git 跟踪的 seed/ 恢复缓存 → 已缓存钱包零 token 秒回。
+services:
+  - type: web
+    name: smart-money-decoder
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt && cd frontend && npm ci && npm run build
+    startCommand: uvicorn api.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /backtest
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.13.1
+      - key: CLASSROOM_API_KEY
+        sync: false          # 在 Render 控制台填（老师的课堂网关 key，绝不入库）
+      - key: TAVILY_API_KEY
+        sync: false
+      - key: HEISENBERG_API_KEY
+        sync: false

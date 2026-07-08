@@ -1,0 +1,75 @@
+{
+  "follow_call": "CHASED",
+  "confidence": "high",
+  "reasoning": null,
+  "confidence_reasons": [
+    "底座矩阵:high(pnl=+10.2%)"
+  ],
+  "facts": {
+    "market_question": "US-Iran Final Nuclear Deal by August 18, 2026?",
+    "outcome": "Yes",
+    "today": "2026-06-25",
+    "price_room_left": 354.55,
+    "price_already_moved": 10.17,
+    "resolution_date_human": "还有约55.0天",
+    "position_type": "single_side_conviction",
+    "recent_action": "flat_no_movement",
+    "support_catalysts": [
+      {
+        "title": "Breaking down the billions Iran could receive under Trump's deal - Axios",
+        "material_tag": "其他背景",
+        "market_reaction": "unknown",
+        "move_pct": null,
+        "same_window": false
+      },
+      {
+        "title": "Trump Signs US-Iran Peace Deal At Versailles - Newsweek",
+        "material_tag": "已生效硬事件",
+        "market_reaction": "unknown",
+        "move_pct": null,
+        "same_window": false
+      },
+      {
+        "title": "UN nuclear agency boss says inspectors will visit Iran's nuclear sites under Iran-US interim deal - The Washington Post",
+        "material_tag": "当事人直接表态",
+        "market_reaction": "weak",
+        "move_pct": 0.0,
+        "same_window": false
+      },
+      {
+        "title": "Interim US-Iran deal leaves the thorniest issue still to be negotiated: Tehran's nuclear program - AP News",
+        "material_tag": "其他背景",
+        "market_reaction": "unknown",
+        "move_pct": null,
+        "same_window": true
+      },
+      {
+        "title": "US-Iran deal: Officials reveal details of agreement as Trump says it will be signed 'shortly' - BBC",
+        "material_tag": "当事人直接表态",
+        "market_reaction": "unknown",
+        "move_pct": null,
+        "same_window": true
+      }
+    ],
+    "threat_catalysts": [
+      {
+        "title": "Trump says Iran agreed to nuclear inspections, Tehran denies U.S. claims - Haaretz",
+        "material_tag": "当事人直接表态",
+        "market_reaction": "confirmed",
+        "move_pct": -9.09,
+        "same_window": false
+      },
+      {
+        "title": "Nuclear Questions Deferred as U.S. Pulls Back on Iran War - The New York Times",
+        "material_tag": "其他背景",
+        "market_reaction": "unknown",
+        "move_pct": null,
+        "same_window": false
+      }
+    ],
+    "confidence": "high",
+    "confidence_reasons": [
+      "底座矩阵:high(pnl=+10.2%)"
+    ]
+  }
+}

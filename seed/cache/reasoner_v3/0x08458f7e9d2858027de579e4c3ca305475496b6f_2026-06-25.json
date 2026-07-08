@@ -1,0 +1,68 @@
+{
+  "follow_call": "ROOM LEFT",
+  "confidence": "medium",
+  "reasoning": null,
+  "confidence_reasons": [
+    "底座矩阵:medium(pnl=-1.5%)"
+  ],
+  "facts": {
+    "market_question": "US-Iran Final Nuclear Deal by August 18, 2026?",
+    "outcome": "No",
+    "today": "2026-06-25",
+    "price_room_left": 28.21,
+    "price_already_moved": -1.56,
+    "resolution_date_human": "还有约55.0天",
+    "position_type": "single_side_conviction",
+    "recent_action": "flat_no_movement",
+    "support_catalysts": [
+      {
+        "title": "Interim US-Iran deal leaves the thorniest issue still to be negotiated: Tehran's nuclear program - AP News",
+        "material_tag": "其他背景",
+        "market_reaction": "unknown",
+        "move_pct": null,
+        "same_window": false
+      },
+      {
+        "title": "UN nuclear agency boss says inspectors will visit Iran's nuclear sites under Iran-US interim deal - The Washington Post",
+        "material_tag": "其他背景",
+        "market_reaction": "weak",
+        "move_pct": 0.0,
+        "same_window": false
+      }
+    ],
+    "threat_catalysts": [
+      {
+        "title": "Trump settles for Iran deal that falls short of his promises - Axios",
+        "material_tag": "已生效硬事件",
+        "market_reaction": "unknown",
+        "move_pct": null,
+        "same_window": false
+      },
+      {
+        "title": "Trump says Iran agreed to nuclear inspections, Tehran denies U.S. claims - Haaretz",
+        "material_tag": "当事人直接表态",
+        "market_reaction": "weak",
+        "move_pct": 1.27,
+        "same_window": false
+      },
+      {
+        "title": "Nuclear Questions Deferred as U.S. Pulls Back on Iran War - The New York Times",
+        "material_tag": "当事人直接表态",
+        "market_reaction": "unknown",
+        "move_pct": null,
+        "same_window": false
+      },
+      {
+        "title": "US-Iran deal: Officials reveal details of agreement as Trump says it will be signed 'shortly' - BBC",
+        "material_tag": "当事人直接表态",
+        "market_reaction": "unknown",
+        "move_pct": null,
+        "same_window": false
+      }
+    ],
+    "confidence": "medium",
+    "confidence_reasons": [
+      "底座矩阵:medium(pnl=-1.5%)"
+    ]
+  }
+}

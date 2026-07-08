@@ -1,0 +1,64 @@
+{
+  "market_context": {
+    "market_id": "0xebb9a87581bb1de91adc9bf9d1a9528cc203976a7f3ab2c9f98b8ef8ff531f30",
+    "market_slug": "will-donald-trump-visit-turkey-in-2026",
+    "market_question": "Will Donald Trump visit Turkey in 2026?",
+    "analyzed_side": "Yes",
+    "as_of": "2026-06-20",
+    "wallet": "0x7c3db723f1d4d8cb9c550095203b686cb11e5c6b",
+    "behavioral_flag": {
+      "flag": "STATIC",
+      "fact": "近 48h 仅 1 买 / 0 卖，无显著动作（沉闷持仓）",
+      "honest_note": "动态行为：基本没动",
+      "windows": {
+        "3h": {
+          "buys": 0,
+          "sells": 0,
+          "buy_usd": 0.0,
+          "sell_usd": 0.0
+        },
+        "24h": {
+          "buys": 0,
+          "sells": 0,
+          "buy_usd": 0.0,
+          "sell_usd": 0.0
+        },
+        "48h": {
+          "buys": 1,
+          "sells": 0,
+          "buy_usd": 127.0,
+          "sell_usd": 0.0
+        }
+      }
+    },
+    "ai_experimental_summary": "**市场综述 | 特朗普2026访土耳其**\n\n**钱包动态：** 近48小时仅录得1笔买入、0笔卖出，巨鲸层面呈静默持仓状态，无显著资金调仓信号。\n\n**事件背景：** Milo Yiannopoulos透露Kanye West将在伊斯坦布尔举办历史性演出。该消息与特朗普访土行程无直接关联，仅反映土耳其文化活动动态。截至当前，白宫未发布2026年土耳其访问计划，美土双边外交日程尚未明确，地缘政治、北约议题等传统访问驱动因素暂无新进展。\n\n市场处于信息真空期，持仓者保持观望。",
+    "timeline_events": [
+      {
+        "timestamp": "2026-05-31",
+        "type": "catalyst",
+        "title": "milo yiannopoulos says kanye west will make history at the istanbul show",
+        "source": "thenews.com.pk",
+        "url": "https://www.thenews.com.pk/latest/1404022-milo-yiannopoulos-says-kanye-west-will-make-history-at-the-istanbul-show",
+        "price_impact_string": "Yes 价格变动 +14%（71% → 85%）",
+        "fact_summary": "Milo Yiannopoulos表示Kanye West将在伊斯坦布尔演出中创造历史",
+        "temporal_note": "该事件与价格变动时间相关，非确证因果"
+      },
+      {
+        "timestamp": "2026-05-23",
+        "type": "price_only",
+        "title": null,
+        "source": null,
+        "price_impact_string": "Yes 价格变动 -12%（89% → 77%）",
+        "fact_summary": "价格异动，但该时间窗 GDELT 三层洗不出对题公开新闻（可能抢跑/薄盘/内幕，系统无法证实）。",
+        "temporal_note": "未归因（无强关联新闻）"
+      }
+    ],
+    "_audit": {
+      "jumps_found": 2,
+      "events": 2,
+      "behavior": "STATIC",
+      "teacher_tokens_approx": 1568,
+      "boundaries": "因果→时间相关 · 无催化剂留白(行为感知内幕) · 价格窗≤as_of · 行为=事实非判断 · 综述无判断"
+    }
+  }
+}

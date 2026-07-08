@@ -1,0 +1,41 @@
+{
+  "follow_call": "CHASED",
+  "confidence": "medium",
+  "reasoning": "这个钱包两边都压了不少，不是单纯赌民主党拿下众议院，更像对冲或做市。支持方向的催化剂有民调和评论，但市场反应都很弱，价格基本没怎么动。有利的价格空间还剩23个百分点左右，但他自己近48小时基本没动，而且因为两边都有仓位，信心度被系统封在medium。现在跟单的话，好的入场价已经过去一部分了。",
+  "confidence_reasons": [
+    "底座矩阵:high(pnl=+0.4%)",
+    "R2:两侧均衡(对冲/做市)→封medium"
+  ],
+  "facts": {
+    "market_question": "Will the Democratic Party control the House after the 2026 Midterm elections?",
+    "outcome": "Yes",
+    "today": "2026-06-20",
+    "price_room_left": 23.46,
+    "price_already_moved": 0.41,
+    "resolution_date_human": "还有约136.0天",
+    "position_type": "hedged",
+    "recent_action": "flat_no_movement",
+    "support_catalysts": [
+      {
+        "title": "Commentary: Gerrymanders, judges and an alley-oop: A look at the midterm fight for control of Congress - Los Angeles Times",
+        "material_tag": "周边压力情绪信号",
+        "market_reaction": "weak",
+        "move_pct": -2.44,
+        "same_window": false
+      },
+      {
+        "title": "Republicans' Chances of Losing Control of House: 3 Election Forecasts - Newsweek",
+        "material_tag": "民调数据",
+        "market_reaction": "weak",
+        "move_pct": 1.22,
+        "same_window": false
+      }
+    ],
+    "threat_catalysts": [],
+    "confidence": "medium",
+    "confidence_reasons": [
+      "底座矩阵:high(pnl=+0.4%)",
+      "R2:两侧均衡(对冲/做市)→封medium"
+    ]
+  }
+}

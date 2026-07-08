@@ -1,0 +1,54 @@
+{
+  "market_context": {
+    "market_id": "0xc0aed6d5d893988b4bef5a8242435bbc7c3b45b1e438bcffc9e9bf71d173ae46",
+    "market_slug": "us-iran-final-nuclear-deal-by-august-18-2026-20260621201255153",
+    "market_question": "US-Iran Final Nuclear Deal by August 18, 2026?",
+    "analyzed_side": "No",
+    "as_of": "2026-06-25",
+    "wallet": "0xb51b3beffd13cde071ed799e70a7b0b598e8b4d9",
+    "behavioral_flag": {
+      "flag": "ADD",
+      "fact": "过去 3h 0 笔 BUY($0) / 24h 4 笔 BUY($1,600)，长期持仓刚被新一轮加仓激活",
+      "honest_note": "动态行为：信念增强/加仓（事实陈述，跟单价值由你裁决）",
+      "windows": {
+        "3h": {
+          "buys": 0,
+          "sells": 0,
+          "buy_usd": 0.0,
+          "sell_usd": 0.0
+        },
+        "24h": {
+          "buys": 4,
+          "sells": 0,
+          "buy_usd": 1600.0,
+          "sell_usd": 0.0
+        },
+        "48h": {
+          "buys": 12,
+          "sells": 0,
+          "buy_usd": 14200.0,
+          "sell_usd": 0.0
+        }
+      }
+    },
+    "ai_experimental_summary": "**市场动态监测 | US-Iran核协议期限市场**\n\n**钱包行为：**过去24小时录得4笔买入共计1,600美元，长期持仓账户重新激活加仓；近3小时无新增交易。\n\n**客观背景：**该市场针对美伊是否在2026年8月18日前达成最终核协议。当前距截止日期剩余54天。美伊核谈判自2015年JCPOA签署、2018年美国退出、2021年重启磋商后持续波动。近期地缘局势、制裁框架及铀浓缩活动仍为关键变量。\n\n市场流动性有限，参与者结构及信息不对称程度需留意。",
+    "timeline_events": [
+      {
+        "timestamp": "2026-06-25",
+        "type": "behavior",
+        "title": "巨鲸动作旗标 · ADD",
+        "source": "Heisenberg 556 Trades",
+        "price_impact_string": null,
+        "fact_summary": "过去 3h 0 笔 BUY($0) / 24h 4 笔 BUY($1,600)，长期持仓刚被新一轮加仓激活",
+        "temporal_note": "动态行为：信念增强/加仓（事实陈述，跟单价值由你裁决）"
+      }
+    ],
+    "_audit": {
+      "jumps_found": 0,
+      "events": 1,
+      "behavior": "ADD",
+      "teacher_tokens_approx": 222,
+      "boundaries": "因果→时间相关 · 无催化剂留白(行为感知内幕) · 价格窗≤as_of · 行为=事实非判断 · 综述无判断"
+    }
+  }
+}

@@ -1,0 +1,255 @@
+{
+  "meta": {
+    "wallet": "0xde7be6d489bce070a959e0cb813128ae659b5f4b",
+    "market": "Will the Democratic Party control the Senate after the 2026 Midterm elections?",
+    "analyzed_side": "Yes",
+    "as_of": "2026-06-20",
+    "mode": "live",
+    "catalyst_anchor": "2026-06-20",
+    "settle": "还有约136.0天"
+  },
+  "who_trader_profile": {
+    "wallet": "0xde7be6d489bce070a959e0cb813128ae659b5f4b",
+    "quality": {
+      "combined_risk_score": 20,
+      "max_drawdown": 0.0339,
+      "drawdown_frequency": 0.0714,
+      "avg_trade_size": 756.92,
+      "markets_traded": 31,
+      "num_markets_traded": 31,
+      "category_diversity_score": 0.3091,
+      "market_concentration_ratio": 0.9053,
+      "annualized_return": 47.7764,
+      "gain_to_pain_ratio": 28.5351,
+      "equity_curve_pattern": "volatile",
+      "perfect_timing_flag": false,
+      "flagged_metrics": "{single_market_dependence,position_size_volatility}",
+      "losing_trades": 8,
+      "best_market_pnl": 1197240.49,
+      "dominant_market_pnl": 1197240.49,
+      "window_days": "15"
+    },
+    "category_specialization": [
+      {
+        "category": "Politics / Global",
+        "roi": 210.6369,
+        "win_rate": 0.8333,
+        "total_pnl": 1263453.07,
+        "total_trades": 759
+      },
+      {
+        "category": "Politics / US / Trump",
+        "roi": 290.3614,
+        "win_rate": 0.6154,
+        "total_pnl": 1227622.43,
+        "total_trades": 429
+      },
+      {
+        "category": "Politics",
+        "roi": 183.2518,
+        "win_rate": 0.619,
+        "total_pnl": 1220619.12,
+        "total_trades": 880
+      },
+      {
+        "category": "Other",
+        "roi": 183.9969,
+        "win_rate": 0.619,
+        "total_pnl": 1220619.12,
+        "total_trades": 879
+      },
+      {
+        "category": "Politics / US",
+        "roi": 259.1052,
+        "win_rate": 0.5882,
+        "total_pnl": 1202988.12,
+        "total_trades": 474
+      },
+      {
+        "category": "Finance & Markets",
+        "roi": -0.3981,
+        "win_rate": 0.0,
+        "total_pnl": -489.14,
+        "total_trades": 262
+      },
+      {
+        "category": "Tech & AI",
+        "roi": -5.0713,
+        "win_rate": 0.0,
+        "total_pnl": -489.14,
+        "total_trades": 10
+      },
+      {
+        "category": "Politics / US / Elections",
+        "roi": -71.3887,
+        "win_rate": 0.4286,
+        "total_pnl": -42344.81,
+        "total_trades": 112
+      }
+    ],
+    "official_rank": {
+      "period": "30d",
+      "rank": 70,
+      "roi": "0.250407",
+      "win_rate": "0.4559",
+      "sharpe_ratio": "0.0232",
+      "total_pnl": "399767.1955",
+      "total_invested": "1596467.74",
+      "total_trades": 2155,
+      "markets_traded": 71
+    },
+    "realized_pnl_recent": {
+      "window": [
+        "2026-05-20",
+        "2026-06-20"
+      ],
+      "days_returned": 11,
+      "realized_pnl_sum": -82329.53
+    },
+    "h_score": {
+      "available": true,
+      "h_score": "65.747",
+      "tier": "Sharp",
+      "leaderboard_rank": 1994
+    }
+  },
+  "what_position_actions": {
+    "wallet": "0xde7be6d489bce070a959e0cb813128ae659b5f4b",
+    "condition_id": "0x307a1ed89d60b61002dd5bbf00e1408c5ed2ab3fcdb056191ca7ef9bc34d38f3",
+    "analyzed_side": "Yes",
+    "market": {
+      "question": "Will the Democratic Party control the Senate after the 2026 Midterm elections?",
+      "winning_outcome": null,
+      "closed": false,
+      "settle_date": "2026-11-03",
+      "days_to_settlement": 136.0,
+      "settle_note": "还有约136.0天"
+    },
+    "two_side_distribution": {
+      "hedged": false,
+      "by_outcome": {
+        "Yes": {
+          "trades": 80,
+          "shares": 49929.7
+        }
+      },
+      "note": "仅单边建仓"
+    },
+    "actions": {
+      "entry_time": "2026-05-17 18:55",
+      "last_add_time": "2026-06-03 21:10",
+      "num_buys": 80,
+      "num_sells": 0,
+      "added_over_time": true,
+      "avg_entry_price": 0.46,
+      "net_shares": 49929.7,
+      "net_cost_usd": 22967.67
+    },
+    "unrealized": {
+      "current_price": 0.43,
+      "price_source": "568最新close",
+      "current_value_usd": 21469.78,
+      "unrealized_pnl_usd": -1497.89,
+      "unrealized_pct": -6.52,
+      "note": "持仓中浮盈亏"
+    }
+  },
+  "price_context": {
+    "as_of": "2026-06-20",
+    "analyzed_side": "Yes",
+    "price_source": "568历史close",
+    "current_price": 0.43,
+    "implied_probability_pct": 43.0,
+    "remaining_upside_per_share_usd": 0.57,
+    "remaining_upside_pct_if_win": 132.56,
+    "downside_per_share_usd": 0.43,
+    "odds_to_one": 1.33,
+    "entry_price": 0.46,
+    "price_delta": -0.03,
+    "price_delta_pct": -6.52
+  },
+  "catalysts": {
+    "positive": [
+      {
+        "title": "Republicans' Chances of Losing the Senate as Two Seats Become Toss-ups - Newsweek",
+        "url": "https://www.newsweek.com/republican-chances-senate-tossup-alaska-ohio-midterm-elections-12060524",
+        "date": "2026-06-11",
+        "snippet": "# Republicans' Chances of Losing the Senate as Two Seats Become Toss-ups. A new set of Senate ratings has reshaped the 2026 battleground map, pulling two previously Republican-leaning states into toss-up territory and nudging another toward Democrats—without yet overturning the GOP's overall advanta",
+        "reason": "最新评级将两个此前倾向共和党的参议院席位调整为势均力敌状态，另一个席位向民主党方向倾斜。",
+        "type": "其他背景",
+        "price_reaction": {
+          "available": true,
+          "window": [
+            "2026-06-10",
+            "2026-06-12"
+          ],
+          "price_before": 0.45,
+          "price_after": 0.43,
+          "move_pct": -4.44,
+          "direction": "▼",
+          "caveat": "该新闻发布前后市场变动，时间相关非因果",
+          "market_check": "市场反应微弱(<5%)"
+        }
+      }
+    ],
+    "negative": [
+      {
+        "title": "Election handicapper shifts three Senate races toward Democrats – but GOP still favored to hold majority - New York Post",
+        "url": "https://nypost.com/2026/06/11/us-news/election-handicapper-shifts-three-senate-races-toward-democrats-but-gop-still-favored-to-hold-majority/",
+        "date": "2026-06-12",
+        "reason": "UVA Center for Politics 将三个参议院席位转向民主党方向，但仍预测共和党保持上院多数，这一专业选举预测机构的评估显示共和党维持参议院控制权的可能性更高，与 Yes 押注相反",
+        "type": "其他背景",
+        "price_reaction": {
+          "available": true,
+          "window": [
+            "2026-06-11",
+            "2026-06-13"
+          ],
+          "price_before": 0.44,
+          "price_after": 0.44,
+          "move_pct": 0.0,
+          "direction": "—",
+          "caveat": "该新闻发布前后市场变动，时间相关非因果",
+          "market_check": "市场反应微弱(<5%)"
+        }
+      }
+    ],
+    "balance_summary": "正向证据按类型陈列：其他背景×1；负向证据按类型陈列：其他背景×1。每条已刻明客观事实类型（材质）——系统不替你称量轻重，不同材质的份量请自行掂量。 系统已完成证据陈述，天平由你裁决。",
+    "honesty_caveat": {
+      "positive_side": "fully_backed",
+      "negative_side": "fully_backed"
+    },
+    "guards": {
+      "relevance_dropped": [
+        {
+          "title": "Susan Collins Within Striking Distance of Graham Platner in Maine—Poll - Newsweek",
+          "reason": "核心实体不在标题=边角混入"
+        },
+        {
+          "title": "Susan Collins Within Striking Distance of Graham Platner in Maine—Poll - Newsweek",
+          "reason": "核心实体不在标题=边角混入"
+        }
+      ],
+      "type_deviations": [],
+      "weight_word_hits": [],
+      "weight_in_reason_hits": [],
+      "fear_lexicon_hits": [],
+      "directive_hits": []
+    }
+  },
+  "_audit": {
+    "teacher_tokens_approx": 3368,
+    "free_sources": [
+      "581",
+      "579",
+      "569",
+      "556",
+      "568",
+      "574"
+    ],
+    "catalyst_window": [
+      "2026-06-10",
+      "2026-06-20"
+    ]
+  }
+}

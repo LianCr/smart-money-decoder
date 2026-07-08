@@ -1,0 +1,336 @@
+{
+  "meta": {
+    "wallet": "0x85b8b010ac6e24a23625621724a15513c80d6b6a",
+    "market": "Will Andy Burnham be the next Prime Minister of the United Kingdom in 2026?",
+    "analyzed_side": "Yes",
+    "as_of": "2026-06-25",
+    "mode": "live",
+    "catalyst_anchor": "2026-06-25",
+    "settle": "还有约189.0天"
+  },
+  "who_trader_profile": {
+    "wallet": "0x85b8b010ac6e24a23625621724a15513c80d6b6a",
+    "quality": {
+      "combined_risk_score": 0,
+      "max_drawdown": 0.0657,
+      "drawdown_frequency": 0.0667,
+      "avg_trade_size": 148.01,
+      "markets_traded": 33,
+      "num_markets_traded": 33,
+      "category_diversity_score": 1.8828,
+      "market_concentration_ratio": 0.2697,
+      "annualized_return": null,
+      "gain_to_pain_ratio": 8.7823,
+      "equity_curve_pattern": "volatile",
+      "perfect_timing_flag": false,
+      "flagged_metrics": "{}",
+      "losing_trades": 79,
+      "best_market_pnl": 11275.92,
+      "dominant_market_pnl": 11275.92,
+      "window_days": "15"
+    },
+    "category_specialization": [
+      {
+        "category": "Politics",
+        "roi": 34.3778,
+        "win_rate": 0.8462,
+        "total_pnl": 17361.34,
+        "total_trades": 324
+      },
+      {
+        "category": "Politics / Global",
+        "roi": 34.3778,
+        "win_rate": 0.8462,
+        "total_pnl": 17361.34,
+        "total_trades": 324
+      },
+      {
+        "category": "Other",
+        "roi": 26.1825,
+        "win_rate": 0.7857,
+        "total_pnl": 14081.35,
+        "total_trades": 328
+      },
+      {
+        "category": "Sports / Motorsport",
+        "roi": 29.7589,
+        "win_rate": 0.1889,
+        "total_pnl": 7184.95,
+        "total_trades": 249
+      },
+      {
+        "category": "Sports / Motorsport / F1",
+        "roi": 29.7589,
+        "win_rate": 0.1889,
+        "total_pnl": 7184.95,
+        "total_trades": 249
+      },
+      {
+        "category": "Sports",
+        "roi": 4.2076,
+        "win_rate": 0.1895,
+        "total_pnl": 1661.44,
+        "total_trades": 284
+      },
+      {
+        "category": "Politics / US / Elections",
+        "roi": 13.8131,
+        "win_rate": 0.6667,
+        "total_pnl": 1631.98,
+        "total_trades": 172
+      },
+      {
+        "category": "Politics / US",
+        "roi": 13.8131,
+        "win_rate": 0.6667,
+        "total_pnl": 1631.98,
+        "total_trades": 172
+      },
+      {
+        "category": "Sports / Cricket",
+        "roi": -99.9313,
+        "win_rate": 0.0,
+        "total_pnl": -319.85,
+        "total_trades": 5
+      },
+      {
+        "category": "Sports / Basketball / NBA",
+        "roi": -16.3817,
+        "win_rate": 0.3333,
+        "total_pnl": -1923.66,
+        "total_trades": 26
+      },
+      {
+        "category": "Sports / Basketball",
+        "roi": -16.3817,
+        "win_rate": 0.3333,
+        "total_pnl": -1923.66,
+        "total_trades": 26
+      },
+      {
+        "category": "Sports / Soccer",
+        "roi": -100.0,
+        "win_rate": 0.0,
+        "total_pnl": -3280.0,
+        "total_trades": 4
+      }
+    ],
+    "official_rank": {
+      "period": "30d",
+      "rank": 848,
+      "roi": "0.256992",
+      "win_rate": "0.4977",
+      "sharpe_ratio": "0.1820",
+      "total_pnl": "28528.7040",
+      "total_invested": "111010.00",
+      "total_trades": 1204,
+      "markets_traded": 47
+    },
+    "realized_pnl_recent": {
+      "window": [
+        "2026-05-20",
+        "2026-06-20"
+      ],
+      "days_returned": 10,
+      "realized_pnl_sum": -5853.45
+    },
+    "h_score": {
+      "available": false,
+      "note": "不在 H-Score 榜首页（584 无按地址查，官方排名见 official_rank/579）"
+    }
+  },
+  "what_position_actions": {
+    "wallet": "0x85b8b010ac6e24a23625621724a15513c80d6b6a",
+    "condition_id": "0x763a7f1e440693b54c56da02d338c2092053567dd865174387d06ee5612fdc9e",
+    "analyzed_side": "Yes",
+    "market": {
+      "question": "Will Andy Burnham be the next Prime Minister of the United Kingdom in 2026?",
+      "winning_outcome": null,
+      "closed": false,
+      "settle_date": "2026-12-31",
+      "days_to_settlement": 189.0,
+      "settle_note": "还有约189.0天"
+    },
+    "two_side_distribution": {
+      "hedged": true,
+      "by_outcome": {
+        "Yes": {
+          "trades": 25,
+          "shares": 14052.6
+        },
+        "No": {
+          "trades": 3,
+          "shares": 11700.0
+        }
+      },
+      "note": "两边都大额建仓 = 做市/对冲玩家（非单边赌徒，接 #28）"
+    },
+    "actions": {
+      "entry_time": "2026-05-16 11:46",
+      "last_add_time": "2026-06-24 06:48",
+      "num_buys": 25,
+      "num_sells": 0,
+      "added_over_time": true,
+      "avg_entry_price": 0.9706,
+      "net_shares": 14052.6,
+      "net_cost_usd": 13639.25
+    },
+    "unrealized": {
+      "current_price": 0.977,
+      "price_source": "568最新close",
+      "current_value_usd": 13729.39,
+      "unrealized_pnl_usd": 90.15,
+      "unrealized_pct": 0.66,
+      "note": "持仓中浮盈亏"
+    }
+  },
+  "price_context": {
+    "as_of": "2026-06-25",
+    "analyzed_side": "Yes",
+    "price_source": "568历史close",
+    "current_price": 0.977,
+    "implied_probability_pct": 97.7,
+    "remaining_upside_per_share_usd": 0.023,
+    "remaining_upside_pct_if_win": 2.35,
+    "downside_per_share_usd": 0.977,
+    "odds_to_one": 0.02,
+    "entry_price": 0.9706,
+    "price_delta": 0.0064,
+    "price_delta_pct": 0.66
+  },
+  "catalysts": {
+    "positive": [
+      {
+        "title": "Who is Andy Burnham, U.K.'s 'King of the North' and likely next prime minister? - The Washington Post",
+        "url": "https://www.washingtonpost.com/world/2026/06/22/who-is-andy-burnham-uks-king-north-likely-next-prime-minister/",
+        "date": "2026-06-22",
+        "reason": "文章将Burnham描述为接替现任首相Starmer的领跑热门人选",
+        "type": "周边压力情绪信号",
+        "price_reaction": {
+          "available": true,
+          "window": [
+            "2026-06-21",
+            "2026-06-23"
+          ],
+          "price_before": 0.946,
+          "price_after": 0.973,
+          "move_pct": 2.85,
+          "direction": "▲",
+          "caveat": "该新闻发布前后市场变动，时间相关非因果",
+          "market_check": "市场反应微弱(<5%)"
+        }
+      },
+      {
+        "title": "Andy Burnham inches closer to UK premiership as Starmer seeks legacy in final days - The Times of Israel",
+        "url": "https://www.timesofisrael.com/andy-burnham-inches-closer-to-uk-premiership-as-starmer-seeks-legacy-in-final-days/",
+        "date": "2026-06-24",
+        "reason": "Burnham于2026年6月22日宣誓就任下议院议员，潜在竞争对手Darren Jones表示不参选，使其无竞争成为下任首相的可能性增加",
+        "type": "已生效硬事件",
+        "price_reaction": {
+          "available": true,
+          "window": [
+            "2026-06-23",
+            "2026-06-25"
+          ],
+          "price_before": 0.973,
+          "price_after": 0.977,
+          "move_pct": 0.41,
+          "direction": "▲",
+          "caveat": "该新闻发布前后市场变动，时间相关非因果",
+          "market_check": "市场反应微弱(<5%)"
+        }
+      },
+      {
+        "title": "Andy Burnham is the 'King of the North' with his eyes on 10 Downing Street - The Sun Chronicle",
+        "url": "https://www.thesunchronicle.com/news/nation_world/andy-burnham-is-the-king-of-the-north-with-his-eyes-on-10-downing-street/article_82676b3a-ee12-54fc-9f18-8a6e94bef61c.html",
+        "date": "2026-06-19",
+        "reason": "Burnham赢得Makerfield补选，为他挑战现任首相Starmer的领导地位铺平道路",
+        "type": "已生效硬事件",
+        "price_reaction": {
+          "available": true,
+          "window": [
+            "2026-06-18",
+            "2026-06-20"
+          ],
+          "price_before": 0.811,
+          "price_after": 0.96,
+          "move_pct": 18.37,
+          "direction": "▲",
+          "caveat": "该新闻发布前后市场变动，时间相关非因果",
+          "market_check": "市场印证该分类"
+        }
+      },
+      {
+        "title": "Andy Burnham prepares for a UK Labour leadership contest that may be a coronation - The Washington Post",
+        "url": "https://www.washingtonpost.com/business/2026/06/23/andy-burnham-uk-labour-leadership-contest-starmer/c29b3130-6ede-11f1-8730-e7fd0e2a6404_story.html",
+        "date": "2026-06-23",
+        "reason": "报道Burnham正准备参加工党领导人竞选，该竞选可能使他在数周内成为英国首相",
+        "type": "周边压力情绪信号",
+        "price_reaction": {
+          "available": true,
+          "window": [
+            "2026-06-22",
+            "2026-06-24"
+          ],
+          "price_before": 0.967,
+          "price_after": 0.977,
+          "move_pct": 1.03,
+          "direction": "▲",
+          "caveat": "该新闻发布前后市场变动，时间相关非因果",
+          "market_check": "市场反应微弱(<5%)",
+          "same_window": "同窗2条新闻，变动为合计、不可归因到单条"
+        }
+      },
+      {
+        "title": "Andy Burnham prepares for a UK Labour leadership contest that may be a coronation - AP News",
+        "url": "https://apnews.com/article/andy-burnham-uk-labour-leadership-contest-starmer-693acb49a71838b7acf3f8fa4663f8bc",
+        "date": "2026-06-23",
+        "reason": "报道Burnham正准备参加工党领导人竞选，该竞选可能使他成为首相",
+        "type": "周边压力情绪信号",
+        "price_reaction": {
+          "available": true,
+          "window": [
+            "2026-06-22",
+            "2026-06-24"
+          ],
+          "price_before": 0.967,
+          "price_after": 0.977,
+          "move_pct": 1.03,
+          "direction": "▲",
+          "caveat": "该新闻发布前后市场变动，时间相关非因果",
+          "market_check": "市场反应微弱(<5%)",
+          "same_window": "同窗2条新闻，变动为合计、不可归因到单条"
+        }
+      }
+    ],
+    "negative": [],
+    "balance_summary": "正向证据按类型陈列：周边压力情绪信号×3、已生效硬事件×2；负向证据按类型陈列：无。每条已刻明客观事实类型（材质）——系统不替你称量轻重，不同材质的份量请自行掂量。 系统已完成证据陈述，天平由你裁决。",
+    "honesty_caveat": {
+      "positive_side": "fully_backed",
+      "negative_side": "true_clearance"
+    },
+    "guards": {
+      "relevance_dropped": [],
+      "type_deviations": [],
+      "weight_word_hits": [],
+      "weight_in_reason_hits": [],
+      "fear_lexicon_hits": [],
+      "directive_hits": []
+    }
+  },
+  "_audit": {
+    "teacher_tokens_approx": 3101,
+    "free_sources": [
+      "581",
+      "579",
+      "569",
+      "556",
+      "568",
+      "574"
+    ],
+    "catalyst_window": [
+      "2026-06-15",
+      "2026-06-25"
+    ]
+  }
+}
