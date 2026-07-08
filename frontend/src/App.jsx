@@ -304,35 +304,66 @@ function DecodeView() {
         </div>
       )}
 
-      {loading && <LoadingStages />}
-      {error && (
-        <div className="error">
-          <div className="r">{error.reason}</div>
-          <div>{error.message}</div>
-        </div>
-      )}
+      {loading && <LoadingStages note={t("未缓存的钱包要真跑全链（数据层 → 双向催化剂 → 多空对抗三连调），约 1-3 分钟；已缓存钱包会秒回。")} />}
+      {error && <ErrorBox error={error} />}
       {card && <Card card={card} />}
     </>
   );
 }
 
+// 常见后端错误 reason → EN 文案（后端 message 是中文；zh 模式直接用后端原文，en 模式查这里、查不到回退原文）
+const REASON_EN = {
+  INVALID_ADDRESS: "Invalid wallet address — expected a 0x… address (42 chars).",
+  NO_POSITIONS: "This wallet has no open positions.",
+  NO_OPEN_POSITIONS: "This wallet has no open positions.",
+  NO_POLITICAL_POSITIONS: "This wallet has no political-market positions — we only analyze politics markets.",
+  ALL_BELOW_MIN_VALUE: "All positions are below the minimum size threshold — too small to analyze meaningfully.",
+  DASHBOARD_PIPELINE_FAILED: "The analysis pipeline failed upstream (data source or AI gateway). Please retry later.",
+  BRIEFING_PIPELINE_FAILED: "The briefing pipeline failed upstream (data source or AI gateway). Please retry later.",
+  MARKET_CONTEXT_FAILED: "Market-context synthesis failed upstream. Please retry later.",
+  RATE_LIMITED: "Upstream API rate limit hit — please wait a moment and retry.",
+  NETWORK: "Cannot reach the backend — please retry later.",
+};
+
+function ErrorBox({ error }) {
+  const { lang } = useLang();
+  if (!error) return null;
+  const msg = lang === "en" ? (REASON_EN[error.reason] || error.message) : error.message;
+  return (
+    <div className="error">
+      <div className="r">{error.reason}</div>
+      <div>{msg}</div>
+    </div>
+  );
+}
+
 // 流水线加载：单请求在飞，前端按节奏 currentStep 逐个点亮，居中、与首页同语言。
 // 渐进式逻辑：i<step=已完成(暗青·✓静止) / i===step=进行中(亮青·脉冲) / i>step=未开始(暗灰静止)。
-function LoadingStages({ stages = STAGES, sub = "定位 → 追溯 → 检索 → 判断" }) {
+function LoadingStages({ stages = STAGES, sub = "定位 → 追溯 → 检索 → 判断", note }) {
   const { t } = useLang();
   const [step, setStep] = useState(0);
+  const [secs, setSecs] = useState(0);          // 真实已用时长（诚实计时，不装进度）
   const timer = useRef();
   useEffect(() => {
+    const t0 = Date.now();
     timer.current = setInterval(() => {
-      setStep((s) => (s < stages.length - 1 ? s + 1 : s));   // 卡在最后一步，绝不全打勾
-    }, 3500);
+      setSecs(Math.floor((Date.now() - t0) / 1000));
+      setStep((s) => {
+        const target = Math.min(Math.floor((Date.now() - t0) / 3500), stages.length - 1);
+        return Math.max(s, target);              // 卡在最后一步，绝不全打勾
+      });
+    }, 1000);
     return () => clearInterval(timer.current);
   }, [stages.length]);
   const last = stages.length - 1;
 
   return (
     <div className="pipe">
-      <div className="pipe-lead">{t("AI 推演中")} <span className="pipe-sub">· {t(sub)}</span></div>
+      <div className="pipe-lead">
+        {t("AI 推演中")} <span className="pipe-sub">· {t(sub)}</span>
+        <span className="pipe-timer num">{secs}s</span>
+      </div>
+      {note && secs >= 3 && <div className="pipe-note">{note}</div>}
       <div className="pipe-list">
         <span className="pipe-rail" />
         <span className="pipe-fill" style={{ height: `calc((100% - 28px) * ${step} / ${last})` }} />
@@ -681,8 +712,8 @@ function BriefingView() {
         </div>
       )}
 
-      {loading && <LoadingStages stages={STAGES_BRIEFING} sub="画像 → 动作 → 价格 → 催化剂 → 整理" />}
-      {error && <div className="error"><div className="r">{error.reason}</div><div>{error.message}</div></div>}
+      {loading && <LoadingStages stages={STAGES_BRIEFING} sub="画像 → 动作 → 价格 → 催化剂 → 整理" note={t("未缓存的钱包要真跑全链（数据层 → 双向催化剂 → 多空对抗三连调），约 1-3 分钟；已缓存钱包会秒回。")} />}
+      {error && <ErrorBox error={error} />}
       {data && <BriefingBody d={data} />}
     </>
   );
@@ -858,8 +889,8 @@ function ContextView() {
         </div>
       )}
 
-      {loading && <LoadingStages stages={STAGES_CONTEXT} sub="盘面 → 价格异动 → 催化剂 → 巨鲸动作 → 综述" />}
-      {error && <div className="error"><div className="r">{error.reason}</div><div>{error.message}</div></div>}
+      {loading && <LoadingStages stages={STAGES_CONTEXT} sub="盘面 → 价格异动 → 催化剂 → 巨鲸动作 → 综述" note={t("未缓存的钱包要真跑全链（数据层 → 双向催化剂 → 多空对抗三连调），约 1-3 分钟；已缓存钱包会秒回。")} />}
+      {error && <ErrorBox error={error} />}
       {data && <ContextBody d={data} />}
     </>
   );
@@ -1265,6 +1296,16 @@ function VerdictHero({ d }) {
         ? pc.current_price >= act.avg_entry_price : true);
   const dirCls = gain ? "pos" : "neg";
 
+  // ⑥ 体检 chip（纯前端代码算，不改 AI 输出、不拦截——"不加守卫≠不可观测"的界面化）
+  const advisories = [];
+  if (r.market_lean && r.thesis_audit) {
+    const nArt = r.thesis_audit.n_articles;
+    if (typeof nArt === "number" && nArt < 3) advisories.push(`${t("⚠ 证据薄：共享文章池仅")} ${nArt} ${t("篇，裁决人输入有限")}`);
+    const conf = String(r.confidence || "").toLowerCase();
+    if (conf === "high" && typeof r.lean_strength === "number" && r.lean_strength < 60)
+      advisories.push(t("⚠ 信心与倾向强度不符：高信心但证据压倒性 <60/100，谨慎采信"));
+  }
+
   return (
     <div className="vh">
       <div className="vh-top">
@@ -1324,6 +1365,12 @@ function VerdictHero({ d }) {
               · {t("多结局")} {r.event_structure.n_candidates} {t("选 1（基线")} {r.event_structure.baseline_pct}%）
             </span>
           )}
+        </div>
+      )}
+
+      {advisories.length > 0 && (
+        <div className="vh-advisories">
+          {advisories.map((a, i) => <span className="vh-advisory" key={i}>{a}</span>)}
         </div>
       )}
 
@@ -1623,8 +1670,23 @@ function BoardView() {
         </div>
       )}
 
-      {loading && <LoadingStages stages={STAGES_BOARD} sub="身份 → 这一注 → 盘面 → 行为×催化剂 → Edge" />}
-      {error && <div className="error"><div className="r">{error.reason}</div><div>{error.message}</div></div>}
+      {showHome && (
+        <div className="method-fold">
+          <Fold title={t("🔒 这里的 AI 被怎么圈养（方法论）")} sub={t("AI 原生 ≠ AI 说了算——六条纪律")}>
+            <ul className="method-list">
+              <li><b>{t("数字归代码。")}</b>{t("价格差、剩余空间、时长、日期数学 100% 由代码预算好，AI 禁止做任何算术。")}</li>
+              <li><b>{t("AI 只做解读。")}</b>{t("全站共七个被严格圈定的 AI 调用点，只负责把硬数字翻译成人话。")}</li>
+              <li><b>{t("信心可溯源。")}</b>{t("⑥ 的信心来自市场级多空对抗 → 中立裁决，来源系统标注在结果里，降级会明示。")}</li>
+              <li><b>{t("守卫会真发火。")}</b>{t("编造催化剂、篡改置信度、替你拍板、贩卖恐惧——命中即拦截、不输出。")}</li>
+              <li><b>{t("没证据就留空。")}</b>{t("空栏目是诚实不是 bug，绝不用幻觉填充。")}</li>
+              <li><b>{t("判断进记分牌。")}</b>{t("每个判断存档，等市场真结算后与现实对账（Track Record 页可查）。")}</li>
+            </ul>
+          </Fold>
+        </div>
+      )}
+
+      {loading && <LoadingStages stages={STAGES_BOARD} sub="身份 → 这一注 → 盘面 → 行为×催化剂 → Edge" note={t("未缓存的钱包要真跑全链（数据层 → 双向催化剂 → 多空对抗三连调），约 1-3 分钟；已缓存钱包会秒回。")} />}
+      {error && <ErrorBox error={error} />}
       {data && (
         <>
           <div className="db-refresh-bar">

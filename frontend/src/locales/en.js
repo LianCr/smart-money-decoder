@@ -304,6 +304,26 @@ export default {
 
   "⚡ 已缓存 · 秒开（不消耗额度）": "⚡ Cached · opens instantly (no quota used)",
 
+  // ── 加载诚实化 / 体检 chip / 方法论面板 ──
+  "未缓存的钱包要真跑全链（数据层 → 双向催化剂 → 多空对抗三连调），约 1-3 分钟；已缓存钱包会秒回。": "Uncached wallets run the full pipeline for real (data layer → two-sided catalysts → bull-vs-bear triple call), about 1–3 minutes; cached wallets return instantly.",
+  "⚠ 证据薄：共享文章池仅": "⚠ Thin evidence: shared article pool has only",
+  "篇，裁决人输入有限": "articles — the referee's input is limited",
+  "⚠ 信心与倾向强度不符：高信心但证据压倒性 <60/100，谨慎采信": "⚠ Confidence/strength mismatch: high confidence but evidence dominance <60/100 — take with caution",
+  "🔒 这里的 AI 被怎么圈养（方法论）": "🔒 How the AI is kept on a leash (methodology)",
+  "AI 原生 ≠ AI 说了算——六条纪律": "AI-native ≠ AI decides — six disciplines",
+  "数字归代码。": "Numbers belong to code. ",
+  "价格差、剩余空间、时长、日期数学 100% 由代码预算好，AI 禁止做任何算术。": "Price deltas, room left, durations, date math — 100% precomputed by code; the AI is forbidden from doing any arithmetic.",
+  "AI 只做解读。": "AI only interprets. ",
+  "全站共七个被严格圈定的 AI 调用点，只负责把硬数字翻译成人话。": "Exactly seven tightly-scoped AI call points site-wide, whose only job is translating hard numbers into plain language.",
+  "信心可溯源。": "Confidence is traceable. ",
+  "⑥ 的信心来自市场级多空对抗 → 中立裁决，来源系统标注在结果里，降级会明示。": "Confidence in ⑥ comes from market-level bull-vs-bear debate → neutral referee; the source system is labeled in the result and any fallback is disclosed.",
+  "守卫会真发火。": "Guards actually fire. ",
+  "编造催化剂、篡改置信度、替你拍板、贩卖恐惧——命中即拦截、不输出。": "Fabricated catalysts, tampered confidence, deciding for you, fear-mongering — any hit is blocked, nothing is output.",
+  "没证据就留空。": "No evidence → left blank. ",
+  "空栏目是诚实不是 bug，绝不用幻觉填充。": "Empty sections are honesty, not bugs — never filled with hallucinations.",
+  "判断进记分牌。": "Judgments go on the scorecard. ",
+  "每个判断存档，等市场真结算后与现实对账（Track Record 页可查）。": "Every judgment is archived and reconciled against reality once markets actually settle (see Track Record).",
+
   // ── Track Record ──
   "别跟": "Don't follow",
   "可跟·已追高": "Followable · chased",
