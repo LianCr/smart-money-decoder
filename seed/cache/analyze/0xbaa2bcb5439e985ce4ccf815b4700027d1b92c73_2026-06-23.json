@@ -1,0 +1,685 @@
+{
+  "profile": {
+    "address": "0xbaa2bcb5439e985ce4ccf815b4700027d1b92c73",
+    "name": "denizz",
+    "pseudonym": "Illustrious-Spectacles",
+    "profile_image": null
+  },
+  "pnl_history": [
+    {
+      "t": 1732752000,
+      "p": 60870.375
+    },
+    {
+      "t": 1733011200,
+      "p": 66857.53
+    },
+    {
+      "t": 1733356800,
+      "p": 65633.07
+    },
+    {
+      "t": 1733616000,
+      "p": 110471.125
+    },
+    {
+      "t": 1733961600,
+      "p": 130638.67
+    },
+    {
+      "t": 1734307200,
+      "p": 126597.016
+    },
+    {
+      "t": 1734566400,
+      "p": 128790.414
+    },
+    {
+      "t": 1734912000,
+      "p": 70220.38
+    },
+    {
+      "t": 1735171200,
+      "p": 69378.24
+    },
+    {
+      "t": 1735516800,
+      "p": 71655.9
+    },
+    {
+      "t": 1735862400,
+      "p": 68088.01
+    },
+    {
+      "t": 1736121600,
+      "p": 70386.22
+    },
+    {
+      "t": 1736467200,
+      "p": 71271.62
+    },
+    {
+      "t": 1736726400,
+      "p": 78440.4
+    },
+    {
+      "t": 1737072000,
+      "p": 104080.3
+    },
+    {
+      "t": 1737417600,
+      "p": 227735.05
+    },
+    {
+      "t": 1737676800,
+      "p": 231036.58
+    },
+    {
+      "t": 1738022400,
+      "p": 233138.83
+    },
+    {
+      "t": 1738281600,
+      "p": 240945.53
+    },
+    {
+      "t": 1738627200,
+      "p": 238260.05
+    },
+    {
+      "t": 1738972800,
+      "p": 246483.64
+    },
+    {
+      "t": 1739232000,
+      "p": 247486.52
+    },
+    {
+      "t": 1739577600,
+      "p": 254848.95
+    },
+    {
+      "t": 1739923200,
+      "p": 271089.7
+    },
+    {
+      "t": 1740182400,
+      "p": 256303.44
+    },
+    {
+      "t": 1740528000,
+      "p": 273072.97
+    },
+    {
+      "t": 1740787200,
+      "p": 272522.0
+    },
+    {
+      "t": 1741132800,
+      "p": 286985.8
+    },
+    {
+      "t": 1741478400,
+      "p": 312655.44
+    },
+    {
+      "t": 1741737600,
+      "p": 309004.0
+    },
+    {
+      "t": 1742083200,
+      "p": 322831.12
+    },
+    {
+      "t": 1742342400,
+      "p": 340108.72
+    },
+    {
+      "t": 1742688000,
+      "p": 359199.5
+    },
+    {
+      "t": 1743033600,
+      "p": 390860.8
+    },
+    {
+      "t": 1743292800,
+      "p": 399606.9
+    },
+    {
+      "t": 1743638400,
+      "p": 410341.3
+    },
+    {
+      "t": 1743897600,
+      "p": 431595.2
+    },
+    {
+      "t": 1744243200,
+      "p": 441189.06
+    },
+    {
+      "t": 1744588800,
+      "p": 485946.66
+    },
+    {
+      "t": 1744848000,
+      "p": 428328.38
+    },
+    {
+      "t": 1745193600,
+      "p": 430270.3
+    },
+    {
+      "t": 1745539200,
+      "p": 431579.7
+    },
+    {
+      "t": 1745798400,
+      "p": 431825.88
+    },
+    {
+      "t": 1746144000,
+      "p": 466009.44
+    },
+    {
+      "t": 1746403200,
+      "p": 437971.22
+    },
+    {
+      "t": 1746748800,
+      "p": 454472.47
+    },
+    {
+      "t": 1747094400,
+      "p": 477311.72
+    },
+    {
+      "t": 1747353600,
+      "p": 423726.28
+    },
+    {
+      "t": 1747699200,
+      "p": 420877.66
+    },
+    {
+      "t": 1747958400,
+      "p": 380733.44
+    },
+    {
+      "t": 1748304000,
+      "p": 394439.84
+    },
+    {
+      "t": 1748649600,
+      "p": 385769.53
+    },
+    {
+      "t": 1748908800,
+      "p": 360486.25
+    },
+    {
+      "t": 1749254400,
+      "p": 356936.53
+    },
+    {
+      "t": 1749513600,
+      "p": 356785.94
+    },
+    {
+      "t": 1749859200,
+      "p": 322725.9
+    },
+    {
+      "t": 1750204800,
+      "p": 313935.25
+    },
+    {
+      "t": 1750464000,
+      "p": 327011.88
+    },
+    {
+      "t": 1750809600,
+      "p": 311732.56
+    },
+    {
+      "t": 1751068800,
+      "p": 323428.53
+    },
+    {
+      "t": 1751414400,
+      "p": 347739.2
+    },
+    {
+      "t": 1751760000,
+      "p": 362129.03
+    },
+    {
+      "t": 1752019200,
+      "p": 358873.44
+    },
+    {
+      "t": 1752364800,
+      "p": 292434.2
+    },
+    {
+      "t": 1752710400,
+      "p": 312851.44
+    },
+    {
+      "t": 1752969600,
+      "p": 294071.9
+    },
+    {
+      "t": 1753315200,
+      "p": 279901.28
+    },
+    {
+      "t": 1753574400,
+      "p": 216240.5
+    },
+    {
+      "t": 1753920000,
+      "p": 201329.7
+    },
+    {
+      "t": 1754265600,
+      "p": 179745.16
+    },
+    {
+      "t": 1754524800,
+      "p": 181040.03
+    },
+    {
+      "t": 1754870400,
+      "p": 178894.31
+    },
+    {
+      "t": 1755129600,
+      "p": 184561.56
+    },
+    {
+      "t": 1755475200,
+      "p": 181320.83
+    },
+    {
+      "t": 1755820800,
+      "p": 192301.88
+    },
+    {
+      "t": 1756080000,
+      "p": 191597.1
+    },
+    {
+      "t": 1756425600,
+      "p": 198131.44
+    },
+    {
+      "t": 1756684800,
+      "p": 200784.88
+    },
+    {
+      "t": 1757030400,
+      "p": 205110.77
+    },
+    {
+      "t": 1757376000,
+      "p": 206874.03
+    },
+    {
+      "t": 1757635200,
+      "p": 213228.05
+    },
+    {
+      "t": 1757980800,
+      "p": 214477.33
+    },
+    {
+      "t": 1758326400,
+      "p": 214393.69
+    },
+    {
+      "t": 1758585600,
+      "p": 216873.33
+    },
+    {
+      "t": 1758931200,
+      "p": 216240.77
+    },
+    {
+      "t": 1759190400,
+      "p": 203614.9
+    },
+    {
+      "t": 1759536000,
+      "p": 203285.38
+    },
+    {
+      "t": 1759881600,
+      "p": 187645.5
+    },
+    {
+      "t": 1760140800,
+      "p": 371899.5
+    },
+    {
+      "t": 1760486400,
+      "p": 402707.94
+    },
+    {
+      "t": 1760745600,
+      "p": 408257.72
+    },
+    {
+      "t": 1761091200,
+      "p": 430177.28
+    },
+    {
+      "t": 1761436800,
+      "p": 448660.25
+    },
+    {
+      "t": 1761696000,
+      "p": 448403.75
+    },
+    {
+      "t": 1762041600,
+      "p": 456266.8
+    },
+    {
+      "t": 1762300800,
+      "p": 464267.94
+    },
+    {
+      "t": 1762646400,
+      "p": 472102.3
+    },
+    {
+      "t": 1762992000,
+      "p": 482513.8
+    },
+    {
+      "t": 1763251200,
+      "p": 475178.06
+    },
+    {
+      "t": 1763596800,
+      "p": 477911.56
+    },
+    {
+      "t": 1763942400,
+      "p": 465927.94
+    },
+    {
+      "t": 1764201600,
+      "p": 478658.53
+    },
+    {
+      "t": 1764547200,
+      "p": 454549.94
+    },
+    {
+      "t": 1764806400,
+      "p": 460176.22
+    },
+    {
+      "t": 1765152000,
+      "p": 469046.38
+    },
+    {
+      "t": 1765497600,
+      "p": 478588.12
+    },
+    {
+      "t": 1765756800,
+      "p": 480236.38
+    },
+    {
+      "t": 1766102400,
+      "p": 486833.4
+    },
+    {
+      "t": 1766361600,
+      "p": 507708.62
+    },
+    {
+      "t": 1766707200,
+      "p": 496046.8
+    },
+    {
+      "t": 1767052800,
+      "p": 507415.28
+    },
+    {
+      "t": 1767312000,
+      "p": 554768.56
+    },
+    {
+      "t": 1767657600,
+      "p": 513753.44
+    },
+    {
+      "t": 1767916800,
+      "p": 478216.5
+    },
+    {
+      "t": 1768262400,
+      "p": 456780.2
+    },
+    {
+      "t": 1768608000,
+      "p": 530051.44
+    },
+    {
+      "t": 1768867200,
+      "p": 531588.25
+    },
+    {
+      "t": 1769212800,
+      "p": 529408.0
+    },
+    {
+      "t": 1769472000,
+      "p": 564407.44
+    },
+    {
+      "t": 1769817600,
+      "p": 547383.75
+    },
+    {
+      "t": 1770163200,
+      "p": 651006.06
+    },
+    {
+      "t": 1770422400,
+      "p": 632391.2
+    },
+    {
+      "t": 1770768000,
+      "p": 634435.2
+    },
+    {
+      "t": 1771113600,
+      "p": 660726.3
+    },
+    {
+      "t": 1771372800,
+      "p": 630903.44
+    },
+    {
+      "t": 1771718400,
+      "p": 594969.8
+    },
+    {
+      "t": 1771977600,
+      "p": 598177.6
+    },
+    {
+      "t": 1772323200,
+      "p": 754845.56
+    },
+    {
+      "t": 1772668800,
+      "p": 810975.3
+    },
+    {
+      "t": 1772928000,
+      "p": 855632.0
+    },
+    {
+      "t": 1773273600,
+      "p": 906396.25
+    },
+    {
+      "t": 1773532800,
+      "p": 870044.5
+    },
+    {
+      "t": 1773878400,
+      "p": 839971.44
+    },
+    {
+      "t": 1774224000,
+      "p": 863929.06
+    },
+    {
+      "t": 1774483200,
+      "p": 888692.9
+    },
+    {
+      "t": 1774828800,
+      "p": 880366.6
+    },
+    {
+      "t": 1775088000,
+      "p": 959276.2
+    },
+    {
+      "t": 1775433600,
+      "p": 834224.6
+    },
+    {
+      "t": 1775779200,
+      "p": 1495592.0
+    },
+    {
+      "t": 1776038400,
+      "p": 1498639.8
+    },
+    {
+      "t": 1776384000,
+      "p": 1890196.0
+    },
+    {
+      "t": 1776729600,
+      "p": 1769794.8
+    },
+    {
+      "t": 1776988800,
+      "p": 1688789.8
+    },
+    {
+      "t": 1777334400,
+      "p": 1718603.0
+    },
+    {
+      "t": 1777593600,
+      "p": 1712158.5
+    },
+    {
+      "t": 1777939200,
+      "p": 1771992.8
+    },
+    {
+      "t": 1778284800,
+      "p": 1838195.4
+    },
+    {
+      "t": 1778544000,
+      "p": 1740406.5
+    },
+    {
+      "t": 1778889600,
+      "p": 1740967.0
+    },
+    {
+      "t": 1779148800,
+      "p": 1757196.2
+    },
+    {
+      "t": 1779494400,
+      "p": 1732436.1
+    },
+    {
+      "t": 1779840000,
+      "p": 1703695.5
+    },
+    {
+      "t": 1780099200,
+      "p": 1491608.2
+    },
+    {
+      "t": 1780444800,
+      "p": 1430173.2
+    },
+    {
+      "t": 1780704000,
+      "p": 1396262.9
+    },
+    {
+      "t": 1781049600,
+      "p": 1379518.6
+    },
+    {
+      "t": 1781395200,
+      "p": 1763390.0
+    },
+    {
+      "t": 1781654400,
+      "p": 2625166.2
+    },
+    {
+      "t": 1782000000,
+      "p": 2407091.0
+    },
+    {
+      "t": 1782244800,
+      "p": 2415377.8
+    }
+  ],
+  "market_question": "Will the U.S. invade Iran before 2027?",
+  "outcome": "No",
+  "resolution_date": "2026-12-31T00:00:00Z",
+  "entry_time": 1772924901,
+  "time_anchored": true,
+  "search_query": "U.S. invade Iran",
+  "price_info": {
+    "entry_price": 0.7067,
+    "current_price": 0.865,
+    "position_value": 276878.012,
+    "cash_pnl": 50654.2721,
+    "pnl_pct": 22.3912
+  },
+  "what_bet": "The wallet is betting the United States will not commence a military offensive intended to establish control over any portion of Iran by December 31, 2026. Under the resolution criteria, air strikes and limited military action do not trigger a Yes—only an invasion aimed at establishing territorial control counts. The wallet is long No at $0.71, wagering that even if hostilities escalate, the U.S. will not cross the threshold into a ground invasion with territorial objectives.",
+  "catalyst": [
+    {
+      "title": "U.S. and Israel launch a major attack on Iran as Trump urges Iranians to 'take over your government' - PBS",
+      "url": "https://www.pbs.org/newshour/world/us-and-israel-launch-a-major-attack-on-iran-and-trump-urges-iranians-to-take-over-your-government",
+      "published_at": "2026-02-28",
+      "relation": "BEFORE_ENTRY",
+      "why_relevant": "A major U.S. and Israeli attack on Iran was launched, but the snippet describes strikes and calls for internal uprising—not a ground offensive to establish control—confirming the wallet's thesis that attacks short of invasion do not meet resolution criteria."
+    },
+    {
+      "title": "Iran foreign minister: Not seeking ceasefire, warns U.S. invasion would be 'big disaster for them' - CNBC",
+      "url": "https://www.cnbc.com/2026/03/05/iran-us-war-invasion-abbas-araghchi.html",
+      "published_at": "2026-03-05",
+      "relation": "AFTER_ENTRY",
+      "why_relevant": "Iran's foreign minister explicitly warned that a U.S. military invasion would be disastrous for the U.S., framing invasion as a scenario distinct from ongoing strikes and signaling that Iran views the invasion threshold as not yet crossed."
+    }
+  ],
+  "edge_analysis": "The wallet entered No at $0.71 and the market now trades at $0.87, a favorable move of 16 cents that has delivered 22.39% unrealized profit. A follower buying No today at $0.87 captures 13.5 cents of remaining upside if no invasion occurs by year-end, but risks 86.5 cents per share if the U.S. launches a ground offensive with territorial control objectives. The majority of the favorable repricing—hostilities confirmed but invasion threshold unmet—has already occurred.",
+  "follow_call": "CHASED",
+  "confidence": "high",
+  "reasoning": "Time-anchored catalyst clearly explains the entry: the wallet identified that major U.S. attacks on Iran, while escalatory, did not constitute the territorial invasion required by resolution criteria. The 16-cent favorable move and 22% gain confirm the market absorbed this distinction. A follower today buys a thesis that has already been largely validated by price, with the bulk of the edge extracted.",
+  "warnings": []
+}

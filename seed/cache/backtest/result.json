@@ -1,0 +1,417 @@
+{
+  "_mock": false,
+  "wallet": "2_wallets",
+  "overview": {
+    "directional": {
+      "hits": 6,
+      "total": 6
+    },
+    "high_conf": {
+      "hits": 4,
+      "total": 4
+    },
+    "low_conf": {
+      "hits": 0,
+      "total": 0
+    },
+    "composition": {
+      "profitable": 4,
+      "loss": 2
+    }
+  },
+  "samples": [
+    {
+      "cid": "0xd47d0bd030ed55038c400015331bea5447e3c3d9078c799aa6f6ac9becc81a70",
+      "market_question": "US x Iran diplomatic meeting by June 10, 2026?",
+      "resolved_outcome": "NO",
+      "resolved_date": "2026-06-11",
+      "t7_date": "2026-06-04",
+      "t1_date": "2026-06-10",
+      "t7_card": {
+        "market_question": "US x Iran diplomatic meeting by June 10, 2026?",
+        "outcome": "No",
+        "resolution_date": "2026-06-10T00:00:00Z",
+        "time_anchored": true,
+        "price_info": {
+          "entry_price": 0.97,
+          "current_price": 0.925,
+          "position_value": 2747.25,
+          "cash_pnl": -133.65,
+          "pnl_pct": -4.6392
+        },
+        "what_bet": "The wallet is betting No on a US–Iran diplomatic meeting occurring by June 10, 2026. To win, no such meeting can take place between the United States and Iran on or before that date. Resolution criteria were unavailable, leaving the definition of 'diplomatic meeting' (level of representation, venue, format) unspecified and thus subject to the platform's interpretation at settlement.",
+        "catalyst": [],
+        "edge_analysis": "The wallet entered at 0.97 and the market has moved against the position to 0.925, producing a loss of 0.045 price units. A follower buying No today at 0.925 would risk 0.925 per share if a meeting occurs and gain 0.075 per share if none takes place by June 10, 2026. The wallet paid for near-certainty; today's price still prices in roughly 92.5% odds that no meeting happens, leaving minimal upside.",
+        "follow_call": "NO BASIS",
+        "confidence": "low",
+        "reasoning": "No articles were retrieved to explain the entry despite time-anchored search, the position is underwater by 4.6%, and today is June 4, 2026 while the market settles June 10, 2026. With settlement imminent, no sourced catalyst, and the wallet already wrong on direction, there is no evidentiary foundation for a follower to replicate this bet.",
+        "warnings": [
+          "No relevant news found in the search window; the trade's catalyst is unknown."
+        ]
+      },
+      "t1_card": {
+        "market_question": "US x Iran diplomatic meeting by June 10, 2026?",
+        "outcome": "No",
+        "resolution_date": "2026-06-10T00:00:00Z",
+        "time_anchored": true,
+        "price_info": {
+          "entry_price": 0.97,
+          "current_price": 0.9985,
+          "position_value": 2965.55,
+          "cash_pnl": 84.65,
+          "pnl_pct": 2.9381
+        },
+        "what_bet": "The wallet is betting No on a US-Iran diplomatic meeting occurring by June 10, 2026. The position pays out if no such meeting takes place before the settlement date. Resolution criteria are unavailable, leaving the definition of 'diplomatic meeting' (level of officials, format, venue) undefined and creating settlement risk.",
+        "catalyst": [],
+        "edge_analysis": "The wallet entered at 0.97 and the market now trades at 0.9985, producing a price_delta of 0.0285 in the wallet's favor. A follower buying No today at 0.9985 faces follower_max_upside of 0.0015 per share and follower_max_loss of 0.9985 per share. The favorable move has already occurred; nearly all upside has been captured.",
+        "follow_call": "CHASED",
+        "confidence": "high",
+        "reasoning": "Today is June 10, 2026, the settlement date itself. The market has moved 2.94% in the wallet's favor and now prices No at 0.9985, meaning the thesis has effectively resolved. A follower buying today captures at most 0.0015 per share while risking 0.9985 — the entry opportunity is gone. The sole article discusses Ukraine-Russia diplomacy and a US focus on Iran but does not describe a US-Iran diplomatic meeting, so it fails the admissions test and is excluded.",
+        "warnings": []
+      },
+      "hit": true,
+      "bet_won": true
+    },
+    {
+      "cid": "0xc88e812beb27442554b9231273f6cdda7c96022afc1a5b2a841f03c17dbceaaf",
+      "market_question": "Iran closes its airspace by June 8?",
+      "resolved_outcome": "YES",
+      "resolved_date": "2026-06-12",
+      "t7_date": "2026-06-05",
+      "t1_date": "2026-06-11",
+      "t7_card": {
+        "market_question": "Iran closes its airspace by June 8?",
+        "outcome": "Yes",
+        "resolution_date": "2026-06-08T00:00:00Z",
+        "time_anchored": true,
+        "price_info": {
+          "entry_price": 0.971,
+          "current_price": 0.0505,
+          "position_value": 15460.85,
+          "cash_pnl": -281816.14,
+          "pnl_pct": -94.7992
+        },
+        "what_bet": "The wallet holds Yes at 97.1 cents, requiring Iran to close its airspace by June 8. Settlement rules are unavailable, leaving the definition of 'closes its airspace' — whether partial restrictions, military closures, or complete civilian shutdowns qualify — entirely to the resolution authority's discretion. The wallet is now underwater by 94.80 percent.",
+        "catalyst": [],
+        "edge_analysis": "The wallet entered at 97.1 cents and has lost 92.05 cents per share as the market collapsed to 5.05 cents. A follower buying Yes today at 5.05 cents can gain up to 94.95 cents per share if Iran closes its airspace by June 08, 2026, and loses 5.05 cents per share if it does not. The entire favorable price move has occurred in reverse — the wallet's thesis has been rejected by the market, and any edge depends on information unavailable here.",
+        "follow_call": "NO BASIS",
+        "confidence": "low",
+        "reasoning": "No catalyst articles were retrieved despite time-anchored search around the entry. The wallet's 94.80 percent loss signals the market moved decisively against the thesis after entry, but without news explaining either the original conviction or the subsequent collapse, a follower has no sourced rationale to evaluate. The low current price reflects low probability, not overlooked upside.",
+        "warnings": [
+          "No relevant news found in the search window; the trade's catalyst is unknown."
+        ]
+      },
+      "t1_card": {
+        "market_question": "Iran closes its airspace by June 8?",
+        "outcome": "Yes",
+        "resolution_date": "2026-06-08T00:00:00Z",
+        "time_anchored": true,
+        "price_info": {
+          "entry_price": 0.971,
+          "current_price": 0.9995,
+          "position_value": 306002.43,
+          "cash_pnl": 8725.43,
+          "pnl_pct": 2.9351
+        },
+        "what_bet": "The wallet holds Yes at 97.1 cents on Iran closing its airspace by June 8. The market title states 'by June 8' but resolution_date_human is June 08, 2026 — settlement occurs on that date itself. Resolution criteria are unavailable, so the threshold for 'closes its airspace' (partial closure, full commercial shutdown, duration required) is undefined and represents meaningful settlement risk.",
+        "catalyst": [
+          {
+            "title": "Israel says it has struck Iran after taking missile fire - Politico",
+            "url": "https://www.politico.com/news/2026/06/07/israel-says-it-has-struck-iran-after-taking-missile-fire-00953175",
+            "published_at": "2026-06-08",
+            "relation": "AFTER_ENTRY",
+            "why_relevant": "Reports that 'the airspace around the country's main airfield in Tehran was closed after the Israeli attack' — a direct closure event on the June 8 resolution date, occurring hours after the wallet's entry."
+          }
+        ],
+        "edge_analysis": "The wallet entered at 97.1 cents; the current price is 99.95 cents. The favorable move of 2.85 cents has already occurred. A follower buying today pays 99.95 cents for a maximum remaining gain of 0.05 cents per share and risks 99.95 cents per share if the market settles No — a 1,999:1 risk-reward on the final half-cent.",
+        "follow_call": "CHASED",
+        "confidence": "high",
+        "reasoning": "Time-anchored catalyst confirms Tehran airspace closure on the resolution date itself, and the wallet's 2.9% gain reflects the price absorbing this outcome. The thesis is well-supported but followers face asymmetric risk for five-hundredths of a cent upside against near-total downside if the closure was partial or if settlement rules demand criteria the headline event does not satisfy.",
+        "warnings": []
+      },
+      "hit": true,
+      "bet_won": true
+    },
+    {
+      "cid": "0xd9933a54c518e773050255ea9dba01a71e1a41f49311ed078ae4a6f7e76b1625",
+      "market_question": "Iran closes its airspace by June 15?",
+      "resolved_outcome": "YES",
+      "resolved_date": "2026-06-12",
+      "t7_date": "2026-06-05",
+      "t1_date": "2026-06-11",
+      "t7_card": {
+        "market_question": "Iran closes its airspace by June 15?",
+        "outcome": "Yes",
+        "resolution_date": "2026-06-15T00:00:00Z",
+        "time_anchored": true,
+        "price_info": {
+          "entry_price": 0.7837,
+          "current_price": 0.096,
+          "position_value": 412.34,
+          "cash_pnl": -2953.8,
+          "pnl_pct": -87.7504
+        },
+        "what_bet": "The wallet holds Yes at 78.37 cents, betting that Iran will close its airspace by June 15, 2026. The market settles June 15, 2026. Resolution criteria are unavailable, leaving ambiguity over what constitutes a qualifying closure—total ban on all flights, military exclusion zone, or regional restriction—and whether partial or temporary measures count.",
+        "catalyst": [],
+        "edge_analysis": "The wallet entered at 0.7837 and the market now trades at 0.096, a price_delta of -0.6877 against the position. A follower buying Yes today pays 0.096 per share for follower_max_upside of 0.904 if Iran closes its airspace by settlement, risking follower_max_loss of 0.096 if it does not. The entire favorable pricing has inverted: the market now assigns less than ten percent probability to the event the wallet bought at nearly eighty percent.",
+        "follow_call": "NO BASIS",
+        "confidence": "low",
+        "reasoning": "No catalyst articles were retrieved despite time-anchored search around the entry, leaving the original thesis unverifiable. The wallet has absorbed an 87.75 percent loss as the market repriced sharply away from closure. Without sourced trigger, resolution criteria, or any recent development supporting airspace shutdown, following this position would be speculation on an opaque thesis that the market has already decisively rejected.",
+        "warnings": [
+          "No relevant news found in the search window; the trade's catalyst is unknown."
+        ]
+      },
+      "t1_card": {
+        "market_question": "Iran closes its airspace by June 15?",
+        "outcome": "Yes",
+        "resolution_date": "2026-06-15T00:00:00Z",
+        "time_anchored": true,
+        "price_info": {
+          "entry_price": 0.7837,
+          "current_price": 0.9995,
+          "position_value": 4293.04,
+          "cash_pnl": 926.9,
+          "pnl_pct": 27.536
+        },
+        "what_bet": "The wallet is betting that Iran will close its entire national airspace by June 15, 2026. Settlement rules are unavailable, creating ambiguity: does a temporary closure count, or must airspace remain shut through the deadline? Does closure of Tehran's main airfield suffice, or is nationwide shutdown required? The wallet is exposed to interpretation risk without published resolution criteria.",
+        "catalyst": [
+          {
+            "title": "Israel says it has struck Iran after taking missile fire - Politico",
+            "url": "https://www.politico.com/news/2026/06/07/israel-says-it-has-struck-iran-after-taking-missile-fire-00953175",
+            "published_at": "2026-06-08",
+            "relation": "BEFORE_ENTRY",
+            "why_relevant": "Reports that Iran closed airspace around Tehran's main airfield following Israeli strikes, demonstrating that escalation triggers immediate airspace shutdowns."
+          },
+          {
+            "title": "Iran war LIVE: Tehran claims 12 missiles fired at US jet near Jordan base; Bahrain intercepts 'aerial attacks' | World News - Hindustan Times",
+            "url": "https://www.hindustantimes.com/world-news/us-iran-war-live-updates-strait-of-hormuz-trump-ceasefire-deal-explosion-strikes-uae-saudi-bahrain-middle-east-news-gulf-101781138491447.html",
+            "published_at": "2026-06-11",
+            "relation": "AFTER_ENTRY",
+            "why_relevant": "Reports Kuwaiti airspace shut amid new Iranian ballistic-missile strikes on U.S. targets, showing regional airspace closures are occurring as conflict intensifies post-entry."
+          }
+        ],
+        "edge_analysis": "The wallet entered at 0.7837 and the market now trades at 0.9995, a move of 0.2158 in the wallet's favor. A follower buying today pays 0.9995 for a maximum gain of 0.0005 per share if Iran closes airspace by June 15, 2026, against a maximum loss of 0.9995 if it does not. The favorable repricing is complete; the position is now a near-certain binary with less than a tenth of a cent of upside remaining.",
+        "follow_call": "CHASED",
+        "confidence": "high",
+        "reasoning": "Time-anchored catalyst shows Tehran airfield closure immediately preceded entry, and post-entry developments confirm ongoing regional airspace shutdowns. The wallet's 27.536 percent gain reflects near-total price discovery: current_price of 0.9995 leaves only 0.0005 per share for a follower. High confidence that the trade thesis was correct, but the window closed behind the wallet.",
+        "warnings": []
+      },
+      "hit": true,
+      "bet_won": true
+    },
+    {
+      "cid": "0xe0b6f4d40f33f456caba50434db5ea8c5ca93e84eb912054a80ca0c58ad70dd7",
+      "market_question": "Starmer out by May 31, 2026?",
+      "resolved_outcome": "NO",
+      "resolved_date": "2026-06-01",
+      "t7_date": "2026-05-25",
+      "t1_date": "2026-05-31",
+      "t7_card": {
+        "market_question": "Starmer out by May 31, 2026?",
+        "outcome": "Yes",
+        "resolution_date": "2026-05-31T12:00:00Z",
+        "time_anchored": true,
+        "price_info": {
+          "entry_price": 0.1858,
+          "current_price": 0.034,
+          "position_value": 721.27,
+          "cash_pnl": -3220.24,
+          "pnl_pct": -81.7008
+        },
+        "what_bet": "The wallet is betting Yes that Keir Starmer will cease to be UK Prime Minister before May 31, 2026. Settlement criteria are unavailable, creating uncertainty around what triggers a Yes resolution — resignation, no-confidence vote, death, or another mechanism — and whether an acting replacement before official succession would count. The market settles May 31, 2026.",
+        "catalyst": [
+          {
+            "title": "Britain's Starmer fights for his job as calls for his ouster grow after local election losses - Greenwich Time",
+            "url": "https://www.greenwichtime.com/news/world/article/britain-s-starmer-fights-for-his-job-as-calls-for-22251677.php",
+            "published_at": "2026-05-10",
+            "relation": "AFTER_ENTRY",
+            "why_relevant": "Devastating local election results prompted dozens of Labour lawmakers to call for Starmer's resignation, directly threatening his tenure as Prime Minister."
+          },
+          {
+            "title": "U.K. Prime Minister Starmer Says He Won't Step Down Amid Calls For Him To Resign - HuffPost",
+            "url": "https://www.huffpost.com/entry/uk-prime-minister-starmer-says-he-wont-step-down-amid-calls-resign_n_6a03391be4b0b1a48de94760?origin=top-ad-recirc",
+            "published_at": "2026-05-12",
+            "relation": "AFTER_ENTRY",
+            "why_relevant": "Around 80 Labour lawmakers called for Starmer to stand down or set a departure timetable, escalating internal party pressure for his exit."
+          }
+        ],
+        "edge_analysis": "The wallet entered at 0.1858 and the market has since collapsed to 0.034, producing a price_delta of -0.1518 against the position — the thesis has been decisively rejected by the market. A follower buying Yes today at 0.034 risks follower_max_loss of 0.034 per share for follower_max_upside of 0.966 per share if Starmer exits within the settlement window, but the wallet's own 81.7% loss signals the market now assigns negligible probability to departure.",
+        "follow_call": "NO BASIS",
+        "confidence": "medium",
+        "reasoning": "Time-anchored articles confirm genuine political pressure emerged after the wallet's entry, with 80 Labour MPs calling for resignation, but all developments occurred after the position was taken — no identifiable catalyst explains the original bet. The 81.7% drawdown and collapse from 0.1858 to 0.034 demonstrate the market moved sharply against the thesis despite the pressure, and today is May 25, 2026 with settlement on May 31, 2026 leaving minimal time for the required outcome. Following today means buying a thesis the market has violently repriced as improbable.",
+        "warnings": []
+      },
+      "t1_card": {
+        "market_question": "Starmer out by May 31, 2026?",
+        "outcome": "Yes",
+        "resolution_date": "2026-05-31T12:00:00Z",
+        "time_anchored": true,
+        "price_info": {
+          "entry_price": 0.1858,
+          "current_price": 0.004,
+          "position_value": 84.85,
+          "cash_pnl": -3856.65,
+          "pnl_pct": -97.8471
+        },
+        "what_bet": "The wallet is betting that UK Prime Minister Keir Starmer will cease to hold office by May 31, 2026. Settlement criteria are unavailable, creating ambiguity about what constitutes 'out' — resignation, removal by party vote, general election loss, or any transfer of the premiership would likely qualify, but the absence of official rules leaves room for dispute. The market settles May 31, 2026.",
+        "catalyst": [
+          {
+            "title": "Britain's Starmer fights for his job as calls for his ouster grow after local election losses - Greenwich Time",
+            "url": "https://www.greenwichtime.com/news/world/article/britain-s-starmer-fights-for-his-job-as-calls-for-22251677.php",
+            "published_at": "2026-05-10",
+            "relation": "AFTER_ENTRY",
+            "why_relevant": "Published after the wallet's entry, this reports that dozens of Labour lawmakers called for Starmer's resignation following devastating local election results, escalating the pressure that would need to force him out by the settlement date."
+          },
+          {
+            "title": "U.K. Prime Minister Starmer Says He Won't Step Down Amid Calls For Him To Resign - HuffPost",
+            "url": "https://www.huffpost.com/entry/uk-prime-minister-starmer-says-he-wont-step-down-amid-calls-resign_n_6a03391be4b0b1a48de94760?origin=top-ad-recirc",
+            "published_at": "2026-05-12",
+            "relation": "AFTER_ENTRY",
+            "why_relevant": "Published after entry, Starmer explicitly told his Cabinet he has no intention of resigning despite around 80 Labour lawmakers calling for his departure, directly threatening the wallet's thesis by showing the Prime Minister intends to remain in office."
+          }
+        ],
+        "edge_analysis": "The wallet entered at 0.1858 and the market now trades at 0.004, reflecting a price_delta of -0.1818 — the position has collapsed. A follower buying Yes today at 0.004 risks follower_max_loss of 0.004 per share but gains follower_max_upside of 0.996 if Starmer leaves office by settlement today, May 31, 2026. The market has priced the thesis as nearly impossible; all favorable movement has reversed and then some.",
+        "follow_call": "NO BASIS",
+        "confidence": "medium",
+        "reasoning": "The wallet's entry timing is known and articles confirm escalating pressure on Starmer in early May, but all post-entry news shows Starmer explicitly refusing to resign and still holding office. The market settles today, and the 97.8% loss indicates the event did not occur. Medium confidence reflects clear catalyst identification and time anchoring, but the thesis has been decisively invalidated by both price action and the passage of time to settlement.",
+        "warnings": []
+      },
+      "hit": true,
+      "bet_won": false
+    },
+    {
+      "cid": "0x575e86314d77231f25c16834b4f501221f215399a79fa6f5760b0a1eb7f1e5d3",
+      "market_question": "Starmer out by May 15, 2026?",
+      "resolved_outcome": "NO",
+      "resolved_date": "2026-05-16",
+      "t7_date": "2026-05-09",
+      "t1_date": "2026-05-15",
+      "t7_card": {
+        "market_question": "Starmer out by May 15, 2026?",
+        "outcome": "Yes",
+        "resolution_date": "2026-06-30T12:00:00Z",
+        "time_anchored": true,
+        "price_info": {
+          "entry_price": 0.0433,
+          "current_price": 0.0275,
+          "position_value": 1565.53,
+          "cash_pnl": -899.47,
+          "pnl_pct": -36.4896
+        },
+        "what_bet": "The wallet is betting that UK Prime Minister Keir Starmer will leave office by May 15, 2026. The market title specifies a May 15 deadline, but the official settlement occurs June 30, 2026; this discrepancy creates ambiguity about whether a late-May departure would resolve Yes or No, and casual readers may misjudge which timeline governs the outcome. Settlement rules were unavailable, amplifying the risk that fine-print definitions of 'out' differ from the headline interpretation.",
+        "catalyst": [],
+        "edge_analysis": "The wallet entered at 0.0433 and the position has moved against it by 0.0158, currently at 0.0275. A follower buying today pays 0.0275 per share with a maximum upside of 0.9725 if Starmer departs by the title deadline and a maximum loss of 0.0275 if he remains. The wallet's 36.49 percent loss signals the market has moved sharply away from the thesis since entry, but the follower's risk-reward ratio—more than 35:1—remains structurally attractive if any credible path to early exit emerges.",
+        "follow_call": "NO BASIS",
+        "confidence": "low",
+        "reasoning": "No catalyst was found in the windowed search despite time-anchored data, leaving the wallet's entry rationale invisible. The 36.49 percent drawdown indicates the market rejected whatever thesis prompted the bet, and the absence of recent developments supporting early departure leaves no evidence that conditions have improved. The favorable risk-reward arithmetic cannot overcome the lack of a sourced trigger or confirming news.",
+        "warnings": [
+          "No relevant news found in the search window; the trade's catalyst is unknown."
+        ]
+      },
+      "t1_card": {
+        "market_question": "Starmer out by May 15, 2026?",
+        "outcome": "Yes",
+        "resolution_date": "2026-06-30T12:00:00Z",
+        "time_anchored": true,
+        "price_info": {
+          "entry_price": 0.0433,
+          "current_price": 0.0105,
+          "position_value": 597.75,
+          "cash_pnl": -1867.25,
+          "pnl_pct": -75.7506
+        },
+        "what_bet": "The wallet holds Yes that UK Prime Minister Keir Starmer will leave office by May 15, 2026. Resolution criteria were unavailable, but the market settles June 30, 2026—a date that falls after the May 15 threshold in the title. Casual readers may misjudge the timeline; the wallet may be betting that a resignation before mid-May will settle Yes even though the market remains open for another period.",
+        "catalyst": [
+          {
+            "title": "The Latest: Starmer fights for political survival as calls for his resignation grow in UK - Greenwich Time",
+            "url": "https://www.greenwichtime.com/business/article/the-latest-starmer-fights-for-political-survival-22254423.php",
+            "published_at": "2026-05-12",
+            "relation": "AFTER_ENTRY",
+            "why_relevant": "Reports dozens of Labour lawmakers calling for Starmer to resign following disastrous local election results, directly increasing the probability of departure by the May 15 threshold."
+          },
+          {
+            "title": "Leading challenger to UK Prime Minister Keir Starmer quits government - CNN",
+            "url": "https://www.cnn.com/2026/05/14/uk/streeting-resigns-health-secretary-starmer-uk-intl",
+            "published_at": "2026-05-14",
+            "relation": "AFTER_ENTRY",
+            "why_relevant": "Health Secretary Wes Streeting resigns citing lost confidence in Starmer's leadership, escalating internal pressure and raising the likelihood of imminent departure."
+          }
+        ],
+        "edge_analysis": "The wallet entered at 0.0433 and the position is now at 0.0105, a price_delta of -0.0328 against them—the market moved sharply away from the Yes thesis despite intensifying resignation calls. A follower buying today at 0.0105 risks follower_max_loss of 0.0105 per share but captures follower_max_upside of 0.9895 if Starmer exits by the title's May 15 date, now today. The favorable entry price is entirely intact; the wallet mistimed the entry or the catalyst failed to move sentiment.",
+        "follow_call": "NO BASIS",
+        "confidence": "medium",
+        "reasoning": "Two high-quality catalysts confirm the resignation crisis is real and occurred after entry, yet the market collapsed against the position by over 75 percent. Today is May 15—the binary threshold named in the title—and Starmer remains in office, meaning the Yes outcome requires his departure within hours or hinges on interpreting 'by May 15' to include the full day. The sharp adverse price move and the arrival of the deadline itself eliminate any structural edge, even though the political facts support the thesis direction.",
+        "warnings": []
+      },
+      "hit": true,
+      "bet_won": false
+    },
+    {
+      "cid": "0x1bb8bd43ada27e828ce693a5dc2896cd918b64869570761a61048ec78471ce9a",
+      "market_question": "Jerome Powell out as Fed Chair by May 15, 2026?",
+      "resolved_outcome": "YES",
+      "resolved_date": "2026-05-16",
+      "t7_date": "2026-05-09",
+      "t1_date": "2026-05-15",
+      "t7_card": {
+        "market_question": "Jerome Powell out as Fed Chair by May 15, 2026?",
+        "outcome": "Yes",
+        "resolution_date": "2026-05-15T00:00:00Z",
+        "time_anchored": true,
+        "price_info": {
+          "entry_price": 0.2182,
+          "current_price": 0.26,
+          "position_value": 1339.95,
+          "cash_pnl": 215.42,
+          "pnl_pct": 19.1567
+        },
+        "what_bet": "The wallet is betting that Jerome Powell will no longer be Federal Reserve Chair by May 15, 2026. Settlement rules were unavailable, leaving ambiguity on what counts as 'out' — resignation, dismissal, or any departure from the role. The market settles May 15, 2026; today is May 09, 2026.",
+        "catalyst": [],
+        "edge_analysis": "The wallet entered at 0.2182 and the market now trades at 0.26, a price_delta of 0.0418 — approximately 19% unrealized gain already captured. A follower buying today pays 0.26 per share for follower_max_upside of 0.74 if Powell exits, against follower_max_loss of 0.26 if he remains. The favorable move from entry has occurred but the bulk of potential upside remains available.",
+        "follow_call": "NO BASIS",
+        "confidence": "low",
+        "reasoning": "No catalyst was recovered despite time-anchored search around the entry date, leaving the trigger and thesis logic unknown. The wallet has banked a 19% gain, yet no public event explains the bet or validates continuation risk this close to settlement. Following a position with opaque reasoning and missing settlement criteria, when the outcome will be known imminently, offers no identifiable edge.",
+        "warnings": [
+          "No relevant news found in the search window; the trade's catalyst is unknown."
+        ]
+      },
+      "t1_card": {
+        "market_question": "Jerome Powell out as Fed Chair by May 15, 2026?",
+        "outcome": "Yes",
+        "resolution_date": "2026-05-15T00:00:00Z",
+        "time_anchored": true,
+        "price_info": {
+          "entry_price": 0.2182,
+          "current_price": 0.23,
+          "position_value": 1185.34,
+          "cash_pnl": 60.81,
+          "pnl_pct": 5.4079
+        },
+        "what_bet": "The wallet is betting that Jerome Powell will no longer hold the position of Federal Reserve Chair by May 15, 2026. Settlement rules are unavailable, leaving ambiguity over whether resignation, removal, or completion of his term qualifies as 'out.' The market settles today, May 15, 2026.",
+        "catalyst": [
+          {
+            "title": "Fed Chair Jerome Powell Just Broke 75 Years of Precedent With a Move That's Likely to Frustrate President Trump. How Will This Impact the Stock Market? - The Motley Fool",
+            "url": "https://www.fool.com/investing/2026/05/09/fed-chair-jerome-powell-just-broke-75-years-of-pre/",
+            "published_at": "2026-05-10",
+            "relation": "BEFORE_ENTRY",
+            "why_relevant": "Powell announced he would remain on the Board of Governors after his term as chair ends, signaling his chair tenure was concluding imminently and making a 'Yes' outcome probable before the May 15 deadline."
+          },
+          {
+            "title": "Board Names Jerome Powell Temporary Fed Chair. Two Governors Disagree With the Move. - Barron's",
+            "url": "https://www.barrons.com/articles/federal-reserve-jerome-powell-kevin-warsh-4386f49e",
+            "published_at": "2026-05-15",
+            "relation": "AFTER_ENTRY",
+            "why_relevant": "The Board named Powell 'chair pro tempore,' indicating his formal term as chair ended and he now holds a temporary designation, directly satisfying the 'out as Fed Chair' condition under any reasonable interpretation."
+          }
+        ],
+        "edge_analysis": "The wallet entered at 0.2182 and the market now trades at 0.23, reflecting a price_delta of 0.0118 in the wallet's favor. A follower buying today pays 0.23 with follower_max_upside of 0.77 per share if 'Yes' settles and follower_max_loss of 0.23 if 'No' prevails. The market settles today, so resolution is imminent and the outcome hinges entirely on how the administrator interprets Powell's transition to 'temporary chair' status.",
+        "follow_call": "CHASED",
+        "confidence": "high",
+        "reasoning": "The catalyst is unambiguous: Powell's May 10 announcement that his chair term was ending, followed by today's confirmation that he holds only a pro tempore title, directly fulfills the market condition. The wallet captured a 5.4079 percent gain on a 0.0118 price move, and today is settlement day—no time value remains. The thesis is correct and the price has absorbed the news; followers face binary resolution risk with minimal upside relative to the move already harvested.",
+        "warnings": []
+      },
+      "hit": true,
+      "bet_won": true
+    }
+  ]
+}

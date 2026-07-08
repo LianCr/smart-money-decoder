@@ -1,0 +1,1287 @@
+{
+  "wallet": "0x74471a007ddcc488f6d57b5e86dfb35a8d48a16d",
+  "as_of": "2026-06-20",
+  "identity": {
+    "profile": {
+      "address": "0x74471a007ddcc488f6d57b5e86dfb35a8d48a16d",
+      "name": "tetrose",
+      "pseudonym": "Bulky-Antler",
+      "profile_image": "https://polymarket-upload.s3.us-east-2.amazonaws.com/profile-image-2739522-d03810e0-d01b-4e53-bef5-827a096c0446.webp"
+    },
+    "pnl_history": [
+      {
+        "t": 1758412800,
+        "p": 719.54443
+      },
+      {
+        "t": 1758499200,
+        "p": 1452.3652
+      },
+      {
+        "t": 1758672000,
+        "p": 23241.156
+      },
+      {
+        "t": 1758844800,
+        "p": 25432.047
+      },
+      {
+        "t": 1759017600,
+        "p": 28732.168
+      },
+      {
+        "t": 1759104000,
+        "p": 18238.703
+      },
+      {
+        "t": 1759276800,
+        "p": 3580.129
+      },
+      {
+        "t": 1759449600,
+        "p": 3327.8901
+      },
+      {
+        "t": 1759622400,
+        "p": 5310.9375
+      },
+      {
+        "t": 1759708800,
+        "p": 4905.416
+      },
+      {
+        "t": 1759881600,
+        "p": 4626.953
+      },
+      {
+        "t": 1760054400,
+        "p": 1754.0966
+      },
+      {
+        "t": 1760227200,
+        "p": 4035.6018
+      },
+      {
+        "t": 1760313600,
+        "p": 3147.1157
+      },
+      {
+        "t": 1760486400,
+        "p": 2631.8372
+      },
+      {
+        "t": 1760659200,
+        "p": 2187.733
+      },
+      {
+        "t": 1760832000,
+        "p": 1822.0254
+      },
+      {
+        "t": 1760918400,
+        "p": 9877.068
+      },
+      {
+        "t": 1761091200,
+        "p": 10230.443
+      },
+      {
+        "t": 1761264000,
+        "p": 11058.5625
+      },
+      {
+        "t": 1761436800,
+        "p": 12130.627
+      },
+      {
+        "t": 1761523200,
+        "p": 6202.919
+      },
+      {
+        "t": 1761696000,
+        "p": 6346.595
+      },
+      {
+        "t": 1761868800,
+        "p": 6676.2114
+      },
+      {
+        "t": 1762041600,
+        "p": 5696.378
+      },
+      {
+        "t": 1762128000,
+        "p": 6473.644
+      },
+      {
+        "t": 1762300800,
+        "p": 7459.161
+      },
+      {
+        "t": 1762473600,
+        "p": -1962.8196
+      },
+      {
+        "t": 1762646400,
+        "p": -845.7045
+      },
+      {
+        "t": 1762732800,
+        "p": -571.96075
+      },
+      {
+        "t": 1762905600,
+        "p": -287.18698
+      },
+      {
+        "t": 1763078400,
+        "p": -1804.4282
+      },
+      {
+        "t": 1763251200,
+        "p": -2324.5176
+      },
+      {
+        "t": 1763337600,
+        "p": -1048.0536
+      },
+      {
+        "t": 1763510400,
+        "p": -1224.1008
+      },
+      {
+        "t": 1763683200,
+        "p": 12175.541
+      },
+      {
+        "t": 1763856000,
+        "p": 13832.375
+      },
+      {
+        "t": 1763942400,
+        "p": 25653.479
+      },
+      {
+        "t": 1764115200,
+        "p": -4204.539
+      },
+      {
+        "t": 1764288000,
+        "p": -6446.201
+      },
+      {
+        "t": 1764460800,
+        "p": 10153.532
+      },
+      {
+        "t": 1764547200,
+        "p": -15111.796
+      },
+      {
+        "t": 1764720000,
+        "p": -15048.686
+      },
+      {
+        "t": 1764892800,
+        "p": -31063.463
+      },
+      {
+        "t": 1765065600,
+        "p": -45817.02
+      },
+      {
+        "t": 1765152000,
+        "p": -49198.76
+      },
+      {
+        "t": 1765324800,
+        "p": -49512.406
+      },
+      {
+        "t": 1765497600,
+        "p": -64466.258
+      },
+      {
+        "t": 1765670400,
+        "p": -64562.49
+      },
+      {
+        "t": 1765756800,
+        "p": -73266.875
+      },
+      {
+        "t": 1765929600,
+        "p": -81774.54
+      },
+      {
+        "t": 1766102400,
+        "p": -70903.41
+      },
+      {
+        "t": 1766275200,
+        "p": -84146.09
+      },
+      {
+        "t": 1766448000,
+        "p": -83909.836
+      },
+      {
+        "t": 1766534400,
+        "p": -85618.09
+      },
+      {
+        "t": 1766707200,
+        "p": -88679.34
+      },
+      {
+        "t": 1766880000,
+        "p": -96457.016
+      },
+      {
+        "t": 1767052800,
+        "p": -88526.9
+      },
+      {
+        "t": 1767139200,
+        "p": -101699.0
+      },
+      {
+        "t": 1767312000,
+        "p": -106333.67
+      },
+      {
+        "t": 1767484800,
+        "p": -71376.54
+      },
+      {
+        "t": 1767657600,
+        "p": -84087.28
+      },
+      {
+        "t": 1767744000,
+        "p": -85470.984
+      },
+      {
+        "t": 1767916800,
+        "p": -85379.414
+      },
+      {
+        "t": 1768089600,
+        "p": -91007.836
+      },
+      {
+        "t": 1768262400,
+        "p": -91869.34
+      },
+      {
+        "t": 1768348800,
+        "p": -97971.57
+      },
+      {
+        "t": 1768521600,
+        "p": -77660.24
+      },
+      {
+        "t": 1768694400,
+        "p": -77490.195
+      },
+      {
+        "t": 1768867200,
+        "p": -80684.05
+      },
+      {
+        "t": 1768953600,
+        "p": -81709.63
+      },
+      {
+        "t": 1769126400,
+        "p": -81729.39
+      },
+      {
+        "t": 1769299200,
+        "p": -49850.39
+      },
+      {
+        "t": 1769472000,
+        "p": -47623.586
+      },
+      {
+        "t": 1769558400,
+        "p": -50967.812
+      },
+      {
+        "t": 1769731200,
+        "p": -51894.98
+      },
+      {
+        "t": 1769904000,
+        "p": -49354.793
+      },
+      {
+        "t": 1770076800,
+        "p": -69974.484
+      },
+      {
+        "t": 1770163200,
+        "p": -72393.24
+      },
+      {
+        "t": 1770336000,
+        "p": -74240.31
+      },
+      {
+        "t": 1770508800,
+        "p": -78052.9
+      },
+      {
+        "t": 1770681600,
+        "p": -79734.805
+      },
+      {
+        "t": 1770768000,
+        "p": -81778.32
+      },
+      {
+        "t": 1770940800,
+        "p": -92679.24
+      },
+      {
+        "t": 1771113600,
+        "p": -104686.664
+      },
+      {
+        "t": 1771286400,
+        "p": -106919.09
+      },
+      {
+        "t": 1771372800,
+        "p": -108056.02
+      },
+      {
+        "t": 1771545600,
+        "p": -99835.445
+      },
+      {
+        "t": 1771718400,
+        "p": -105351.05
+      },
+      {
+        "t": 1771891200,
+        "p": -106629.6
+      },
+      {
+        "t": 1771977600,
+        "p": -109069.555
+      },
+      {
+        "t": 1772150400,
+        "p": -115342.29
+      },
+      {
+        "t": 1772323200,
+        "p": -108034.445
+      },
+      {
+        "t": 1772496000,
+        "p": -106355.78
+      },
+      {
+        "t": 1772582400,
+        "p": -107050.86
+      },
+      {
+        "t": 1772755200,
+        "p": -92720.664
+      },
+      {
+        "t": 1772928000,
+        "p": -95822.13
+      },
+      {
+        "t": 1773100800,
+        "p": -91554.78
+      },
+      {
+        "t": 1773187200,
+        "p": -71645.78
+      },
+      {
+        "t": 1773360000,
+        "p": -71770.24
+      },
+      {
+        "t": 1773532800,
+        "p": -71701.59
+      },
+      {
+        "t": 1773705600,
+        "p": -74845.76
+      },
+      {
+        "t": 1773792000,
+        "p": -74662.12
+      },
+      {
+        "t": 1773964800,
+        "p": -74055.12
+      },
+      {
+        "t": 1774137600,
+        "p": -74093.76
+      },
+      {
+        "t": 1774310400,
+        "p": -81219.516
+      },
+      {
+        "t": 1774483200,
+        "p": -85107.08
+      },
+      {
+        "t": 1774569600,
+        "p": -81094.59
+      },
+      {
+        "t": 1774742400,
+        "p": -71328.31
+      },
+      {
+        "t": 1774915200,
+        "p": -69745.586
+      },
+      {
+        "t": 1775088000,
+        "p": -76361.984
+      },
+      {
+        "t": 1775174400,
+        "p": -63860.277
+      },
+      {
+        "t": 1775347200,
+        "p": -56437.83
+      },
+      {
+        "t": 1775520000,
+        "p": -58754.168
+      },
+      {
+        "t": 1775692800,
+        "p": -60250.145
+      },
+      {
+        "t": 1775779200,
+        "p": -61788.035
+      },
+      {
+        "t": 1775952000,
+        "p": -59590.004
+      },
+      {
+        "t": 1776124800,
+        "p": -59897.754
+      },
+      {
+        "t": 1776297600,
+        "p": -28333.44
+      },
+      {
+        "t": 1776384000,
+        "p": -20070.373
+      },
+      {
+        "t": 1776556800,
+        "p": -22859.033
+      },
+      {
+        "t": 1776729600,
+        "p": -28409.977
+      },
+      {
+        "t": 1776902400,
+        "p": -21236.193
+      },
+      {
+        "t": 1776988800,
+        "p": -21426.633
+      },
+      {
+        "t": 1777161600,
+        "p": -4419.412
+      },
+      {
+        "t": 1777334400,
+        "p": -11058.976
+      },
+      {
+        "t": 1777507200,
+        "p": 11563.77
+      },
+      {
+        "t": 1777593600,
+        "p": 10718.196
+      },
+      {
+        "t": 1777766400,
+        "p": -11639.069
+      },
+      {
+        "t": 1777939200,
+        "p": -12576.586
+      },
+      {
+        "t": 1778112000,
+        "p": -46244.055
+      },
+      {
+        "t": 1778198400,
+        "p": -55723.168
+      },
+      {
+        "t": 1778371200,
+        "p": -56089.63
+      },
+      {
+        "t": 1778544000,
+        "p": -55201.69
+      },
+      {
+        "t": 1778716800,
+        "p": -72543.18
+      },
+      {
+        "t": 1778803200,
+        "p": -73214.33
+      },
+      {
+        "t": 1778976000,
+        "p": -62395.484
+      },
+      {
+        "t": 1779148800,
+        "p": -49528.684
+      },
+      {
+        "t": 1779321600,
+        "p": -62261.98
+      },
+      {
+        "t": 1779408000,
+        "p": -81143.89
+      },
+      {
+        "t": 1779580800,
+        "p": -10727.755
+      },
+      {
+        "t": 1779753600,
+        "p": -34610.91
+      },
+      {
+        "t": 1779926400,
+        "p": -77288.766
+      },
+      {
+        "t": 1780012800,
+        "p": -78294.31
+      },
+      {
+        "t": 1780185600,
+        "p": -111236.586
+      },
+      {
+        "t": 1780358400,
+        "p": -116833.14
+      },
+      {
+        "t": 1780531200,
+        "p": -118983.12
+      },
+      {
+        "t": 1780617600,
+        "p": -126444.08
+      },
+      {
+        "t": 1780790400,
+        "p": -143831.11
+      },
+      {
+        "t": 1780963200,
+        "p": -132816.22
+      },
+      {
+        "t": 1781136000,
+        "p": -136936.86
+      },
+      {
+        "t": 1781222400,
+        "p": -101657.35
+      },
+      {
+        "t": 1781395200,
+        "p": -68005.77
+      },
+      {
+        "t": 1781568000,
+        "p": 357114.28
+      },
+      {
+        "t": 1781740800,
+        "p": 369474.0
+      },
+      {
+        "t": 1781827200,
+        "p": 358412.53
+      },
+      {
+        "t": 1782000000,
+        "p": 355205.97
+      },
+      {
+        "t": 1782172800,
+        "p": 338922.47
+      },
+      {
+        "t": 1782345600,
+        "p": 342126.88
+      },
+      {
+        "t": 1782428400,
+        "p": 332677.03
+      }
+    ],
+    "who_trader_profile": {
+      "wallet": "0x74471a007ddcc488f6d57b5e86dfb35a8d48a16d",
+      "quality": {
+        "combined_risk_score": 10,
+        "max_drawdown": 9.9786,
+        "drawdown_frequency": 0.1333,
+        "avg_trade_size": 552.65,
+        "markets_traded": 90,
+        "num_markets_traded": 90,
+        "category_diversity_score": 0.6082,
+        "market_concentration_ratio": 0.6191,
+        "annualized_return": null,
+        "gain_to_pain_ratio": 6.705,
+        "equity_curve_pattern": "volatile",
+        "perfect_timing_flag": false,
+        "flagged_metrics": "{position_size_volatility}",
+        "losing_trades": 221,
+        "best_market_pnl": 521463.16,
+        "dominant_market_pnl": 521463.16,
+        "window_days": "15"
+      },
+      "category_specialization": [
+        {
+          "category": "Politics / US / Trump",
+          "roi": 109.3392,
+          "win_rate": 0.4831,
+          "total_pnl": 528709.93,
+          "total_trades": 862
+        },
+        {
+          "category": "Politics / US",
+          "roi": 107.2485,
+          "win_rate": 0.4831,
+          "total_pnl": 528709.93,
+          "total_trades": 894
+        },
+        {
+          "category": "Politics",
+          "roi": 53.4123,
+          "win_rate": 0.4096,
+          "total_pnl": 482580.87,
+          "total_trades": 1610
+        },
+        {
+          "category": "Politics / Global",
+          "roi": 54.8127,
+          "win_rate": 0.4096,
+          "total_pnl": 482580.87,
+          "total_trades": 1603
+        },
+        {
+          "category": "Other",
+          "roi": 52.4559,
+          "win_rate": 0.382,
+          "total_pnl": 463247.67,
+          "total_trades": 1602
+        },
+        {
+          "category": "Politics / US / Elections",
+          "roi": 0.0,
+          "win_rate": 0.0,
+          "total_pnl": 0.0,
+          "total_trades": 32
+        },
+        {
+          "category": "Finance & Markets",
+          "roi": -56.2763,
+          "win_rate": 0.0,
+          "total_pnl": -44691.24,
+          "total_trades": 312
+        }
+      ],
+      "official_rank": {
+        "period": "30d",
+        "rank": 71,
+        "roi": "0.320309",
+        "win_rate": "0.4277",
+        "sharpe_ratio": "0.0572",
+        "total_pnl": "398624.3934",
+        "total_invested": "1244499.50",
+        "total_trades": 3423,
+        "markets_traded": 139
+      },
+      "realized_pnl_recent": {
+        "window": [
+          "2026-05-20",
+          "2026-06-20"
+        ],
+        "days_returned": 11,
+        "realized_pnl_sum": -16447.85
+      },
+      "h_score": {
+        "available": false,
+        "note": "不在 H-Score 榜首页（584 无按地址查，官方排名见 official_rank/579）"
+      }
+    }
+  },
+  "position": {
+    "meta": {
+      "wallet": "0x74471a007ddcc488f6d57b5e86dfb35a8d48a16d",
+      "market": "Will Benjamin Netanyahu be the next Prime Minister of Israel?",
+      "analyzed_side": "No",
+      "as_of": "2026-06-20",
+      "mode": "live",
+      "catalyst_anchor": "2026-06-20",
+      "settle": "还有约194.0天"
+    },
+    "what_position_actions": {
+      "wallet": "0x74471a007ddcc488f6d57b5e86dfb35a8d48a16d",
+      "condition_id": "0x7586a96520578acaaaa4ea84a2582f197f84255da1f3392a7aa300386c187b37",
+      "analyzed_side": "No",
+      "market": {
+        "question": "Will Benjamin Netanyahu be the next Prime Minister of Israel?",
+        "winning_outcome": null,
+        "closed": false,
+        "settle_date": "2026-12-31",
+        "days_to_settlement": 194.0,
+        "settle_note": "还有约194.0天"
+      },
+      "two_side_distribution": {
+        "hedged": false,
+        "by_outcome": {
+          "No": {
+            "trades": 18,
+            "shares": 48338.7
+          }
+        },
+        "note": "仅单边建仓"
+      },
+      "actions": {
+        "entry_time": "2026-04-26 13:14",
+        "last_add_time": "2026-06-22 14:58",
+        "num_buys": 18,
+        "num_sells": 0,
+        "added_over_time": true,
+        "avg_entry_price": 0.652,
+        "net_shares": 48338.7,
+        "net_cost_usd": 31517.27
+      },
+      "unrealized": {
+        "current_price": 0.67,
+        "price_source": "568最新close",
+        "current_value_usd": 32386.95,
+        "unrealized_pnl_usd": 869.67,
+        "unrealized_pct": 2.76,
+        "note": "持仓中浮盈亏"
+      }
+    },
+    "price_context": {
+      "as_of": "2026-06-20",
+      "analyzed_side": "No",
+      "price_source": "568历史close",
+      "current_price": 0.67,
+      "implied_probability_pct": 67.0,
+      "remaining_upside_per_share_usd": 0.33,
+      "remaining_upside_pct_if_win": 49.25,
+      "downside_per_share_usd": 0.67,
+      "odds_to_one": 0.49,
+      "entry_price": 0.652,
+      "price_delta": 0.018,
+      "price_delta_pct": 2.76
+    },
+    "what_the_bet": "押注内塔尼亚胡**不会**成为以色列下一任总理，只要2026年议会选举后正式宣誓就职的总理不是内塔尼亚胡就算赢。",
+    "resolution_criteria": "Legislative elections are schedule to be held in Israel on October 27, 2026. \n\nThis market will resolve to the next individual who is officially appointed and sworn in as Prime Minister of Israel following the 2026 parliamentary election. If an election is called early, this market will immediately resolve to the individual who is officially appointed and sworn in after that election.\n\nTo count for resolution, the individual must be formally sworn in. Any interim or caretaker Prime Minister will not count toward the resolution of this market.\n\nIf no such Prime Minister is sworn in by December 31, 2027, 11:59 PM ET, this market will resolve to “Other”.\n\nThe primary resolution source for this market will be official information from the Government of Israel; however, a consensus of credible reporting may also be used."
+  },
+  "market": {
+    "slug": "will-benjamin-netanyahu-be-the-next-prime-minister-of-israel",
+    "market_id": "0x7586a96520578acaaaa4ea84a2582f197f84255da1f3392a7aa300386c187b37"
+  },
+  "price_series": [
+    {
+      "date": "2026-04-22",
+      "price": 0.58
+    },
+    {
+      "date": "2026-04-23",
+      "price": 0.58
+    },
+    {
+      "date": "2026-04-24",
+      "price": 0.6
+    },
+    {
+      "date": "2026-04-25",
+      "price": 0.61
+    },
+    {
+      "date": "2026-04-26",
+      "price": 0.56
+    },
+    {
+      "date": "2026-04-27",
+      "price": 0.57
+    },
+    {
+      "date": "2026-04-28",
+      "price": 0.56
+    },
+    {
+      "date": "2026-04-30",
+      "price": 0.6
+    },
+    {
+      "date": "2026-05-01",
+      "price": 0.58
+    },
+    {
+      "date": "2026-05-02",
+      "price": 0.59
+    },
+    {
+      "date": "2026-05-03",
+      "price": 0.58
+    },
+    {
+      "date": "2026-05-04",
+      "price": 0.56
+    },
+    {
+      "date": "2026-05-05",
+      "price": 0.57
+    },
+    {
+      "date": "2026-05-06",
+      "price": 0.6
+    },
+    {
+      "date": "2026-05-07",
+      "price": 0.6
+    },
+    {
+      "date": "2026-05-08",
+      "price": 0.61
+    },
+    {
+      "date": "2026-05-09",
+      "price": 0.61
+    },
+    {
+      "date": "2026-05-10",
+      "price": 0.6
+    },
+    {
+      "date": "2026-05-11",
+      "price": 0.59
+    },
+    {
+      "date": "2026-05-12",
+      "price": 0.59
+    },
+    {
+      "date": "2026-05-13",
+      "price": 0.6
+    },
+    {
+      "date": "2026-05-14",
+      "price": 0.6
+    },
+    {
+      "date": "2026-05-15",
+      "price": 0.59
+    },
+    {
+      "date": "2026-05-16",
+      "price": 0.59
+    },
+    {
+      "date": "2026-05-17",
+      "price": 0.61
+    },
+    {
+      "date": "2026-05-18",
+      "price": 0.62
+    },
+    {
+      "date": "2026-05-19",
+      "price": 0.63
+    },
+    {
+      "date": "2026-05-20",
+      "price": 0.62
+    },
+    {
+      "date": "2026-05-21",
+      "price": 0.63
+    },
+    {
+      "date": "2026-05-22",
+      "price": 0.64
+    },
+    {
+      "date": "2026-05-23",
+      "price": 0.65
+    },
+    {
+      "date": "2026-05-24",
+      "price": 0.65
+    },
+    {
+      "date": "2026-05-25",
+      "price": 0.65
+    },
+    {
+      "date": "2026-05-26",
+      "price": 0.65
+    },
+    {
+      "date": "2026-05-27",
+      "price": 0.66
+    },
+    {
+      "date": "2026-05-28",
+      "price": 0.65
+    },
+    {
+      "date": "2026-05-29",
+      "price": 0.65
+    },
+    {
+      "date": "2026-05-30",
+      "price": 0.67
+    },
+    {
+      "date": "2026-05-31",
+      "price": 0.66
+    },
+    {
+      "date": "2026-06-01",
+      "price": 0.66
+    },
+    {
+      "date": "2026-06-02",
+      "price": 0.67
+    },
+    {
+      "date": "2026-06-03",
+      "price": 0.68
+    },
+    {
+      "date": "2026-06-04",
+      "price": 0.68
+    },
+    {
+      "date": "2026-06-05",
+      "price": 0.67
+    },
+    {
+      "date": "2026-06-06",
+      "price": 0.68
+    },
+    {
+      "date": "2026-06-07",
+      "price": 0.67
+    },
+    {
+      "date": "2026-06-08",
+      "price": 0.66
+    },
+    {
+      "date": "2026-06-09",
+      "price": 0.66
+    },
+    {
+      "date": "2026-06-10",
+      "price": 0.61
+    },
+    {
+      "date": "2026-06-11",
+      "price": 0.65
+    },
+    {
+      "date": "2026-06-12",
+      "price": 0.64
+    },
+    {
+      "date": "2026-06-13",
+      "price": 0.66
+    },
+    {
+      "date": "2026-06-14",
+      "price": 0.72
+    },
+    {
+      "date": "2026-06-15",
+      "price": 0.69
+    },
+    {
+      "date": "2026-06-16",
+      "price": 0.67
+    },
+    {
+      "date": "2026-06-17",
+      "price": 0.67
+    },
+    {
+      "date": "2026-06-18",
+      "price": 0.64
+    },
+    {
+      "date": "2026-06-19",
+      "price": 0.66
+    },
+    {
+      "date": "2026-06-20",
+      "price": 0.67
+    }
+  ],
+  "behavior": {
+    "flag": "STATIC",
+    "fact": "近 48h 仅 0 买 / 0 卖，无显著动作（沉闷持仓）",
+    "honest_note": "动态行为：基本没动",
+    "windows": {
+      "3h": {
+        "buys": 0,
+        "sells": 0,
+        "buy_usd": 0.0,
+        "sell_usd": 0.0
+      },
+      "24h": {
+        "buys": 0,
+        "sells": 0,
+        "buy_usd": 0.0,
+        "sell_usd": 0.0
+      },
+      "48h": {
+        "buys": 0,
+        "sells": 0,
+        "buy_usd": 0.0,
+        "sell_usd": 0.0
+      }
+    }
+  },
+  "news_stream": [
+    {
+      "date": "2026-06-20",
+      "title": "Benjamin Netanyahu's election hopes 'undermined' if conflict with Lebanon continues - Sky News Australia",
+      "summary": "中东专家警告与黎巴嫩的持续冲突可能严重削弱Netanyahu的连任前景",
+      "url": "https://www.skynews.com.au/world-news/global-affairs/benjamin-netanyahus-election-hopes-undermined-if-conflict-with-lebanon-continues/video/2a4c97eff79ed1bb0bcd053886ec4043?amp",
+      "origin": "Tavily",
+      "direction": "support",
+      "reaction": {
+        "available": false
+      },
+      "same_window": false
+    },
+    {
+      "date": "2026-06-17",
+      "title": "Israel's Next Leader - The Times of Israel",
+      "summary": "民调显示Netanyahu在即将到来的大选中将无法获得足够席位组建右翼联盟",
+      "url": "https://blogs.timesofisrael.com/israels-next-leader/",
+      "origin": "Tavily",
+      "direction": "support",
+      "reaction": {
+        "available": true,
+        "kind": "weak",
+        "move_pct": -4.48,
+        "window": [
+          "2026-06-16",
+          "2026-06-18"
+        ]
+      },
+      "same_window": true
+    },
+    {
+      "date": "2026-06-17",
+      "title": "Netanyahu, Israel's arch-survivor, set to face voter fury over Iran deal - Yahoo",
+      "summary": "报道指Netanyahu将面临选民对伊朗协议的愤怒",
+      "url": "https://www.yahoo.com/news/articles/netanyahu-israels-arch-survivor-set-100650583.html",
+      "origin": "Tavily",
+      "direction": "support",
+      "reaction": {
+        "available": true,
+        "kind": "weak",
+        "move_pct": -4.48,
+        "window": [
+          "2026-06-16",
+          "2026-06-18"
+        ]
+      },
+      "same_window": true
+    },
+    {
+      "date": "2026-06-14",
+      "title": "trump claims iran deal close as hormuz tensions linger",
+      "summary": "特朗普声称与伊朗的协议接近达成",
+      "url": "https://www.maitlandmercury.com.au/story/9290782/trump-claims-iran-deal-close-as-hormuz-tensions-linger/",
+      "origin": "GDELT",
+      "direction": null,
+      "reaction": {
+        "available": true,
+        "kind": "weak",
+        "move_pct": 4.55,
+        "window": [
+          "2026-06-13",
+          "2026-06-15"
+        ]
+      },
+      "same_window": true
+    },
+    {
+      "date": "2026-06-14",
+      "title": "strait showdown hormuz remains open as us and iran edge toward a deal",
+      "summary": "美国和伊朗正在接近达成协议",
+      "url": "https://www.africanews.com/2026/06/12/strait-showdown-hormuz-remains-open-as-us-and-iran-edge-toward-a-deal/",
+      "origin": "GDELT",
+      "direction": null,
+      "reaction": {
+        "available": true,
+        "kind": "weak",
+        "move_pct": 4.55,
+        "window": [
+          "2026-06-13",
+          "2026-06-15"
+        ]
+      },
+      "same_window": true
+    },
+    {
+      "date": "2026-06-10",
+      "title": "israel and iran exchange missile fire threatening middle east truce",
+      "summary": "以色列和伊朗交换导弹袭击",
+      "url": "https://newstalk1090.iheart.com/content/2026-06-08-israel-and-iran-exchange-strikes-amid-rising-tensions/",
+      "origin": "GDELT",
+      "direction": null,
+      "reaction": {
+        "available": true,
+        "kind": "weak",
+        "move_pct": -1.52,
+        "window": [
+          "2026-06-09",
+          "2026-06-11"
+        ]
+      },
+      "same_window": true
+    },
+    {
+      "date": "2026-06-10",
+      "title": "Likud insists Netanyahu will run and win election after Trump doubts political future - Ynetnews",
+      "summary": "美国总统Trump公开质疑Netanyahu是否想继续从政，反映外部对其政治前途的不确定性",
+      "url": "https://www.ynetnews.com/article/tq4vuxawj",
+      "origin": "Tavily",
+      "direction": "support",
+      "reaction": {
+        "available": true,
+        "kind": "weak",
+        "move_pct": -1.52,
+        "window": [
+          "2026-06-09",
+          "2026-06-11"
+        ]
+      },
+      "same_window": true
+    },
+    {
+      "date": "2026-06-10",
+      "title": "Trump says not clear Netanyahu will run in upcoming elections, remain in politics - Ynetnews",
+      "summary": "Trump expressed doubt that Netanyahu would continue in politics, stating 'not clear' if he will run in upcoming elections. If Netanyahu does not run, he cannot become the next Prime Minister, which would make outcome=No correct.",
+      "url": "https://www.ynetnews.com/article/syk0064i11me",
+      "origin": "Tavily",
+      "direction": "threat",
+      "reaction": {
+        "available": true,
+        "kind": "weak",
+        "move_pct": -1.52,
+        "window": [
+          "2026-06-09",
+          "2026-06-11"
+        ]
+      },
+      "same_window": true
+    }
+  ],
+  "world_summary": "# 市场综述：Netanyahu连任前景\n\n**巨鲸动态**  \n近48小时无买卖记录，持仓静默无显著操作。\n\n**事态进展**  \n特朗普公开表示\"不确定\"Netanyahu是否继续参政或参选；最新民调显示Netanyahu可能无法获得足够席位组建右翼联盟；中东专家指出与黎巴嫩冲突持续发展；Polymarket盘面显示前IDF参谋长Eizenkot领导的新党派Yashar在交易者共识中领先，中间派安全诉求吸引寻求替代方案的选民，民调支持率超越Bennett-Lapid联盟；特朗普声称与伊朗协议接近达成，以色列-伊朗导弹交火事件同期发生；报道称选民对伊朗协议可能产生不满情绪。",
+  "reasoning": {
+    "follow_call": "ROOM LEFT",
+    "confidence": "high",
+    "reasoning": "这个钱包单方向押注内塔尼亚胡不会连任，买入成本很低，价格才涨了一点点，还有很大的上涨空间。近48小时他基本没动，保持原仓位。支持他方向的证据包括民调数据和多条政治压力信号，虽然市场对这些消息的反应都比较温和，但方向是一致的；反向威胁只有一条类似的情绪信号，力度相当。信心评级为高是因为他目前浮盈约2.8%，底座盈利表现稳定。",
+    "confidence_reasons": [
+      "底座矩阵:high(pnl=+2.8%)"
+    ],
+    "facts": {
+      "market_question": "Will Benjamin Netanyahu be the next Prime Minister of Israel?",
+      "outcome": "No",
+      "today": "2026-06-20",
+      "price_room_left": 49.25,
+      "price_already_moved": 2.76,
+      "resolution_date_human": "还有约194.0天",
+      "position_type": "single_side_conviction",
+      "recent_action": "flat_no_movement",
+      "support_catalysts": [
+        {
+          "title": "Israel's Next Leader - The Times of Israel",
+          "material_tag": "民调数据",
+          "market_reaction": "weak",
+          "move_pct": -4.48,
+          "same_window": true
+        },
+        {
+          "title": "Likud insists Netanyahu will run and win election after Trump doubts political future - Ynetnews",
+          "material_tag": "周边压力情绪信号",
+          "market_reaction": "weak",
+          "move_pct": -1.52,
+          "same_window": false
+        },
+        {
+          "title": "Benjamin Netanyahu's election hopes 'undermined' if conflict with Lebanon continues - Sky News Australia",
+          "material_tag": "周边压力情绪信号",
+          "market_reaction": "unknown",
+          "move_pct": null,
+          "same_window": false
+        },
+        {
+          "title": "Netanyahu, Israel's arch-survivor, set to face voter fury over Iran deal - Yahoo",
+          "material_tag": "周边压力情绪信号",
+          "market_reaction": "weak",
+          "move_pct": -4.48,
+          "same_window": true
+        }
+      ],
+      "threat_catalysts": [
+        {
+          "title": "Trump says not clear Netanyahu will run in upcoming elections, remain in politics - Ynetnews",
+          "material_tag": "周边压力情绪信号",
+          "market_reaction": "weak",
+          "move_pct": -1.52,
+          "same_window": false
+        }
+      ],
+      "confidence": "high",
+      "confidence_reasons": [
+        "底座矩阵:high(pnl=+2.8%)"
+      ]
+    }
+  }
+}

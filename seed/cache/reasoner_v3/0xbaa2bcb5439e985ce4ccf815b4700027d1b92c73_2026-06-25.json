@@ -1,0 +1,49 @@
+{
+  "follow_call": "NO BASIS",
+  "confidence": "medium",
+  "reasoning": "这个钱包两边都押了不少筹码，不是单纯赌一个方向，更像是对冲或做市策略。近48小时他基本没动仓位。支持'不会达成协议'的消息和威胁这个方向的消息都有，但市场对双方的反应都很弱，没有明确的价格信号显示市场当前站在哪一边。信心定为中等，是因为虽然钱包自己这笔单子账面盈利还不错，但对冲仓位的性质把信心上限封住了——跟单的人拿不到他那套完整的风险结构。",
+  "confidence_reasons": [
+    "底座矩阵:high(pnl=+3.1%)",
+    "R2:两侧均衡(对冲/做市)→封medium"
+  ],
+  "facts": {
+    "market_question": "US-Iran Final Nuclear Deal by August 31, 2026?",
+    "outcome": "No",
+    "today": "2026-06-25",
+    "price_room_left": 33.33,
+    "price_already_moved": 1.76,
+    "resolution_date_human": "还有约68.0天",
+    "position_type": "hedged",
+    "recent_action": "flat_no_movement",
+    "support_catalysts": [
+      {
+        "title": "Is Iran Resuming Nuclear Inspections? Trump And Iran Offer Different Answers - Forbes",
+        "material_tag": "当事人直接表态",
+        "market_reaction": "weak",
+        "move_pct": 2.86,
+        "same_window": false
+      }
+    ],
+    "threat_catalysts": [
+      {
+        "title": "Trump says Iran agreed to nuclear inspections, Tehran denies U.S. claims - Haaretz",
+        "material_tag": "当事人直接表态",
+        "market_reaction": "weak",
+        "move_pct": 2.7,
+        "same_window": false
+      },
+      {
+        "title": "US-Iran deal: Officials reveal details of agreement as Trump says it will be signed 'shortly' - BBC",
+        "material_tag": "当事人直接表态",
+        "market_reaction": "unknown",
+        "move_pct": null,
+        "same_window": false
+      }
+    ],
+    "confidence": "medium",
+    "confidence_reasons": [
+      "底座矩阵:high(pnl=+3.1%)",
+      "R2:两侧均衡(对冲/做市)→封medium"
+    ]
+  }
+}

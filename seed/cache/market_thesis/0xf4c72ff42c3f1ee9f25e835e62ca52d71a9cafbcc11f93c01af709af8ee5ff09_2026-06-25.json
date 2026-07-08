@@ -1,0 +1,83 @@
+{
+  "market_lean": "NO",
+  "lean_strength": 92,
+  "confidence": "high",
+  "pivotal_unknown": "2026年下半年是否会发生弹劾、罢免或意外辞职事件",
+  "rationale": "三篇独立来源证实李在明2026年6月正常履职（就职周年、G7峰会、人事任命），无任何离职迹象。市场6% YES价虽有鲸鱼集中，但流动性极高且价格稳定在低位，与证据方向一致。唯一风险是距年底还有半年窗口，但现有证据压倒性指向他将留任全年。",
+  "implied_prob_yes": 6,
+  "shared_pool": [
+    {
+      "title": "President Lee Jae Myung: A Year in Power - Carnegie Endowment for International Peace",
+      "url": "https://carnegieendowment.org/posts/2026/06/president-lee-jae-myung-a-year-in-power",
+      "date": "2026-06-23",
+      "summary": "President Lee marked his first year in office after one of the most tumultuous periods in South Korean politics. South Korean President Lee Jae Myung marked his first anniversary in office on June 4, 2026, after one of the most tumultuous periods in contemporary Korean politics. Together with Yoon’s"
+    },
+    {
+      "title": "South Korea's Lee leaves G7 with Trump's pen after talks about peace on the peninsula - Reuters",
+      "url": "https://www.reuters.com/world/asia-pacific/south-koreas-lee-leaves-g7-with-trumps-pen-after-talks-about-peace-peninsula-2026-06-18/",
+      "date": "2026-06-18",
+      "summary": "# South Korea's Lee leaves G7 with Trump's pen after talks about peace on the peninsula | Reuters. ## Browse World. # South Korea's Lee leaves G7 with Trump's pen after talks about peace on the peninsula. Item 1 of 3 South Korea's President Lee Jae-myung and South Korea's first lady Kim Hea Kyung ar"
+    },
+    {
+      "title": "Rebuilding Korea Party Condemns Han Chan-sik's Anti-Reform Record - 조선일보",
+      "url": "https://www.chosun.com/english/national-en/2026/06/21/G7OZJP6MTZEDNJNN2TLVXCLKOA/",
+      "date": "2026-06-21",
+      "summary": "President Lee Jae Myung partially replaced senior aides at the level of senior secretary on the 21st, amid which the Rebuilding Korea Party repeatedly expressed concern over the appointment of Han Chan-sik, a former prosecutor, as the new Senior Secretary for Civil Affairs. Park Byung-eon, senior sp"
+    },
+    {
+      "title": "Trump hints at new approach to North Korea’s nuclear programme - Al Jazeera",
+      "url": "https://www.aljazeera.com/news/2026/6/19/trump-hints-at-new-approach-to-north-koreas-nuclear-programme",
+      "date": "2026-06-19",
+      "summary": "# Trump hints at new approach to North Korea’s nuclear programme. *South Korea’s president said his US counterpart had told him the ‘time had come to pay attention to the North Korea issue’ at the G7 summit.*. United States President Donald Trump intends to shift his focus to North Korea’s nuclear p"
+    },
+    {
+      "title": "'New Employee Kang (Chairman)' Lee Ju-myung makes a surprise appearance in the succession war..setting a new series record viewership of '9.5%' - starnewskorea.com",
+      "url": "https://www.starnewskorea.com/en/broadcast-drama/2026/06/15/2026061509014053325",
+      "date": "2026-06-15",
+      "summary": "# 'New Employee Kang (Chairman)' Lee Ju-myung makes a surprise appearance in the succession war..setting a new series record viewership of '9.5%'. 'New Employee Kang (Chairman)' Chairman Lee Jun-young made a surprise appearance of his youngest daughter Lee Ju-myung, causing a stir in the succession"
+    },
+    {
+      "title": "The Mexican faithful are belting out \"El Rey\" after a clinching a spot in the Round of 32 - FOX Sports",
+      "url": "https://www.foxsports.com/watch-vertical/fmc-cc9oay2b7i85od0r",
+      "date": "2026-06-19",
+      "summary": "# The Mexican faithful are belting out \"El Rey\" after a clinching a spot in the Round of 32. FIFA Men's World Cup  South Korea  Mexico  WC - Mexico vs. South Korea - 06/18/2026. ### Tequila shots all around after Mexico's huge win in Guadalajara! ### 🇲🇽 @javierhernandez shares his thoughts on Mexico"
+    }
+  ],
+  "input_trust": {
+    "price": {
+      "trust": "med",
+      "line": "价格可信度=MED：流动性 Top 5%(97.7百分位) · 头部集中 top1=27.29% top10=82.99% · 近7天 69 人参与 · 成交量 No Trades",
+      "days_to_resolution": 189,
+      "raw": {
+        "liquidity_percentile": 97.7,
+        "top1_wallet_pct": 27.29,
+        "unique_traders_7d": 69,
+        "volume_trend": "No Trades",
+        "flags": []
+      }
+    },
+    "vol": {
+      "vol": 0.23656138371042867,
+      "desc": "高(市场自己没拿定)",
+      "line": "市场自身犹豫度=高(市场自己没拿定)：近14日已实现波动 0.237，收盘 [0.11, 0.09, 0.09, 0.15, 0.08, 0.07]"
+    },
+    "lines": [
+      "价格可信度=MED：流动性 Top 5%(97.7百分位) · 头部集中 top1=27.29% top10=82.99% · 近7天 69 人参与 · 成交量 No Trades",
+      "市场自身犹豫度=高(市场自己没拿定)：近14日已实现波动 0.237，收盘 [0.11, 0.09, 0.09, 0.15, 0.08, 0.07]",
+      "距结算 189 天"
+    ]
+  },
+  "event_structure": {
+    "multi": false,
+    "n_candidates": 1,
+    "baseline_pct": 100.0,
+    "event_slug": null
+  },
+  "_audit": {
+    "bull": "根据给定文章，无法找到支持Lee Jae-myung在2026年卸任总统职位的证据。\n\n所有相关文章显示Lee Jae-myung在2026年6月仍在正常履职：他出席G7峰会与特朗普讨论半岛和平问题，于2026年6月4日庆祝就职一周年，并在6月21日进行高级助理人事调整。这些都是在任总统的常规活动，没有任何迹象表明他将在2026年内离职或被罢免。\n\n文章描述他经历了\"韩国政治最动荡时期之一\"后仍然完成第一年任期，表明他已度过政治危机而非面临即将卸任的局面。\n\n**引用：**\n- President Lee Jae Myung: A Year in Power - Carnegie Endowment for International Peace\n- South Korea's Lee leaves G7 with Trump's pen after talks about peace on the peninsula - Reuters\n- Rebuilding Korea Party Condemns Han Chan-sik's Anti-Reform Record - 조선일보",
+    "bear": "## 空头论点（支持解决为 NO）\n\n证据显示李在明在2026年6月仍稳固地担任总统职位。Carnegie Endowment文章明确指出\"President Lee Jae Myung marked his first anniversary in office on June 4, 2026\"，表明他已在任满一年。路透社报道显示他于2026年6月作为韩国总统参加G7峰会并与特朗普进行半岛和平谈判，这是正常履职的标志。朝鲜日报还记录了他在6月21日进行高级助理人事调整，这是在任总统的日常职权行为。所有2026年中期的证据均显示李在明持续执政，没有任何即将离任或政治危机的迹象。\n\n**引用：**\n- President Lee Jae Myung: A Year in Power - Carnegie Endowment for International Peace\n- South Korea's Lee leaves G7 with Trump's pen after talks about peace on the peninsula - Reuters\n- Rebuilding Korea Party Condemns Han Chan-sik's Anti-Reform Record - 조선일보",
+    "n_articles": 6,
+    "as_of": "2026-06-25",
+    "raw_reasoner": "```json\n{\n  \"market_lean\": \"NO\",\n  \"lean_strength_0_100\": 92,\n  \"confidence\": \"high\",\n  \"pivotal_unknown\": \"2026年下半年是否会发生弹劾、罢免或意外辞职事件\",\n  \"rationale\": \"三篇独立来源证实李在明2026年6月正常履职（就职周年、G7峰会、人事任命），无任何离职迹象。市场6% YES价虽有鲸鱼集中，但流动性极高且价格稳定在低位，与证据方向一致。唯一风险是距年底还有半年窗口，但现有证据压倒性指向他将留任全年。\"\n}\n```"
+  }
+}

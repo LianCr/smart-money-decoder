@@ -31,21 +31,18 @@ from collections import Counter
 from datetime import datetime, timedelta, timezone
 from email.utils import parsedate_to_datetime
 
-import requests
 from dotenv import load_dotenv
 from tavily import TavilyClient
 
+from core.llm import call_gateway
 from fetcher.news import _build_time_window  # 复用经验证的锚窗逻辑，不改它
 
 load_dotenv()
 
 # ── 配置 ──────────────────────────────────────────────────────────────────────
-CLASSROOM_API_URL = "https://4dm65e698a.execute-api.us-west-2.amazonaws.com/prod/invoke"
-CLASSROOM_API_KEY = os.environ.get("CLASSROOM_API_KEY")
 TAVILY_API_KEY    = os.environ.get("TAVILY_API_KEY")
 
 LLM_BACKEND   = os.environ.get("DUAL_CATALYST_BACKEND", "gateway")  # "gateway" | "bedrock"
-GATEWAY_MODEL = "claude-sonnet-4.5"
 BEDROCK_MODEL = "claude-sonnet-4-6"   # 🔴 4.6 非 3.5；真实 inference-profile id 等账号开好再填
 
 MAX_TOKENS_OUT  = 1500
@@ -146,14 +143,7 @@ def _approx_tokens(text):
 
 
 def _call_gateway(combined_input):
-    resp = requests.post(
-        CLASSROOM_API_URL,
-        headers={"Content-Type": "application/json", "x-api-key": CLASSROOM_API_KEY},
-        json={"model": GATEWAY_MODEL, "input": combined_input, "maxTokens": MAX_TOKENS_OUT},
-        timeout=REQUEST_TIMEOUT)
-    if resp.status_code != 200:
-        raise RuntimeError(f"gateway {resp.status_code}: {resp.text[:200]}")
-    return resp.json().get("output", "")
+    return call_gateway(combined_input, max_tokens=MAX_TOKENS_OUT, timeout=REQUEST_TIMEOUT)
 
 
 def _call_bedrock(combined_input):
@@ -374,7 +364,7 @@ def analyze(market_title, outcome, entry_time, as_of_anchor=None):
 
 # ── 测试基准：Starmer out by May 31, 2026?（outcome=Yes, entry≈2026-05-18）─────
 if __name__ == "__main__":
-    if not CLASSROOM_API_KEY:
+    if not os.environ.get("CLASSROOM_API_KEY"):
         raise SystemExit("缺 CLASSROOM_API_KEY")
     res = analyze("Starmer out by May 31, 2026?", "Yes", 1779062400)
     a, g = res["_audit"], res["_guards"]

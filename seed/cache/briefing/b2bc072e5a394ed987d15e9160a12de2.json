@@ -1,0 +1,222 @@
+{
+  "meta": {
+    "wallet": "0xff9152ac8cb6260419ea8940248177083aceab3a",
+    "market": "Will United Russia (ER) gain the most seats in the next Russian parliamentary election?",
+    "analyzed_side": "Yes",
+    "as_of": "2026-06-25",
+    "mode": "live",
+    "catalyst_anchor": "2026-06-25",
+    "settle": "还有约97.0天"
+  },
+  "who_trader_profile": {
+    "wallet": "0xff9152ac8cb6260419ea8940248177083aceab3a",
+    "quality": {
+      "combined_risk_score": 10,
+      "max_drawdown": 3.5842,
+      "drawdown_frequency": 0.2,
+      "avg_trade_size": 57.6,
+      "markets_traded": 81,
+      "num_markets_traded": 81,
+      "category_diversity_score": 1.3,
+      "market_concentration_ratio": 0.1621,
+      "annualized_return": null,
+      "gain_to_pain_ratio": 8.2492,
+      "equity_curve_pattern": "volatile",
+      "perfect_timing_flag": false,
+      "flagged_metrics": "{position_size_volatility}",
+      "losing_trades": 74,
+      "best_market_pnl": 3255.86,
+      "dominant_market_pnl": 3255.86,
+      "window_days": "15"
+    },
+    "category_specialization": [
+      {
+        "category": "Politics",
+        "roi": 23.2125,
+        "win_rate": 0.7864,
+        "total_pnl": 11038.76,
+        "total_trades": 805
+      },
+      {
+        "category": "Politics / Global",
+        "roi": 23.5238,
+        "win_rate": 0.7864,
+        "total_pnl": 11038.76,
+        "total_trades": 781
+      },
+      {
+        "category": "Other",
+        "roi": 23.1413,
+        "win_rate": 0.7881,
+        "total_pnl": 10988.45,
+        "total_trades": 818
+      },
+      {
+        "category": "Politics / US",
+        "roi": 13.2189,
+        "win_rate": 0.7933,
+        "total_pnl": 3718.84,
+        "total_trades": 407
+      },
+      {
+        "category": "Politics / US / Trump",
+        "roi": 14.5161,
+        "win_rate": 0.7891,
+        "total_pnl": 3597.34,
+        "total_trades": 387
+      },
+      {
+        "category": "Politics / US / Elections",
+        "roi": 3.6257,
+        "win_rate": 1.0,
+        "total_pnl": 121.5,
+        "total_trades": 20
+      },
+      {
+        "category": "Sports",
+        "roi": 0.0,
+        "win_rate": 0.0,
+        "total_pnl": -18.95,
+        "total_trades": 1
+      },
+      {
+        "category": "Sports / Soccer",
+        "roi": 0.0,
+        "win_rate": 0.0,
+        "total_pnl": -18.95,
+        "total_trades": 1
+      },
+      {
+        "category": "Weather & Science",
+        "roi": -106.2727,
+        "win_rate": 0.5,
+        "total_pnl": -410.0,
+        "total_trades": 12
+      },
+      {
+        "category": "Tech & AI",
+        "roi": -150.9526,
+        "win_rate": 0.7647,
+        "total_pnl": -815.64,
+        "total_trades": 29
+      },
+      {
+        "category": "Finance & Markets",
+        "roi": -71.7046,
+        "win_rate": 0.7143,
+        "total_pnl": -1005.65,
+        "total_trades": 43
+      }
+    ],
+    "official_rank": {
+      "period": "30d",
+      "rank": 3135,
+      "roi": "0.082196",
+      "win_rate": "0.6369",
+      "sharpe_ratio": "0.0747",
+      "total_pnl": "6191.4858",
+      "total_invested": "75325.82",
+      "total_trades": 1330,
+      "markets_traded": 124
+    },
+    "realized_pnl_recent": {
+      "window": [
+        "2026-05-20",
+        "2026-06-20"
+      ],
+      "days_returned": 11,
+      "realized_pnl_sum": -6666.59
+    },
+    "h_score": {
+      "available": false,
+      "note": "不在 H-Score 榜首页（584 无按地址查，官方排名见 official_rank/579）"
+    }
+  },
+  "what_position_actions": {
+    "wallet": "0xff9152ac8cb6260419ea8940248177083aceab3a",
+    "condition_id": "0x502a94e5c525766d5ee7f16c6568131ba1b2cbadb69c703af05a6ef00336ed64",
+    "analyzed_side": "Yes",
+    "market": {
+      "question": "Will United Russia (ER) gain the most seats in the next Russian parliamentary election?",
+      "winning_outcome": null,
+      "closed": false,
+      "settle_date": "2026-09-30",
+      "days_to_settlement": 97.0,
+      "settle_note": "还有约97.0天"
+    },
+    "two_side_distribution": {
+      "hedged": false,
+      "by_outcome": {
+        "Yes": {
+          "trades": 12,
+          "shares": 3500.0
+        }
+      },
+      "note": "仅单边建仓"
+    },
+    "actions": {
+      "entry_time": "2026-05-19 08:49",
+      "last_add_time": "2026-06-25 00:55",
+      "num_buys": 12,
+      "num_sells": 0,
+      "added_over_time": true,
+      "avg_entry_price": 0.6094,
+      "net_shares": 3500.0,
+      "net_cost_usd": 2133.0
+    },
+    "unrealized": {
+      "current_price": 0.6,
+      "price_source": "568最新close",
+      "current_value_usd": 2100.0,
+      "unrealized_pnl_usd": -33.0,
+      "unrealized_pct": -1.55,
+      "note": "持仓中浮盈亏"
+    }
+  },
+  "price_context": {
+    "as_of": "2026-06-25",
+    "analyzed_side": "Yes",
+    "price_source": "568历史close",
+    "current_price": 0.6,
+    "implied_probability_pct": 60.0,
+    "remaining_upside_per_share_usd": 0.4,
+    "remaining_upside_pct_if_win": 66.67,
+    "downside_per_share_usd": 0.6,
+    "odds_to_one": 0.67,
+    "entry_price": 0.6094,
+    "price_delta": -0.0094,
+    "price_delta_pct": -1.54
+  },
+  "catalysts": {
+    "positive": [],
+    "negative": [],
+    "balance_summary": "正向证据按类型陈列：无；负向证据按类型陈列：无。每条已刻明客观事实类型（材质）——系统不替你称量轻重，不同材质的份量请自行掂量。 系统已完成证据陈述，天平由你裁决。",
+    "honesty_caveat": {
+      "positive_side": "search_vacuum",
+      "negative_side": "true_clearance"
+    },
+    "guards": {
+      "relevance_dropped": [],
+      "type_deviations": [],
+      "weight_word_hits": [],
+      "weight_in_reason_hits": [],
+      "fear_lexicon_hits": [],
+      "directive_hits": []
+    }
+  },
+  "_audit": {
+    "teacher_tokens_approx": 2149,
+    "free_sources": [
+      "581",
+      "579",
+      "569",
+      "556",
+      "568",
+      "574"
+    ],
+    "catalyst_window": [
+      "2026-06-15",
+      "2026-06-25"
+    ]
+  }
+}

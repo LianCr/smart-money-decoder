@@ -13,6 +13,7 @@ fetcher/positions.py — Heisenberg 版"钱包最大政治仓"查找器（v3 简
 
 from datetime import datetime, timedelta, timezone
 
+from core.config import BRIEFING_AS_OF
 from fetcher.heisenberg import AGENTS, HeisenbergError, call, paginate, results
 
 POLITICAL_KW = (
@@ -34,7 +35,7 @@ def _f(x):
         return None
 
 
-def get_top_political_position_hz(wallet, as_of="2026-06-20", min_cost=300.0, max_pages=15):
+def get_top_political_position_hz(wallet, as_of=BRIEFING_AS_OF, min_cost=300.0, max_pages=15):
     """返回该钱包最大**未结算**政治持仓 {market_id, outcome, market_question} 或 {error,reason,message}。
     max_pages：翻几页成交（默认 15 全量）；扫榜时可调小(如 6)换速度——大户最大净仓多在近几页。"""
     wallet = (wallet or "").strip()

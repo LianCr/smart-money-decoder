@@ -1,0 +1,47 @@
+{
+  "follow_call": "ROOM LEFT",
+  "confidence": "high",
+  "reasoning": "这个钱包单边押注卢拉赢,当前价格还有很大空间,之前涨幅只占了很小一部分。近48小时他没动仓位。支持面有卢拉警告特朗普别干涉巴西选举的消息,但市场反应偏弱;威胁面有盟友牵涉财务丑闻的已生效事件,市场同样反应弱。信心评级高是因为他这个仓位已经浮盈近28%,说明方向目前在兑现,但市场还没完全消化这个走势,跟单空间仍然充足。",
+  "confidence_reasons": [
+    "底座矩阵:high(pnl=+27.9%)"
+  ],
+  "facts": {
+    "market_question": "Will Luiz Inácio Lula da Silva win the 2026 Brazilian presidential election?",
+    "outcome": "Yes",
+    "today": "2026-06-25",
+    "price_room_left": 78.57,
+    "price_already_moved": 27.85,
+    "resolution_date_human": "还有约101.0天",
+    "position_type": "single_side_conviction",
+    "recent_action": "flat_no_movement",
+    "support_catalysts": [
+      {
+        "title": "Brazil's Lula warns Trump not to meddle in Brazil's elections - The Washington Post",
+        "material_tag": "其他背景",
+        "market_reaction": "weak",
+        "move_pct": -1.92,
+        "same_window": true
+      },
+      {
+        "title": "Brazil's Lula warns Trump not to meddle in Brazil's elections - AP News",
+        "material_tag": "其他背景",
+        "market_reaction": "weak",
+        "move_pct": -1.92,
+        "same_window": true
+      }
+    ],
+    "threat_catalysts": [
+      {
+        "title": "Brazil executes warrant against Lula ally in widening financial scandal - Al Jazeera",
+        "material_tag": "已生效硬事件",
+        "market_reaction": "weak",
+        "move_pct": 1.96,
+        "same_window": false
+      }
+    ],
+    "confidence": "high",
+    "confidence_reasons": [
+      "底座矩阵:high(pnl=+27.9%)"
+    ]
+  }
+}

@@ -1,43 +1,16 @@
 """
-analyzer/reasoner_v3.py — ⑥ Edge / Reasoning（v3 统一看板最后一段，本轮唯一新逻辑）
+analyzer/reasoner_v3.py — ⑥ Edge / Reasoning 的代码层：纯代码矩阵 + facts 契约（零网关调用）
 
-两部分：
-  A. compute_confidence_v3 —— 代码算置信度（v2 底座删 rule5 + R1→R4 只降不升），附「降级原因」列表。
-  B. run_reasoner_v3       —— 读 reasoner_v3_prompt.txt + 代码算好的字段，网关出
-                              follow_call / confidence(echo) / reasoning（说人话、守三铁律）。
+  compute_confidence_v3 —— 代码算置信度（v2 底座删 rule5 + R1→R4 只降不升），附「降级原因」列表。
+  build_facts           —— 把封板模块输出拼成 ⑥ 的数据契约（价格/时长/对冲/催化剂 + 矩阵结论）。
 
-守卫：CONFIDENCE_TAMPERED · INVALID_FOLLOW_CALL · 三铁律扫词(LAW1 评判对错 / LAW3 替用户决定)
-      · DURATION_COMPUTED · FABRICATED。
+（旧 B 段 run_reasoner_v3/reason_v3 网关 prose 已在瘦身后移除：follow_call 改由
+ api 层代码判定、信心由 market_thesis 直出，本模块只剩纯代码、零 token。）
 
 🔴 红线：不改任何封板模块（dual_catalyst / price_reaction / 六道守卫 / decoder v2 矩阵 / fetcher 数据层），
    只读它们的输出。decoder._compute_confidence（v2，/analyze 在用）原封不动，这里是独立 v3 矩阵。
 """
-import json
-import os
-import re
-from pathlib import Path
-
-import requests
-
 CONF_ORDER = {"low": 0, "medium": 1, "high": 2}
-FOLLOW_ENUM = ["ROOM LEFT", "CHASED", "NO BASIS"]
-PROMPT_PATH = Path(__file__).parent / "reasoner_v3_prompt.txt"
-GATEWAY_URL = "https://4dm65e698a.execute-api.us-west-2.amazonaws.com/prod/invoke"
-
-# 三铁律扫词（命中即守卫拦截）。"错"单字太宽（不错/没错误伤），用具体短语。
-LAW1_VERDICT = ["看走眼", "失误", "错判", "判断对", "判断错", "高明", "明智", "愚蠢", "英明", "正确",
-                "wrong", "mistaken", "foolish", "sharp call", "correct call", "smart move"]
-LAW3_DIRECTIVE = ["建议跟", "别跟", "不要跟", "值得买", "值得跟", "快上车", "该跟", "该买", "该卖",
-                  "推荐跟", "赶紧", "应该跟", "should follow", "don't follow", "do not follow",
-                  "worth it", "get in now", "stay out"]
-DURATION_RE = re.compile(r"\d+\s*(天|周|个?月|年|days?|weeks?|months?|years?)", re.IGNORECASE)
-
-
-class ReasonerError(Exception):
-    def __init__(self, reason: str, message: str):
-        self.reason = reason
-        self.message = message
-        super().__init__(f"{reason}: {message}")
 
 
 def _min_conf(a: str, b: str) -> str:
@@ -198,72 +171,3 @@ def build_facts(briefing: dict, behavioral_flag: dict, today: str) -> dict:
         "confidence": confidence,
         "confidence_reasons": reasons,
     }
-
-
-# ── B. reasoner 网关调用 + 守卫 ──────────────────────────────────────────────
-def _strip_fence(text: str) -> str:
-    t = (text or "").strip()
-    if t.startswith("```"):
-        t = re.sub(r"^```[a-zA-Z]*\n?", "", t)
-        t = re.sub(r"\n?```$", "", t).strip()
-    return t
-
-
-def _gateway(prompt: str, facts: dict, max_tokens: int = 900) -> str:
-    key = os.environ.get("CLASSROOM_API_KEY")
-    if not key:
-        raise ReasonerError("NO_API_KEY", "CLASSROOM_API_KEY 未配置")
-    full = prompt + "\n\n=== THE JSON OBJECT (your entire universe of facts) ===\n" + \
-        json.dumps(facts, ensure_ascii=False)
-    resp = requests.post(GATEWAY_URL,
-                         headers={"Content-Type": "application/json", "x-api-key": key},
-                         json={"model": "claude-sonnet-4.5", "input": full, "maxTokens": max_tokens},
-                         timeout=30)
-    if resp.status_code != 200:
-        raise ReasonerError("GATEWAY_ERROR", f"网关 {resp.status_code}: {resp.text[:160]}")
-    return resp.json()["output"]
-
-
-def _scan_iron_laws(reasoning: str):
-    for w in LAW1_VERDICT:
-        if w in reasoning:
-            raise ReasonerError("LAW1_VERDICT", f"reasoning 出现评判对错词「{w}」")
-    for w in LAW3_DIRECTIVE:
-        if w in reasoning:
-            raise ReasonerError("LAW3_DIRECTIVE", f"reasoning 出现替用户决定词「{w}」")
-    if DURATION_RE.search(reasoning):
-        raise ReasonerError("DURATION_COMPUTED", "reasoning 出现时长推算（禁止日期/时长数学）")
-
-
-def run_reasoner_v3(facts: dict) -> dict:
-    """读 prompt + facts → 网关 → 解析 + 五道守卫。返回 {follow_call, confidence, reasoning, confidence_reasons}。"""
-    prompt = PROMPT_PATH.read_text(encoding="utf-8")
-    raw = _strip_fence(_gateway(prompt, facts))
-    try:
-        obj = json.loads(raw)
-    except json.JSONDecodeError:
-        raise ReasonerError("BAD_JSON", f"模型未返回合法 JSON: {raw[:160]}")
-
-    fc = str(obj.get("follow_call", "")).strip().upper()
-    fc_norm = next((e for e in FOLLOW_ENUM if fc.startswith(e)), None)
-    if not fc_norm:
-        raise ReasonerError("INVALID_FOLLOW_CALL", f"非法 follow_call: {obj.get('follow_call')!r}")
-
-    conf_out = str(obj.get("confidence", "")).strip().lower()
-    if conf_out != facts["confidence"]:                         # CONFIDENCE_TAMPERED 守卫
-        raise ReasonerError("CONFIDENCE_TAMPERED",
-                            f"AI 篡改置信度 {facts['confidence']}→{conf_out}（代码算定,不准改）")
-
-    reasoning = str(obj.get("reasoning", "")).strip()
-    _scan_iron_laws(reasoning)                                  # 三铁律 + 时长守卫
-
-    return {"follow_call": fc_norm, "confidence": conf_out,
-            "reasoning": reasoning, "confidence_reasons": facts["confidence_reasons"]}
-
-
-def reason_v3(briefing: dict, behavioral_flag: dict, today: str) -> dict:
-    """⑥ 顶层：briefing(已封板输出) + behavioral_flag → facts(含矩阵) → reasoner。"""
-    facts = build_facts(briefing, behavioral_flag, today)
-    out = run_reasoner_v3(facts)
-    out["facts"] = facts                                        # 透传给前端/调试（含降级原因）
-    return out

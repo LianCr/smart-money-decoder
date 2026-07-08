@@ -1,0 +1,44 @@
+{
+  "market_context": {
+    "market_id": "0xc0aed6d5d893988b4bef5a8242435bbc7c3b45b1e438bcffc9e9bf71d173ae46",
+    "market_slug": "us-iran-final-nuclear-deal-by-august-18-2026-20260621201255153",
+    "market_question": "US-Iran Final Nuclear Deal by August 18, 2026?",
+    "analyzed_side": "Yes",
+    "as_of": "2026-06-25",
+    "wallet": "0xde7be6d489bce070a959e0cb813128ae659b5f4b",
+    "behavioral_flag": {
+      "flag": "STATIC",
+      "fact": "近 48h 仅 58 买 / 0 卖，无显著动作（沉闷持仓）",
+      "honest_note": "动态行为：基本没动",
+      "windows": {
+        "3h": {
+          "buys": 0,
+          "sells": 0,
+          "buy_usd": 0.0,
+          "sell_usd": 0.0
+        },
+        "24h": {
+          "buys": 0,
+          "sells": 0,
+          "buy_usd": 0.0,
+          "sell_usd": 0.0
+        },
+        "48h": {
+          "buys": 58,
+          "sells": 0,
+          "buy_usd": 15624.0,
+          "sell_usd": 0.0
+        }
+      }
+    },
+    "ai_experimental_summary": "",
+    "timeline_events": [],
+    "_audit": {
+      "jumps_found": 0,
+      "events": 0,
+      "behavior": "STATIC",
+      "teacher_tokens_approx": 0,
+      "boundaries": "因果→时间相关 · 无催化剂留白(行为感知内幕) · 价格窗≤as_of · 行为=事实非判断 · 综述无判断"
+    }
+  }
+}

@@ -1,0 +1,293 @@
+{
+  "meta": {
+    "wallet": "0x24c8cf69a0e0a17eee21f69d29752bfa32e823e1",
+    "market": "Will the Democratic Party control the House after the 2026 Midterm elections?",
+    "analyzed_side": "Yes",
+    "as_of": "2026-06-20",
+    "mode": "live",
+    "catalyst_anchor": "2026-06-20",
+    "settle": "还有约136.0天"
+  },
+  "who_trader_profile": {
+    "wallet": "0x24c8cf69a0e0a17eee21f69d29752bfa32e823e1",
+    "quality": {
+      "combined_risk_score": 10,
+      "max_drawdown": 9.1249,
+      "drawdown_frequency": 0.2,
+      "avg_trade_size": 564.22,
+      "markets_traded": 133,
+      "num_markets_traded": 133,
+      "category_diversity_score": 1.219,
+      "market_concentration_ratio": 0.3414,
+      "annualized_return": null,
+      "gain_to_pain_ratio": 4.362,
+      "equity_curve_pattern": "volatile",
+      "perfect_timing_flag": false,
+      "flagged_metrics": "{position_size_volatility}",
+      "losing_trades": 798,
+      "best_market_pnl": 24332.65,
+      "dominant_market_pnl": 19919.07,
+      "window_days": "15"
+    },
+    "category_specialization": [
+      {
+        "category": "Politics",
+        "roi": 3.1686,
+        "win_rate": 0.4301,
+        "total_pnl": 65051.37,
+        "total_trades": 2368
+      },
+      {
+        "category": "Politics / Global",
+        "roi": 4.2111,
+        "win_rate": 0.4024,
+        "total_pnl": 64754.94,
+        "total_trades": 2045
+      },
+      {
+        "category": "Other",
+        "roi": 1.4211,
+        "win_rate": 0.5863,
+        "total_pnl": 61345.21,
+        "total_trades": 7654
+      },
+      {
+        "category": "Politics / US / Trump",
+        "roi": 3.5384,
+        "win_rate": 0.2719,
+        "total_pnl": 44749.28,
+        "total_trades": 1052
+      },
+      {
+        "category": "Politics / US",
+        "roi": 3.335,
+        "win_rate": 0.2892,
+        "total_pnl": 44602.41,
+        "total_trades": 1740
+      },
+      {
+        "category": "Finance & Markets",
+        "roi": 0.4338,
+        "win_rate": 0.5688,
+        "total_pnl": 2108.67,
+        "total_trades": 315
+      },
+      {
+        "category": "Sports / Basketball / NBA",
+        "roi": 0.0,
+        "win_rate": 0.3333,
+        "total_pnl": 29.9,
+        "total_trades": 0
+      },
+      {
+        "category": "Sports / Basketball",
+        "roi": 0.0,
+        "win_rate": 0.3333,
+        "total_pnl": 29.9,
+        "total_trades": 0
+      },
+      {
+        "category": "Weather & Science",
+        "roi": 0.0,
+        "win_rate": 0.0,
+        "total_pnl": 0.0,
+        "total_trades": 6
+      },
+      {
+        "category": "Tech & AI",
+        "roi": -1.2072,
+        "win_rate": 0.0,
+        "total_pnl": -51.39,
+        "total_trades": 6
+      },
+      {
+        "category": "Culture & Entertainment",
+        "roi": 0.0,
+        "win_rate": 0.25,
+        "total_pnl": -53.12,
+        "total_trades": 3
+      },
+      {
+        "category": "Politics / US / Elections",
+        "roi": -0.1313,
+        "win_rate": 0.7222,
+        "total_pnl": -95.47,
+        "total_trades": 688
+      },
+      {
+        "category": "Sports",
+        "roi": -0.1505,
+        "win_rate": 0.6685,
+        "total_pnl": -3415.31,
+        "total_trades": 5292
+      },
+      {
+        "category": "Sports / Soccer",
+        "roi": -0.1518,
+        "win_rate": 0.6693,
+        "total_pnl": -3445.21,
+        "total_trades": 5292
+      }
+    ],
+    "official_rank": {
+      "period": "30d",
+      "rank": 326,
+      "roi": "0.010202",
+      "win_rate": "0.4929",
+      "sharpe_ratio": "0.0125",
+      "total_pnl": "81217.3686",
+      "total_invested": "7960736.40",
+      "total_trades": 14490,
+      "markets_traded": 193
+    },
+    "realized_pnl_recent": {
+      "window": [
+        "2026-05-20",
+        "2026-06-20"
+      ],
+      "days_returned": 11,
+      "realized_pnl_sum": -6603.86
+    },
+    "h_score": {
+      "available": false,
+      "note": "不在 H-Score 榜首页（584 无按地址查，官方排名见 official_rank/579）"
+    }
+  },
+  "what_position_actions": {
+    "wallet": "0x24c8cf69a0e0a17eee21f69d29752bfa32e823e1",
+    "condition_id": "0xd5d9fc47718bd553592d126b1fa5e87183d27f3936975b0c04cc0f2dec1f1bb4",
+    "analyzed_side": "Yes",
+    "market": {
+      "question": "Will the Democratic Party control the House after the 2026 Midterm elections?",
+      "winning_outcome": null,
+      "closed": false,
+      "settle_date": "2026-11-03",
+      "days_to_settlement": 136.0,
+      "settle_note": "还有约136.0天"
+    },
+    "two_side_distribution": {
+      "hedged": true,
+      "by_outcome": {
+        "No": {
+          "trades": 787,
+          "shares": 90060.1
+        },
+        "Yes": {
+          "trades": 3,
+          "shares": 9999.0
+        }
+      },
+      "note": "两边都大额建仓 = 做市/对冲玩家（非单边赌徒，接 #28）"
+    },
+    "actions": {
+      "entry_time": "2026-05-13 18:20",
+      "last_add_time": "2026-06-18 07:04",
+      "num_buys": 3,
+      "num_sells": 0,
+      "added_over_time": true,
+      "avg_entry_price": 0.8067,
+      "net_shares": 9999.0,
+      "net_cost_usd": 8065.86
+    },
+    "unrealized": {
+      "current_price": 0.81,
+      "price_source": "568最新close",
+      "current_value_usd": 8099.19,
+      "unrealized_pnl_usd": 33.33,
+      "unrealized_pct": 0.41,
+      "note": "持仓中浮盈亏"
+    }
+  },
+  "price_context": {
+    "as_of": "2026-06-20",
+    "analyzed_side": "Yes",
+    "price_source": "568历史close",
+    "current_price": 0.81,
+    "implied_probability_pct": 81.0,
+    "remaining_upside_per_share_usd": 0.19,
+    "remaining_upside_pct_if_win": 23.46,
+    "downside_per_share_usd": 0.81,
+    "odds_to_one": 0.23,
+    "entry_price": 0.8067,
+    "price_delta": 0.0033,
+    "price_delta_pct": 0.41
+  },
+  "catalysts": {
+    "positive": [
+      {
+        "title": "Commentary: Gerrymanders, judges and an alley-oop: A look at the midterm fight for control of Congress - Los Angeles Times",
+        "url": "https://www.latimes.com/politics/story/2026-06-17/midterm-election-handicapping-senate-house-control-congress-democrats-republicans",
+        "date": "2026-06-17",
+        "reason": "文章指出尽管共和党在重新划分选区中占据优势，但仍面临失去众议院控制权的严重风险",
+        "type": "周边压力情绪信号",
+        "price_reaction": {
+          "available": true,
+          "window": [
+            "2026-06-16",
+            "2026-06-18"
+          ],
+          "price_before": 0.82,
+          "price_after": 0.8,
+          "move_pct": -2.44,
+          "direction": "▼",
+          "caveat": "该新闻发布前后市场变动，时间相关非因果",
+          "market_check": "市场反应微弱(<5%)"
+        }
+      },
+      {
+        "title": "Republicans' Chances of Losing Control of House: 3 Election Forecasts - Newsweek",
+        "url": "https://www.newsweek.com/republicans-chances-of-losing-control-of-house-3-election-forecasts-12054968",
+        "date": "2026-06-10",
+        "reason": "三家主要选举预测机构的更新评级显示民主党可能有能力翻转众议院控制权",
+        "type": "民调数据",
+        "price_reaction": {
+          "available": true,
+          "window": [
+            "2026-06-09",
+            "2026-06-11"
+          ],
+          "price_before": 0.82,
+          "price_after": 0.83,
+          "move_pct": 1.22,
+          "direction": "▲",
+          "caveat": "该新闻发布前后市场变动，时间相关非因果",
+          "market_check": "市场反应微弱(<5%)"
+        }
+      }
+    ],
+    "negative": [],
+    "balance_summary": "正向证据按类型陈列：周边压力情绪信号×1、民调数据×1；负向证据按类型陈列：无。每条已刻明客观事实类型（材质）——系统不替你称量轻重，不同材质的份量请自行掂量。 系统已完成证据陈述，天平由你裁决。",
+    "honesty_caveat": {
+      "positive_side": "fully_backed",
+      "negative_side": "true_clearance"
+    },
+    "guards": {
+      "relevance_dropped": [
+        {
+          "title": "Who stays home may threaten Republicans this year as much as who votes - CNN",
+          "reason": "核心实体不在标题=边角混入"
+        }
+      ],
+      "type_deviations": [],
+      "weight_word_hits": [],
+      "weight_in_reason_hits": [],
+      "fear_lexicon_hits": [],
+      "directive_hits": []
+    }
+  },
+  "_audit": {
+    "teacher_tokens_approx": 2444,
+    "free_sources": [
+      "581",
+      "579",
+      "569",
+      "556",
+      "568",
+      "574"
+    ],
+    "catalyst_window": [
+      "2026-06-10",
+      "2026-06-20"
+    ]
+  }
+}

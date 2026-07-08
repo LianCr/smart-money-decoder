@@ -30,7 +30,7 @@ from fetcher.markets import get_market_holders
 from fetcher.profile import _wallet360
 from briefing.market_context import get_behavior_flags
 
-AS_OF = "2026-06-25"
+from core.config import BRIEFING_AS_OF as AS_OF
 OUT = Path(".data/recommendations.json")
 
 # 种子 = 已知活跃政治钱包（演示钱包 + 方法 C 验证过的政治专家）。它们的热门顶仓盘 = 发现入口。

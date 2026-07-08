@@ -1,0 +1,54 @@
+{
+  "market_context": {
+    "market_id": "0xd5d9fc47718bd553592d126b1fa5e87183d27f3936975b0c04cc0f2dec1f1bb4",
+    "market_slug": "will-the-democratic-party-control-the-house-after-the-2026-midterm-elections",
+    "market_question": "Will the Democratic Party control the House after the 2026 Midterm elections?",
+    "analyzed_side": "Yes",
+    "as_of": "2026-06-25",
+    "wallet": "0xbacd00c9080a82ded56f504ee8810af732b0ab35",
+    "behavioral_flag": {
+      "flag": "ADD",
+      "fact": "过去 3h 3 笔 BUY($25) / 24h 26 笔 BUY($529)，长期持仓刚被新一轮加仓激活",
+      "honest_note": "动态行为：信念增强/加仓（事实陈述，跟单价值由你裁决）",
+      "windows": {
+        "3h": {
+          "buys": 3,
+          "sells": 0,
+          "buy_usd": 25.0,
+          "sell_usd": 0.0
+        },
+        "24h": {
+          "buys": 26,
+          "sells": 0,
+          "buy_usd": 529.0,
+          "sell_usd": 0.0
+        },
+        "48h": {
+          "buys": 56,
+          "sells": 0,
+          "buy_usd": 5012.0,
+          "sell_usd": 0.0
+        }
+      }
+    },
+    "ai_experimental_summary": "**市场动态综述 | 2026年中期选举众议院控制权**\n\n**钱包行为：** 过去3小时录得3笔买入($25)，24小时内累计26笔买入($529)，长期持仓账户出现新一轮加仓行为。\n\n**客观背景：** 2026年中期选举将于11月举行，目前距投票日尚余约16个月。现任众议院多数党地位、总统支持率走势、经济指标表现及历史中期选举规律（执政党通常面临挑战）均为市场定价的考量因素。当前民调、特殊选举结果及选区重划影响仍在演变中。市场反映的是对未来政治格局的概率预期，各方信息持续更新。",
+    "timeline_events": [
+      {
+        "timestamp": "2026-06-25",
+        "type": "behavior",
+        "title": "巨鲸动作旗标 · ADD",
+        "source": "Heisenberg 556 Trades",
+        "price_impact_string": null,
+        "fact_summary": "过去 3h 3 笔 BUY($25) / 24h 26 笔 BUY($529)，长期持仓刚被新一轮加仓激活",
+        "temporal_note": "动态行为：信念增强/加仓（事实陈述，跟单价值由你裁决）"
+      }
+    ],
+    "_audit": {
+      "jumps_found": 0,
+      "events": 1,
+      "behavior": "ADD",
+      "teacher_tokens_approx": 238,
+      "boundaries": "因果→时间相关 · 无催化剂留白(行为感知内幕) · 价格窗≤as_of · 行为=事实非判断 · 综述无判断"
+    }
+  }
+}

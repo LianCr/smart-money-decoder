@@ -1,0 +1,105 @@
+{
+  "market_context": {
+    "market_id": "0xc8aaa82e283d68aba57ce829af58ce6ed3d5e94e23e9395b50dd579b2c657708",
+    "market_slug": "will-keir-starmer-be-the-next-leader-out-before-2027-565",
+    "market_question": "Will Keir Starmer be the next leader out before 2027?",
+    "analyzed_side": "Yes",
+    "as_of": "2026-06-25",
+    "wallet": "0x9d84ce0306f8551e02efef1680475fc0f1dc1344",
+    "behavioral_flag": {
+      "flag": "STATIC",
+      "fact": "近 48h 仅 0 买 / 0 卖，无显著动作（沉闷持仓）",
+      "honest_note": "动态行为：基本没动",
+      "windows": {
+        "3h": {
+          "buys": 0,
+          "sells": 0,
+          "buy_usd": 0.0,
+          "sell_usd": 0.0
+        },
+        "24h": {
+          "buys": 0,
+          "sells": 0,
+          "buy_usd": 0.0,
+          "sell_usd": 0.0
+        },
+        "48h": {
+          "buys": 0,
+          "sells": 0,
+          "buy_usd": 0.0,
+          "sell_usd": 0.0
+        }
+      }
+    },
+    "ai_experimental_summary": "**【市场：Starmer 2027年前离任？】**\n\n**巨鲸动态：**近48小时零买零卖，资金完全静默观望。\n\n**客观事实：**多家媒体报道Starmer面临辞职压力并反思政局；前卫生大臣Streeting准备最早下周发起党内挑战；工党安迪·伯纳姆赢得关键补选后获得挑战资格；Starmer本人公开回应称将应战任何领导权竞争。党内竞争态势明朗化，多位潜在挑战者浮出水面。市场当前处于事态发展等待期，大额资金暂未表态。",
+    "timeline_events": [
+      {
+        "timestamp": "2026-06-22",
+        "type": "catalyst",
+        "title": "starmer reflecting on political realities amid pressure to resign",
+        "source": "kentonline.co.uk",
+        "url": "https://www.kentonline.co.uk/news/national/starmer-reflecting-on-political-realities-amid-pressure-to-resign-168286/",
+        "price_impact_string": "Yes 价格变动 +40%（40% → 80%）",
+        "fact_summary": "有报道称斯塔默在压力下反思政治现实并面临辞职压力",
+        "temporal_note": "该事件与价格变动时间相关，非确证因果"
+      },
+      {
+        "timestamp": "2026-06-19",
+        "type": "catalyst",
+        "title": "streeting prepared to trigger leadership contest as early as next week",
+        "source": "breakingnews.ie",
+        "url": "https://www.breakingnews.ie/world/streeting-prepared-to-trigger-leadership-contest-as-early-as-next-week-1914673.html",
+        "price_impact_string": "Yes 价格变动 +36%（33% → 69%）",
+        "fact_summary": "Streeting准备最早在下周发起领导权竞选",
+        "temporal_note": "该事件与价格变动时间相关，非确证因果 · 同窗多条,合计不可归因到单条"
+      },
+      {
+        "timestamp": "2026-06-19",
+        "type": "catalyst",
+        "title": "former uk minister could challenge pm starmer soon",
+        "source": "newcastleherald.com.au",
+        "url": "https://www.newcastleherald.com.au/story/9294317/former-uk-minister-could-challenge-pm-starmer-soon/",
+        "price_impact_string": "Yes 价格变动 +36%（33% → 69%）",
+        "fact_summary": "英国前部长可能很快挑战首相Starmer",
+        "temporal_note": "该事件与价格变动时间相关，非确证因果 · 同窗多条,合计不可归因到单条"
+      },
+      {
+        "timestamp": "2026-06-20",
+        "type": "catalyst",
+        "title": "labours andy burnham wins a special election setting up a showdown with starmer to lead britain",
+        "source": "wpsu.org",
+        "url": "https://radio.wpsu.org/2026-06-19/labours-andy-burnham-wins-a-special-election-setting-up-a-showdown-with-starmer-to-lead-britain",
+        "price_impact_string": "Yes 价格变动 -16%（69% → 53%）",
+        "fact_summary": "工党的安迪·伯纳姆赢得了一场补选",
+        "temporal_note": "该事件与价格变动时间相关，非确证因果"
+      },
+      {
+        "timestamp": "2026-06-21",
+        "type": "catalyst",
+        "title": "labours andy burnham wins a special election setting up a showdown with starmer to lead britain",
+        "source": "wpsu.org",
+        "url": "https://radio.wpsu.org/2026-06-19/labours-andy-burnham-wins-a-special-election-setting-up-a-showdown-with-starmer-to-lead-britain",
+        "price_impact_string": "Yes 价格变动 -13%（53% → 40%）",
+        "fact_summary": "工党的安迪·伯纳姆赢得补选，此胜利使其具备挑战斯塔默领导地位的资格",
+        "temporal_note": "该事件与价格变动时间相关，非确证因果 · 同窗多条,合计不可归因到单条"
+      },
+      {
+        "timestamp": "2026-06-21",
+        "type": "catalyst",
+        "title": "starmer insists he will stand in any leadership contest following burnham win",
+        "source": "lynnnews.co.uk",
+        "url": "https://www.lynnnews.co.uk/national/starmer-insists-he-will-stand-in-any-leadership-contest-following-burnham-win-168228/",
+        "price_impact_string": "Yes 价格变动 -13%（53% → 40%）",
+        "fact_summary": "斯塔默在伯纳姆胜选后表示他将参加任何领导权竞争",
+        "temporal_note": "该事件与价格变动时间相关，非确证因果 · 同窗多条,合计不可归因到单条"
+      }
+    ],
+    "_audit": {
+      "jumps_found": 4,
+      "events": 6,
+      "behavior": "STATIC",
+      "teacher_tokens_approx": 3281,
+      "boundaries": "因果→时间相关 · 无催化剂留白(行为感知内幕) · 价格窗≤as_of · 行为=事实非判断 · 综述无判断"
+    }
+  }
+}

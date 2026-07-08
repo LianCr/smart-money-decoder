@@ -8,6 +8,19 @@ Read-only public APIs throughout — **no trading, no private keys.**
 
 ---
 
+## What it does now (v3)
+
+The product has grown from "paste a wallet" into a **recommendation-first political-bets dashboard**:
+
+- **🏠 Recommendation homepage** — instead of waiting for you to find a wallet, the system **works backwards from hot political markets to their biggest co-holders** (a known political trader → the markets they're actually in → the whales on the other side), quality-gates them as genuine political specialists, and surfaces a feed of wallets worth watching. A scrolling ticker shows **this week's top political-profit traders**. (`recommend.py`, `hot_traders.py`, `fetcher/markets.py`)
+- **📊 Unified board (①–⑥)** — one screen per wallet: identity & size · the bet (what it is) · live odds · whale 48h behavior flow · three-source catalysts (news × social, *fact vs. emotion* kept visually distinct) · **Edge/Reasoning**.
+- **🎯 Market-level confidence, not wallet-anchored** — the key redesign. Confidence used to be driven by the wallet's P&L, which produced contradictions (two wallets betting opposite sides of the *same* market got opposite confidence). Now a **market-level adversarial pass** (one agent argues YES, one argues NO, a neutral reasoner adjudicates) yields **a single shared confidence per market**; each wallet is then mapped onto it as *with-edge* or *against-edge*. Confidence is **discounted by how trustworthy its inputs are** — price depth & whale-concentration (575 Market Insights), the outcome token's realized volatility (568), and time-to-resolution — on the principle *"confidence is capped by your most trustworthy anchor; two weak signals agreeing isn't confidence."* When two smart-money wallets disagree on a market, the board says so rather than endorsing both. (`analyzer/market_thesis.py`)
+- **🧾 Honest scorecard** — every call is logged and, once markets resolve, checked for **direction hit/miss** (never copy-trade ROI — that would re-import survivorship bias).
+
+The two views below (**Decode card** + **Track Record backtest**) are the original v2 experience, now the archival/secondary tabs.
+
+---
+
 ## 🎬 Demo
 
 Watch the walkthrough: paste a wallet, watch the pipeline decode a live political bet, then see the decoder's track record put on trial against history. Click the thumbnail to play on YouTube.

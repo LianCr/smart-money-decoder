@@ -1,0 +1,314 @@
+{
+  "meta": {
+    "wallet": "0x71edffd0d70a1da823ff07a3c6fc81457294d338",
+    "market": "Fed rate hike in 2026?",
+    "analyzed_side": "No",
+    "as_of": "2026-06-20",
+    "mode": "live",
+    "catalyst_anchor": "2026-06-20",
+    "settle": "还有约172.0天"
+  },
+  "who_trader_profile": {
+    "wallet": "0x71edffd0d70a1da823ff07a3c6fc81457294d338",
+    "quality": {
+      "combined_risk_score": 10,
+      "max_drawdown": 0.0758,
+      "drawdown_frequency": 0.0833,
+      "avg_trade_size": 598.33,
+      "markets_traded": 37,
+      "num_markets_traded": 37,
+      "category_diversity_score": 0.8441,
+      "market_concentration_ratio": 0.6911,
+      "annualized_return": 5.1445,
+      "gain_to_pain_ratio": 68.8749,
+      "equity_curve_pattern": "volatile",
+      "perfect_timing_flag": false,
+      "flagged_metrics": "{position_size_volatility}",
+      "losing_trades": 39,
+      "best_market_pnl": 30673.99,
+      "dominant_market_pnl": 30673.99,
+      "window_days": "15"
+    },
+    "category_specialization": [
+      {
+        "category": "Politics",
+        "roi": 19.6763,
+        "win_rate": 0.95,
+        "total_pnl": 38051.64,
+        "total_trades": 264
+      },
+      {
+        "category": "Other",
+        "roi": 15.3895,
+        "win_rate": 0.6337,
+        "total_pnl": 37065.93,
+        "total_trades": 390
+      },
+      {
+        "category": "Finance & Markets",
+        "roi": 21.9278,
+        "win_rate": 0.8529,
+        "total_pnl": 34638.97,
+        "total_trades": 317
+      },
+      {
+        "category": "Politics / Global",
+        "roi": 8.981,
+        "win_rate": 0.9545,
+        "total_pnl": 7202.48,
+        "total_trades": 51
+      },
+      {
+        "category": "Tech & AI",
+        "roi": 2.1186,
+        "win_rate": 0.8,
+        "total_pnl": 139.2,
+        "total_trades": 15
+      },
+      {
+        "category": "Weather & Science",
+        "roi": 0.0,
+        "win_rate": 0.75,
+        "total_pnl": 86.72,
+        "total_trades": 4
+      },
+      {
+        "category": "Politics / US / Trump",
+        "roi": -0.0123,
+        "win_rate": 0.5,
+        "total_pnl": -9.45,
+        "total_trades": 7
+      },
+      {
+        "category": "Politics / US",
+        "roi": -0.0123,
+        "win_rate": 0.5,
+        "total_pnl": -9.45,
+        "total_trades": 7
+      },
+      {
+        "category": "Sports",
+        "roi": -12.5427,
+        "win_rate": 0.5,
+        "total_pnl": -367.5,
+        "total_trades": 3
+      },
+      {
+        "category": "Sports / Soccer",
+        "roi": -12.5427,
+        "win_rate": 0.5,
+        "total_pnl": -367.5,
+        "total_trades": 3
+      },
+      {
+        "category": "Crypto",
+        "roi": 0.0,
+        "win_rate": 0.0,
+        "total_pnl": -691.24,
+        "total_trades": 31
+      },
+      {
+        "category": "Crypto / Prices",
+        "roi": 0.0,
+        "win_rate": 0.0,
+        "total_pnl": -691.24,
+        "total_trades": 31
+      }
+    ],
+    "official_rank": {
+      "period": "30d",
+      "rank": 840,
+      "roi": "0.110917",
+      "win_rate": "0.5161",
+      "sharpe_ratio": "0.0868",
+      "total_pnl": "28618.1736",
+      "total_invested": "258014.36",
+      "total_trades": 488,
+      "markets_traded": 45
+    },
+    "realized_pnl_recent": {
+      "window": [
+        "2026-05-20",
+        "2026-06-20"
+      ],
+      "days_returned": 9,
+      "realized_pnl_sum": -984.67
+    },
+    "h_score": {
+      "available": false,
+      "note": "不在 H-Score 榜首页（584 无按地址查，官方排名见 official_rank/579）"
+    }
+  },
+  "what_position_actions": {
+    "wallet": "0x71edffd0d70a1da823ff07a3c6fc81457294d338",
+    "condition_id": "0x80b3af88cb991980e8da1ce86b9794a0957f96ec98c29319dd7ba65e9744d82b",
+    "analyzed_side": "No",
+    "market": {
+      "question": "Fed rate hike in 2026?",
+      "winning_outcome": null,
+      "closed": false,
+      "settle_date": "2026-12-09",
+      "days_to_settlement": 172.0,
+      "settle_note": "还有约172.0天"
+    },
+    "two_side_distribution": {
+      "hedged": false,
+      "by_outcome": {
+        "No": {
+          "trades": 82,
+          "shares": 136234.3
+        }
+      },
+      "note": "仅单边建仓"
+    },
+    "actions": {
+      "entry_time": "2026-04-18 12:03",
+      "last_add_time": "2026-06-22 13:33",
+      "num_buys": 82,
+      "num_sells": 2,
+      "added_over_time": true,
+      "avg_entry_price": 0.6824,
+      "net_shares": 135643.8,
+      "net_cost_usd": 92561.19
+    },
+    "unrealized": {
+      "current_price": 0.38,
+      "price_source": "568最新close",
+      "current_value_usd": 51544.66,
+      "unrealized_pnl_usd": -41016.53,
+      "unrealized_pct": -44.31,
+      "note": "持仓中浮盈亏"
+    }
+  },
+  "price_context": {
+    "as_of": "2026-06-20",
+    "analyzed_side": "No",
+    "price_source": "568历史close",
+    "current_price": 0.38,
+    "implied_probability_pct": 38.0,
+    "remaining_upside_per_share_usd": 0.62,
+    "remaining_upside_pct_if_win": 163.16,
+    "downside_per_share_usd": 0.38,
+    "odds_to_one": 1.63,
+    "entry_price": 0.6824,
+    "price_delta": -0.3024,
+    "price_delta_pct": -44.31
+  },
+  "catalysts": {
+    "positive": [],
+    "negative": [
+      {
+        "title": "Fed 'dot plot': Almost half of FOMC members project at least one interest rate hike this year - Yahoo Finance",
+        "url": "https://finance.yahoo.com/economy/policy/article/fed-dot-plot-almost-half-of-fomc-members-project-at-least-one-interest-rate-hike-this-year-183645064.html",
+        "date": "2026-06-17",
+        "reason": "Nine out of 18 FOMC policymakers project higher rates before the end of 2026, showing institutional support within the Fed for a rate hike in 2026, directly contradicting the No outcome.",
+        "type": "当事人直接表态",
+        "price_reaction": {
+          "available": true,
+          "window": [
+            "2026-06-16",
+            "2026-06-18"
+          ],
+          "price_before": 0.64,
+          "price_after": 0.45,
+          "move_pct": -29.69,
+          "direction": "▼",
+          "caveat": "该新闻发布前后市场变动，时间相关非因果",
+          "market_check": "市场印证该分类",
+          "same_window": "同窗4条新闻，变动为合计、不可归因到单条"
+        }
+      },
+      {
+        "title": "Nearly half of Fed policymakers see a 2026 rate hike in the cards - Reuters",
+        "url": "https://www.reuters.com/business/nearly-half-fed-policymakers-see-2026-rate-hike-cards-2026-06-17/",
+        "date": "2026-06-17",
+        "reason": "Nearly half of Federal Reserve policymakers project the need for a rate hike in 2026, indicating material internal momentum toward raising rates this year.",
+        "type": "当事人直接表态",
+        "price_reaction": {
+          "available": true,
+          "window": [
+            "2026-06-16",
+            "2026-06-18"
+          ],
+          "price_before": 0.64,
+          "price_after": 0.45,
+          "move_pct": -29.69,
+          "direction": "▼",
+          "caveat": "该新闻发布前后市场变动，时间相关非因果",
+          "market_check": "市场印证该分类",
+          "same_window": "同窗4条新闻，变动为合计、不可归因到单条"
+        }
+      },
+      {
+        "title": "Fed leans toward possible rate hike this year, in shift on inflation - NewsBreak: Local News & Alerts",
+        "url": "https://www.newsbreak.com/politico-560779/4716640593599-fed-leans-toward-possible-rate-hike-this-year-in-shift-on-inflation",
+        "date": "2026-06-17",
+        "reason": "Federal Reserve officials suggested an interest rate increase is on the table in 2026 as reflected in quarterly economic forecasts, representing a policy stance shift that increases probability of a hike.",
+        "type": "当事人直接表态",
+        "price_reaction": {
+          "available": true,
+          "window": [
+            "2026-06-16",
+            "2026-06-18"
+          ],
+          "price_before": 0.64,
+          "price_after": 0.45,
+          "move_pct": -29.69,
+          "direction": "▼",
+          "caveat": "该新闻发布前后市场变动，时间相关非因果",
+          "market_check": "市场印证该分类",
+          "same_window": "同窗4条新闻，变动为合计、不可归因到单条"
+        }
+      },
+      {
+        "title": "Traders now see Fed raising rates by September - KITCO",
+        "url": "https://www.kitco.com/news/off-the-wire/2026-06-17/traders-now-see-fed-raising-rates-september",
+        "date": "2026-06-17",
+        "reason": "Short-term interest-rate futures now price in a higher probability of a Fed rate hike by September 2026 than unchanged rates, reflecting market expectation of a 2026 hike.",
+        "type": "市场价格信号",
+        "price_reaction": {
+          "available": true,
+          "window": [
+            "2026-06-16",
+            "2026-06-18"
+          ],
+          "price_before": 0.64,
+          "price_after": 0.45,
+          "move_pct": -29.69,
+          "direction": "▼",
+          "caveat": "该新闻发布前后市场变动，时间相关非因果",
+          "market_check": "市场印证该分类",
+          "same_window": "同窗4条新闻，变动为合计、不可归因到单条"
+        }
+      }
+    ],
+    "balance_summary": "正向证据按类型陈列：无；负向证据按类型陈列：当事人直接表态×3、市场价格信号×1。每条已刻明客观事实类型（材质）——系统不替你称量轻重，不同材质的份量请自行掂量。 系统已完成证据陈述，天平由你裁决。",
+    "honesty_caveat": {
+      "positive_side": "search_vacuum",
+      "negative_side": "fully_backed"
+    },
+    "guards": {
+      "relevance_dropped": [],
+      "type_deviations": [],
+      "weight_word_hits": [],
+      "weight_in_reason_hits": [],
+      "fear_lexicon_hits": [],
+      "directive_hits": []
+    }
+  },
+  "_audit": {
+    "teacher_tokens_approx": 1707,
+    "free_sources": [
+      "581",
+      "579",
+      "569",
+      "556",
+      "568",
+      "574"
+    ],
+    "catalyst_window": [
+      "2026-06-10",
+      "2026-06-20"
+    ]
+  }
+}

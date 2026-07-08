@@ -1,0 +1,253 @@
+{
+  "meta": {
+    "wallet": "0xbaa2bcb5439e985ce4ccf815b4700027d1b92c73",
+    "market": "US-Iran Final Nuclear Deal by August 31, 2026?",
+    "analyzed_side": "No",
+    "as_of": "2026-06-25",
+    "mode": "live",
+    "catalyst_anchor": "2026-06-25",
+    "settle": "还有约68.0天"
+  },
+  "who_trader_profile": {
+    "wallet": "0xbaa2bcb5439e985ce4ccf815b4700027d1b92c73",
+    "quality": {
+      "combined_risk_score": 10,
+      "max_drawdown": 0.0871,
+      "drawdown_frequency": 0.2,
+      "avg_trade_size": 533.38,
+      "markets_traded": 94,
+      "num_markets_traded": 94,
+      "category_diversity_score": 0.76,
+      "market_concentration_ratio": 0.4928,
+      "annualized_return": null,
+      "gain_to_pain_ratio": 12.0631,
+      "equity_curve_pattern": "volatile",
+      "perfect_timing_flag": false,
+      "flagged_metrics": "{position_size_volatility}",
+      "losing_trades": 740,
+      "best_market_pnl": 832259.67,
+      "dominant_market_pnl": 832259.67,
+      "window_days": "15"
+    },
+    "category_specialization": [
+      {
+        "category": "Politics",
+        "roi": 49.1192,
+        "win_rate": 0.4066,
+        "total_pnl": 1057918.48,
+        "total_trades": 4038
+      },
+      {
+        "category": "Politics / Global",
+        "roi": 49.1255,
+        "win_rate": 0.4066,
+        "total_pnl": 1057918.48,
+        "total_trades": 4035
+      },
+      {
+        "category": "Other",
+        "roi": 49.2036,
+        "win_rate": 0.4056,
+        "total_pnl": 1057263.03,
+        "total_trades": 4017
+      },
+      {
+        "category": "Politics / US",
+        "roi": 110.5388,
+        "win_rate": 0.439,
+        "total_pnl": 825258.66,
+        "total_trades": 2236
+      },
+      {
+        "category": "Politics / US / Trump",
+        "roi": 110.5388,
+        "win_rate": 0.439,
+        "total_pnl": 825258.66,
+        "total_trades": 2236
+      },
+      {
+        "category": "Finance & Markets",
+        "roi": -14.8607,
+        "win_rate": 0.2085,
+        "total_pnl": -1311.46,
+        "total_trades": 266
+      }
+    ],
+    "official_rank": {
+      "period": "30d",
+      "rank": 31,
+      "roi": "0.237321",
+      "win_rate": "0.3073",
+      "sharpe_ratio": "0.0355",
+      "total_pnl": "737359.9499",
+      "total_invested": "3107015.03",
+      "total_trades": 7046,
+      "markets_traded": 132
+    },
+    "realized_pnl_recent": {
+      "window": [
+        "2026-05-20",
+        "2026-06-20"
+      ],
+      "days_returned": 11,
+      "realized_pnl_sum": -268035.55
+    },
+    "h_score": {
+      "available": false,
+      "note": "不在 H-Score 榜首页（584 无按地址查，官方排名见 official_rank/579）"
+    }
+  },
+  "what_position_actions": {
+    "wallet": "0xbaa2bcb5439e985ce4ccf815b4700027d1b92c73",
+    "condition_id": "0xa1b3158fedfddaf2a0d8b364f6a57ee68146fb6ad458222aa8e02bcf0abbb099",
+    "analyzed_side": "No",
+    "market": {
+      "question": "US-Iran Final Nuclear Deal by August 31, 2026?",
+      "winning_outcome": null,
+      "closed": false,
+      "settle_date": "2026-08-31",
+      "days_to_settlement": 68.0,
+      "settle_note": "还有约68.0天"
+    },
+    "two_side_distribution": {
+      "hedged": true,
+      "by_outcome": {
+        "Yes": {
+          "trades": 1,
+          "shares": 202534.4
+        },
+        "No": {
+          "trades": 72,
+          "shares": 586765.0
+        }
+      },
+      "note": "两边都大额建仓 = 做市/对冲玩家（非单边赌徒，接 #28）"
+    },
+    "actions": {
+      "entry_time": "2026-06-22 01:32",
+      "last_add_time": "2026-06-24 05:29",
+      "num_buys": 72,
+      "num_sells": 34,
+      "added_over_time": true,
+      "avg_entry_price": 0.737,
+      "net_shares": 438149.2,
+      "net_cost_usd": 318609.52
+    },
+    "unrealized": {
+      "current_price": 0.75,
+      "price_source": "568最新close",
+      "current_value_usd": 328611.91,
+      "unrealized_pnl_usd": 10002.4,
+      "unrealized_pct": 3.14,
+      "note": "持仓中浮盈亏"
+    }
+  },
+  "price_context": {
+    "as_of": "2026-06-25",
+    "analyzed_side": "No",
+    "price_source": "568历史close",
+    "current_price": 0.75,
+    "implied_probability_pct": 75.0,
+    "remaining_upside_per_share_usd": 0.25,
+    "remaining_upside_pct_if_win": 33.33,
+    "downside_per_share_usd": 0.75,
+    "odds_to_one": 0.33,
+    "entry_price": 0.737,
+    "price_delta": 0.013,
+    "price_delta_pct": 1.76
+  },
+  "catalysts": {
+    "positive": [
+      {
+        "title": "Is Iran Resuming Nuclear Inspections? Trump And Iran Offer Different Answers - Forbes",
+        "url": "https://www.forbes.com/sites/saradorn/2026/06/22/trump-says-iran-will-allow-nuclear-inspections-but-iran-denies-new-commitments/",
+        "date": "2026-06-22",
+        "reason": "美国与伊朗对核查承诺存在公开分歧，伊朗否认新承诺，显示双方在条款上尚未达成一致",
+        "type": "当事人直接表态",
+        "price_reaction": {
+          "available": true,
+          "window": [
+            "2026-06-21",
+            "2026-06-23"
+          ],
+          "price_before": 0.7,
+          "price_after": 0.72,
+          "move_pct": 2.86,
+          "direction": "▲",
+          "caveat": "该新闻发布前后市场变动，时间相关非因果",
+          "market_check": "市场反应微弱(<5%)"
+        }
+      }
+    ],
+    "negative": [
+      {
+        "title": "Trump says Iran agreed to nuclear inspections, Tehran denies U.S. claims - Haaretz",
+        "url": "https://www.haaretz.com/middle-east-news/iran/2026-06-23/ty-article/trump-says-iran-agreed-to-nuclear-inspections-tehran-denies-u-s-claims/0000019e-f4a9-d803-abdf-fcb942f90000",
+        "date": "2026-06-23",
+        "reason": "Trump claims Iran agreed to nuclear inspections and asset arrangements, indicating active negotiations on substantive deal terms two months before the August 31 deadline. If both sides continue to narrow differences, a final deal could be reached within the timeframe.",
+        "type": "当事人直接表态",
+        "price_reaction": {
+          "available": true,
+          "window": [
+            "2026-06-22",
+            "2026-06-24"
+          ],
+          "price_before": 0.74,
+          "price_after": 0.76,
+          "move_pct": 2.7,
+          "direction": "▲",
+          "caveat": "该新闻发布前后市场变动，时间相关非因果",
+          "market_check": "市场反应微弱(<5%)"
+        }
+      },
+      {
+        "title": "US-Iran deal: Officials reveal details of agreement as Trump says it will be signed 'shortly' - BBC",
+        "url": "https://www.bbc.com/news/live/c8j2ewl0dpxt",
+        "date": "2026-06-17",
+        "reason": "Trump states the US-Iran agreement will be signed 'shortly' and officials reveal a 14-paragraph agreement committing Iran to never have nuclear weapons and establishing a $300bn reconstruction fund. A签署 before August 31 would constitute a final nuclear deal within the market timeframe.",
+        "type": "当事人直接表态",
+        "price_reaction": {
+          "available": false,
+          "reason": "no_price",
+          "note": "新闻时点拿不到价(市场未创建/无成交) → 反应不可知，不编造",
+          "market_check": "市场反应不可知"
+        }
+      }
+    ],
+    "balance_summary": "正向证据按类型陈列：当事人直接表态×1；负向证据按类型陈列：当事人直接表态×2。每条已刻明客观事实类型（材质）——系统不替你称量轻重，不同材质的份量请自行掂量。 系统已完成证据陈述，天平由你裁决。",
+    "honesty_caveat": {
+      "positive_side": "fully_backed",
+      "negative_side": "fully_backed"
+    },
+    "guards": {
+      "relevance_dropped": [],
+      "type_deviations": [],
+      "weight_word_hits": [],
+      "weight_in_reason_hits": [
+        {
+          "reason": "美国与伊朗对核查承诺存在公开分歧，伊朗否认新承诺，显示双方在关键条款上尚未达成一致",
+          "words": [
+            "关键"
+          ]
+        }
+      ],
+      "fear_lexicon_hits": [],
+      "directive_hits": []
+    }
+  },
+  "_audit": {
+    "teacher_tokens_approx": 2560,
+    "free_sources": [
+      "581",
+      "579",
+      "569",
+      "556",
+      "568",
+      "574"
+    ],
+    "catalyst_window": [
+      "2026-06-15",
+      "2026-06-25"
+    ]
+  }
+}

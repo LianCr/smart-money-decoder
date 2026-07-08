@@ -1,0 +1,1259 @@
+{
+  "wallet": "0xa83c7adfd9c81b49f69b8a16e8c77641fa9aa8f4",
+  "as_of": "2026-06-25",
+  "identity": {
+    "profile": {
+      "address": "0xa83c7adfd9c81b49f69b8a16e8c77641fa9aa8f4",
+      "name": "Maria-s",
+      "pseudonym": "Close-Lout",
+      "profile_image": null
+    },
+    "pnl_history": [
+      {
+        "t": 1756771200,
+        "p": 21.11361
+      },
+      {
+        "t": 1756857600,
+        "p": -4.179676
+      },
+      {
+        "t": 1757030400,
+        "p": -96.11192
+      },
+      {
+        "t": 1757203200,
+        "p": -250.20522
+      },
+      {
+        "t": 1757376000,
+        "p": -228.33238
+      },
+      {
+        "t": 1757548800,
+        "p": -313.7477
+      },
+      {
+        "t": 1757721600,
+        "p": -78.096214
+      },
+      {
+        "t": 1757894400,
+        "p": 39.33466
+      },
+      {
+        "t": 1758067200,
+        "p": -25.34273
+      },
+      {
+        "t": 1758153600,
+        "p": -75.79071
+      },
+      {
+        "t": 1758326400,
+        "p": -123.39176
+      },
+      {
+        "t": 1758499200,
+        "p": -179.69157
+      },
+      {
+        "t": 1758672000,
+        "p": -257.44766
+      },
+      {
+        "t": 1758844800,
+        "p": -101.487305
+      },
+      {
+        "t": 1759017600,
+        "p": -109.44565
+      },
+      {
+        "t": 1759190400,
+        "p": 24.071491
+      },
+      {
+        "t": 1759363200,
+        "p": 42.792507
+      },
+      {
+        "t": 1759449600,
+        "p": -140.51402
+      },
+      {
+        "t": 1759622400,
+        "p": -196.8968
+      },
+      {
+        "t": 1759795200,
+        "p": -152.85678
+      },
+      {
+        "t": 1759968000,
+        "p": -33.992954
+      },
+      {
+        "t": 1760140800,
+        "p": -332.9466
+      },
+      {
+        "t": 1760313600,
+        "p": -231.55411
+      },
+      {
+        "t": 1760486400,
+        "p": -367.24823
+      },
+      {
+        "t": 1760659200,
+        "p": -129.21603
+      },
+      {
+        "t": 1760832000,
+        "p": -316.66284
+      },
+      {
+        "t": 1760918400,
+        "p": -129.54277
+      },
+      {
+        "t": 1761091200,
+        "p": -337.28464
+      },
+      {
+        "t": 1761264000,
+        "p": -277.25055
+      },
+      {
+        "t": 1761436800,
+        "p": -484.22638
+      },
+      {
+        "t": 1761609600,
+        "p": -771.8063
+      },
+      {
+        "t": 1761782400,
+        "p": -675.94617
+      },
+      {
+        "t": 1761955200,
+        "p": -676.48425
+      },
+      {
+        "t": 1762128000,
+        "p": -456.35367
+      },
+      {
+        "t": 1762214400,
+        "p": -560.6356
+      },
+      {
+        "t": 1762387200,
+        "p": 68.65084
+      },
+      {
+        "t": 1762560000,
+        "p": 317.09058
+      },
+      {
+        "t": 1762732800,
+        "p": -179.92119
+      },
+      {
+        "t": 1762905600,
+        "p": -72.92545
+      },
+      {
+        "t": 1763078400,
+        "p": -290.8552
+      },
+      {
+        "t": 1763251200,
+        "p": -291.33032
+      },
+      {
+        "t": 1763424000,
+        "p": -62.580807
+      },
+      {
+        "t": 1763510400,
+        "p": 52.803425
+      },
+      {
+        "t": 1763683200,
+        "p": 440.44818
+      },
+      {
+        "t": 1763856000,
+        "p": -23.2253
+      },
+      {
+        "t": 1764028800,
+        "p": -62.17512
+      },
+      {
+        "t": 1764201600,
+        "p": 247.63489
+      },
+      {
+        "t": 1764374400,
+        "p": 170.18233
+      },
+      {
+        "t": 1764547200,
+        "p": -23.449438
+      },
+      {
+        "t": 1764720000,
+        "p": 54.00337
+      },
+      {
+        "t": 1764892800,
+        "p": -100.90169
+      },
+      {
+        "t": 1764979200,
+        "p": -256.25345
+      },
+      {
+        "t": 1765152000,
+        "p": -372.70596
+      },
+      {
+        "t": 1765324800,
+        "p": 128.60956
+      },
+      {
+        "t": 1765497600,
+        "p": 0.323662
+      },
+      {
+        "t": 1765670400,
+        "p": -299.01028
+      },
+      {
+        "t": 1765843200,
+        "p": 43.59212
+      },
+      {
+        "t": 1766016000,
+        "p": -118.2271
+      },
+      {
+        "t": 1766188800,
+        "p": 1.733664
+      },
+      {
+        "t": 1766275200,
+        "p": 2.106653
+      },
+      {
+        "t": 1766448000,
+        "p": 129.89975
+      },
+      {
+        "t": 1766620800,
+        "p": -216.47653
+      },
+      {
+        "t": 1766793600,
+        "p": -312.31525
+      },
+      {
+        "t": 1766966400,
+        "p": -228.0108
+      },
+      {
+        "t": 1767139200,
+        "p": -380.29456
+      },
+      {
+        "t": 1767312000,
+        "p": -342.0971
+      },
+      {
+        "t": 1767484800,
+        "p": -244.51105
+      },
+      {
+        "t": 1767571200,
+        "p": -194.31294
+      },
+      {
+        "t": 1767744000,
+        "p": -244.88408
+      },
+      {
+        "t": 1767916800,
+        "p": -646.4683
+      },
+      {
+        "t": 1768089600,
+        "p": -136.60922
+      },
+      {
+        "t": 1768262400,
+        "p": 632.17566
+      },
+      {
+        "t": 1768435200,
+        "p": 17.073141
+      },
+      {
+        "t": 1768608000,
+        "p": -136.6091
+      },
+      {
+        "t": 1768780800,
+        "p": -34.154293
+      },
+      {
+        "t": 1768953600,
+        "p": -392.74652
+      },
+      {
+        "t": 1769040000,
+        "p": -443.97394
+      },
+      {
+        "t": 1769212800,
+        "p": -392.74646
+      },
+      {
+        "t": 1769385600,
+        "p": -290.29153
+      },
+      {
+        "t": 1769558400,
+        "p": -341.51904
+      },
+      {
+        "t": 1769731200,
+        "p": -443.97397
+      },
+      {
+        "t": 1769904000,
+        "p": -443.97397
+      },
+      {
+        "t": 1770076800,
+        "p": -392.7465
+      },
+      {
+        "t": 1770249600,
+        "p": -34.154297
+      },
+      {
+        "t": 1770336000,
+        "p": -73.44668
+      },
+      {
+        "t": 1770508800,
+        "p": 72.776276
+      },
+      {
+        "t": 1770681600,
+        "p": -28.932684
+      },
+      {
+        "t": 1770854400,
+        "p": -80.9061
+      },
+      {
+        "t": 1771027200,
+        "p": -236.45331
+      },
+      {
+        "t": 1771200000,
+        "p": -185.22586
+      },
+      {
+        "t": 1771372800,
+        "p": -82.77095
+      },
+      {
+        "t": 1771545600,
+        "p": -32.662422
+      },
+      {
+        "t": 1771718400,
+        "p": -84.63574
+      },
+      {
+        "t": 1771804800,
+        "p": -289.54556
+      },
+      {
+        "t": 1771977600,
+        "p": -135.86322
+      },
+      {
+        "t": 1772150400,
+        "p": -237.57217
+      },
+      {
+        "t": 1772323200,
+        "p": -443.22806
+      },
+      {
+        "t": 1772496000,
+        "p": -391.25467
+      },
+      {
+        "t": 1772668800,
+        "p": -1519.0048
+      },
+      {
+        "t": 1772841600,
+        "p": -1005.98425
+      },
+      {
+        "t": 1773014400,
+        "p": -904.27515
+      },
+      {
+        "t": 1773100800,
+        "p": -1519.7506
+      },
+      {
+        "t": 1773273600,
+        "p": -2441.8447
+      },
+      {
+        "t": 1773446400,
+        "p": -2441.8447
+      },
+      {
+        "t": 1773619200,
+        "p": -2032.7709
+      },
+      {
+        "t": 1773792000,
+        "p": -2749.9553
+      },
+      {
+        "t": 1773964800,
+        "p": -2340.1357
+      },
+      {
+        "t": 1774137600,
+        "p": -2340.1357
+      },
+      {
+        "t": 1774310400,
+        "p": -2545.0454
+      },
+      {
+        "t": 1774396800,
+        "p": -2545.0454
+      },
+      {
+        "t": 1774569600,
+        "p": -2647.5005
+      },
+      {
+        "t": 1774742400,
+        "p": -2340.1357
+      },
+      {
+        "t": 1774915200,
+        "p": -2647.5005
+      },
+      {
+        "t": 1775088000,
+        "p": -2647.5005
+      },
+      {
+        "t": 1775260800,
+        "p": -2288.9082
+      },
+      {
+        "t": 1775433600,
+        "p": -2442.5906
+      },
+      {
+        "t": 1775606400,
+        "p": -2647.5005
+      },
+      {
+        "t": 1775779200,
+        "p": -2391.363
+      },
+      {
+        "t": 1775865600,
+        "p": -2135.2258
+      },
+      {
+        "t": 1776038400,
+        "p": -2340.1355
+      },
+      {
+        "t": 1776211200,
+        "p": -2288.9082
+      },
+      {
+        "t": 1776384000,
+        "p": -2237.6807
+      },
+      {
+        "t": 1776556800,
+        "p": -2135.2258
+      },
+      {
+        "t": 1776729600,
+        "p": -1366.8137
+      },
+      {
+        "t": 1776902400,
+        "p": -1264.359
+      },
+      {
+        "t": 1777075200,
+        "p": -1161.9042
+      },
+      {
+        "t": 1777161600,
+        "p": -1827.8611
+      },
+      {
+        "t": 1777334400,
+        "p": -1366.814
+      },
+      {
+        "t": 1777507200,
+        "p": -1418.0414
+      },
+      {
+        "t": 1777680000,
+        "p": -1213.1316
+      },
+      {
+        "t": 1777852800,
+        "p": -1008.2218
+      },
+      {
+        "t": 1778025600,
+        "p": -598.4021
+      },
+      {
+        "t": 1778198400,
+        "p": -188.58253
+      },
+      {
+        "t": 1778371200,
+        "p": 16.327291
+      },
+      {
+        "t": 1778457600,
+        "p": 323.69208
+      },
+      {
+        "t": 1778630400,
+        "p": 426.14694
+      },
+      {
+        "t": 1778803200,
+        "p": 323.69208
+      },
+      {
+        "t": 1778976000,
+        "p": 426.14694
+      },
+      {
+        "t": 1779148800,
+        "p": 528.6018
+      },
+      {
+        "t": 1779321600,
+        "p": 528.60187
+      },
+      {
+        "t": 1779494400,
+        "p": 1655.606
+      },
+      {
+        "t": 1779667200,
+        "p": 3054.1602
+      },
+      {
+        "t": 1779840000,
+        "p": 8394.565
+      },
+      {
+        "t": 1779926400,
+        "p": 2382.8904
+      },
+      {
+        "t": 1780099200,
+        "p": -6655.4614
+      },
+      {
+        "t": 1780272000,
+        "p": 68850.13
+      },
+      {
+        "t": 1780444800,
+        "p": 68884.19
+      },
+      {
+        "t": 1780617600,
+        "p": 69005.984
+      },
+      {
+        "t": 1780790400,
+        "p": 69209.625
+      },
+      {
+        "t": 1780963200,
+        "p": 71102.22
+      },
+      {
+        "t": 1781136000,
+        "p": 69110.17
+      },
+      {
+        "t": 1781222400,
+        "p": 70238.24
+      },
+      {
+        "t": 1781395200,
+        "p": 66659.95
+      },
+      {
+        "t": 1781568000,
+        "p": 66905.555
+      },
+      {
+        "t": 1781740800,
+        "p": 64795.94
+      },
+      {
+        "t": 1781913600,
+        "p": 64861.14
+      },
+      {
+        "t": 1782086400,
+        "p": 74644.66
+      },
+      {
+        "t": 1782259200,
+        "p": 74754.09
+      },
+      {
+        "t": 1782432000,
+        "p": 75869.48
+      },
+      {
+        "t": 1782450000,
+        "p": 75939.45
+      }
+    ],
+    "who_trader_profile": {
+      "wallet": "0xa83c7adfd9c81b49f69b8a16e8c77641fa9aa8f4",
+      "quality": {
+        "combined_risk_score": 20,
+        "max_drawdown": 6.8227,
+        "drawdown_frequency": 0.1333,
+        "avg_trade_size": 176.61,
+        "markets_traded": 217,
+        "num_markets_traded": 217,
+        "category_diversity_score": 1.8964,
+        "market_concentration_ratio": 0.4744,
+        "annualized_return": null,
+        "gain_to_pain_ratio": 1.427,
+        "equity_curve_pattern": "volatile",
+        "perfect_timing_flag": true,
+        "flagged_metrics": "{position_size_volatility,perfect_timing}",
+        "losing_trades": 61,
+        "best_market_pnl": 11388.13,
+        "dominant_market_pnl": 11388.13,
+        "window_days": "15"
+      },
+      "category_specialization": [
+        {
+          "category": "Politics / US / Elections",
+          "roi": 9.2203,
+          "win_rate": 0.9412,
+          "total_pnl": 12288.53,
+          "total_trades": 183
+        },
+        {
+          "category": "Politics / US",
+          "roi": 8.9547,
+          "win_rate": 0.7391,
+          "total_pnl": 12143.47,
+          "total_trades": 194
+        },
+        {
+          "category": "Politics / Global",
+          "roi": 8.0718,
+          "win_rate": 0.7381,
+          "total_pnl": 11099.22,
+          "total_trades": 256
+        },
+        {
+          "category": "Politics",
+          "roi": 8.0718,
+          "win_rate": 0.7045,
+          "total_pnl": 11099.21,
+          "total_trades": 256
+        },
+        {
+          "category": "Other",
+          "roi": 4.2416,
+          "win_rate": 0.8405,
+          "total_pnl": 6986.48,
+          "total_trades": 902
+        },
+        {
+          "category": "Esports / Counter-Strike",
+          "roi": 69.7122,
+          "win_rate": 0.7143,
+          "total_pnl": 1275.62,
+          "total_trades": 27
+        },
+        {
+          "category": "Sports / Soccer",
+          "roi": 10.9412,
+          "win_rate": 0.7857,
+          "total_pnl": 187.09,
+          "total_trades": 21
+        },
+        {
+          "category": "Sports",
+          "roi": 0.7966,
+          "win_rate": 0.7576,
+          "total_pnl": 186.86,
+          "total_trades": 180
+        },
+        {
+          "category": "Esports",
+          "roi": 5.6337,
+          "win_rate": 0.6667,
+          "total_pnl": 165.62,
+          "total_trades": 29
+        },
+        {
+          "category": "Culture & Entertainment",
+          "roi": 0.0,
+          "win_rate": 0.0,
+          "total_pnl": 0.0,
+          "total_trades": 0
+        },
+        {
+          "category": "Politics / US / Trump",
+          "roi": -6.2143,
+          "win_rate": 0.1667,
+          "total_pnl": -145.07,
+          "total_trades": 11
+        },
+        {
+          "category": "Sports / Tennis",
+          "roi": -0.8818,
+          "win_rate": 0.7674,
+          "total_pnl": -165.85,
+          "total_trades": 130
+        },
+        {
+          "category": "Cities",
+          "roi": -5.7703,
+          "win_rate": 0.8154,
+          "total_pnl": -560.05,
+          "total_trades": 266
+        },
+        {
+          "category": "Esports / MOBA / League of Legends",
+          "roi": -100.0002,
+          "win_rate": 0.5,
+          "total_pnl": -1110.0,
+          "total_trades": 2
+        },
+        {
+          "category": "Esports / MOBA",
+          "roi": -100.0002,
+          "win_rate": 0.5,
+          "total_pnl": -1110.0,
+          "total_trades": 2
+        },
+        {
+          "category": "Weather & Science",
+          "roi": -17.9764,
+          "win_rate": 0.8523,
+          "total_pnl": -5344.08,
+          "total_trades": 695
+        }
+      ],
+      "official_rank": {
+        "period": "30d",
+        "rank": 775,
+        "roi": "0.126669",
+        "win_rate": "0.7886",
+        "sharpe_ratio": "0.0740",
+        "total_pnl": "31746.4083",
+        "total_invested": "250624.63",
+        "total_trades": 1403,
+        "markets_traded": 241
+      },
+      "realized_pnl_recent": {
+        "window": [
+          "2026-05-20",
+          "2026-06-20"
+        ],
+        "days_returned": 6,
+        "realized_pnl_sum": 0
+      },
+      "h_score": {
+        "available": false,
+        "note": "不在 H-Score 榜首页（584 无按地址查，官方排名见 official_rank/579）"
+      }
+    }
+  },
+  "position": {
+    "meta": {
+      "wallet": "0xa83c7adfd9c81b49f69b8a16e8c77641fa9aa8f4",
+      "market": "Will the Democratic Party control the House after the 2026 Midterm elections?",
+      "analyzed_side": "Yes",
+      "as_of": "2026-06-25",
+      "mode": "live",
+      "catalyst_anchor": "2026-06-25",
+      "settle": "还有约131.0天"
+    },
+    "what_position_actions": {
+      "wallet": "0xa83c7adfd9c81b49f69b8a16e8c77641fa9aa8f4",
+      "condition_id": "0xd5d9fc47718bd553592d126b1fa5e87183d27f3936975b0c04cc0f2dec1f1bb4",
+      "analyzed_side": "Yes",
+      "market": {
+        "question": "Will the Democratic Party control the House after the 2026 Midterm elections?",
+        "winning_outcome": null,
+        "closed": false,
+        "settle_date": "2026-11-03",
+        "days_to_settlement": 131.0,
+        "settle_note": "还有约131.0天"
+      },
+      "two_side_distribution": {
+        "hedged": false,
+        "by_outcome": {
+          "Yes": {
+            "trades": 1,
+            "shares": 1000.0
+          }
+        },
+        "note": "仅单边建仓"
+      },
+      "actions": {
+        "entry_time": "2026-06-24 22:16",
+        "last_add_time": "2026-06-24 22:16",
+        "num_buys": 1,
+        "num_sells": 0,
+        "added_over_time": false,
+        "avg_entry_price": 0.81,
+        "net_shares": 1000.0,
+        "net_cost_usd": 809.99
+      },
+      "unrealized": {
+        "current_price": 0.82,
+        "price_source": "568最新close",
+        "current_value_usd": 819.99,
+        "unrealized_pnl_usd": 10.0,
+        "unrealized_pct": 1.23,
+        "note": "持仓中浮盈亏"
+      }
+    },
+    "price_context": {
+      "as_of": "2026-06-25",
+      "analyzed_side": "Yes",
+      "price_source": "568历史close",
+      "current_price": 0.82,
+      "implied_probability_pct": 82.0,
+      "remaining_upside_per_share_usd": 0.18,
+      "remaining_upside_pct_if_win": 21.95,
+      "downside_per_share_usd": 0.82,
+      "odds_to_one": 0.22,
+      "entry_price": 0.81,
+      "price_delta": 0.01,
+      "price_delta_pct": 1.23
+    },
+    "what_the_bet": "押民主党在2026年11月3日中期选举后控制众议院（占据超过半数投票席位），如果民主党获得多数席位或选出的众议院议长属于民主党则算赢。",
+    "resolution_criteria": "This market will resolve according to the party that controls the House of Representatives following the 2026 U.S. House elections scheduled for November 3, 2026.\n\nHouse control is defined as having more than half of the voting members of the U.S. House of Representatives.\n\nIf the outcome of this election is ambiguous given the above rules, this market will remain open until the Speaker of the House is selected following the 2026 U.S. general election, at which point it will resolve to the party the Speaker is affiliated with at the time of their election to that position. If the elected Speaker does not caucus with any listed party this market will resolve “Other”.\n\nDetermination of which party controls the House after the 2026 U.S. House elections will be based on a consensus of credible reporting, or if there is ambiguity, final federal and/or state election authority certification or other final official determination of the 2026 election results."
+  },
+  "market": {
+    "slug": "will-the-democratic-party-control-the-house-after-the-2026-midterm-elections",
+    "market_id": "0xd5d9fc47718bd553592d126b1fa5e87183d27f3936975b0c04cc0f2dec1f1bb4"
+  },
+  "price_series": [
+    {
+      "date": "2026-04-27",
+      "price": 0.85
+    },
+    {
+      "date": "2026-04-28",
+      "price": 0.86
+    },
+    {
+      "date": "2026-05-01",
+      "price": 0.83
+    },
+    {
+      "date": "2026-05-02",
+      "price": 0.85
+    },
+    {
+      "date": "2026-05-03",
+      "price": 0.84
+    },
+    {
+      "date": "2026-05-04",
+      "price": 0.82
+    },
+    {
+      "date": "2026-05-05",
+      "price": 0.82
+    },
+    {
+      "date": "2026-05-06",
+      "price": 0.83
+    },
+    {
+      "date": "2026-05-07",
+      "price": 0.83
+    },
+    {
+      "date": "2026-05-08",
+      "price": 0.78
+    },
+    {
+      "date": "2026-05-09",
+      "price": 0.79
+    },
+    {
+      "date": "2026-05-10",
+      "price": 0.78
+    },
+    {
+      "date": "2026-05-11",
+      "price": 0.78
+    },
+    {
+      "date": "2026-05-12",
+      "price": 0.79
+    },
+    {
+      "date": "2026-05-13",
+      "price": 0.78
+    },
+    {
+      "date": "2026-05-14",
+      "price": 0.79
+    },
+    {
+      "date": "2026-05-15",
+      "price": 0.79
+    },
+    {
+      "date": "2026-05-16",
+      "price": 0.78
+    },
+    {
+      "date": "2026-05-17",
+      "price": 0.78
+    },
+    {
+      "date": "2026-05-18",
+      "price": 0.8
+    },
+    {
+      "date": "2026-05-19",
+      "price": 0.8
+    },
+    {
+      "date": "2026-05-20",
+      "price": 0.81
+    },
+    {
+      "date": "2026-05-21",
+      "price": 0.8
+    },
+    {
+      "date": "2026-05-22",
+      "price": 0.81
+    },
+    {
+      "date": "2026-05-23",
+      "price": 0.8
+    },
+    {
+      "date": "2026-05-24",
+      "price": 0.81
+    },
+    {
+      "date": "2026-05-25",
+      "price": 0.8
+    },
+    {
+      "date": "2026-05-26",
+      "price": 0.81
+    },
+    {
+      "date": "2026-05-27",
+      "price": 0.8
+    },
+    {
+      "date": "2026-05-28",
+      "price": 0.8
+    },
+    {
+      "date": "2026-05-29",
+      "price": 0.8
+    },
+    {
+      "date": "2026-05-30",
+      "price": 0.81
+    },
+    {
+      "date": "2026-05-31",
+      "price": 0.82
+    },
+    {
+      "date": "2026-06-01",
+      "price": 0.81
+    },
+    {
+      "date": "2026-06-02",
+      "price": 0.81
+    },
+    {
+      "date": "2026-06-03",
+      "price": 0.81
+    },
+    {
+      "date": "2026-06-04",
+      "price": 0.81
+    },
+    {
+      "date": "2026-06-05",
+      "price": 0.81
+    },
+    {
+      "date": "2026-06-06",
+      "price": 0.82
+    },
+    {
+      "date": "2026-06-07",
+      "price": 0.82
+    },
+    {
+      "date": "2026-06-08",
+      "price": 0.82
+    },
+    {
+      "date": "2026-06-09",
+      "price": 0.82
+    },
+    {
+      "date": "2026-06-10",
+      "price": 0.82
+    },
+    {
+      "date": "2026-06-11",
+      "price": 0.83
+    },
+    {
+      "date": "2026-06-12",
+      "price": 0.82
+    },
+    {
+      "date": "2026-06-13",
+      "price": 0.82
+    },
+    {
+      "date": "2026-06-14",
+      "price": 0.82
+    },
+    {
+      "date": "2026-06-15",
+      "price": 0.83
+    },
+    {
+      "date": "2026-06-16",
+      "price": 0.82
+    },
+    {
+      "date": "2026-06-17",
+      "price": 0.83
+    },
+    {
+      "date": "2026-06-18",
+      "price": 0.8
+    },
+    {
+      "date": "2026-06-19",
+      "price": 0.81
+    },
+    {
+      "date": "2026-06-20",
+      "price": 0.81
+    },
+    {
+      "date": "2026-06-21",
+      "price": 0.81
+    },
+    {
+      "date": "2026-06-22",
+      "price": 0.8
+    },
+    {
+      "date": "2026-06-23",
+      "price": 0.8
+    },
+    {
+      "date": "2026-06-24",
+      "price": 0.81
+    },
+    {
+      "date": "2026-06-25",
+      "price": 0.82
+    }
+  ],
+  "behavior": {
+    "flag": "STATIC",
+    "fact": "近 48h 仅 1 买 / 0 卖，无显著动作（沉闷持仓）",
+    "honest_note": "动态行为：基本没动",
+    "windows": {
+      "3h": {
+        "buys": 0,
+        "sells": 0,
+        "buy_usd": 0.0,
+        "sell_usd": 0.0
+      },
+      "24h": {
+        "buys": 0,
+        "sells": 0,
+        "buy_usd": 0.0,
+        "sell_usd": 0.0
+      },
+      "48h": {
+        "buys": 1,
+        "sells": 0,
+        "buy_usd": 810.0,
+        "sell_usd": 0.0
+      }
+    }
+  },
+  "news_stream": [
+    {
+      "date": "2026-06-25",
+      "title": "Sen. Elizabeth Warren: \"Thank you Donald Trump\" for the issue that will decide the midterms - CNN",
+      "summary": "民主党参议员沃伦表示特朗普提供了将决定中期选举的议题，暗示民主党在中期选举中获得优势",
+      "url": "https://www.cnn.com/2026/06/24/politics/video/elizabeth-warren-donald-trump-housing-crisis-affordability-kaitlan-collins-midterm-elections-senate-republicans",
+      "origin": "Tavily",
+      "direction": "support",
+      "reaction": {
+        "available": false
+      },
+      "same_window": false
+    },
+    {
+      "date": "2026-06-17",
+      "title": "Commentary: Gerrymanders, judges and an alley-oop: A look at the midterm fight for control of Congress - Los Angeles Times",
+      "summary": "文章指出尽管共和党在重新划分选区的战斗中占据优势（come out ahead），这直接影响众议院席位分布，对民主党赢得2026中期选举控制权构成不利条件。",
+      "url": "https://www.latimes.com/politics/story/2026-06-17/midterm-election-handicapping-senate-house-control-congress-democrats-republicans",
+      "origin": "Tavily",
+      "direction": "threat",
+      "reaction": {
+        "available": true,
+        "kind": "weak",
+        "move_pct": -2.44,
+        "window": [
+          "2026-06-16",
+          "2026-06-18"
+        ]
+      },
+      "same_window": false
+    }
+  ],
+  "social": {
+    "keywords": "{house,midterm}",
+    "acceleration": 2.09,
+    "author_diversity_pct": 37.3,
+    "tweet_count": 1072,
+    "organic": true,
+    "posts": [
+      {
+        "username": "FoxNews",
+        "content": "BREAKING: The Trump administration scores another major win with the Supreme Court today as it clears the way for the White House to end Temporary Protected Status for hundreds of thousands of migrants from Haiti and Syr",
+        "url": "https://x.com/FoxNews/status/2070155162560119099",
+        "likes": 6464.0,
+        "retweets": 883.0,
+        "created_on": "2026-06-25T14:40:27Z"
+      },
+      {
+        "username": "bennyjohnson",
+        "content": "The people hit hardest by the today's Supreme Court ruling to send hundreds of thousands of Haitians back home are the white liberals who were using them as slaves and house servants. https://t.co/S9tn5shG6l",
+        "url": "https://x.com/bennyjohnson/status/2070179557068456377",
+        "likes": 3584.0,
+        "retweets": 570.0,
+        "created_on": "2026-06-25T16:17:23Z"
+      },
+      {
+        "username": "bloomstarbms",
+        "content": "The token i sold to build this house was around $120k when i sold it. i used less than $80k to build it.\n\nfast forward today if i held? it will be worth less than $3k.\n\ni am definitely buying it back at $2k as an act of ",
+        "url": "https://x.com/bloomstarbms/status/2070052379458707908",
+        "likes": 1734.0,
+        "retweets": 63.0,
+        "created_on": "2026-06-25T07:52:01Z"
+      },
+      {
+        "username": "Dexerto",
+        "content": "KFC is giving the person who bought Colonel Sanders' former house free food for a year\n\nThe chain says the house sold immediately after the offer of free chicken was introduced https://t.co/ymxPUqZAJh",
+        "url": "https://x.com/Dexerto/status/2070231065331912711",
+        "likes": 1254.0,
+        "retweets": 28.0,
+        "created_on": "2026-06-25T19:42:03Z"
+      }
+    ],
+    "note": "社媒=情绪非事实，可能被刷量；author_diversity<20% 当噪音看。仅实时，不进回测。"
+  },
+  "world_summary": "# 市场综述：民主党2026中期选举众议院控制权\n\n**巨鲸动态**  \n近48小时仅录得1笔买入、0笔卖出，持仓维持沉闷状态。\n\n**事态进展**  \n民主党参议员沃伦近期表态称特朗普提供了将决定中期选举的议题。共和党在重新划区战斗中占据优势，德州、佛州、弗州等地新增偏共和党选区，使GOP赔率从早期低点略有回升。\n\nPolymarket盘面显示2026年6月民主党通用选票领先5-6个百分点，符合共和党总统任期下的历史中期选举模式。共和党以微弱多数进入周期，仅能承受几席损失；民主党需温和净增即可夺回控制权。当前预测仍倾向民主党在关键战场具优势。",
+  "reasoning": {
+    "follow_call": "ROOM LEFT",
+    "confidence": "high",
+    "reasoning": "这个钱包单纯押民主党拿下2026中期选举众议院，近48小时没有动作。他当初买入的价格很低，现在价格只涨了一点点，还有很大的上涨空间可以赚。支持方向有沃伦参议员的直接表态，反对方向只有一篇背景评论且市场反应很弱。信心评级为高，因为他目前账面盈利+1.2%，基础矩阵判定为高信心。",
+    "confidence_reasons": [
+      "底座矩阵:high(pnl=+1.2%)"
+    ],
+    "facts": {
+      "market_question": "Will the Democratic Party control the House after the 2026 Midterm elections?",
+      "outcome": "Yes",
+      "today": "2026-06-25",
+      "price_room_left": 21.95,
+      "price_already_moved": 1.23,
+      "resolution_date_human": "还有约131.0天",
+      "position_type": "single_side_conviction",
+      "recent_action": "flat_no_movement",
+      "support_catalysts": [
+        {
+          "title": "Sen. Elizabeth Warren: \"Thank you Donald Trump\" for the issue that will decide the midterms - CNN",
+          "material_tag": "当事人直接表态",
+          "market_reaction": "unknown",
+          "move_pct": null,
+          "same_window": false
+        }
+      ],
+      "threat_catalysts": [
+        {
+          "title": "Commentary: Gerrymanders, judges and an alley-oop: A look at the midterm fight for control of Congress - Los Angeles Times",
+          "material_tag": "其他背景",
+          "market_reaction": "weak",
+          "move_pct": -2.44,
+          "same_window": false
+        }
+      ],
+      "confidence": "high",
+      "confidence_reasons": [
+        "底座矩阵:high(pnl=+1.2%)"
+      ]
+    }
+  }
+}

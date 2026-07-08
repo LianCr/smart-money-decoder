@@ -1,0 +1,1317 @@
+{
+  "wallet": "0xfd8f5bba5b09d286b6d1db35cda8249bdd356f11",
+  "as_of": "2026-06-25",
+  "identity": {
+    "profile": {
+      "address": "0xfd8f5bba5b09d286b6d1db35cda8249bdd356f11",
+      "name": "bitdady",
+      "pseudonym": "Grown-Hellcat",
+      "profile_image": null
+    },
+    "pnl_history": [
+      {
+        "t": 1770422400,
+        "p": 2.717596
+      },
+      {
+        "t": 1770508800,
+        "p": 7.4067
+      },
+      {
+        "t": 1770595200,
+        "p": 4.280631
+      },
+      {
+        "t": 1770681600,
+        "p": 6.625183
+      },
+      {
+        "t": 1770768000,
+        "p": 10.272264
+      },
+      {
+        "t": 1770854400,
+        "p": 24.860586
+      },
+      {
+        "t": 1770940800,
+        "p": 17.045414
+      },
+      {
+        "t": 1771027200,
+        "p": 14.700862
+      },
+      {
+        "t": 1771113600,
+        "p": 34.499302
+      },
+      {
+        "t": 1771200000,
+        "p": -20.467419
+      },
+      {
+        "t": 1771286400,
+        "p": -16.820337
+      },
+      {
+        "t": 1771372800,
+        "p": -0.668979
+      },
+      {
+        "t": 1771459200,
+        "p": 4.691137
+      },
+      {
+        "t": 1771545600,
+        "p": 5.322679
+      },
+      {
+        "t": 1771632000,
+        "p": 5.322674
+      },
+      {
+        "t": 1771718400,
+        "p": 5.322678
+      },
+      {
+        "t": 1771804800,
+        "p": 5.322727
+      },
+      {
+        "t": 1771891200,
+        "p": 5.429097
+      },
+      {
+        "t": 1771977600,
+        "p": 9.872676
+      },
+      {
+        "t": 1772064000,
+        "p": 12.472645
+      },
+      {
+        "t": 1772150400,
+        "p": 16.112602
+      },
+      {
+        "t": 1772236800,
+        "p": 15.007615
+      },
+      {
+        "t": 1772323200,
+        "p": 15.462609
+      },
+      {
+        "t": 1772409600,
+        "p": 17.347588
+      },
+      {
+        "t": 1772496000,
+        "p": 18.77757
+      },
+      {
+        "t": 1772582400,
+        "p": 17.99758
+      },
+      {
+        "t": 1772668800,
+        "p": 19.102566
+      },
+      {
+        "t": 1772755200,
+        "p": -19.992569
+      },
+      {
+        "t": 1772841600,
+        "p": 57.23531
+      },
+      {
+        "t": 1772928000,
+        "p": 60.404392
+      },
+      {
+        "t": 1773014400,
+        "p": 49.62943
+      },
+      {
+        "t": 1773100800,
+        "p": 50.17133
+      },
+      {
+        "t": 1773187200,
+        "p": 63.748505
+      },
+      {
+        "t": 1773273600,
+        "p": 65.1985
+      },
+      {
+        "t": 1773360000,
+        "p": 62.29855
+      },
+      {
+        "t": 1773446400,
+        "p": 64.47352
+      },
+      {
+        "t": 1773532800,
+        "p": 64.614136
+      },
+      {
+        "t": 1773619200,
+        "p": 87.738884
+      },
+      {
+        "t": 1773705600,
+        "p": 123.52854
+      },
+      {
+        "t": 1773792000,
+        "p": 112.08728
+      },
+      {
+        "t": 1773878400,
+        "p": 76.603966
+      },
+      {
+        "t": 1773964800,
+        "p": 60.87927
+      },
+      {
+        "t": 1774051200,
+        "p": 92.32886
+      },
+      {
+        "t": 1774137600,
+        "p": 137.7728
+      },
+      {
+        "t": 1774224000,
+        "p": 160.86053
+      },
+      {
+        "t": 1774310400,
+        "p": 183.67029
+      },
+      {
+        "t": 1774396800,
+        "p": 195.0392
+      },
+      {
+        "t": 1774483200,
+        "p": 240.13144
+      },
+      {
+        "t": 1774569600,
+        "p": 221.3838
+      },
+      {
+        "t": 1774656000,
+        "p": 389.4576
+      },
+      {
+        "t": 1774742400,
+        "p": 487.34064
+      },
+      {
+        "t": 1774828800,
+        "p": 502.44232
+      },
+      {
+        "t": 1774915200,
+        "p": 480.4026
+      },
+      {
+        "t": 1775001600,
+        "p": 471.90717
+      },
+      {
+        "t": 1775088000,
+        "p": 463.72342
+      },
+      {
+        "t": 1775174400,
+        "p": 266.788
+      },
+      {
+        "t": 1775260800,
+        "p": 483.32587
+      },
+      {
+        "t": 1775347200,
+        "p": 401.55936
+      },
+      {
+        "t": 1775433600,
+        "p": 758.76526
+      },
+      {
+        "t": 1775520000,
+        "p": 1096.981
+      },
+      {
+        "t": 1775606400,
+        "p": 2288.867
+      },
+      {
+        "t": 1775692800,
+        "p": 3141.8984
+      },
+      {
+        "t": 1775779200,
+        "p": 2380.079
+      },
+      {
+        "t": 1775865600,
+        "p": 603.24866
+      },
+      {
+        "t": 1775952000,
+        "p": 1124.1902
+      },
+      {
+        "t": 1776038400,
+        "p": 11002.45
+      },
+      {
+        "t": 1776124800,
+        "p": 16088.844
+      },
+      {
+        "t": 1776211200,
+        "p": 2897.029
+      },
+      {
+        "t": 1776297600,
+        "p": -1341.335
+      },
+      {
+        "t": 1776384000,
+        "p": 1985.6582
+      },
+      {
+        "t": 1776470400,
+        "p": 4691.46
+      },
+      {
+        "t": 1776556800,
+        "p": 2686.789
+      },
+      {
+        "t": 1776643200,
+        "p": 4607.8115
+      },
+      {
+        "t": 1776729600,
+        "p": 7327.457
+      },
+      {
+        "t": 1776816000,
+        "p": 5456.0137
+      },
+      {
+        "t": 1776902400,
+        "p": 3618.793
+      },
+      {
+        "t": 1776988800,
+        "p": 6621.59
+      },
+      {
+        "t": 1777075200,
+        "p": 12045.982
+      },
+      {
+        "t": 1777161600,
+        "p": 13491.272
+      },
+      {
+        "t": 1777248000,
+        "p": 17234.096
+      },
+      {
+        "t": 1777334400,
+        "p": 16233.4
+      },
+      {
+        "t": 1777420800,
+        "p": 16230.714
+      },
+      {
+        "t": 1777507200,
+        "p": 16316.514
+      },
+      {
+        "t": 1777593600,
+        "p": 15293.006
+      },
+      {
+        "t": 1777680000,
+        "p": 16015.964
+      },
+      {
+        "t": 1777766400,
+        "p": 15658.87
+      },
+      {
+        "t": 1777852800,
+        "p": 17042.947
+      },
+      {
+        "t": 1777939200,
+        "p": 15172.112
+      },
+      {
+        "t": 1778025600,
+        "p": 15319.768
+      },
+      {
+        "t": 1778112000,
+        "p": 15826.415
+      },
+      {
+        "t": 1778198400,
+        "p": 19281.854
+      },
+      {
+        "t": 1778284800,
+        "p": 18995.727
+      },
+      {
+        "t": 1778371200,
+        "p": 17491.994
+      },
+      {
+        "t": 1778457600,
+        "p": 17552.977
+      },
+      {
+        "t": 1778544000,
+        "p": 18410.37
+      },
+      {
+        "t": 1778630400,
+        "p": 16738.469
+      },
+      {
+        "t": 1778716800,
+        "p": 17341.598
+      },
+      {
+        "t": 1778803200,
+        "p": 17897.424
+      },
+      {
+        "t": 1778889600,
+        "p": 16071.283
+      },
+      {
+        "t": 1778976000,
+        "p": 15615.29
+      },
+      {
+        "t": 1779062400,
+        "p": 16914.459
+      },
+      {
+        "t": 1779148800,
+        "p": 16900.248
+      },
+      {
+        "t": 1779235200,
+        "p": 15300.071
+      },
+      {
+        "t": 1779321600,
+        "p": 2801.0122
+      },
+      {
+        "t": 1779408000,
+        "p": 4133.86
+      },
+      {
+        "t": 1779494400,
+        "p": 1053.1984
+      },
+      {
+        "t": 1779580800,
+        "p": 3738.1748
+      },
+      {
+        "t": 1779667200,
+        "p": 7246.2207
+      },
+      {
+        "t": 1779753600,
+        "p": -460.76382
+      },
+      {
+        "t": 1779840000,
+        "p": 2818.1028
+      },
+      {
+        "t": 1779926400,
+        "p": 3.112505
+      },
+      {
+        "t": 1780012800,
+        "p": -2046.6061
+      },
+      {
+        "t": 1780099200,
+        "p": -4661.317
+      },
+      {
+        "t": 1780185600,
+        "p": -4150.1704
+      },
+      {
+        "t": 1780272000,
+        "p": -4445.899
+      },
+      {
+        "t": 1780358400,
+        "p": -4918.0034
+      },
+      {
+        "t": 1780444800,
+        "p": -5409.5195
+      },
+      {
+        "t": 1780531200,
+        "p": -26660.662
+      },
+      {
+        "t": 1780617600,
+        "p": -27404.883
+      },
+      {
+        "t": 1780704000,
+        "p": -22367.262
+      },
+      {
+        "t": 1780790400,
+        "p": -22625.504
+      },
+      {
+        "t": 1780876800,
+        "p": -27829.334
+      },
+      {
+        "t": 1780963200,
+        "p": -22953.863
+      },
+      {
+        "t": 1781049600,
+        "p": -22960.416
+      },
+      {
+        "t": 1781136000,
+        "p": -23022.168
+      },
+      {
+        "t": 1781222400,
+        "p": -25663.576
+      },
+      {
+        "t": 1781308800,
+        "p": -26618.86
+      },
+      {
+        "t": 1781395200,
+        "p": -28536.762
+      },
+      {
+        "t": 1781481600,
+        "p": -41893.87
+      },
+      {
+        "t": 1781568000,
+        "p": -46602.832
+      },
+      {
+        "t": 1781654400,
+        "p": -47452.67
+      },
+      {
+        "t": 1781740800,
+        "p": -47895.79
+      },
+      {
+        "t": 1781827200,
+        "p": -48618.484
+      },
+      {
+        "t": 1781913600,
+        "p": -49071.473
+      },
+      {
+        "t": 1782000000,
+        "p": -46308.715
+      },
+      {
+        "t": 1782086400,
+        "p": -45684.035
+      },
+      {
+        "t": 1782172800,
+        "p": -45209.77
+      },
+      {
+        "t": 1782259200,
+        "p": -45170.29
+      },
+      {
+        "t": 1782345600,
+        "p": -45123.715
+      },
+      {
+        "t": 1782432000,
+        "p": -45097.066
+      },
+      {
+        "t": 1782453600,
+        "p": -45099.2
+      }
+    ],
+    "who_trader_profile": {
+      "wallet": "0xfd8f5bba5b09d286b6d1db35cda8249bdd356f11",
+      "quality": {
+        "combined_risk_score": 10,
+        "max_drawdown": 1000,
+        "drawdown_frequency": 0.0667,
+        "avg_trade_size": 52.5,
+        "markets_traded": 57,
+        "num_markets_traded": 57,
+        "category_diversity_score": 0.5042,
+        "market_concentration_ratio": 0.7223,
+        "annualized_return": null,
+        "gain_to_pain_ratio": -0.8372,
+        "equity_curve_pattern": "volatile",
+        "perfect_timing_flag": false,
+        "flagged_metrics": "{position_size_volatility}",
+        "losing_trades": 202,
+        "best_market_pnl": 1976.14,
+        "dominant_market_pnl": -23755.29,
+        "window_days": "15"
+      },
+      "category_specialization": [
+        {
+          "category": "Politics / US / Elections",
+          "roi": 6.6707,
+          "win_rate": 0.6,
+          "total_pnl": 374.41,
+          "total_trades": 92
+        },
+        {
+          "category": "Sports / Soccer",
+          "roi": 566.6667,
+          "win_rate": 1.0,
+          "total_pnl": 85.0,
+          "total_trades": 1
+        },
+        {
+          "category": "Sports",
+          "roi": 566.6667,
+          "win_rate": 1.0,
+          "total_pnl": 85.0,
+          "total_trades": 1
+        },
+        {
+          "category": "Finance & Markets",
+          "roi": 2.4931,
+          "win_rate": 1.0,
+          "total_pnl": 10.23,
+          "total_trades": 4
+        },
+        {
+          "category": "Culture & Entertainment",
+          "roi": 0.0,
+          "win_rate": 0.0,
+          "total_pnl": 0.0,
+          "total_trades": 1
+        },
+        {
+          "category": "Tech & AI",
+          "roi": -24.9937,
+          "win_rate": 0.303,
+          "total_pnl": -242.17,
+          "total_trades": 42
+        },
+        {
+          "category": "Politics",
+          "roi": -32.2207,
+          "win_rate": 0.4798,
+          "total_pnl": -20878.2,
+          "total_trades": 1218
+        },
+        {
+          "category": "Other",
+          "roi": -32.0339,
+          "win_rate": 0.4555,
+          "total_pnl": -21057.92,
+          "total_trades": 1252
+        },
+        {
+          "category": "Politics / Global",
+          "roi": -34.1348,
+          "win_rate": 0.4811,
+          "total_pnl": -21293.56,
+          "total_trades": 1096
+        },
+        {
+          "category": "Politics / US",
+          "roi": -42.1844,
+          "win_rate": 0.4514,
+          "total_pnl": -21683.7,
+          "total_trades": 924
+        },
+        {
+          "category": "Politics / US / Trump",
+          "roi": -48.2221,
+          "win_rate": 0.4128,
+          "total_pnl": -22080.65,
+          "total_trades": 824
+        }
+      ],
+      "official_rank": {
+        "period": "30d",
+        "rank": 775529,
+        "roi": "-0.230367",
+        "win_rate": "0.5946",
+        "sharpe_ratio": "-0.0714",
+        "total_pnl": "-41366.6770",
+        "total_invested": "179568.62",
+        "total_trades": 2609,
+        "markets_traded": 125
+      },
+      "realized_pnl_recent": {
+        "window": [
+          "2026-05-20",
+          "2026-06-20"
+        ],
+        "days_returned": 11,
+        "realized_pnl_sum": -8820.36
+      },
+      "h_score": {
+        "available": false,
+        "note": "不在 H-Score 榜首页（584 无按地址查，官方排名见 official_rank/579）"
+      }
+    }
+  },
+  "position": {
+    "meta": {
+      "wallet": "0xfd8f5bba5b09d286b6d1db35cda8249bdd356f11",
+      "market": "Will Andy Burnham be the next Prime Minister of the United Kingdom in 2026?",
+      "analyzed_side": "Yes",
+      "as_of": "2026-06-25",
+      "mode": "live",
+      "catalyst_anchor": "2026-06-25",
+      "settle": "还有约189.0天"
+    },
+    "what_position_actions": {
+      "wallet": "0xfd8f5bba5b09d286b6d1db35cda8249bdd356f11",
+      "condition_id": "0x763a7f1e440693b54c56da02d338c2092053567dd865174387d06ee5612fdc9e",
+      "analyzed_side": "Yes",
+      "market": {
+        "question": "Will Andy Burnham be the next Prime Minister of the United Kingdom in 2026?",
+        "winning_outcome": null,
+        "closed": false,
+        "settle_date": "2026-12-31",
+        "days_to_settlement": 189.0,
+        "settle_note": "还有约189.0天"
+      },
+      "two_side_distribution": {
+        "hedged": false,
+        "by_outcome": {
+          "Yes": {
+            "trades": 9,
+            "shares": 457.7
+          }
+        },
+        "note": "仅单边建仓"
+      },
+      "actions": {
+        "entry_time": "2026-06-21 14:30",
+        "last_add_time": "2026-06-24 13:19",
+        "num_buys": 9,
+        "num_sells": 0,
+        "added_over_time": true,
+        "avg_entry_price": 0.9687,
+        "net_shares": 457.7,
+        "net_cost_usd": 443.4
+      },
+      "unrealized": {
+        "current_price": 0.977,
+        "price_source": "568最新close",
+        "current_value_usd": 447.2,
+        "unrealized_pnl_usd": 3.8,
+        "unrealized_pct": 0.86,
+        "note": "持仓中浮盈亏"
+      }
+    },
+    "price_context": {
+      "as_of": "2026-06-25",
+      "analyzed_side": "Yes",
+      "price_source": "568历史close",
+      "current_price": 0.977,
+      "implied_probability_pct": 97.7,
+      "remaining_upside_per_share_usd": 0.023,
+      "remaining_upside_pct_if_win": 2.35,
+      "downside_per_share_usd": 0.977,
+      "odds_to_one": 0.02,
+      "entry_price": 0.9687,
+      "price_delta": 0.0083,
+      "price_delta_pct": 0.86
+    },
+    "what_the_bet": "押注安迪·伯纳姆（Andy Burnham）将在2026年12月31日晚11:59（美东时间）前被英国君主正式任命为英国首相，如果他成为下一任正式首相则赢。",
+    "resolution_criteria": "This market will resolve to the next individual who is officially appointed as Prime Minister of the United Kingdom by December 31, 2026, 11:59 PM ET.\n\nTo count for resolution, the individual must be officially appointed by the United Kingdom Monarch. Any interim or caretaker Prime Minister will not count toward the resolution of this market.\n\nIf no such Prime Minister is appointed by December 31, 2026, 11:59 PM ET, this market will resolve to “No Next PM in 2026”.\n\nThe primary resolution source for this market will be official information from the Government of the United Kingdom; however, a consensus of credible reporting may also be used."
+  },
+  "market": {
+    "slug": "will-andy-burnham-be-the-next-prime-minister-of-the-united-kingdom-in-2026-882",
+    "market_id": "0x763a7f1e440693b54c56da02d338c2092053567dd865174387d06ee5612fdc9e"
+  },
+  "price_series": [
+    {
+      "date": "2026-04-27",
+      "price": 0.131
+    },
+    {
+      "date": "2026-04-28",
+      "price": 0.148
+    },
+    {
+      "date": "2026-05-01",
+      "price": 0.18
+    },
+    {
+      "date": "2026-05-02",
+      "price": 0.16
+    },
+    {
+      "date": "2026-05-03",
+      "price": 0.169
+    },
+    {
+      "date": "2026-05-04",
+      "price": 0.2379
+    },
+    {
+      "date": "2026-05-05",
+      "price": 0.193
+    },
+    {
+      "date": "2026-05-06",
+      "price": 0.238
+    },
+    {
+      "date": "2026-05-07",
+      "price": 0.304
+    },
+    {
+      "date": "2026-05-08",
+      "price": 0.234
+    },
+    {
+      "date": "2026-05-09",
+      "price": 0.205
+    },
+    {
+      "date": "2026-05-10",
+      "price": 0.211
+    },
+    {
+      "date": "2026-05-11",
+      "price": 0.257
+    },
+    {
+      "date": "2026-05-12",
+      "price": 0.245
+    },
+    {
+      "date": "2026-05-13",
+      "price": 0.231
+    },
+    {
+      "date": "2026-05-14",
+      "price": 0.4269
+    },
+    {
+      "date": "2026-05-15",
+      "price": 0.5
+    },
+    {
+      "date": "2026-05-16",
+      "price": 0.496
+    },
+    {
+      "date": "2026-05-17",
+      "price": 0.563
+    },
+    {
+      "date": "2026-05-18",
+      "price": 0.515
+    },
+    {
+      "date": "2026-05-19",
+      "price": 0.519
+    },
+    {
+      "date": "2026-05-20",
+      "price": 0.4216
+    },
+    {
+      "date": "2026-05-21",
+      "price": 0.454
+    },
+    {
+      "date": "2026-05-22",
+      "price": 0.46
+    },
+    {
+      "date": "2026-05-23",
+      "price": 0.463
+    },
+    {
+      "date": "2026-05-24",
+      "price": 0.468
+    },
+    {
+      "date": "2026-05-25",
+      "price": 0.465
+    },
+    {
+      "date": "2026-05-26",
+      "price": 0.464
+    },
+    {
+      "date": "2026-05-27",
+      "price": 0.512
+    },
+    {
+      "date": "2026-05-28",
+      "price": 0.526
+    },
+    {
+      "date": "2026-05-29",
+      "price": 0.545
+    },
+    {
+      "date": "2026-05-30",
+      "price": 0.539
+    },
+    {
+      "date": "2026-05-31",
+      "price": 0.566
+    },
+    {
+      "date": "2026-06-01",
+      "price": 0.633
+    },
+    {
+      "date": "2026-06-02",
+      "price": 0.599
+    },
+    {
+      "date": "2026-06-03",
+      "price": 0.566
+    },
+    {
+      "date": "2026-06-04",
+      "price": 0.613
+    },
+    {
+      "date": "2026-06-05",
+      "price": 0.597
+    },
+    {
+      "date": "2026-06-06",
+      "price": 0.6
+    },
+    {
+      "date": "2026-06-07",
+      "price": 0.58
+    },
+    {
+      "date": "2026-06-08",
+      "price": 0.624
+    },
+    {
+      "date": "2026-06-09",
+      "price": 0.65
+    },
+    {
+      "date": "2026-06-10",
+      "price": 0.662
+    },
+    {
+      "date": "2026-06-11",
+      "price": 0.64
+    },
+    {
+      "date": "2026-06-12",
+      "price": 0.646
+    },
+    {
+      "date": "2026-06-13",
+      "price": 0.603
+    },
+    {
+      "date": "2026-06-14",
+      "price": 0.622
+    },
+    {
+      "date": "2026-06-15",
+      "price": 0.65
+    },
+    {
+      "date": "2026-06-16",
+      "price": 0.69
+    },
+    {
+      "date": "2026-06-17",
+      "price": 0.7627
+    },
+    {
+      "date": "2026-06-18",
+      "price": 0.811
+    },
+    {
+      "date": "2026-06-19",
+      "price": 0.931
+    },
+    {
+      "date": "2026-06-20",
+      "price": 0.96
+    },
+    {
+      "date": "2026-06-21",
+      "price": 0.946
+    },
+    {
+      "date": "2026-06-22",
+      "price": 0.967
+    },
+    {
+      "date": "2026-06-23",
+      "price": 0.973
+    },
+    {
+      "date": "2026-06-24",
+      "price": 0.977
+    },
+    {
+      "date": "2026-06-25",
+      "price": 0.977
+    }
+  ],
+  "behavior": {
+    "flag": "STATIC",
+    "fact": "近 48h 仅 1 买 / 0 卖，无显著动作（沉闷持仓）",
+    "honest_note": "动态行为：基本没动",
+    "windows": {
+      "3h": {
+        "buys": 0,
+        "sells": 0,
+        "buy_usd": 0.0,
+        "sell_usd": 0.0
+      },
+      "24h": {
+        "buys": 0,
+        "sells": 0,
+        "buy_usd": 0.0,
+        "sell_usd": 0.0
+      },
+      "48h": {
+        "buys": 1,
+        "sells": 0,
+        "buy_usd": 8.0,
+        "sell_usd": 0.0
+      }
+    }
+  },
+  "news_stream": [
+    {
+      "date": "2026-06-24",
+      "title": "Andy Burnham inches closer to UK premiership as Starmer seeks legacy in final days - The Times of Israel",
+      "summary": "Andy Burnham, front left, is sworn-in as an MP in the House of Common in London, England, June 22, 2026. LONDON (AP) — Andy Burnham took a step closer to becoming Britain’s next prime minister without a contest on Wednesday when Cabinet minister Darren Jones, touted as a possible rival, said he woul",
+      "url": "https://www.timesofisrael.com/andy-burnham-inches-closer-to-uk-premiership-as-starmer-seeks-legacy-in-final-days/",
+      "origin": "Tavily",
+      "direction": null,
+      "reaction": {
+        "available": true,
+        "kind": "weak",
+        "move_pct": 0.41,
+        "window": [
+          "2026-06-23",
+          "2026-06-25"
+        ]
+      },
+      "same_window": true
+    },
+    {
+      "date": "2026-06-24",
+      "title": "What Has Andy Burnham, Britain's Likely Next Prime Minister, Said About Trump? - Time Magazine",
+      "summary": "# What Has Andy Burnham, Britain's Likely Next Prime Minister, Said About Trump? If Andy Burnham’s planned leadership bid remains unchallenged, the newly sworn-in Member of Parliament for Makerfield could be the U.K.’s new Prime Minister in a matter of weeks. In recent months, Starmer’s alliance wit",
+      "url": "https://time.com/article/2026/06/23/what-has-andy-burnham-uk-prime-minister-lead-said-about-trump/",
+      "origin": "Tavily",
+      "direction": null,
+      "reaction": {
+        "available": true,
+        "kind": "weak",
+        "move_pct": 0.41,
+        "window": [
+          "2026-06-23",
+          "2026-06-25"
+        ]
+      },
+      "same_window": true
+    },
+    {
+      "date": "2026-06-23",
+      "title": "Andy Burnham prepares for a UK Labour leadership contest that may be a coronation - The Washington Post",
+      "summary": "# Andy Burnham prepares for a UK Labour leadership contest that may be a coronation. Andy Burnham is preparing for a Labour leadership contest that could make him Britain’s prime minister within weeks. Andy Burnham with colleagues from the Parliamentary Labour Party in Westminster Hall at the Houses",
+      "url": "https://www.washingtonpost.com/business/2026/06/23/andy-burnham-uk-labour-leadership-contest-starmer/c29b3130-6ede-11f1-8730-e7fd0e2a6404_story.html",
+      "origin": "Tavily",
+      "direction": null,
+      "reaction": {
+        "available": true,
+        "kind": "weak",
+        "move_pct": 1.03,
+        "window": [
+          "2026-06-22",
+          "2026-06-24"
+        ]
+      },
+      "same_window": true
+    },
+    {
+      "date": "2026-06-23",
+      "title": "Andy Burnham prepares for a UK Labour leadership contest that may be a coronation - AP News",
+      "summary": "Test Your News I.Q. 2026 Elections Election Results Election calendar White House Congress Supreme Court The latest AP-NORC polls Ground Game. 2026 Elections Election Results Election calendar White House Congress Supreme Court The latest AP-NORC polls Ground Game. Andy Burnham with colleagues from",
+      "url": "https://apnews.com/article/andy-burnham-uk-labour-leadership-contest-starmer-693acb49a71838b7acf3f8fa4663f8bc",
+      "origin": "Tavily",
+      "direction": null,
+      "reaction": {
+        "available": true,
+        "kind": "weak",
+        "move_pct": 1.03,
+        "window": [
+          "2026-06-22",
+          "2026-06-24"
+        ]
+      },
+      "same_window": true
+    },
+    {
+      "date": "2026-06-22",
+      "title": "Who is Andy Burnham, U.K.’s ‘King of the North’ and likely next prime minister? - The Washington Post",
+      "summary": "# Who is Andy Burnham, U.K.’s ‘King of the North’ and likely next prime minister? The runaway favorite to succeed Prime Minister Keir Starmer is a longtime mayor equally comfortable in the corridors of Westminster and in working-class northern England. Make us preferred on Google. Andy Burnham, who",
+      "url": "https://www.washingtonpost.com/world/2026/06/22/who-is-andy-burnham-uks-king-north-likely-next-prime-minister/",
+      "origin": "Tavily",
+      "direction": null,
+      "reaction": {
+        "available": true,
+        "kind": "weak",
+        "move_pct": 2.85,
+        "window": [
+          "2026-06-21",
+          "2026-06-23"
+        ]
+      },
+      "same_window": true
+    },
+    {
+      "date": "2026-06-22",
+      "title": "Analysis: Everything points to Burnham becoming PM within weeks - BBC",
+      "summary": "Shortly after 10 o'clock this morning Andy Burnham finally confirmed what had been obvious for days - that he would stand to be the next Labour leader and therefore the UK's next prime minister. Streeting acknowledged that he and Burnham had \"spoken at length\" since the latter's by-election victory,",
+      "url": "https://www.bbc.com/news/articles/c20y1zvg50lo",
+      "origin": "Tavily",
+      "direction": null,
+      "reaction": {
+        "available": true,
+        "kind": "weak",
+        "move_pct": 2.85,
+        "window": [
+          "2026-06-21",
+          "2026-06-23"
+        ]
+      },
+      "same_window": true
+    },
+    {
+      "date": "2026-06-21",
+      "title": "Meet Labour's 'King of the North,' the 56-year-old representing Greater Manchester and challenging Keir Starmer - Fortune",
+      "summary": "Andy Burnham, Britain's Labour candidate for Makerfield, speaks in front of supporters during the by-election in Makerfield, England, Thursday, June 18, 2026 where voters are choosing a new lawmaker with Andy Burnham of the Labour Party as the leading contender.AP Photo/Jon Super. He’s also an exper",
+      "url": "https://fortune.com/2026/06/21/andy-burnham-makerfield-labour-leadership-starmer/",
+      "origin": "Tavily",
+      "direction": null,
+      "reaction": {
+        "available": true,
+        "kind": "weak",
+        "move_pct": 0.73,
+        "window": [
+          "2026-06-20",
+          "2026-06-22"
+        ]
+      },
+      "same_window": false
+    },
+    {
+      "date": "2026-06-19",
+      "title": "starmer says wants burnham play big part labour government",
+      "summary": "斯塔默表示希望伯纳姆在工党政府中发挥重要作用",
+      "url": "https://www.halsteadgazette.co.uk/news/national/26201451.starmer-says-wants-burnham-play-big-part-labour-government/",
+      "origin": "GDELT",
+      "direction": null,
+      "reaction": {
+        "available": true,
+        "kind": "confirm",
+        "move_pct": 18.37,
+        "window": [
+          "2026-06-18",
+          "2026-06-20"
+        ]
+      },
+      "same_window": true
+    },
+    {
+      "date": "2026-06-19",
+      "title": "streeting prepared to trigger leadership contest as early as next week",
+      "summary": "斯特里廷准备最早于下周发起领导权竞选",
+      "url": "https://www.breakingnews.ie/world/streeting-prepared-to-trigger-leadership-contest-as-early-as-next-week-1914673.html",
+      "origin": "GDELT",
+      "direction": null,
+      "reaction": {
+        "available": true,
+        "kind": "confirm",
+        "move_pct": 18.37,
+        "window": [
+          "2026-06-18",
+          "2026-06-20"
+        ]
+      },
+      "same_window": true
+    },
+    {
+      "date": "2026-06-19",
+      "title": "Andy Burnham is the 'King of the North' with his eyes on 10 Downing Street - The Sun Chronicle",
+      "summary": "Labour party's Andy Burnham speaks after winning the Makerfield by-election, paving the way for a leadership challenge against Prime Minister Sir Keir Starmer. Andy Burnham, Britain's Labour candidate for Makerfield, speaks in front of supporters during the by-election in Makerfield, England, Thursd",
+      "url": "https://www.thesunchronicle.com/news/nation_world/andy-burnham-is-the-king-of-the-north-with-his-eyes-on-10-downing-street/article_82676b3a-ee12-54fc-9f18-8a6e94bef61c.html",
+      "origin": "Tavily",
+      "direction": null,
+      "reaction": {
+        "available": true,
+        "kind": "confirm",
+        "move_pct": 18.37,
+        "window": [
+          "2026-06-18",
+          "2026-06-20"
+        ]
+      },
+      "same_window": true
+    },
+    {
+      "date": "2026-06-01",
+      "title": "labour have lost their way voters in makerfield say its time for a change",
+      "summary": "卫报报道梅克菲尔德选区选民表示工党已迷失方向，是时候改变了",
+      "url": "https://www.theguardian.com/politics/2026/may/31/labour-have-lost-their-way-voters-in-makerfield-say-its-time-for-a-change",
+      "origin": "GDELT",
+      "direction": null,
+      "reaction": {
+        "available": true,
+        "kind": "confirm",
+        "move_pct": 5.83,
+        "window": [
+          "2026-05-31",
+          "2026-06-02"
+        ]
+      },
+      "same_window": true
+    },
+    {
+      "date": "2026-06-01",
+      "title": "restore britain reform makerfield burnham",
+      "summary": "镜报报道涉及英国改革、梅克菲尔德和伯纳姆的内容",
+      "url": "https://www.mirror.co.uk/news/politics/restore-britain-reform-makerfield-burnham-37223510",
+      "origin": "GDELT",
+      "direction": null,
+      "reaction": {
+        "available": true,
+        "kind": "confirm",
+        "move_pct": 5.83,
+        "window": [
+          "2026-05-31",
+          "2026-06-02"
+        ]
+      },
+      "same_window": true
+    }
+  ],
+  "social": {
+    "keywords": "{andy,burnham}",
+    "acceleration": 0.0,
+    "author_diversity_pct": 31.8,
+    "tweet_count": 374,
+    "organic": true,
+    "posts": [
+      {
+        "username": "Dexerto",
+        "content": "Animal Crossing is getting a Baskin-Robbins collab ice cream \n\n'Animal Crossing Summer Island Feast Ice Cream' combines pear-flavored ice cream, apple sorbet, salty ramune sorbet, and fish-shaped candy pieces https://t.c",
+        "url": "https://x.com/Dexerto/status/2069760078673019328",
+        "likes": 12852.0,
+        "retweets": 603.0,
+        "created_on": "2026-06-24T12:30:31Z"
+      },
+      {
+        "username": "narendramodi",
+        "content": "A great meeting with Mr. Andy Jassy. I welcome Amazon's record $48 billion investment in India. This will create new opportunities for our youth. At the same time, it shows the growing interest across the world to invest",
+        "url": "https://x.com/narendramodi/status/2070067064069624186",
+        "likes": 2746.0,
+        "retweets": 624.0,
+        "created_on": "2026-06-25T08:50:22Z"
+      },
+      {
+        "username": "BGatesIsaPyscho",
+        "content": "🚨🇺🇸🇬🇧 Bev Turner to President Trump:-\n\n“Do you know about Andy Burnham (New UK PM)?”\n\nTrump:- “I hear he’s Liberal - The UK is DYING” https://t.co/FuFrqxh6VH",
+        "url": "https://x.com/BGatesIsaPyscho/status/2069885840721895478",
+        "likes": 801.0,
+        "retweets": 198.0,
+        "created_on": "2026-06-24T20:50:15Z"
+      },
+      {
+        "username": "cricbuzz",
+        "content": "⚡ Hardik Pandya not among the trade enquiries received by CSK\n\nCSK and DC have also categorically denied the possibility of a Khaleel Ahmed-David Miller trade\n\n#CSK #IPL https://t.co/3fs8w3oobU",
+        "url": "https://x.com/cricbuzz/status/2069085315663581275",
+        "likes": 818.0,
+        "retweets": 52.0,
+        "created_on": "2026-06-22T15:49:15Z"
+      }
+    ],
+    "note": "社媒=情绪非事实，可能被刷量；author_diversity<20% 当噪音看。仅实时，不进回测。"
+  },
+  "world_summary": "**巨鲸动态**  \n近48小时仅录得1笔买入、0笔卖出，持仓维持静态。\n\n**事态进展**  \nAndy Burnham已宣誓就任议员，赢得Makerfield补选（该补选定于2026年6月18日举行）重返议会。潜在竞争对手Darren Jones宣布不参选。现任首相Starmer公开表示希望Burnham在工党政府中发挥重要作用，同时Wes Streeting准备最早下周发起领导权竞选。卫报报道Makerfield选区选民称\"工党已迷失方向，是时候改变\"。多家媒体将Burnham描述为接替Starmer的领跑热门，报道称其正准备参加可能在数周内使其成为首相的工党领袖竞选。Polymarket盘面显示Burnham占76.7%份额，\"2026年无新首相\"占13.0%。",
+  "reasoning": {
+    "follow_call": null,
+    "confidence": "high",
+    "reasoning": "所有证据来自 2026 年 6 月（距今已 6 个月），当时称 Burnham\"数周内\"将成为首相，但市场 98% 押注 NO 且价格可信度高（流动性顶层、1140 人参与、波动低），说明 6 月的\"加冕\"预期已证伪。证据与当前价格时间维度脱节——若 Burnham 真就职，市场不会在剩余半年窗口维持 98% NO 共识。 这一注押 Yes，逆 edge。",
+    "guard_tripped": "DURATION_COMPUTED",
+    "guard_message": "reasoning 出现时长推算（禁止日期/时长数学）",
+    "market_lean": "NO",
+    "lean_strength": 95,
+    "pivotal_unknown": "Burnham 在剩余 189 天内实际完成首相就职（文章描述\"数周内\"已过期 6 个月）",
+    "alignment": "逆 edge",
+    "thesis_audit": {
+      "bull": "BBC analysis from June 22, 2026 states \"everything points to Burnham becoming PM within weeks\" following his confirmation to stand for Labour leadership. The Washington Post and AP News both report on June 23 that Burnham is preparing for a leadership contest \"that may be a coronation\" which \"could make him Britain's prime minister within weeks.\" The Times of Israel confirms on June 24 that Burnham \"took a step closer to becoming Britain's next prime minister\" after potential rival Darren Jones declined to challenge him, leaving the path largely uncontested.\n\n**引用：**\n- \"Analysis: Everything points to Burnham becoming PM within weeks - BBC\"\n- \"Andy Burnham prepares for a UK Labour leadership contest that may be a coronation - The Washington Post\"\n- \"Andy Burnham inches closer to UK premiership as Starmer seeks legacy in final days - The Times of Israel\"",
+      "bear": "**证据不支持NO论点**\n\n所有可用文章均发表于2026年6月19-24日，一致指向Burnham即将成为首相：BBC分析称\"一切迹象表明Burnham将在数周内成为首相\"，华盛顿邮报和时代周刊均称其为\"likely next prime minister\"，美联社报道竞争对手Darren Jones已退出，领导权竞选可能变成\"加冕礼\"。文章池中没有任何质疑Burnham将就任的证据，也没有显示任何阻碍因素。**作为空头分析师，我必须如实说明：给定证据全面支持YES结果，无法构建有力的NO论据。**\n\n**引用：**\n- Analysis: Everything points to Burnham becoming PM within weeks - BBC\n- Andy Burnham prepares for a UK Labour leadership contest that may be a coronation - The Washington Post\n- Andy Burnham inches closer to UK premiership as Starmer seeks legacy in final days - The Times of Israel",
+      "n_articles": 8,
+      "as_of": "2026-06-25",
+      "raw_reasoner": "```json\n{\n  \"market_lean\": \"NO\",\n  \"lean_strength_0_100\": 95,\n  \"confidence\": \"high\",\n  \"pivotal_unknown\": \"Burnham 在剩余 189 天内实际完成首相就职（文章描述\"数周内\"已过期 6 个月）\",\n  \"rationale\": \"所有证据来自 2026 年 6 月（距今已 6 个月），当时称 Burnham\"数周内\"将成为首相，但市场 98% 押注 NO 且价格可信度高（流动性顶层、1140 人参与、波动低），说明 6 月的\"加冕\"预期已证伪。证据与当前价格时间维度脱节——若 Burnham 真就职，市场不会在剩余半年窗口维持 98% NO 共识。\"\n}\n```"
+    },
+    "input_trust": [
+      "价格可信度=HIGH：流动性 Top 5%(97.72百分位) · 头部集中 top1=13.65% top10=52.2% · 近7天 1140 人参与 · 成交量 Declining",
+      "市场自身犹豫度=低(共识已稳)：近14日已实现波动 0.05，收盘 [0.93, 0.96, 0.95, 0.97, 0.97, 0.98]",
+      "距结算 189 天"
+    ]
+  }
+}

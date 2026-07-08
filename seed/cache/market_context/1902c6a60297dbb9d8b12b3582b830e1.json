@@ -1,0 +1,185 @@
+{
+  "market_context": {
+    "market_id": "0x1be62d973dc8fb45de714eb2113118b6ac3e47694f8b0801c0c41d992d0b7c9f",
+    "market_slug": "will-trump-agree-to-iranian-transit-fees-in-the-strait-of-hormuz-by-june-30",
+    "market_question": "Will Trump agree to Iranian transit fees in the Strait of Hormuz by June 30?",
+    "analyzed_side": "No",
+    "as_of": "2026-06-20",
+    "wallet": "0xbaa2bcb5439e985ce4ccf815b4700027d1b92c73",
+    "behavioral_flag": {
+      "flag": "STATIC",
+      "fact": "近 48h 仅 0 买 / 4 卖，无显著动作（沉闷持仓）",
+      "honest_note": "动态行为：基本没动",
+      "windows": {
+        "3h": {
+          "buys": 0,
+          "sells": 0,
+          "buy_usd": 0.0,
+          "sell_usd": 0.0
+        },
+        "24h": {
+          "buys": 0,
+          "sells": 1,
+          "buy_usd": 0.0,
+          "sell_usd": 378.0
+        },
+        "48h": {
+          "buys": 0,
+          "sells": 4,
+          "buy_usd": 0.0,
+          "sell_usd": 502.0
+        }
+      }
+    },
+    "ai_experimental_summary": "【巨鲸动态】近48小时仅0笔买入/4笔卖出，持仓沉闷无显著动作。\n\n【局势陈述】特朗普宣布霍尔木兹海峡将于周日重开，美伊接近签署第一阶段协议，伊方称备忘录可能需数日；美国务卿卢比奥公开谴责通行费\"非法且不可接受\"；美方打击伊朗布雷船只，伊朗外长称协议草案可能远程签署；航运公司等待安全保证，油轮试图偷越封锁；市场截止时间为6月30日。客观陈列事实供参考，不构成任何方向性建议。",
+    "timeline_events": [
+      {
+        "timestamp": "2026-06-16",
+        "type": "catalyst",
+        "title": "trump says hormuz reopen after sunday us iran deal tehran says memorandum may take days",
+        "source": "ibtimes.co.in",
+        "url": "https://www.ibtimes.co.in/trump-says-hormuz-reopen-after-sunday-us-iran-deal-tehran-says-memorandum-may-take-days-902917",
+        "price_impact_string": "No 价格变动 +12%（83% → 95%）",
+        "fact_summary": "特朗普表示霍尔木兹海峡将在周日美伊协议后重新开放，德黑兰称备忘录可能需要数日",
+        "temporal_note": "该事件与价格变动时间相关，非确证因果 · 同窗多条,合计不可归因到单条"
+      },
+      {
+        "timestamp": "2026-06-16",
+        "type": "catalyst",
+        "title": "iran war day 107 washington tehran close to signing first stage of deal",
+        "source": "dominicanrepublicpost.com",
+        "url": "https://dominicanrepublicpost.com/iran-war-day-107-washington-tehran-close-to-signing-first-stage-of-deal/",
+        "price_impact_string": "No 价格变动 +12%（83% → 95%）",
+        "fact_summary": "华盛顿和德黑兰接近签署第一阶段协议",
+        "temporal_note": "该事件与价格变动时间相关，非确证因果 · 同窗多条,合计不可归因到单条"
+      },
+      {
+        "timestamp": "2026-05-28",
+        "type": "catalyst",
+        "title": "unlawful illegal unsustainable and unacceptable us state secy marco rubio slams tolls on strait of hormuz",
+        "source": "austinglobe.com",
+        "url": "http://www.austinglobe.com/news/279075922/unlawful-illegal-unsustainable-and-unacceptable-us-state-secy-marco-rubio-slams-tolls-on-strait-of-hormuz",
+        "price_impact_string": "No 价格变动 +10%（85% → 95%）",
+        "fact_summary": "美国国务卿卢比奥公开谴责霍尔木兹海峡通行费为非法且不可接受",
+        "temporal_note": "该事件与价格变动时间相关，非确证因果 · 同窗多条,合计不可归因到单条"
+      },
+      {
+        "timestamp": "2026-05-28",
+        "type": "catalyst",
+        "title": "marco rubio says iran deal may take a few days after us self defence strikes",
+        "source": "thenews.com.pk",
+        "url": "https://www.thenews.com.pk/latest/1403868-marco-rubio-says-iran-deal-may-take-a-few-days-after-us-self-defence-strikes",
+        "price_impact_string": "No 价格变动 +10%（85% → 95%）",
+        "fact_summary": "卢比奥表示美国自卫打击后伊朗协议可能需要几天时间达成",
+        "temporal_note": "该事件与价格变动时间相关，非确证因果 · 同窗多条,合计不可归因到单条"
+      },
+      {
+        "timestamp": "2026-05-28",
+        "type": "catalyst",
+        "title": "us strikes iranian mine laying vessels as trump affirms ongoing peace talks",
+        "source": "klif.com",
+        "url": "https://www.klif.com/2026/05/26/us-strikes-iranian-mine-laying-vessels-as-trump-affirms-ongoing-peace-talks/",
+        "price_impact_string": "No 价格变动 +10%（85% → 95%）",
+        "fact_summary": "美国打击伊朗布雷船只同时特朗普确认和平谈判持续进行",
+        "temporal_note": "该事件与价格变动时间相关，非确证因果 · 同窗多条,合计不可归因到单条"
+      },
+      {
+        "timestamp": "2026-06-15",
+        "type": "catalyst",
+        "title": "iran fm says draft us deal to be signed remotely possibly in coming days",
+        "source": "naharnet.com",
+        "url": "https://www.naharnet.com/stories/en/320663-iran-fm-says-draft-us-deal-to-be-signed-remotely-possibly-in-coming-days",
+        "price_impact_string": "No 价格变动 -8%（91% → 83%）",
+        "fact_summary": "伊朗外长表示美伊协议草案可能在未来几天远程签署",
+        "temporal_note": "该事件与价格变动时间相关，非确证因果 · 同窗多条,合计不可归因到单条"
+      },
+      {
+        "timestamp": "2026-06-15",
+        "type": "catalyst",
+        "title": "oil tankers sneaking past iran blockade",
+        "source": "arkansasonline.com",
+        "url": "https://www.arkansasonline.com/news/2026/jun/13/oil-tankers-sneaking-past-iran-blockade/",
+        "price_impact_string": "No 价格变动 -8%（91% → 83%）",
+        "fact_summary": "有油轮试图偷偷通过伊朗封锁",
+        "temporal_note": "该事件与价格变动时间相关，非确证因果 · 同窗多条,合计不可归因到单条"
+      },
+      {
+        "timestamp": "2026-06-19",
+        "type": "catalyst",
+        "title": "japan undecided on sending military to hormuz",
+        "source": "surinametimes.com",
+        "url": "https://www.surinametimes.com/artikel/japan-undecided-on-sending-military-to-hormuz",
+        "price_impact_string": "No 价格变动 +6%（89% → 95%）",
+        "fact_summary": "日本尚未决定是否向霍尔木兹海峡派遣军事力量",
+        "temporal_note": "该事件与价格变动时间相关，非确证因果 · 同窗多条,合计不可归因到单条"
+      },
+      {
+        "timestamp": "2026-06-19",
+        "type": "catalyst",
+        "title": "shipping firms await safety assurances before hormuz return",
+        "source": "vietnamtribune.com",
+        "url": "http://www.vietnamtribune.com/news/279125061/shipping-firms-await-safety-assurances-before-hormuz-return",
+        "price_impact_string": "No 价格变动 +6%（89% → 95%）",
+        "fact_summary": "航运公司等待安全保证后才返回霍尔木兹海峡",
+        "temporal_note": "该事件与价格变动时间相关，非确证因果 · 同窗多条,合计不可归因到单条"
+      },
+      {
+        "timestamp": "2026-06-17",
+        "type": "catalyst",
+        "title": "us iran peace deal likely to ease india s energy supplies full recovery still a year away say analysts",
+        "source": "moneycontrol.com",
+        "url": "https://www.moneycontrol.com/news/india/us-iran-peace-deal-likely-to-ease-india-s-energy-supplies-full-recovery-still-a-year-away-say-analysts-13949920.html",
+        "price_impact_string": "No 价格变动 -5%（95% → 90%）",
+        "fact_summary": "美国与伊朗达成和平协议可能缓解印度能源供应",
+        "temporal_note": "该事件与价格变动时间相关，非确证因果 · 同窗多条,合计不可归因到单条"
+      },
+      {
+        "timestamp": "2026-06-17",
+        "type": "catalyst",
+        "title": "trump praises putin and xi over iran peace deal",
+        "source": "irishsun.com",
+        "url": "http://www.irishsun.com/news/279123665/trump-praises-putin-and-xi-over-iran-peace-deal",
+        "price_impact_string": "No 价格变动 -5%（95% → 90%）",
+        "fact_summary": "特朗普称赞普京和习近平在伊朗和平协议中的作用",
+        "temporal_note": "该事件与价格变动时间相关，非确证因果 · 同窗多条,合计不可归因到单条"
+      },
+      {
+        "timestamp": "2026-06-17",
+        "type": "catalyst",
+        "title": "us iran reach initial deal to close conflict",
+        "source": "arkansasonline.com",
+        "url": "https://www.arkansasonline.com/news/2026/jun/15/us-iran-reach-initial-deal-to-close-conflict/",
+        "price_impact_string": "No 价格变动 -5%（95% → 90%）",
+        "fact_summary": "美国与伊朗达成初步协议以结束冲突",
+        "temporal_note": "该事件与价格变动时间相关，非确证因果 · 同窗多条,合计不可归因到单条"
+      },
+      {
+        "timestamp": "2026-05-24",
+        "type": "catalyst",
+        "title": "sweden nato role reopening strait of hormuz",
+        "source": "politico.eu",
+        "url": "https://www.politico.eu/article/sweden-nato-role-reopening-strait-of-hormuz/",
+        "price_impact_string": "No 价格变动 -5%（90% → 85%）",
+        "fact_summary": "瑞典在北约框架下讨论重新开放霍尔木兹海峡的角色",
+        "temporal_note": "该事件与价格变动时间相关，非确证因果 · 同窗多条,合计不可归因到单条"
+      },
+      {
+        "timestamp": "2026-05-24",
+        "type": "catalyst",
+        "title": "pakistan seeks breakthrough us iran peace talks",
+        "source": "asiaone.com",
+        "url": "https://www.asiaone.com/world/pakistan-seeks-breakthrough-us-iran-peace-talks",
+        "price_impact_string": "No 价格变动 -5%（90% → 85%）",
+        "fact_summary": "巴基斯坦寻求在美伊和平谈判中取得突破",
+        "temporal_note": "该事件与价格变动时间相关，非确证因果 · 同窗多条,合计不可归因到单条"
+      }
+    ],
+    "_audit": {
+      "jumps_found": 6,
+      "events": 14,
+      "behavior": "STATIC",
+      "teacher_tokens_approx": 4803,
+      "boundaries": "因果→时间相关 · 无催化剂留白(行为感知内幕) · 价格窗≤as_of · 行为=事实非判断 · 综述无判断"
+    }
+  }
+}

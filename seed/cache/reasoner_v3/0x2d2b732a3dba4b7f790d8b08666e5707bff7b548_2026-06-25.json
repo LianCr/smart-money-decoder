@@ -1,0 +1,41 @@
+{
+  "follow_call": "CHASED",
+  "confidence": "medium",
+  "reasoning": null,
+  "confidence_reasons": [
+    "底座矩阵:high(pnl=+11.7%)",
+    "R1:支持侧部分被市场反向定价→封medium"
+  ],
+  "facts": {
+    "market_question": "Lee Jae-myung out as president of South Korea in 2026?",
+    "outcome": "No",
+    "today": "2026-06-25",
+    "price_room_left": 6.84,
+    "price_already_moved": 11.71,
+    "resolution_date_human": "还有约189.0天",
+    "position_type": "single_side_conviction",
+    "recent_action": "flat_no_movement",
+    "support_catalysts": [
+      {
+        "title": "South Korea's Lee leaves G7 with Trump's pen after talks about peace on the peninsula - Reuters",
+        "material_tag": "已生效硬事件",
+        "market_reaction": "weak",
+        "move_pct": -0.02,
+        "same_window": false
+      },
+      {
+        "title": "Rebuilding Korea Party Condemns Han Chan-sik's Anti-Reform Record - 조선일보",
+        "material_tag": "已生效硬事件",
+        "market_reaction": "rejected",
+        "move_pct": -6.39,
+        "same_window": false
+      }
+    ],
+    "threat_catalysts": [],
+    "confidence": "medium",
+    "confidence_reasons": [
+      "底座矩阵:high(pnl=+11.7%)",
+      "R1:支持侧部分被市场反向定价→封medium"
+    ]
+  }
+}

@@ -1,0 +1,752 @@
+{
+  "wallet": "0x2d2b732a3dba4b7f790d8b08666e5707bff7b548",
+  "as_of": "2026-06-25",
+  "identity": {
+    "profile": {
+      "address": "0x2d2b732a3dba4b7f790d8b08666e5707bff7b548",
+      "name": "wzqs",
+      "pseudonym": "Unfinished-Cupboard",
+      "profile_image": null
+    },
+    "pnl_history": [
+      {
+        "t": 1778457600,
+        "p": 0.500432
+      },
+      {
+        "t": 1778544000,
+        "p": -0.400287
+      },
+      {
+        "t": 1778630400,
+        "p": 20.597582
+      },
+      {
+        "t": 1778716800,
+        "p": 26.748579
+      },
+      {
+        "t": 1778803200,
+        "p": 31.349134
+      },
+      {
+        "t": 1778889600,
+        "p": 66.24937
+      },
+      {
+        "t": 1778976000,
+        "p": 68.54745
+      },
+      {
+        "t": 1779062400,
+        "p": 68.447205
+      },
+      {
+        "t": 1779148800,
+        "p": 68.84683
+      },
+      {
+        "t": 1779235200,
+        "p": 72.896164
+      },
+      {
+        "t": 1779321600,
+        "p": 73.99588
+      },
+      {
+        "t": 1779408000,
+        "p": 75.59631
+      },
+      {
+        "t": 1779494400,
+        "p": 162.9554
+      },
+      {
+        "t": 1779580800,
+        "p": 171.3551
+      },
+      {
+        "t": 1779667200,
+        "p": 173.65475
+      },
+      {
+        "t": 1779753600,
+        "p": 173.75534
+      },
+      {
+        "t": 1779840000,
+        "p": 183.85558
+      },
+      {
+        "t": 1779926400,
+        "p": 198.05775
+      },
+      {
+        "t": 1780012800,
+        "p": 209.77133
+      },
+      {
+        "t": 1780099200,
+        "p": 231.47134
+      },
+      {
+        "t": 1780185600,
+        "p": 254.20457
+      },
+      {
+        "t": 1780272000,
+        "p": 357.75204
+      },
+      {
+        "t": 1780358400,
+        "p": 1608.106
+      },
+      {
+        "t": 1780444800,
+        "p": 1601.3861
+      },
+      {
+        "t": 1780531200,
+        "p": 1638.3667
+      },
+      {
+        "t": 1780617600,
+        "p": 1697.1168
+      },
+      {
+        "t": 1780704000,
+        "p": 1705.706
+      },
+      {
+        "t": 1780790400,
+        "p": 1724.6519
+      },
+      {
+        "t": 1780876800,
+        "p": 1372.1482
+      },
+      {
+        "t": 1780963200,
+        "p": 1350.6968
+      },
+      {
+        "t": 1781049600,
+        "p": 1365.3035
+      },
+      {
+        "t": 1781136000,
+        "p": 1373.6981
+      },
+      {
+        "t": 1781222400,
+        "p": 1198.3911
+      },
+      {
+        "t": 1781308800,
+        "p": 954.63104
+      },
+      {
+        "t": 1781395200,
+        "p": 1116.5359
+      },
+      {
+        "t": 1781481600,
+        "p": 3180.435
+      },
+      {
+        "t": 1781568000,
+        "p": 3632.962
+      },
+      {
+        "t": 1781654400,
+        "p": 3794.9297
+      },
+      {
+        "t": 1781740800,
+        "p": 3844.3196
+      },
+      {
+        "t": 1781827200,
+        "p": 3772.3992
+      },
+      {
+        "t": 1781913600,
+        "p": 3637.026
+      },
+      {
+        "t": 1782000000,
+        "p": 4341.8203
+      },
+      {
+        "t": 1782086400,
+        "p": 4305.3555
+      },
+      {
+        "t": 1782172800,
+        "p": 3194.9504
+      },
+      {
+        "t": 1782259200,
+        "p": 3148.2402
+      },
+      {
+        "t": 1782345600,
+        "p": 2656.091
+      },
+      {
+        "t": 1782432000,
+        "p": 2613.3618
+      },
+      {
+        "t": 1782457200,
+        "p": 2637.8076
+      }
+    ],
+    "who_trader_profile": {
+      "wallet": "0x2d2b732a3dba4b7f790d8b08666e5707bff7b548",
+      "quality": {
+        "combined_risk_score": 10,
+        "max_drawdown": 0.0032,
+        "drawdown_frequency": 0,
+        "avg_trade_size": 61.18,
+        "markets_traded": 18,
+        "num_markets_traded": 18,
+        "category_diversity_score": 0.6703,
+        "market_concentration_ratio": 0.846,
+        "annualized_return": null,
+        "gain_to_pain_ratio": 6.412,
+        "equity_curve_pattern": "volatile",
+        "perfect_timing_flag": false,
+        "flagged_metrics": "{single_market_dependence}",
+        "losing_trades": 11,
+        "best_market_pnl": 4967.5,
+        "dominant_market_pnl": 4967.5,
+        "window_days": "15"
+      },
+      "category_specialization": [
+        {
+          "category": "Politics / US",
+          "roi": 306.1342,
+          "win_rate": 0.9231,
+          "total_pnl": 5158.9,
+          "total_trades": 21
+        },
+        {
+          "category": "Politics / US / Trump",
+          "roi": 306.1342,
+          "win_rate": 0.9231,
+          "total_pnl": 5158.9,
+          "total_trades": 21
+        },
+        {
+          "category": "Politics",
+          "roi": 82.6732,
+          "win_rate": 0.6,
+          "total_pnl": 4906.97,
+          "total_trades": 97
+        },
+        {
+          "category": "Politics / Global",
+          "roi": 141.2905,
+          "win_rate": 0.7778,
+          "total_pnl": 4762.86,
+          "total_trades": 27
+        },
+        {
+          "category": "Other",
+          "roi": 93.9006,
+          "win_rate": 0.4762,
+          "total_pnl": 4403.38,
+          "total_trades": 96
+        },
+        {
+          "category": "Finance & Markets",
+          "roi": -79.5299,
+          "win_rate": 0.5,
+          "total_pnl": -388.59,
+          "total_trades": 8
+        },
+        {
+          "category": "Tech & AI",
+          "roi": -99.9952,
+          "win_rate": 0.0,
+          "total_pnl": -408.49,
+          "total_trades": 7
+        }
+      ],
+      "official_rank": {
+        "period": "30d",
+        "rank": 3253,
+        "roi": "0.368399",
+        "win_rate": "0.7317",
+        "sharpe_ratio": "0.1963",
+        "total_pnl": "5902.7137",
+        "total_invested": "16022.63",
+        "total_trades": 209,
+        "markets_traded": 31
+      },
+      "realized_pnl_recent": {
+        "window": [
+          "2026-05-20",
+          "2026-06-20"
+        ],
+        "days_returned": 10,
+        "realized_pnl_sum": 126.82
+      },
+      "h_score": {
+        "available": false,
+        "note": "不在 H-Score 榜首页（584 无按地址查，官方排名见 official_rank/579）"
+      }
+    }
+  },
+  "position": {
+    "meta": {
+      "wallet": "0x2d2b732a3dba4b7f790d8b08666e5707bff7b548",
+      "market": "Lee Jae-myung out as president of South Korea in 2026?",
+      "analyzed_side": "No",
+      "as_of": "2026-06-25",
+      "mode": "live",
+      "catalyst_anchor": "2026-06-25",
+      "settle": "还有约189.0天"
+    },
+    "what_position_actions": {
+      "wallet": "0x2d2b732a3dba4b7f790d8b08666e5707bff7b548",
+      "condition_id": "0xf4c72ff42c3f1ee9f25e835e62ca52d71a9cafbcc11f93c01af709af8ee5ff09",
+      "analyzed_side": "No",
+      "market": {
+        "question": "Lee Jae-myung out as president of South Korea in 2026?",
+        "winning_outcome": null,
+        "closed": false,
+        "settle_date": "2026-12-31",
+        "days_to_settlement": 189.0,
+        "settle_note": "还有约189.0天"
+      },
+      "two_side_distribution": {
+        "hedged": false,
+        "by_outcome": {
+          "No": {
+            "trades": 3,
+            "shares": 1600.0
+          }
+        },
+        "note": "仅单边建仓"
+      },
+      "actions": {
+        "entry_time": "2026-06-16 03:05",
+        "last_add_time": "2026-06-22 23:59",
+        "num_buys": 3,
+        "num_sells": 0,
+        "added_over_time": true,
+        "avg_entry_price": 0.8379,
+        "net_shares": 1600.0,
+        "net_cost_usd": 1340.59
+      },
+      "unrealized": {
+        "current_price": 0.936,
+        "price_source": "568最新close",
+        "current_value_usd": 1497.59,
+        "unrealized_pnl_usd": 157.0,
+        "unrealized_pct": 11.71,
+        "note": "持仓中浮盈亏"
+      }
+    },
+    "price_context": {
+      "as_of": "2026-06-25",
+      "analyzed_side": "No",
+      "price_source": "568历史close",
+      "current_price": 0.936,
+      "implied_probability_pct": 93.6,
+      "remaining_upside_per_share_usd": 0.064,
+      "remaining_upside_pct_if_win": 6.84,
+      "downside_per_share_usd": 0.936,
+      "odds_to_one": 0.07,
+      "entry_price": 0.8379,
+      "price_delta": 0.0981,
+      "price_delta_pct": 11.71
+    },
+    "what_the_bet": "押**No**，赌李在明在2026年12月31日前不会成为或不会停止担任韩国总统（如果他成为总统后又离任则押注失败）。",
+    "resolution_criteria": "This market will resolve to “Yes” if Lee Jae-myung ceases to be the President of South Korea for any period of time between market creation and December 31, 2026, 11:59 PM ET. Otherwise, this market will resolve to “No”.\n\nAn announcement of Lee Jae-myung's resignation/removal before this market's end date will immediately resolve this market to \"Yes\", regardless of when the announced resignation/removal goes into effect.\n\nIf the specified individual is detained, effectively removed from the specified position, or otherwise permanently prevented from fulfilling the duties of the specified position within this market’s timeframe, it will qualify for a “Yes” resolution.\n\nThe resolution source for this market will be official information from Lee Jae-myung and the government of South Korea; however, a consensus of credible reporting may also be used."
+  },
+  "market": {
+    "slug": "lee-jae-myung-out-as-president-of-south-korea-in-2026",
+    "market_id": "0xf4c72ff42c3f1ee9f25e835e62ca52d71a9cafbcc11f93c01af709af8ee5ff09"
+  },
+  "price_series": [
+    {
+      "date": "2026-04-27",
+      "price": 0.92
+    },
+    {
+      "date": "2026-04-28",
+      "price": 0.91
+    },
+    {
+      "date": "2026-05-01",
+      "price": 0.92
+    },
+    {
+      "date": "2026-05-05",
+      "price": 0.92
+    },
+    {
+      "date": "2026-05-08",
+      "price": 0.93
+    },
+    {
+      "date": "2026-05-11",
+      "price": 0.849
+    },
+    {
+      "date": "2026-05-12",
+      "price": 0.911
+    },
+    {
+      "date": "2026-05-13",
+      "price": 0.8906
+    },
+    {
+      "date": "2026-05-14",
+      "price": 0.931
+    },
+    {
+      "date": "2026-05-15",
+      "price": 0.931
+    },
+    {
+      "date": "2026-05-17",
+      "price": 0.928
+    },
+    {
+      "date": "2026-05-19",
+      "price": 0.924
+    },
+    {
+      "date": "2026-05-20",
+      "price": 0.92
+    },
+    {
+      "date": "2026-05-21",
+      "price": 0.9
+    },
+    {
+      "date": "2026-05-22",
+      "price": 0.9
+    },
+    {
+      "date": "2026-05-23",
+      "price": 0.9
+    },
+    {
+      "date": "2026-05-25",
+      "price": 0.9
+    },
+    {
+      "date": "2026-05-26",
+      "price": 0.9
+    },
+    {
+      "date": "2026-05-27",
+      "price": 0.899
+    },
+    {
+      "date": "2026-05-28",
+      "price": 0.898
+    },
+    {
+      "date": "2026-05-29",
+      "price": 0.915
+    },
+    {
+      "date": "2026-05-30",
+      "price": 0.915
+    },
+    {
+      "date": "2026-06-03",
+      "price": 0.898
+    },
+    {
+      "date": "2026-06-04",
+      "price": 0.913
+    },
+    {
+      "date": "2026-06-05",
+      "price": 0.861
+    },
+    {
+      "date": "2026-06-06",
+      "price": 0.89
+    },
+    {
+      "date": "2026-06-07",
+      "price": 0.882
+    },
+    {
+      "date": "2026-06-08",
+      "price": 0.862
+    },
+    {
+      "date": "2026-06-09",
+      "price": 0.903
+    },
+    {
+      "date": "2026-06-10",
+      "price": 0.893
+    },
+    {
+      "date": "2026-06-11",
+      "price": 0.885
+    },
+    {
+      "date": "2026-06-12",
+      "price": 0.902
+    },
+    {
+      "date": "2026-06-13",
+      "price": 0.911
+    },
+    {
+      "date": "2026-06-14",
+      "price": 0.894
+    },
+    {
+      "date": "2026-06-15",
+      "price": 0.889
+    },
+    {
+      "date": "2026-06-16",
+      "price": 0.886
+    },
+    {
+      "date": "2026-06-17",
+      "price": 0.893
+    },
+    {
+      "date": "2026-06-18",
+      "price": 0.889
+    },
+    {
+      "date": "2026-06-19",
+      "price": 0.8928
+    },
+    {
+      "date": "2026-06-20",
+      "price": 0.908
+    },
+    {
+      "date": "2026-06-21",
+      "price": 0.9186
+    },
+    {
+      "date": "2026-06-22",
+      "price": 0.85
+    },
+    {
+      "date": "2026-06-23",
+      "price": 0.9249
+    },
+    {
+      "date": "2026-06-24",
+      "price": 0.936
+    }
+  ],
+  "behavior": {
+    "flag": "STATIC",
+    "fact": "近 48h 仅 0 买 / 0 卖，无显著动作（沉闷持仓）",
+    "honest_note": "动态行为：基本没动",
+    "windows": {
+      "3h": {
+        "buys": 0,
+        "sells": 0,
+        "buy_usd": 0.0,
+        "sell_usd": 0.0
+      },
+      "24h": {
+        "buys": 0,
+        "sells": 0,
+        "buy_usd": 0.0,
+        "sell_usd": 0.0
+      },
+      "48h": {
+        "buys": 0,
+        "sells": 0,
+        "buy_usd": 0.0,
+        "sell_usd": 0.0
+      }
+    }
+  },
+  "news_stream": [
+    {
+      "date": "2026-06-23",
+      "title": "President Lee Jae Myung: A Year in Power - Carnegie Endowment for International Peace",
+      "summary": "President Lee marked his first year in office after one of the most tumultuous periods in South Korean politics. South Korean President Lee Jae Myung marked his first anniversary in office on June 4, 2026, after one of the most tumultuous periods in contemporary Korean politics. Together with Yoon’s",
+      "url": "https://carnegieendowment.org/posts/2026/06/president-lee-jae-myung-a-year-in-power",
+      "origin": "Tavily",
+      "direction": null,
+      "reaction": {
+        "available": true,
+        "kind": "confirm",
+        "move_pct": 10.12,
+        "window": [
+          "2026-06-22",
+          "2026-06-24"
+        ]
+      },
+      "same_window": false
+    },
+    {
+      "date": "2026-06-21",
+      "title": "Rebuilding Korea Party Condemns Han Chan-sik's Anti-Reform Record - 조선일보",
+      "summary": "President Lee Jae Myung partially replaced senior aides at the level of senior secretary on the 21st, amid which the Rebuilding Korea Party repeatedly expressed concern over the appointment of Han Chan-sik, a former prosecutor, as the new Senior Secretary for Civil Affairs. Park Byung-eon, senior sp",
+      "url": "https://www.chosun.com/english/national-en/2026/06/21/G7OZJP6MTZEDNJNN2TLVXCLKOA/",
+      "origin": "Tavily",
+      "direction": null,
+      "reaction": {
+        "available": true,
+        "kind": "reject",
+        "move_pct": -6.39,
+        "window": [
+          "2026-06-20",
+          "2026-06-22"
+        ]
+      },
+      "same_window": false
+    },
+    {
+      "date": "2026-06-19",
+      "title": "Trump hints at new approach to North Korea’s nuclear programme - Al Jazeera",
+      "summary": "# Trump hints at new approach to North Korea’s nuclear programme. *South Korea’s president said his US counterpart had told him the ‘time had come to pay attention to the North Korea issue’ at the G7 summit.*. United States President Donald Trump intends to shift his focus to North Korea’s nuclear p",
+      "url": "https://www.aljazeera.com/news/2026/6/19/trump-hints-at-new-approach-to-north-koreas-nuclear-programme",
+      "origin": "Tavily",
+      "direction": null,
+      "reaction": {
+        "available": true,
+        "kind": "weak",
+        "move_pct": 2.14,
+        "window": [
+          "2026-06-18",
+          "2026-06-20"
+        ]
+      },
+      "same_window": true
+    },
+    {
+      "date": "2026-06-19",
+      "title": "The Mexican faithful are belting out \"El Rey\" after a clinching a spot in the Round of 32 - FOX Sports",
+      "summary": "# The Mexican faithful are belting out \"El Rey\" after a clinching a spot in the Round of 32. FIFA Men's World Cup  South Korea  Mexico  WC - Mexico vs. South Korea - 06/18/2026. ### Tequila shots all around after Mexico's huge win in Guadalajara! ### 🇲🇽 @javierhernandez shares his thoughts on Mexico",
+      "url": "https://www.foxsports.com/watch-vertical/fmc-cc9oay2b7i85od0r",
+      "origin": "Tavily",
+      "direction": null,
+      "reaction": {
+        "available": true,
+        "kind": "weak",
+        "move_pct": 2.14,
+        "window": [
+          "2026-06-18",
+          "2026-06-20"
+        ]
+      },
+      "same_window": true
+    },
+    {
+      "date": "2026-06-18",
+      "title": "South Korea's Lee leaves G7 with Trump's pen after talks about peace on the peninsula - Reuters",
+      "summary": "# South Korea's Lee leaves G7 with Trump's pen after talks about peace on the peninsula | Reuters. ## Browse World. # South Korea's Lee leaves G7 with Trump's pen after talks about peace on the peninsula. Item 1 of 3 South Korea's President Lee Jae-myung and South Korea's first lady Kim Hea Kyung ar",
+      "url": "https://www.reuters.com/world/asia-pacific/south-koreas-lee-leaves-g7-with-trumps-pen-after-talks-about-peace-peninsula-2026-06-18/",
+      "origin": "Tavily",
+      "direction": null,
+      "reaction": {
+        "available": true,
+        "kind": "weak",
+        "move_pct": -0.02,
+        "window": [
+          "2026-06-17",
+          "2026-06-19"
+        ]
+      },
+      "same_window": false
+    },
+    {
+      "date": "2026-06-15",
+      "title": "'New Employee Kang (Chairman)' Lee Ju-myung makes a surprise appearance in the succession war..setting a new series record viewership of '9.5%' - starnewskorea.com",
+      "summary": "# 'New Employee Kang (Chairman)' Lee Ju-myung makes a surprise appearance in the succession war..setting a new series record viewership of '9.5%'. 'New Employee Kang (Chairman)' Chairman Lee Jun-young made a surprise appearance of his youngest daughter Lee Ju-myung, causing a stir in the succession",
+      "url": "https://www.starnewskorea.com/en/broadcast-drama/2026/06/15/2026061509014053325",
+      "origin": "Tavily",
+      "direction": null,
+      "reaction": {
+        "available": true,
+        "kind": "weak",
+        "move_pct": -0.89,
+        "window": [
+          "2026-06-14",
+          "2026-06-16"
+        ]
+      },
+      "same_window": false
+    }
+  ],
+  "social": null,
+  "world_summary": "# 市场综述：Lee Jae-myung 2026年卸任总统市场（No方向分析）\n\n**【巨鲸动态】** 近48小时内该市场无交易记录（0买/0卖），处于静默持仓状态。\n\n**【事态进展·三源整合】** 新闻层面：Lee Jae-myung以总统身份出席2026年6月G7峰会并与特朗普会谈，21日进行高级幕僚人事调整；Polymarket叙事层面：其所属民主党在6月地方选举中赢得多数州长及市长席位，支持率徘徊60%附近，未出现弹劾程序、资格质疑或辞职压力，韩国宪法规定单一五年任期、下次全国大选定于2030年；现有信息显示2026年期间其持续履行总统职权。\n\n*（本综述仅陈列客观事实，不含方向性判断）*",
+  "reasoning": {
+    "follow_call": "CHASED",
+    "confidence": "high",
+    "reasoning": "三篇独立来源证实李在明2026年6月正常履职（就职周年、G7峰会、人事任命），无任何离职迹象。市场6% YES价虽有鲸鱼集中，但流动性极高且价格稳定在低位，与证据方向一致。唯一风险是距年底还有半年窗口，但现有证据压倒性指向他将留任全年。 这一注押 No，顺 edge。",
+    "confidence_reasons": [
+      "底座矩阵:high(pnl=+11.7%)",
+      "R1:支持侧部分被市场反向定价→封medium"
+    ],
+    "facts": {
+      "market_question": "Lee Jae-myung out as president of South Korea in 2026?",
+      "outcome": "No",
+      "today": "2026-06-25",
+      "price_room_left": 6.84,
+      "price_already_moved": 11.71,
+      "resolution_date_human": "还有约189.0天",
+      "position_type": "single_side_conviction",
+      "recent_action": "flat_no_movement",
+      "support_catalysts": [
+        {
+          "title": "South Korea's Lee leaves G7 with Trump's pen after talks about peace on the peninsula - Reuters",
+          "material_tag": "已生效硬事件",
+          "market_reaction": "weak",
+          "move_pct": -0.02,
+          "same_window": false
+        },
+        {
+          "title": "Rebuilding Korea Party Condemns Han Chan-sik's Anti-Reform Record - 조선일보",
+          "material_tag": "已生效硬事件",
+          "market_reaction": "rejected",
+          "move_pct": -6.39,
+          "same_window": false
+        }
+      ],
+      "threat_catalysts": [],
+      "confidence": "medium",
+      "confidence_reasons": [
+        "底座矩阵:high(pnl=+11.7%)",
+        "R1:支持侧部分被市场反向定价→封medium"
+      ]
+    },
+    "market_lean": "NO",
+    "lean_strength": 92,
+    "pivotal_unknown": "2026年下半年是否会发生弹劾、罢免或意外辞职事件",
+    "alignment": "顺 edge",
+    "thesis_audit": {
+      "bull": "根据给定文章，无法找到支持Lee Jae-myung在2026年卸任总统职位的证据。\n\n所有相关文章显示Lee Jae-myung在2026年6月仍在正常履职：他出席G7峰会与特朗普讨论半岛和平问题，于2026年6月4日庆祝就职一周年，并在6月21日进行高级助理人事调整。这些都是在任总统的常规活动，没有任何迹象表明他将在2026年内离职或被罢免。\n\n文章描述他经历了\"韩国政治最动荡时期之一\"后仍然完成第一年任期，表明他已度过政治危机而非面临即将卸任的局面。\n\n**引用：**\n- President Lee Jae Myung: A Year in Power - Carnegie Endowment for International Peace\n- South Korea's Lee leaves G7 with Trump's pen after talks about peace on the peninsula - Reuters\n- Rebuilding Korea Party Condemns Han Chan-sik's Anti-Reform Record - 조선일보",
+      "bear": "## 空头论点（支持解决为 NO）\n\n证据显示李在明在2026年6月仍稳固地担任总统职位。Carnegie Endowment文章明确指出\"President Lee Jae Myung marked his first anniversary in office on June 4, 2026\"，表明他已在任满一年。路透社报道显示他于2026年6月作为韩国总统参加G7峰会并与特朗普进行半岛和平谈判，这是正常履职的标志。朝鲜日报还记录了他在6月21日进行高级助理人事调整，这是在任总统的日常职权行为。所有2026年中期的证据均显示李在明持续执政，没有任何即将离任或政治危机的迹象。\n\n**引用：**\n- President Lee Jae Myung: A Year in Power - Carnegie Endowment for International Peace\n- South Korea's Lee leaves G7 with Trump's pen after talks about peace on the peninsula - Reuters\n- Rebuilding Korea Party Condemns Han Chan-sik's Anti-Reform Record - 조선일보",
+      "n_articles": 6,
+      "as_of": "2026-06-25",
+      "raw_reasoner": "```json\n{\n  \"market_lean\": \"NO\",\n  \"lean_strength_0_100\": 92,\n  \"confidence\": \"high\",\n  \"pivotal_unknown\": \"2026年下半年是否会发生弹劾、罢免或意外辞职事件\",\n  \"rationale\": \"三篇独立来源证实李在明2026年6月正常履职（就职周年、G7峰会、人事任命），无任何离职迹象。市场6% YES价虽有鲸鱼集中，但流动性极高且价格稳定在低位，与证据方向一致。唯一风险是距年底还有半年窗口，但现有证据压倒性指向他将留任全年。\"\n}\n```"
+    },
+    "input_trust": [
+      "价格可信度=MED：流动性 Top 5%(97.7百分位) · 头部集中 top1=27.29% top10=82.99% · 近7天 69 人参与 · 成交量 No Trades",
+      "市场自身犹豫度=高(市场自己没拿定)：近14日已实现波动 0.237，收盘 [0.11, 0.09, 0.09, 0.15, 0.08, 0.07]",
+      "距结算 189 天"
+    ],
+    "event_structure": {
+      "multi": false,
+      "n_candidates": 1,
+      "baseline_pct": 100.0,
+      "event_slug": null
+    }
+  }
+}

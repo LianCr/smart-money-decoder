@@ -1,0 +1,1214 @@
+{
+  "wallet": "0x24c8cf69a0e0a17eee21f69d29752bfa32e823e1",
+  "as_of": "2026-06-20",
+  "identity": {
+    "profile": {
+      "address": "0x24c8cf69a0e0a17eee21f69d29752bfa32e823e1",
+      "name": "debased",
+      "pseudonym": "Broken-Dogwood",
+      "profile_image": "https://polymarket-upload.s3.us-east-2.amazonaws.com/trump_farmer_b64c6dcd-13e2-4dda-b1c2-0fb46389fb22_1743074825403.png"
+    },
+    "pnl_history": [
+      {
+        "t": 1732752000,
+        "p": 233647.6
+      },
+      {
+        "t": 1733011200,
+        "p": 239172.47
+      },
+      {
+        "t": 1733356800,
+        "p": 255799.72
+      },
+      {
+        "t": 1733616000,
+        "p": 266039.84
+      },
+      {
+        "t": 1733961600,
+        "p": 270179.6
+      },
+      {
+        "t": 1734307200,
+        "p": 277394.0
+      },
+      {
+        "t": 1734566400,
+        "p": 283124.6
+      },
+      {
+        "t": 1734912000,
+        "p": 306451.0
+      },
+      {
+        "t": 1735171200,
+        "p": 316370.47
+      },
+      {
+        "t": 1735516800,
+        "p": 324216.38
+      },
+      {
+        "t": 1735862400,
+        "p": 331421.25
+      },
+      {
+        "t": 1736121600,
+        "p": 337014.44
+      },
+      {
+        "t": 1736467200,
+        "p": 344045.8
+      },
+      {
+        "t": 1736812800,
+        "p": 348753.56
+      },
+      {
+        "t": 1737072000,
+        "p": 355700.88
+      },
+      {
+        "t": 1737417600,
+        "p": 377082.03
+      },
+      {
+        "t": 1737676800,
+        "p": 389236.78
+      },
+      {
+        "t": 1738022400,
+        "p": 393344.5
+      },
+      {
+        "t": 1738368000,
+        "p": 397486.2
+      },
+      {
+        "t": 1738627200,
+        "p": 400473.66
+      },
+      {
+        "t": 1738972800,
+        "p": 405471.53
+      },
+      {
+        "t": 1739318400,
+        "p": 408907.44
+      },
+      {
+        "t": 1739577600,
+        "p": 413335.4
+      },
+      {
+        "t": 1739923200,
+        "p": 417186.44
+      },
+      {
+        "t": 1740182400,
+        "p": 419633.94
+      },
+      {
+        "t": 1740528000,
+        "p": 425943.16
+      },
+      {
+        "t": 1740873600,
+        "p": 428737.25
+      },
+      {
+        "t": 1741132800,
+        "p": 432817.34
+      },
+      {
+        "t": 1741478400,
+        "p": 437586.8
+      },
+      {
+        "t": 1741824000,
+        "p": 441512.4
+      },
+      {
+        "t": 1742083200,
+        "p": 448812.9
+      },
+      {
+        "t": 1742428800,
+        "p": 457003.53
+      },
+      {
+        "t": 1742688000,
+        "p": 458842.9
+      },
+      {
+        "t": 1743033600,
+        "p": 462278.53
+      },
+      {
+        "t": 1743379200,
+        "p": 467277.66
+      },
+      {
+        "t": 1743638400,
+        "p": 493151.0
+      },
+      {
+        "t": 1743984000,
+        "p": 484535.78
+      },
+      {
+        "t": 1744329600,
+        "p": 491473.03
+      },
+      {
+        "t": 1744588800,
+        "p": 488491.44
+      },
+      {
+        "t": 1744934400,
+        "p": 506820.9
+      },
+      {
+        "t": 1745193600,
+        "p": 514431.25
+      },
+      {
+        "t": 1745539200,
+        "p": 529878.9
+      },
+      {
+        "t": 1745884800,
+        "p": 530737.25
+      },
+      {
+        "t": 1746144000,
+        "p": 567318.8
+      },
+      {
+        "t": 1746489600,
+        "p": 597694.25
+      },
+      {
+        "t": 1746835200,
+        "p": 609236.44
+      },
+      {
+        "t": 1747094400,
+        "p": 620880.8
+      },
+      {
+        "t": 1747440000,
+        "p": 627256.56
+      },
+      {
+        "t": 1747699200,
+        "p": 649905.3
+      },
+      {
+        "t": 1748044800,
+        "p": 685999.25
+      },
+      {
+        "t": 1748390400,
+        "p": 766991.2
+      },
+      {
+        "t": 1748649600,
+        "p": 861754.2
+      },
+      {
+        "t": 1748995200,
+        "p": 760125.75
+      },
+      {
+        "t": 1749340800,
+        "p": 754774.1
+      },
+      {
+        "t": 1749600000,
+        "p": 747921.25
+      },
+      {
+        "t": 1749945600,
+        "p": 731763.25
+      },
+      {
+        "t": 1750204800,
+        "p": 730709.06
+      },
+      {
+        "t": 1750550400,
+        "p": 722008.5
+      },
+      {
+        "t": 1750896000,
+        "p": 745576.44
+      },
+      {
+        "t": 1751155200,
+        "p": 757386.25
+      },
+      {
+        "t": 1751500800,
+        "p": 767305.75
+      },
+      {
+        "t": 1751760000,
+        "p": 772949.75
+      },
+      {
+        "t": 1752105600,
+        "p": 788366.8
+      },
+      {
+        "t": 1752451200,
+        "p": 790897.2
+      },
+      {
+        "t": 1752710400,
+        "p": 789884.2
+      },
+      {
+        "t": 1753056000,
+        "p": 791272.94
+      },
+      {
+        "t": 1753401600,
+        "p": 794376.8
+      },
+      {
+        "t": 1753660800,
+        "p": 794650.0
+      },
+      {
+        "t": 1754006400,
+        "p": 802266.2
+      },
+      {
+        "t": 1754265600,
+        "p": 804449.3
+      },
+      {
+        "t": 1754611200,
+        "p": 807328.94
+      },
+      {
+        "t": 1754956800,
+        "p": 807408.94
+      },
+      {
+        "t": 1755216000,
+        "p": 806822.1
+      },
+      {
+        "t": 1755561600,
+        "p": 816451.5
+      },
+      {
+        "t": 1755907200,
+        "p": 828440.3
+      },
+      {
+        "t": 1756166400,
+        "p": 832357.56
+      },
+      {
+        "t": 1756512000,
+        "p": 838893.4
+      },
+      {
+        "t": 1756771200,
+        "p": 843293.7
+      },
+      {
+        "t": 1757116800,
+        "p": 857242.0
+      },
+      {
+        "t": 1757462400,
+        "p": 865312.7
+      },
+      {
+        "t": 1757721600,
+        "p": 881583.94
+      },
+      {
+        "t": 1758067200,
+        "p": 900040.8
+      },
+      {
+        "t": 1758412800,
+        "p": 922347.3
+      },
+      {
+        "t": 1758672000,
+        "p": 936333.6
+      },
+      {
+        "t": 1759017600,
+        "p": 941540.44
+      },
+      {
+        "t": 1759276800,
+        "p": 944956.2
+      },
+      {
+        "t": 1759622400,
+        "p": 951749.3
+      },
+      {
+        "t": 1759968000,
+        "p": 962897.06
+      },
+      {
+        "t": 1760227200,
+        "p": 974924.0
+      },
+      {
+        "t": 1760572800,
+        "p": 980451.56
+      },
+      {
+        "t": 1760918400,
+        "p": 990659.1
+      },
+      {
+        "t": 1761177600,
+        "p": 993525.75
+      },
+      {
+        "t": 1761523200,
+        "p": 1015999.4
+      },
+      {
+        "t": 1761782400,
+        "p": 1045421.06
+      },
+      {
+        "t": 1762128000,
+        "p": 1057761.8
+      },
+      {
+        "t": 1762473600,
+        "p": 1025410.3
+      },
+      {
+        "t": 1762732800,
+        "p": 1029324.5
+      },
+      {
+        "t": 1763078400,
+        "p": 1042019.3
+      },
+      {
+        "t": 1763424000,
+        "p": 1046218.06
+      },
+      {
+        "t": 1763683200,
+        "p": 1047107.75
+      },
+      {
+        "t": 1764028800,
+        "p": 1054420.4
+      },
+      {
+        "t": 1764288000,
+        "p": 1061595.6
+      },
+      {
+        "t": 1764633600,
+        "p": 1077252.5
+      },
+      {
+        "t": 1764979200,
+        "p": 1085355.4
+      },
+      {
+        "t": 1765238400,
+        "p": 1089757.9
+      },
+      {
+        "t": 1765584000,
+        "p": 1098634.0
+      },
+      {
+        "t": 1765929600,
+        "p": 1098902.4
+      },
+      {
+        "t": 1766188800,
+        "p": 1103388.1
+      },
+      {
+        "t": 1766534400,
+        "p": 1106032.8
+      },
+      {
+        "t": 1766793600,
+        "p": 1114645.2
+      },
+      {
+        "t": 1767139200,
+        "p": 1117280.0
+      },
+      {
+        "t": 1767484800,
+        "p": 1108354.1
+      },
+      {
+        "t": 1767744000,
+        "p": 1111095.8
+      },
+      {
+        "t": 1768089600,
+        "p": 1106313.1
+      },
+      {
+        "t": 1768348800,
+        "p": 1110528.4
+      },
+      {
+        "t": 1768694400,
+        "p": 1118519.2
+      },
+      {
+        "t": 1769040000,
+        "p": 1131879.1
+      },
+      {
+        "t": 1769299200,
+        "p": 1139457.9
+      },
+      {
+        "t": 1769644800,
+        "p": 1147470.4
+      },
+      {
+        "t": 1769990400,
+        "p": 1190912.4
+      },
+      {
+        "t": 1770249600,
+        "p": 1201585.2
+      },
+      {
+        "t": 1770595200,
+        "p": 1220978.9
+      },
+      {
+        "t": 1770854400,
+        "p": 1227807.8
+      },
+      {
+        "t": 1771200000,
+        "p": 1232462.0
+      },
+      {
+        "t": 1771545600,
+        "p": 1235989.8
+      },
+      {
+        "t": 1771804800,
+        "p": 1236304.8
+      },
+      {
+        "t": 1772150400,
+        "p": 1238942.2
+      },
+      {
+        "t": 1772496000,
+        "p": 1252436.1
+      },
+      {
+        "t": 1772755200,
+        "p": 1300934.0
+      },
+      {
+        "t": 1773100800,
+        "p": 1313243.1
+      },
+      {
+        "t": 1773360000,
+        "p": 1319370.5
+      },
+      {
+        "t": 1773705600,
+        "p": 1319165.6
+      },
+      {
+        "t": 1774051200,
+        "p": 1325284.0
+      },
+      {
+        "t": 1774310400,
+        "p": 1335466.8
+      },
+      {
+        "t": 1774656000,
+        "p": 1342967.1
+      },
+      {
+        "t": 1775001600,
+        "p": 1352222.0
+      },
+      {
+        "t": 1775260800,
+        "p": 1357332.5
+      },
+      {
+        "t": 1775606400,
+        "p": 1374390.9
+      },
+      {
+        "t": 1775865600,
+        "p": 1383934.6
+      },
+      {
+        "t": 1776211200,
+        "p": 1396470.2
+      },
+      {
+        "t": 1776556800,
+        "p": 1406828.4
+      },
+      {
+        "t": 1776816000,
+        "p": 1413743.2
+      },
+      {
+        "t": 1777161600,
+        "p": 1420844.6
+      },
+      {
+        "t": 1777507200,
+        "p": 1445705.2
+      },
+      {
+        "t": 1777766400,
+        "p": 1445450.1
+      },
+      {
+        "t": 1778112000,
+        "p": 1448597.2
+      },
+      {
+        "t": 1778371200,
+        "p": 1514763.0
+      },
+      {
+        "t": 1778716800,
+        "p": 2198850.0
+      },
+      {
+        "t": 1779062400,
+        "p": 1486152.2
+      },
+      {
+        "t": 1779321600,
+        "p": 1474649.4
+      },
+      {
+        "t": 1779667200,
+        "p": 1478162.6
+      },
+      {
+        "t": 1780012800,
+        "p": 1480743.5
+      },
+      {
+        "t": 1780272000,
+        "p": 1478506.5
+      },
+      {
+        "t": 1780617600,
+        "p": 1512518.2
+      },
+      {
+        "t": 1780876800,
+        "p": 1514424.1
+      },
+      {
+        "t": 1781222400,
+        "p": 1629997.1
+      },
+      {
+        "t": 1781568000,
+        "p": 1683814.0
+      },
+      {
+        "t": 1781827200,
+        "p": 1707483.6
+      },
+      {
+        "t": 1782172800,
+        "p": 1723551.0
+      },
+      {
+        "t": 1782421200,
+        "p": 1729013.5
+      }
+    ],
+    "who_trader_profile": {
+      "wallet": "0x24c8cf69a0e0a17eee21f69d29752bfa32e823e1",
+      "quality": {
+        "combined_risk_score": 10,
+        "max_drawdown": 9.1249,
+        "drawdown_frequency": 0.2,
+        "avg_trade_size": 564.22,
+        "markets_traded": 133,
+        "num_markets_traded": 133,
+        "category_diversity_score": 1.219,
+        "market_concentration_ratio": 0.3414,
+        "annualized_return": null,
+        "gain_to_pain_ratio": 4.362,
+        "equity_curve_pattern": "volatile",
+        "perfect_timing_flag": false,
+        "flagged_metrics": "{position_size_volatility}",
+        "losing_trades": 798,
+        "best_market_pnl": 24332.65,
+        "dominant_market_pnl": 19919.07,
+        "window_days": "15"
+      },
+      "category_specialization": [
+        {
+          "category": "Politics",
+          "roi": 3.1686,
+          "win_rate": 0.4301,
+          "total_pnl": 65051.37,
+          "total_trades": 2368
+        },
+        {
+          "category": "Politics / Global",
+          "roi": 4.2111,
+          "win_rate": 0.4024,
+          "total_pnl": 64754.94,
+          "total_trades": 2045
+        },
+        {
+          "category": "Other",
+          "roi": 1.4211,
+          "win_rate": 0.5863,
+          "total_pnl": 61345.21,
+          "total_trades": 7654
+        },
+        {
+          "category": "Politics / US / Trump",
+          "roi": 3.5384,
+          "win_rate": 0.2719,
+          "total_pnl": 44749.28,
+          "total_trades": 1052
+        },
+        {
+          "category": "Politics / US",
+          "roi": 3.335,
+          "win_rate": 0.2892,
+          "total_pnl": 44602.41,
+          "total_trades": 1740
+        },
+        {
+          "category": "Finance & Markets",
+          "roi": 0.4338,
+          "win_rate": 0.5688,
+          "total_pnl": 2108.67,
+          "total_trades": 315
+        },
+        {
+          "category": "Sports / Basketball / NBA",
+          "roi": 0.0,
+          "win_rate": 0.3333,
+          "total_pnl": 29.9,
+          "total_trades": 0
+        },
+        {
+          "category": "Sports / Basketball",
+          "roi": 0.0,
+          "win_rate": 0.3333,
+          "total_pnl": 29.9,
+          "total_trades": 0
+        },
+        {
+          "category": "Weather & Science",
+          "roi": 0.0,
+          "win_rate": 0.0,
+          "total_pnl": 0.0,
+          "total_trades": 6
+        },
+        {
+          "category": "Tech & AI",
+          "roi": -1.2072,
+          "win_rate": 0.0,
+          "total_pnl": -51.39,
+          "total_trades": 6
+        },
+        {
+          "category": "Culture & Entertainment",
+          "roi": 0.0,
+          "win_rate": 0.25,
+          "total_pnl": -53.12,
+          "total_trades": 3
+        },
+        {
+          "category": "Politics / US / Elections",
+          "roi": -0.1313,
+          "win_rate": 0.7222,
+          "total_pnl": -95.47,
+          "total_trades": 688
+        },
+        {
+          "category": "Sports",
+          "roi": -0.1505,
+          "win_rate": 0.6685,
+          "total_pnl": -3415.31,
+          "total_trades": 5292
+        },
+        {
+          "category": "Sports / Soccer",
+          "roi": -0.1518,
+          "win_rate": 0.6693,
+          "total_pnl": -3445.21,
+          "total_trades": 5292
+        }
+      ],
+      "official_rank": {
+        "period": "30d",
+        "rank": 326,
+        "roi": "0.010202",
+        "win_rate": "0.4929",
+        "sharpe_ratio": "0.0125",
+        "total_pnl": "81217.3686",
+        "total_invested": "7960736.40",
+        "total_trades": 14490,
+        "markets_traded": 193
+      },
+      "realized_pnl_recent": {
+        "window": [
+          "2026-05-20",
+          "2026-06-20"
+        ],
+        "days_returned": 11,
+        "realized_pnl_sum": -6603.86
+      },
+      "h_score": {
+        "available": false,
+        "note": "不在 H-Score 榜首页（584 无按地址查，官方排名见 official_rank/579）"
+      }
+    }
+  },
+  "position": {
+    "meta": {
+      "wallet": "0x24c8cf69a0e0a17eee21f69d29752bfa32e823e1",
+      "market": "Will the Democratic Party control the House after the 2026 Midterm elections?",
+      "analyzed_side": "Yes",
+      "as_of": "2026-06-20",
+      "mode": "live",
+      "catalyst_anchor": "2026-06-20",
+      "settle": "还有约136.0天"
+    },
+    "what_position_actions": {
+      "wallet": "0x24c8cf69a0e0a17eee21f69d29752bfa32e823e1",
+      "condition_id": "0xd5d9fc47718bd553592d126b1fa5e87183d27f3936975b0c04cc0f2dec1f1bb4",
+      "analyzed_side": "Yes",
+      "market": {
+        "question": "Will the Democratic Party control the House after the 2026 Midterm elections?",
+        "winning_outcome": null,
+        "closed": false,
+        "settle_date": "2026-11-03",
+        "days_to_settlement": 136.0,
+        "settle_note": "还有约136.0天"
+      },
+      "two_side_distribution": {
+        "hedged": true,
+        "by_outcome": {
+          "No": {
+            "trades": 787,
+            "shares": 90060.1
+          },
+          "Yes": {
+            "trades": 3,
+            "shares": 9999.0
+          }
+        },
+        "note": "两边都大额建仓 = 做市/对冲玩家（非单边赌徒，接 #28）"
+      },
+      "actions": {
+        "entry_time": "2026-05-13 18:20",
+        "last_add_time": "2026-06-18 07:04",
+        "num_buys": 3,
+        "num_sells": 0,
+        "added_over_time": true,
+        "avg_entry_price": 0.8067,
+        "net_shares": 9999.0,
+        "net_cost_usd": 8065.86
+      },
+      "unrealized": {
+        "current_price": 0.81,
+        "price_source": "568最新close",
+        "current_value_usd": 8099.19,
+        "unrealized_pnl_usd": 33.33,
+        "unrealized_pct": 0.41,
+        "note": "持仓中浮盈亏"
+      }
+    },
+    "price_context": {
+      "as_of": "2026-06-20",
+      "analyzed_side": "Yes",
+      "price_source": "568历史close",
+      "current_price": 0.81,
+      "implied_probability_pct": 81.0,
+      "remaining_upside_per_share_usd": 0.19,
+      "remaining_upside_pct_if_win": 23.46,
+      "downside_per_share_usd": 0.81,
+      "odds_to_one": 0.23,
+      "entry_price": 0.8067,
+      "price_delta": 0.0033,
+      "price_delta_pct": 0.41
+    },
+    "what_the_bet": "押民主党在2026年中期选举后控制众议院，如果民主党在众议院拥有超过半数投票席位（或当选议长所属政党为民主党）则算赢。",
+    "resolution_criteria": "This market will resolve according to the party that controls the House of Representatives following the 2026 U.S. House elections scheduled for November 3, 2026.\n\nHouse control is defined as having more than half of the voting members of the U.S. House of Representatives.\n\nIf the outcome of this election is ambiguous given the above rules, this market will remain open until the Speaker of the House is selected following the 2026 U.S. general election, at which point it will resolve to the party the Speaker is affiliated with at the time of their election to that position. If the elected Speaker does not caucus with any listed party this market will resolve “Other”.\n\nDetermination of which party controls the House after the 2026 U.S. House elections will be based on a consensus of credible reporting, or if there is ambiguity, final federal and/or state election authority certification or other final official determination of the 2026 election results."
+  },
+  "market": {
+    "slug": "will-the-democratic-party-control-the-house-after-the-2026-midterm-elections",
+    "market_id": "0xd5d9fc47718bd553592d126b1fa5e87183d27f3936975b0c04cc0f2dec1f1bb4"
+  },
+  "price_series": [
+    {
+      "date": "2026-04-22",
+      "price": 0.85
+    },
+    {
+      "date": "2026-04-23",
+      "price": 0.85
+    },
+    {
+      "date": "2026-04-24",
+      "price": 0.85
+    },
+    {
+      "date": "2026-04-25",
+      "price": 0.85
+    },
+    {
+      "date": "2026-04-26",
+      "price": 0.86
+    },
+    {
+      "date": "2026-04-27",
+      "price": 0.85
+    },
+    {
+      "date": "2026-04-28",
+      "price": 0.86
+    },
+    {
+      "date": "2026-05-01",
+      "price": 0.83
+    },
+    {
+      "date": "2026-05-02",
+      "price": 0.85
+    },
+    {
+      "date": "2026-05-03",
+      "price": 0.84
+    },
+    {
+      "date": "2026-05-04",
+      "price": 0.82
+    },
+    {
+      "date": "2026-05-05",
+      "price": 0.82
+    },
+    {
+      "date": "2026-05-06",
+      "price": 0.83
+    },
+    {
+      "date": "2026-05-07",
+      "price": 0.83
+    },
+    {
+      "date": "2026-05-08",
+      "price": 0.78
+    },
+    {
+      "date": "2026-05-09",
+      "price": 0.79
+    },
+    {
+      "date": "2026-05-10",
+      "price": 0.78
+    },
+    {
+      "date": "2026-05-11",
+      "price": 0.78
+    },
+    {
+      "date": "2026-05-12",
+      "price": 0.79
+    },
+    {
+      "date": "2026-05-13",
+      "price": 0.78
+    },
+    {
+      "date": "2026-05-14",
+      "price": 0.79
+    },
+    {
+      "date": "2026-05-15",
+      "price": 0.79
+    },
+    {
+      "date": "2026-05-16",
+      "price": 0.78
+    },
+    {
+      "date": "2026-05-17",
+      "price": 0.78
+    },
+    {
+      "date": "2026-05-18",
+      "price": 0.8
+    },
+    {
+      "date": "2026-05-19",
+      "price": 0.8
+    },
+    {
+      "date": "2026-05-20",
+      "price": 0.81
+    },
+    {
+      "date": "2026-05-21",
+      "price": 0.8
+    },
+    {
+      "date": "2026-05-22",
+      "price": 0.81
+    },
+    {
+      "date": "2026-05-23",
+      "price": 0.8
+    },
+    {
+      "date": "2026-05-24",
+      "price": 0.81
+    },
+    {
+      "date": "2026-05-25",
+      "price": 0.8
+    },
+    {
+      "date": "2026-05-26",
+      "price": 0.81
+    },
+    {
+      "date": "2026-05-27",
+      "price": 0.8
+    },
+    {
+      "date": "2026-05-28",
+      "price": 0.8
+    },
+    {
+      "date": "2026-05-29",
+      "price": 0.8
+    },
+    {
+      "date": "2026-05-30",
+      "price": 0.81
+    },
+    {
+      "date": "2026-05-31",
+      "price": 0.82
+    },
+    {
+      "date": "2026-06-01",
+      "price": 0.81
+    },
+    {
+      "date": "2026-06-02",
+      "price": 0.81
+    },
+    {
+      "date": "2026-06-03",
+      "price": 0.81
+    },
+    {
+      "date": "2026-06-04",
+      "price": 0.81
+    },
+    {
+      "date": "2026-06-05",
+      "price": 0.81
+    },
+    {
+      "date": "2026-06-06",
+      "price": 0.82
+    },
+    {
+      "date": "2026-06-07",
+      "price": 0.82
+    },
+    {
+      "date": "2026-06-08",
+      "price": 0.82
+    },
+    {
+      "date": "2026-06-09",
+      "price": 0.82
+    },
+    {
+      "date": "2026-06-10",
+      "price": 0.82
+    },
+    {
+      "date": "2026-06-11",
+      "price": 0.83
+    },
+    {
+      "date": "2026-06-12",
+      "price": 0.82
+    },
+    {
+      "date": "2026-06-13",
+      "price": 0.82
+    },
+    {
+      "date": "2026-06-14",
+      "price": 0.82
+    },
+    {
+      "date": "2026-06-15",
+      "price": 0.83
+    },
+    {
+      "date": "2026-06-16",
+      "price": 0.82
+    },
+    {
+      "date": "2026-06-17",
+      "price": 0.83
+    },
+    {
+      "date": "2026-06-18",
+      "price": 0.8
+    },
+    {
+      "date": "2026-06-19",
+      "price": 0.81
+    },
+    {
+      "date": "2026-06-20",
+      "price": 0.81
+    }
+  ],
+  "behavior": {
+    "flag": "STATIC",
+    "fact": "近 48h 仅 0 买 / 0 卖，无显著动作（沉闷持仓）",
+    "honest_note": "动态行为：基本没动",
+    "windows": {
+      "3h": {
+        "buys": 0,
+        "sells": 0,
+        "buy_usd": 0.0,
+        "sell_usd": 0.0
+      },
+      "24h": {
+        "buys": 0,
+        "sells": 0,
+        "buy_usd": 0.0,
+        "sell_usd": 0.0
+      },
+      "48h": {
+        "buys": 0,
+        "sells": 0,
+        "buy_usd": 0.0,
+        "sell_usd": 0.0
+      }
+    }
+  },
+  "news_stream": [
+    {
+      "date": "2026-06-17",
+      "title": "Commentary: Gerrymanders, judges and an alley-oop: A look at the midterm fight for control of Congress - Los Angeles Times",
+      "summary": "文章指出尽管共和党在重新划分选区中占据优势，但仍面临失去众议院控制权的严重风险",
+      "url": "https://www.latimes.com/politics/story/2026-06-17/midterm-election-handicapping-senate-house-control-congress-democrats-republicans",
+      "origin": "Tavily",
+      "direction": "support",
+      "reaction": {
+        "available": true,
+        "kind": "weak",
+        "move_pct": -2.44,
+        "window": [
+          "2026-06-16",
+          "2026-06-18"
+        ]
+      },
+      "same_window": false
+    },
+    {
+      "date": "2026-06-10",
+      "title": "Republicans' Chances of Losing Control of House: 3 Election Forecasts - Newsweek",
+      "summary": "三家主要选举预测机构的更新评级显示民主党可能有能力翻转众议院控制权",
+      "url": "https://www.newsweek.com/republicans-chances-of-losing-control-of-house-3-election-forecasts-12054968",
+      "origin": "Tavily",
+      "direction": "support",
+      "reaction": {
+        "available": true,
+        "kind": "weak",
+        "move_pct": 1.22,
+        "window": [
+          "2026-06-09",
+          "2026-06-11"
+        ]
+      },
+      "same_window": false
+    }
+  ],
+  "world_summary": "# 市场综述\n\n**巨鲸动态**  \n近48小时无交易记录，呈现沉闷持仓状态。\n\n**事态进展**  \n三家主要选举预测机构更新评级，显示民主党具备翻转众议院的可能性。2026年6月民调中民主党通用选票领先5-6个百分点，符合共和党总统任期内的历史中期选举模式。共和党以微弱多数进入本周期，仅能承受数个席位流失；民主党需净增少量席位即可获得控制权。得克萨斯、佛罗里达和弗吉尼亚等州重新划分选区后增加部分共和党倾向选区，使共和党赔率从早期低点小幅回升，但预测仍显示民主党在战场选区中占据优势。",
+  "reasoning": {
+    "follow_call": "CHASED",
+    "confidence": "medium",
+    "reasoning": "这个钱包两边都压了不少，不是单纯赌民主党拿下众议院，更像对冲或做市。支持方向的催化剂有民调和评论，但市场反应都很弱，价格基本没怎么动。有利的价格空间还剩23个百分点左右，但他自己近48小时基本没动，而且因为两边都有仓位，信心度被系统封在medium。现在跟单的话，好的入场价已经过去一部分了。",
+    "confidence_reasons": [
+      "底座矩阵:high(pnl=+0.4%)",
+      "R2:两侧均衡(对冲/做市)→封medium"
+    ],
+    "facts": {
+      "market_question": "Will the Democratic Party control the House after the 2026 Midterm elections?",
+      "outcome": "Yes",
+      "today": "2026-06-20",
+      "price_room_left": 23.46,
+      "price_already_moved": 0.41,
+      "resolution_date_human": "还有约136.0天",
+      "position_type": "hedged",
+      "recent_action": "flat_no_movement",
+      "support_catalysts": [
+        {
+          "title": "Commentary: Gerrymanders, judges and an alley-oop: A look at the midterm fight for control of Congress - Los Angeles Times",
+          "material_tag": "周边压力情绪信号",
+          "market_reaction": "weak",
+          "move_pct": -2.44,
+          "same_window": false
+        },
+        {
+          "title": "Republicans' Chances of Losing Control of House: 3 Election Forecasts - Newsweek",
+          "material_tag": "民调数据",
+          "market_reaction": "weak",
+          "move_pct": 1.22,
+          "same_window": false
+        }
+      ],
+      "threat_catalysts": [],
+      "confidence": "medium",
+      "confidence_reasons": [
+        "底座矩阵:high(pnl=+0.4%)",
+        "R2:两侧均衡(对冲/做市)→封medium"
+      ]
+    }
+  }
+}

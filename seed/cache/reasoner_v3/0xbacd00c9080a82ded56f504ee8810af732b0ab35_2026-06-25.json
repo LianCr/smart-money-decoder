@@ -1,0 +1,40 @@
+{
+  "follow_call": "ROOM LEFT",
+  "confidence": "high",
+  "reasoning": null,
+  "confidence_reasons": [
+    "底座矩阵:high(pnl=+2.4%)"
+  ],
+  "facts": {
+    "market_question": "Will the Democratic Party control the House after the 2026 Midterm elections?",
+    "outcome": "Yes",
+    "today": "2026-06-25",
+    "price_room_left": 21.95,
+    "price_already_moved": 2.41,
+    "resolution_date_human": "还有约131.0天",
+    "position_type": "hedged",
+    "recent_action": "adding",
+    "support_catalysts": [
+      {
+        "title": "Sen. Elizabeth Warren: \"Thank you Donald Trump\" for the issue that will decide the midterms - CNN",
+        "material_tag": "当事人直接表态",
+        "market_reaction": "unknown",
+        "move_pct": null,
+        "same_window": false
+      }
+    ],
+    "threat_catalysts": [
+      {
+        "title": "Commentary: Gerrymanders, judges and an alley-oop: A look at the midterm fight for control of Congress - Los Angeles Times",
+        "material_tag": "已生效硬事件",
+        "market_reaction": "weak",
+        "move_pct": -2.44,
+        "same_window": false
+      }
+    ],
+    "confidence": "high",
+    "confidence_reasons": [
+      "底座矩阵:high(pnl=+2.4%)"
+    ]
+  }
+}

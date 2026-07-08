@@ -28,15 +28,13 @@ from pathlib import Path
 import requests
 from dotenv import load_dotenv
 
+from core.llm import call_gateway
 from fetcher.heisenberg import AGENTS, call, paginate, results
 
 load_dotenv()
 
 GKG_URL = "http://data.gdeltproject.org/gdeltv2/{stamp}.gkg.csv.zip"
 C_DATE, C_SRC, C_THEMES, C_PERSONS, C_ORGS, C_TONE, C_URL = 1, 3, 7, 9, 11, 15, 4
-CLASSROOM_API_URL = "https://4dm65e698a.execute-api.us-west-2.amazonaws.com/prod/invoke"
-KEY = os.environ.get("CLASSROOM_API_KEY")
-GATEWAY_MODEL = "claude-sonnet-4.5"
 CACHE_DIR = Path(".cache/market_context")
 # 新闻密度开关（默认中档：4 个跳变·阈值 5%·每跳 2 条 ≈ 10 条/盘）。仍锚在真跳变上、不破红线。
 # 调密集(top=6/pick=3≈16条)更接近 Polymarket 但 +~3k token/钱包；调 top=2 回到最省的 ~6 条。
@@ -83,11 +81,7 @@ def _title(url):
 
 
 def _gateway(prompt, max_tokens=900):
-    r = requests.post(CLASSROOM_API_URL, headers={"Content-Type": "application/json", "x-api-key": KEY},
-                      json={"model": GATEWAY_MODEL, "input": prompt, "maxTokens": max_tokens}, timeout=30)
-    if r.status_code != 200:
-        raise RuntimeError(f"gateway {r.status_code}: {r.text[:160]}")
-    return r.json().get("output", "")
+    return call_gateway(prompt, max_tokens=max_tokens, timeout=30)
 
 
 # ── ① Heisenberg：找显著价格跳变（≤ as_of，边界4）──────────────────────────────
@@ -283,10 +277,15 @@ def synthesize(cid, as_of, entity_terms, outcome="Yes", wallet=None):
     }
 
 
+def cache_file(cid, as_of, outcome="Yes", wallet=None):
+    """该 (盘,as_of,侧,钱包) 的缓存文件路径（refresh 强制重建时由 api 层删除）。"""
+    key = hashlib.md5(f"{cid}|{as_of}|{outcome}|{(wallet or '').lower()}".encode()).hexdigest()
+    return CACHE_DIR / f"{key}.json"
+
+
 def load_or_build(cid, as_of, entity_terms, outcome="Yes", wallet=None):
     CACHE_DIR.mkdir(parents=True, exist_ok=True)
-    key = hashlib.md5(f"{cid}|{as_of}|{outcome}|{(wallet or '').lower()}".encode()).hexdigest()
-    p = CACHE_DIR / f"{key}.json"
+    p = cache_file(cid, as_of, outcome, wallet)
     if p.exists():
         return json.loads(p.read_text(encoding="utf-8"))
     obj = synthesize(cid, as_of, entity_terms, outcome, wallet=wallet)

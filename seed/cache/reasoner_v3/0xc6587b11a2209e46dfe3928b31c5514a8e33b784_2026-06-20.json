@@ -1,0 +1,54 @@
+{
+  "follow_call": "ROOM LEFT",
+  "confidence": "medium",
+  "reasoning": "这个钱包单纯押注民主党拿不下众议院,近48小时没动仓位。支持这个方向的证据里,有关于共和党在选区重划中占优的背景材料,市场对这条已经确认(价格朝着钱包的方向走了);威胁方向的证据都是市场价格信号类的,反应很弱。价格已经涨了一些,但还有不少空间可以跟,好入口没完全过去。信心定为中等是因为钱包目前浮亏100%,底座矩阵给出的就是medium。",
+  "confidence_reasons": [
+    "底座矩阵:medium(pnl=-100.0%)"
+  ],
+  "facts": {
+    "market_question": "Will the Democratic Party control the House after the 2026 Midterm elections?",
+    "outcome": "No",
+    "today": "2026-06-20",
+    "price_room_left": 426.32,
+    "price_already_moved": 26.67,
+    "resolution_date_human": "还有约136.0天",
+    "position_type": "single_side_conviction",
+    "recent_action": "flat_no_movement",
+    "support_catalysts": [
+      {
+        "title": "Commentary: Gerrymanders, judges and an alley-oop: A look at the midterm fight for control of Congress - Los Angeles Times",
+        "material_tag": "其他背景",
+        "market_reaction": "confirmed",
+        "move_pct": 5.56,
+        "same_window": false
+      },
+      {
+        "title": "Republicans gained edge over Democrats in redistricting battle, internal party assessment finds - BBC",
+        "material_tag": "其他背景",
+        "market_reaction": "weak",
+        "move_pct": 0.0,
+        "same_window": false
+      }
+    ],
+    "threat_catalysts": [
+      {
+        "title": "Republicans' Chances of Losing Control of House: 3 Election Forecasts - Newsweek",
+        "material_tag": "市场价格信号",
+        "market_reaction": "weak",
+        "move_pct": 0.0,
+        "same_window": true
+      },
+      {
+        "title": "Progressive Randy Villegas' Chances of Winning California House Race - Newsweek",
+        "material_tag": "市场价格信号",
+        "market_reaction": "weak",
+        "move_pct": 0.0,
+        "same_window": true
+      }
+    ],
+    "confidence": "medium",
+    "confidence_reasons": [
+      "底座矩阵:medium(pnl=-100.0%)"
+    ]
+  }
+}

@@ -1,0 +1,101 @@
+{
+  "market_lean": "YES",
+  "lean_strength": 75,
+  "confidence": "med",
+  "pivotal_unknown": "统一俄罗斯党当前真实支持率、反对派动员能力及选举是否如期举行",
+  "rationale": "文章池完全未覆盖俄罗斯国内选举，但市场价格显示高置信度（流动性顶级、3000人参与、波动已收敛至60%附近）。在俄罗斯威权体制下统一俄罗斯党历史垄断杜马的背景前提可支撑价格方向，价格本身可信度高使其成为强锚；但证据真空+距结算97天的时间窗口令结构性变化仍有可能，故方向倾向明确、信心保持中档。",
+  "implied_prob_yes": 60,
+  "shared_pool": [
+    {
+      "title": "Putin hosts leaders of Southeast Asian nations, seeking to boost their business ties - AP News",
+      "url": "https://apnews.com/article/russia-putin-asean-summit-kazan-10599e42de372d53ec740c17f5327def",
+      "date": "2026-06-17",
+      "summary": "Test Your News I.Q. 2026 Elections Election Results Election calendar White House Congress Supreme Court The latest AP-NORC polls Ground Game. Russian President Vladimir Putin, fourth right, and Malaysian Prime Minister Anwar Ibrahim, second left, attend a talks on the sidelines of the Russia-ASEAN"
+    },
+    {
+      "title": "Armenia’s opposition faces arrests as it contests the ruling party’s election win - AP News",
+      "url": "https://apnews.com/article/strong-armenia-opposition-arrests-pashinyan-1b6f7e89d8063dc57218619012f409cc",
+      "date": "2026-06-19",
+      "summary": "Test Your News I.Q. 2026 Elections Election Results Election calendar White House Congress Supreme Court The latest AP-NORC polls Ground Game. + What Americans think about Trump's handling of Iran, according to a new AP-NORC poll. A man wearing in t-shirt with an image of Russian President Vladimir"
+    },
+    {
+      "title": "A man who set fire to homes linked to Starmer is in jail. His Russian-speaking handler slipped away - AP News",
+      "url": "https://apnews.com/article/russia-starmer-arson-intelligence-putin-5fcc1f976743eab9826be62dfc506402",
+      "date": "2026-06-16",
+      "summary": "Test Your News I.Q. 2026 Elections Election Results Election calendar White House Congress Supreme Court The latest AP-NORC polls Ground Game. Your home base for in-depth reporting from the world of sports. The future of a beloved dog statue on a New York warehouse is up in the air. A string of arso"
+    },
+    {
+      "title": "Israel’s Next Leader - The Times of Israel",
+      "url": "https://blogs.timesofisrael.com/israels-next-leader/",
+      "date": "2026-06-17",
+      "summary": "# Israel’s Next Leader. Israel’s forthcoming general election is due to take place in September or October, and if the pollsters are correct Prime Minister Benjamin Netanyahu will fail to capture enough Knesset seats to cobble together yet another right-wing coalition. Yashar’s leader, Gadi Eisenkot"
+    },
+    {
+      "title": "Live updates: Maryland governor, two hotly contested House seats - The Washington Post",
+      "url": "https://www.washingtonpost.com/elections/2026/06/23/maryland-primary-election-results-live-updates/",
+      "date": "2026-06-23",
+      "summary": "# Live updates: Maryland governor, two hotly contested House seats. Two expensive House races will be decided, while Gov. Wes Moore faces a rematch against MAGA-aligned Dan Cox. Make us preferred on Google. Tuesday’s primary election in deeply Democratic Maryland determines the next officeholder in"
+    },
+    {
+      "title": "Inflation pressures will remain entrenched, says CIO - Reuters",
+      "url": "https://www.reuters.com/video/watch/idRW043018062026RP1/",
+      "date": "2026-06-18",
+      "summary": "# Reuters Video. ## Inflation pressures will remain entrenched, says CIO. Alexander Morris, CEO and chief investment officer of F/m Investments, said easing energy prices are unlikely to eliminate broader inflation pressures. * ### Now Playing Inflation pressures will remain entrenched, says CIO. *"
+    },
+    {
+      "title": "Veteran hero eyes Senate run as One Nation option remains on the table - Sky News Australia",
+      "url": "https://www.skynews.com.au/opinion/veteran-hero-eyes-senate-run-as-one-nation-option-remains-on-the-table/video/85c62cf4262139730e22b8be85069493",
+      "date": "2026-06-23",
+      "summary": "Image 4: Veteran hero eyes Senate run as One Nation option remains on the table. Retired Special Forces Major Heston Russell reveals he’s aiming to run for Senate in the next election and says joining forces with Pauline Hanson’s One Nation remains a possibility. Image 5: ‘Worse than Starmer’: Farag"
+    },
+    {
+      "title": "Fire engulfs centuries-old Ukrainian monastery after deadly strikes - NBC News",
+      "url": "https://www.nbcnews.com/video/fire-engulfs-centuries-old-ukrainian-monastery-after-deadly-strikes-265091141591",
+      "date": "2026-06-15",
+      "summary": "* ## New video shows apparent Ukrainian attacks on Russian targets in St. Petersburg. * ## Russia targets Kyiv with massive overnight attack. * ## Russian drone intended for Ukraine injures two people in Romania. * ## Putin Says He Believes Ukraine War is 'Coming to an End'. * ## Ukraine accuses Rus"
+    },
+    {
+      "title": "Reform UK’s polling results are ‘not enough’ to win a general election outright - Sky News Australia",
+      "url": "https://www.skynews.com.au/opinion/reform-uks-polling-results-are-not-enough-to-win-a-general-election-outright/video/121276f17975a3a1d21ff2ce074cf577",
+      "date": "2026-06-21",
+      "summary": "# Reform UK’s polling results are ‘not enough’ to win a general election outright | Sky News Australia. Reform UK’s polling results are ‘not enough’ to win a general election outright. GB News Presenter Alexander Armstrong says Reform UK polling results are “not enough” to win a general election out"
+    }
+  ],
+  "input_trust": {
+    "price": {
+      "trust": "high",
+      "line": "价格可信度=HIGH：流动性 Top 5%(98.93百分位) · 头部集中 top1=14.01% top10=45.94% · 近7天 3000 人参与 · 成交量 Declining",
+      "days_to_resolution": 97,
+      "raw": {
+        "liquidity_percentile": 98.93,
+        "top1_wallet_pct": 14.01,
+        "unique_traders_7d": 3000,
+        "volume_trend": "Declining",
+        "flags": []
+      }
+    },
+    "vol": {
+      "vol": 0.025643717183634396,
+      "desc": "低(共识已稳)",
+      "line": "市场自身犹豫度=低(共识已稳)：近14日已实现波动 0.026，收盘 [0.58, 0.57, 0.59, 0.61, 0.63, 0.64]"
+    },
+    "lines": [
+      "价格可信度=HIGH：流动性 Top 5%(98.93百分位) · 头部集中 top1=14.01% top10=45.94% · 近7天 3000 人参与 · 成交量 Declining",
+      "市场自身犹豫度=低(共识已稳)：近14日已实现波动 0.026，收盘 [0.58, 0.57, 0.59, 0.61, 0.63, 0.64]",
+      "距结算 97 天"
+    ]
+  },
+  "event_structure": {
+    "multi": false,
+    "n_candidates": 1,
+    "baseline_pct": 100.0,
+    "event_slug": null
+  },
+  "_audit": {
+    "bull": "Based on the available articles, I cannot construct a strong bull case for YES on this market. The article pool contains no information about Russian parliamentary elections, United Russia's electoral prospects, polling data for Russian parties, or any developments that would indicate United Russia's likelihood of winning the most seats in the next Duma election. The only Russia-related content discusses Putin's diplomatic meetings with ASEAN leaders and intelligence operations abroad, which provide no insight into domestic electoral dynamics. Without relevant information about Russian party politics, electoral systems, or campaign developments, there is insufficient evidence in these sources to argue that United Russia will gain the most seats.\n\n引用：\n- Putin hosts leaders of Southeast Asian nations, seeking to boost their business ties - AP News\n- A man who set fire to homes linked to Starmer is in jail. His Russian-speaking handler slipped away - AP News",
+    "bear": "**可用证据稀薄，无法形成实质性空头论点。**\n\n文章池中没有任何一篇直接涉及俄罗斯议会选举、统一俄罗斯党（United Russia）的支持率、选举时间安排或竞争对手的相关信息。唯一提及俄罗斯的文章仅涉及普京外交活动、乌克兰战争和间谍案件，均与俄罗斯国内选举形势无关。\n\n在缺乏关于俄罗斯国内政治动态、反对派力量或选举预测的任何证据情况下，无法基于给定材料构建统一俄罗斯党可能失去多数席位的论证。\n\n**引用：**\n无适用文章",
+    "n_articles": 9,
+    "as_of": "2026-06-25",
+    "raw_reasoner": "```json\n{\n  \"market_lean\": \"YES\",\n  \"lean_strength_0_100\": 75,\n  \"confidence\": \"med\",\n  \"pivotal_unknown\": \"统一俄罗斯党当前真实支持率、反对派动员能力及选举是否如期举行\",\n  \"rationale\": \"文章池完全未覆盖俄罗斯国内选举，但市场价格显示高置信度（流动性顶级、3000人参与、波动已收敛至60%附近）。在俄罗斯威权体制下统一俄罗斯党历史垄断杜马的背景前提可支撑价格方向，价格本身可信度高使其成为强锚；但证据真空+距结算97天的时间窗口令结构性变化仍有可能，故方向倾向明确、信心保持中档。\"\n}\n```"
+  }
+}

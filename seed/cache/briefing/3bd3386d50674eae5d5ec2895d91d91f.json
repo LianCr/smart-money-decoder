@@ -1,0 +1,229 @@
+{
+  "meta": {
+    "wallet": "0x853c37a959a5791b849e3f3225c7f5963746bd03",
+    "market": "Starmer out by June 30, 2026?",
+    "analyzed_side": "No",
+    "as_of": "2026-06-20",
+    "mode": "live",
+    "catalyst_anchor": "2026-06-20",
+    "settle": "还有约2.4天"
+  },
+  "who_trader_profile": {
+    "wallet": "0x853c37a959a5791b849e3f3225c7f5963746bd03",
+    "quality": {
+      "combined_risk_score": 0,
+      "max_drawdown": 0.1425,
+      "drawdown_frequency": 0.0667,
+      "avg_trade_size": 172.42,
+      "markets_traded": 81,
+      "num_markets_traded": 81,
+      "category_diversity_score": 1.4948,
+      "market_concentration_ratio": 0.1512,
+      "annualized_return": 5.6397,
+      "gain_to_pain_ratio": 5.8811,
+      "equity_curve_pattern": "volatile",
+      "perfect_timing_flag": false,
+      "flagged_metrics": "{}",
+      "losing_trades": 113,
+      "best_market_pnl": 13208.26,
+      "dominant_market_pnl": 13208.26,
+      "window_days": "15"
+    },
+    "category_specialization": [
+      {
+        "category": "Other",
+        "roi": 23.2249,
+        "win_rate": 0.7956,
+        "total_pnl": 34206.26,
+        "total_trades": 854
+      },
+      {
+        "category": "Politics / Global",
+        "roi": 26.4194,
+        "win_rate": 0.7901,
+        "total_pnl": 33567.99,
+        "total_trades": 740
+      },
+      {
+        "category": "Politics",
+        "roi": 22.3421,
+        "win_rate": 0.7962,
+        "total_pnl": 31691.4,
+        "total_trades": 825
+      },
+      {
+        "category": "Politics / US",
+        "roi": 25.756,
+        "win_rate": 0.7891,
+        "total_pnl": 19498.78,
+        "total_trades": 470
+      },
+      {
+        "category": "Politics / US / Trump",
+        "roi": 27.1693,
+        "win_rate": 0.7809,
+        "total_pnl": 19277.05,
+        "total_trades": 459
+      },
+      {
+        "category": "Sports",
+        "roi": 21.0154,
+        "win_rate": 0.75,
+        "total_pnl": 1512.3,
+        "total_trades": 36
+      },
+      {
+        "category": "Sports / Soccer",
+        "roi": 21.0154,
+        "win_rate": 0.75,
+        "total_pnl": 1512.3,
+        "total_trades": 36
+      },
+      {
+        "category": "Politics / US / Elections",
+        "roi": 7.997,
+        "win_rate": 1.0,
+        "total_pnl": 220.23,
+        "total_trades": 10
+      },
+      {
+        "category": "Culture & Entertainment",
+        "roi": 2.6275,
+        "win_rate": 1.0,
+        "total_pnl": 1.68,
+        "total_trades": 4
+      },
+      {
+        "category": "Crypto",
+        "roi": 0.0,
+        "win_rate": 0.0,
+        "total_pnl": 0.0,
+        "total_trades": 1
+      },
+      {
+        "category": "Tech & AI",
+        "roi": -22.6585,
+        "win_rate": 0.5,
+        "total_pnl": -727.89,
+        "total_trades": 40
+      },
+      {
+        "category": "Finance & Markets",
+        "roi": -79.5781,
+        "win_rate": 0.4167,
+        "total_pnl": -4594.5,
+        "total_trades": 46
+      }
+    ],
+    "official_rank": {
+      "period": "30d",
+      "rank": 1482,
+      "roi": "0.051995",
+      "win_rate": "0.7619",
+      "sharpe_ratio": "0.0310",
+      "total_pnl": "15183.8654",
+      "total_invested": "292024.50",
+      "total_trades": 1380,
+      "markets_traded": 126
+    },
+    "realized_pnl_recent": {
+      "window": [
+        "2026-05-20",
+        "2026-06-20"
+      ],
+      "days_returned": 11,
+      "realized_pnl_sum": 5952.42
+    },
+    "h_score": {
+      "available": false,
+      "note": "不在 H-Score 榜首页（584 无按地址查，官方排名见 official_rank/579）"
+    }
+  },
+  "what_position_actions": {
+    "wallet": "0x853c37a959a5791b849e3f3225c7f5963746bd03",
+    "condition_id": "0xbee2cd40473495f713c69b9dfbce9fc2837fa4011568222c83c83bb773e35053",
+    "analyzed_side": "No",
+    "market": {
+      "question": "Starmer out by June 30, 2026?",
+      "winning_outcome": "Yes",
+      "closed": true,
+      "settle_date": "2026-06-22",
+      "days_to_settlement": 2.4,
+      "settle_note": "还有约2.4天"
+    },
+    "two_side_distribution": {
+      "hedged": false,
+      "by_outcome": {
+        "No": {
+          "trades": 1,
+          "shares": 41394.9
+        }
+      },
+      "note": "仅单边建仓"
+    },
+    "actions": {
+      "entry_time": "2026-06-20 21:24",
+      "last_add_time": "2026-06-20 21:24",
+      "num_buys": 1,
+      "num_sells": 7,
+      "added_over_time": false,
+      "avg_entry_price": 0.1296,
+      "net_shares": 0.0,
+      "net_cost_usd": 2968.36
+    },
+    "unrealized": {
+      "current_price": 0.0,
+      "price_source": "结算值(已resolve)",
+      "current_value_usd": 0.0,
+      "unrealized_pnl_usd": -2968.36,
+      "unrealized_pct": -100.0,
+      "note": "已结算→此为最终实现盈亏(分析侧)"
+    }
+  },
+  "price_context": {
+    "as_of": "2026-06-20",
+    "analyzed_side": "No",
+    "price_source": "568历史close",
+    "current_price": 0.12,
+    "implied_probability_pct": 12.0,
+    "remaining_upside_per_share_usd": 0.88,
+    "remaining_upside_pct_if_win": 733.33,
+    "downside_per_share_usd": 0.12,
+    "odds_to_one": 7.33,
+    "entry_price": 0.1296,
+    "price_delta": -0.0096,
+    "price_delta_pct": -7.41
+  },
+  "catalysts": {
+    "positive": [],
+    "negative": [],
+    "balance_summary": "正向证据按类型陈列：无；负向证据按类型陈列：无。每条已刻明客观事实类型（材质）——系统不替你称量轻重，不同材质的份量请自行掂量。 系统已完成证据陈述，天平由你裁决。",
+    "honesty_caveat": {
+      "positive_side": "search_vacuum",
+      "negative_side": "search_vacuum"
+    },
+    "guards": {
+      "relevance_dropped": [],
+      "type_deviations": [],
+      "weight_word_hits": [],
+      "weight_in_reason_hits": [],
+      "fear_lexicon_hits": [],
+      "directive_hits": []
+    }
+  },
+  "_audit": {
+    "teacher_tokens_approx": 479,
+    "free_sources": [
+      "581",
+      "579",
+      "569",
+      "556",
+      "568",
+      "574"
+    ],
+    "catalyst_window": [
+      "2026-06-10",
+      "2026-06-20"
+    ]
+  }
+}

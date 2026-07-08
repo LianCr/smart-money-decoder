@@ -1,0 +1,44 @@
+{
+  "market_context": {
+    "market_id": "0x307a1ed89d60b61002dd5bbf00e1408c5ed2ab3fcdb056191ca7ef9bc34d38f3",
+    "market_slug": "will-the-democratic-party-control-the-senate-after-the-2026-midterm-elections",
+    "market_question": "Will the Democratic Party control the Senate after the 2026 Midterm elections?",
+    "analyzed_side": "Yes",
+    "as_of": "2026-06-20",
+    "wallet": "0xde7be6d489bce070a959e0cb813128ae659b5f4b",
+    "behavioral_flag": {
+      "flag": "STATIC",
+      "fact": "近 48h 仅 0 买 / 0 卖，无显著动作（沉闷持仓）",
+      "honest_note": "动态行为：基本没动",
+      "windows": {
+        "3h": {
+          "buys": 0,
+          "sells": 0,
+          "buy_usd": 0.0,
+          "sell_usd": 0.0
+        },
+        "24h": {
+          "buys": 0,
+          "sells": 0,
+          "buy_usd": 0.0,
+          "sell_usd": 0.0
+        },
+        "48h": {
+          "buys": 0,
+          "sells": 0,
+          "buy_usd": 0.0,
+          "sell_usd": 0.0
+        }
+      }
+    },
+    "ai_experimental_summary": "",
+    "timeline_events": [],
+    "_audit": {
+      "jumps_found": 0,
+      "events": 0,
+      "behavior": "STATIC",
+      "teacher_tokens_approx": 0,
+      "boundaries": "因果→时间相关 · 无催化剂留白(行为感知内幕) · 价格窗≤as_of · 行为=事实非判断 · 综述无判断"
+    }
+  }
+}

@@ -1,0 +1,278 @@
+{
+  "meta": {
+    "wallet": "0x7c3db723f1d4d8cb9c550095203b686cb11e5c6b",
+    "market": "Will Donald Trump visit Turkey in 2026?",
+    "analyzed_side": "Yes",
+    "as_of": "2026-06-25",
+    "mode": "live",
+    "catalyst_anchor": "2026-06-25",
+    "settle": "还有约189.0天"
+  },
+  "who_trader_profile": {
+    "wallet": "0x7c3db723f1d4d8cb9c550095203b686cb11e5c6b",
+    "quality": {
+      "combined_risk_score": 30,
+      "max_drawdown": 0.455,
+      "drawdown_frequency": 0.0667,
+      "avg_trade_size": 565.31,
+      "markets_traded": 211,
+      "num_markets_traded": 211,
+      "category_diversity_score": 1.3334,
+      "market_concentration_ratio": 0.4669,
+      "annualized_return": null,
+      "gain_to_pain_ratio": 1.2755,
+      "equity_curve_pattern": "volatile",
+      "perfect_timing_flag": false,
+      "flagged_metrics": "{position_size_volatility,sybil_risk}",
+      "losing_trades": 457,
+      "best_market_pnl": 46427.72,
+      "dominant_market_pnl": 31511.39,
+      "window_days": "15"
+    },
+    "category_specialization": [
+      {
+        "category": "Politics",
+        "roi": 4.808,
+        "win_rate": 0.7881,
+        "total_pnl": 120266.97,
+        "total_trades": 4117
+      },
+      {
+        "category": "Politics / Global",
+        "roi": 4.8189,
+        "win_rate": 0.7855,
+        "total_pnl": 119163.07,
+        "total_trades": 4061
+      },
+      {
+        "category": "Other",
+        "roi": 4.3207,
+        "win_rate": 0.7592,
+        "total_pnl": 112701.91,
+        "total_trades": 4573
+      },
+      {
+        "category": "Politics / US",
+        "roi": 4.1632,
+        "win_rate": 0.7794,
+        "total_pnl": 75517.85,
+        "total_trades": 2176
+      },
+      {
+        "category": "Politics / US / Trump",
+        "roi": 4.1473,
+        "win_rate": 0.7786,
+        "total_pnl": 75192.44,
+        "total_trades": 2172
+      },
+      {
+        "category": "Tech & AI",
+        "roi": 17.4756,
+        "win_rate": 0.8519,
+        "total_pnl": 1575.3,
+        "total_trades": 61
+      },
+      {
+        "category": "Weather & Science",
+        "roi": 10.563,
+        "win_rate": 0.8235,
+        "total_pnl": 934.63,
+        "total_trades": 46
+      },
+      {
+        "category": "Sports",
+        "roi": 0.6565,
+        "win_rate": 0.6186,
+        "total_pnl": 532.75,
+        "total_trades": 307
+      },
+      {
+        "category": "Sports / Soccer",
+        "roi": 2.6202,
+        "win_rate": 0.6207,
+        "total_pnl": 376.58,
+        "total_trades": 302
+      },
+      {
+        "category": "Politics / US / Elections",
+        "roi": 35.9174,
+        "win_rate": 1.0,
+        "total_pnl": 325.41,
+        "total_trades": 4
+      },
+      {
+        "category": "Culture & Entertainment",
+        "roi": 5.9683,
+        "win_rate": 0.8,
+        "total_pnl": 240.3,
+        "total_trades": 23
+      },
+      {
+        "category": "Sports / Basketball",
+        "roi": 88.3133,
+        "win_rate": 0.5,
+        "total_pnl": 156.17,
+        "total_trades": 2
+      },
+      {
+        "category": "Sports / Basketball / NBA",
+        "roi": 88.3133,
+        "win_rate": 0.5,
+        "total_pnl": 156.17,
+        "total_trades": 2
+      },
+      {
+        "category": "Finance & Markets",
+        "roi": -4.3563,
+        "win_rate": 0.6304,
+        "total_pnl": -1584.56,
+        "total_trades": 114
+      },
+      {
+        "category": "Crypto / Prices",
+        "roi": -18.3337,
+        "win_rate": 0.0667,
+        "total_pnl": -7635.63,
+        "total_trades": 191
+      },
+      {
+        "category": "Crypto",
+        "roi": -17.8757,
+        "win_rate": 0.0667,
+        "total_pnl": -7635.63,
+        "total_trades": 192
+      }
+    ],
+    "official_rank": {
+      "period": "30d",
+      "rank": 199,
+      "roi": "0.028499",
+      "win_rate": "0.7896",
+      "sharpe_ratio": "0.0335",
+      "total_pnl": "129890.2200",
+      "total_invested": "4557711.40",
+      "total_trades": 8747,
+      "markets_traded": 326
+    },
+    "realized_pnl_recent": {
+      "window": [
+        "2026-05-20",
+        "2026-06-20"
+      ],
+      "days_returned": 11,
+      "realized_pnl_sum": 13367.16
+    },
+    "h_score": {
+      "available": false,
+      "note": "不在 H-Score 榜首页（584 无按地址查，官方排名见 official_rank/579）"
+    }
+  },
+  "what_position_actions": {
+    "wallet": "0x7c3db723f1d4d8cb9c550095203b686cb11e5c6b",
+    "condition_id": "0xebb9a87581bb1de91adc9bf9d1a9528cc203976a7f3ab2c9f98b8ef8ff531f30",
+    "analyzed_side": "Yes",
+    "market": {
+      "question": "Will Donald Trump visit Turkey in 2026?",
+      "winning_outcome": null,
+      "closed": false,
+      "settle_date": "2026-12-31",
+      "days_to_settlement": 189.0,
+      "settle_note": "还有约189.0天"
+    },
+    "two_side_distribution": {
+      "hedged": false,
+      "by_outcome": {
+        "Yes": {
+          "trades": 2,
+          "shares": 2141.1
+        }
+      },
+      "note": "仅单边建仓"
+    },
+    "actions": {
+      "entry_time": "2026-06-17 19:47",
+      "last_add_time": "2026-06-19 08:09",
+      "num_buys": 2,
+      "num_sells": 0,
+      "added_over_time": true,
+      "avg_entry_price": 0.9422,
+      "net_shares": 2141.1,
+      "net_cost_usd": 2017.27
+    },
+    "unrealized": {
+      "current_price": 0.959,
+      "price_source": "568最新close",
+      "current_value_usd": 2053.35,
+      "unrealized_pnl_usd": 36.08,
+      "unrealized_pct": 1.79,
+      "note": "持仓中浮盈亏"
+    }
+  },
+  "price_context": {
+    "as_of": "2026-06-25",
+    "analyzed_side": "Yes",
+    "price_source": "568历史close",
+    "current_price": 0.959,
+    "implied_probability_pct": 95.9,
+    "remaining_upside_per_share_usd": 0.041,
+    "remaining_upside_pct_if_win": 4.28,
+    "downside_per_share_usd": 0.959,
+    "odds_to_one": 0.04,
+    "entry_price": 0.9422,
+    "price_delta": 0.0168,
+    "price_delta_pct": 1.78
+  },
+  "catalysts": {
+    "positive": [
+      {
+        "title": "Trump says he is going to Turkey, China this year - TradingView",
+        "url": "https://www.tradingview.com/news/reuters.com,2026:newsml_S0N4040CP:0-trump-says-he-is-going-to-turkey-china-this-year/",
+        "date": "2026-06-19",
+        "reason": "特朗普直接表示他将在2026年访问土耳其",
+        "type": "当事人直接表态",
+        "price_reaction": {
+          "available": true,
+          "window": [
+            "2026-06-18",
+            "2026-06-20"
+          ],
+          "price_before": 0.977,
+          "price_after": 0.94,
+          "move_pct": -3.79,
+          "direction": "▼",
+          "caveat": "该新闻发布前后市场变动，时间相关非因果",
+          "market_check": "市场反应微弱(<5%)"
+        }
+      }
+    ],
+    "negative": [],
+    "balance_summary": "正向证据按类型陈列：当事人直接表态×1；负向证据按类型陈列：无。每条已刻明客观事实类型（材质）——系统不替你称量轻重，不同材质的份量请自行掂量。 系统已完成证据陈述，天平由你裁决。",
+    "honesty_caveat": {
+      "positive_side": "fully_backed",
+      "negative_side": "true_clearance"
+    },
+    "guards": {
+      "relevance_dropped": [],
+      "type_deviations": [],
+      "weight_word_hits": [],
+      "weight_in_reason_hits": [],
+      "fear_lexicon_hits": [],
+      "directive_hits": []
+    }
+  },
+  "_audit": {
+    "teacher_tokens_approx": 2612,
+    "free_sources": [
+      "581",
+      "579",
+      "569",
+      "556",
+      "568",
+      "574"
+    ],
+    "catalyst_window": [
+      "2026-06-15",
+      "2026-06-25"
+    ]
+  }
+}

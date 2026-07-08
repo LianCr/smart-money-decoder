@@ -1,0 +1,328 @@
+{
+  "meta": {
+    "wallet": "0x9d84ce0306f8551e02efef1680475fc0f1dc1344",
+    "market": "Will Gavin Newsom win the 2028 Democratic presidential nomination?",
+    "analyzed_side": "Yes",
+    "as_of": "2026-06-23",
+    "mode": "live",
+    "catalyst_anchor": "2026-06-23",
+    "settle": "还有约868.0天"
+  },
+  "who_trader_profile": {
+    "wallet": "0x9d84ce0306f8551e02efef1680475fc0f1dc1344",
+    "quality": {
+      "combined_risk_score": 35,
+      "max_drawdown": 0,
+      "drawdown_frequency": 0,
+      "avg_trade_size": 184.63,
+      "markets_traded": 45,
+      "num_markets_traded": 45,
+      "category_diversity_score": 0.7915,
+      "market_concentration_ratio": 0.5051,
+      "annualized_return": 6.6931,
+      "gain_to_pain_ratio": 100,
+      "equity_curve_pattern": "hockey-stick",
+      "perfect_timing_flag": false,
+      "flagged_metrics": "{suspicious_win_rate,position_size_volatility}",
+      "losing_trades": 14,
+      "best_market_pnl": 94301.35,
+      "dominant_market_pnl": 94301.35,
+      "window_days": "15"
+    },
+    "category_specialization": [
+      {
+        "category": "Other",
+        "roi": 27.3187,
+        "win_rate": 0.9643,
+        "total_pnl": 137207.78,
+        "total_trades": 2725
+      },
+      {
+        "category": "Politics",
+        "roi": 28.8425,
+        "win_rate": 0.9655,
+        "total_pnl": 135009.93,
+        "total_trades": 984
+      },
+      {
+        "category": "Politics / Global",
+        "roi": 29.2062,
+        "win_rate": 0.9697,
+        "total_pnl": 133560.76,
+        "total_trades": 820
+      },
+      {
+        "category": "Politics / US",
+        "roi": 4.3342,
+        "win_rate": 0.9907,
+        "total_pnl": 17336.44,
+        "total_trades": 531
+      },
+      {
+        "category": "Politics / US / Trump",
+        "roi": 3.9586,
+        "win_rate": 0.9867,
+        "total_pnl": 15594.02,
+        "total_trades": 303
+      },
+      {
+        "category": "Sports",
+        "roi": 9.0578,
+        "win_rate": 1.0,
+        "total_pnl": 3090.0,
+        "total_trades": 1740
+      },
+      {
+        "category": "Sports / Soccer",
+        "roi": 9.0578,
+        "win_rate": 1.0,
+        "total_pnl": 3090.0,
+        "total_trades": 1740
+      },
+      {
+        "category": "Politics / US / Elections",
+        "roi": 21.1968,
+        "win_rate": 1.0,
+        "total_pnl": 1284.47,
+        "total_trades": 228
+      },
+      {
+        "category": "Tech & AI",
+        "roi": 0.0,
+        "win_rate": 0.4167,
+        "total_pnl": 846.97,
+        "total_trades": 0
+      },
+      {
+        "category": "Finance & Markets",
+        "roi": 0.0,
+        "win_rate": 0.3846,
+        "total_pnl": 405.68,
+        "total_trades": 0
+      },
+      {
+        "category": "Culture & Entertainment",
+        "roi": 0.0,
+        "win_rate": 0.0,
+        "total_pnl": 0.0,
+        "total_trades": 4
+      },
+      {
+        "category": "Weather & Science",
+        "roi": 0.0,
+        "win_rate": 0.0,
+        "total_pnl": -88.8,
+        "total_trades": 0
+      }
+    ],
+    "official_rank": {
+      "period": "30d",
+      "rank": 245,
+      "roi": "0.193516",
+      "win_rate": "0.9338",
+      "sharpe_ratio": "0.0814",
+      "total_pnl": "103488.3094",
+      "total_invested": "534779.97",
+      "total_trades": 3539,
+      "markets_traded": 64
+    },
+    "realized_pnl_recent": {
+      "window": [
+        "2026-05-20",
+        "2026-06-20"
+      ],
+      "days_returned": 5,
+      "realized_pnl_sum": -46048.54
+    },
+    "h_score": {
+      "available": false,
+      "note": "不在 H-Score 榜首页（584 无按地址查，官方排名见 official_rank/579）"
+    }
+  },
+  "what_position_actions": {
+    "wallet": "0x9d84ce0306f8551e02efef1680475fc0f1dc1344",
+    "condition_id": "0x0f49db97f71c68b1e42a6d16e3de93d85dbf7d4148e3f018eb79e88554be9f75",
+    "analyzed_side": "Yes",
+    "market": {
+      "question": "Will Gavin Newsom win the 2028 Democratic presidential nomination?",
+      "winning_outcome": null,
+      "closed": false,
+      "settle_date": "2028-11-07",
+      "days_to_settlement": 868.0,
+      "settle_note": "还有约868.0天"
+    },
+    "two_side_distribution": {
+      "hedged": true,
+      "by_outcome": {
+        "No": {
+          "trades": 227,
+          "shares": 42794.8
+        },
+        "Yes": {
+          "trades": 1,
+          "shares": 1.6
+        }
+      },
+      "note": "两边都大额建仓 = 做市/对冲玩家（非单边赌徒，接 #28）"
+    },
+    "actions": {
+      "entry_time": "2025-07-20 11:01",
+      "last_add_time": "2025-07-20 11:01",
+      "num_buys": 1,
+      "num_sells": 24,
+      "added_over_time": false,
+      "avg_entry_price": 0.2,
+      "net_shares": -32150.0,
+      "net_cost_usd": -6262.84
+    },
+    "unrealized": {
+      "current_price": 0.213,
+      "price_source": "568最新close",
+      "current_value_usd": -6847.94,
+      "unrealized_pnl_usd": -585.1,
+      "unrealized_pct": 9.34,
+      "note": "持仓中浮盈亏"
+    }
+  },
+  "price_context": {
+    "as_of": "2026-06-23",
+    "analyzed_side": "Yes",
+    "price_source": "568最新close",
+    "current_price": 0.213,
+    "implied_probability_pct": 21.3,
+    "remaining_upside_per_share_usd": 0.787,
+    "remaining_upside_pct_if_win": 369.48,
+    "downside_per_share_usd": 0.213,
+    "odds_to_one": 3.69,
+    "entry_price": 0.2,
+    "price_delta": 0.013,
+    "price_delta_pct": 6.5
+  },
+  "catalysts": {
+    "positive": [
+      {
+        "title": "Gavin Newsom's Presidential Chances Amid DOJ Probe - Newsweek",
+        "url": "https://www.newsweek.com/gavin-newsoms-presidential-chances-amid-doj-probe-12080748",
+        "date": "2026-06-16",
+        "reason": "预测市场数据显示Newsom在2028年的总统候选人赔率在DOJ调查披露后上升。",
+        "type": "市场价格信号",
+        "price_reaction": {
+          "available": true,
+          "window": [
+            "2026-06-15",
+            "2026-06-17"
+          ],
+          "price_before": 0.244,
+          "price_after": 0.245,
+          "move_pct": 0.41,
+          "direction": "▲",
+          "caveat": "该新闻发布前后市场变动，时间相关非因果",
+          "market_check": "市场反应微弱(<5%)"
+        }
+      },
+      {
+        "title": "Axios: Last week, Gavin Newsom hosted Hunter Biden on his podcast. The former president's son repeatedly alluded to Newsom becoming the next president. Paraphrasing one of his father's old lines, Hunter told Newsom: \"I'll come campaign for you or again - t.co",
+        "url": "https://t.co/dnibXSGpJx",
+        "date": "2026-06-21",
+        "reason": "Hunter Biden在Newsom播客中暗示Newsom将成为下届总统，并表示愿意为其竞选。",
+        "type": "周边压力情绪信号",
+        "price_reaction": {
+          "available": true,
+          "window": [
+            "2026-06-20",
+            "2026-06-22"
+          ],
+          "price_before": 0.232,
+          "price_after": 0.232,
+          "move_pct": 0.0,
+          "direction": "—",
+          "caveat": "该新闻发布前后市场变动，时间相关非因果",
+          "market_check": "市场反应微弱(<5%)"
+        }
+      },
+      {
+        "title": "2028 presidential run looms over Gavin Newsom's response to DOJ probe - The Washington Post",
+        "url": "https://www.washingtonpost.com/politics/2026/06/17/what-probe-into-gavin-newsom-could-mean-2028-presidential-bid/",
+        "date": "2026-06-17",
+        "reason": "文章指出如果民主党选民认为调查具有政治动机，可能会团结支持Newsom。",
+        "type": "周边压力情绪信号",
+        "price_reaction": {
+          "available": true,
+          "window": [
+            "2026-06-16",
+            "2026-06-18"
+          ],
+          "price_before": 0.243,
+          "price_after": 0.239,
+          "move_pct": -1.65,
+          "direction": "▼",
+          "caveat": "该新闻发布前后市场变动，时间相关非因果",
+          "market_check": "市场反应微弱(<5%)"
+        }
+      }
+    ],
+    "negative": [
+      {
+        "title": "What is Gavin Newsom doing? - Silver Bulletin",
+        "url": "https://www.natesilver.net/p/what-is-gavin-newsom-doing",
+        "date": "2026-06-23",
+        "reason": "文章指出 Newsom 在民调中支持率下降，且被描述为不受欢迎的民主党建制派的代表，这直接影响其在 2028 年民主党初选中获得提名的能力。",
+        "type": "民调数据",
+        "price_reaction": {
+          "available": false,
+          "reason": "as_of_leak_guard",
+          "note": "新闻后价格尚未发生(回测防泄漏)，反应不可知",
+          "market_check": "市场反应不可知"
+        }
+      },
+      {
+        "title": "Failing 'Moral Test,' Newsom Rejects Compromise 2% Wealth Tax on California Billionaires - Common Dreams",
+        "url": "https://www.commondreams.org/news/newsom-california-billionaires-tax",
+        "date": "2026-06-19",
+        "reason": "Newsom 拒绝对加州亿万富翁征收 2% 财富税，遭到民主党进步派代表 Ro Khanna 批评，可能削弱其在民主党初选中工人阶级和进步派选民的支持基础。",
+        "type": "当事人直接表态",
+        "price_reaction": {
+          "available": true,
+          "window": [
+            "2026-06-18",
+            "2026-06-20"
+          ],
+          "price_before": 0.239,
+          "price_after": 0.232,
+          "move_pct": -2.93,
+          "direction": "▼",
+          "caveat": "该新闻发布前后市场变动，时间相关非因果",
+          "market_check": "市场反应微弱(<5%)"
+        }
+      }
+    ],
+    "balance_summary": "正向证据按类型陈列：市场价格信号×1、周边压力情绪信号×2；负向证据按类型陈列：民调数据×1、当事人直接表态×1。每条已刻明客观事实类型（材质）——系统不替你称量轻重，不同材质的份量请自行掂量。 系统已完成证据陈述，天平由你裁决。",
+    "honesty_caveat": {
+      "positive_side": "fully_backed",
+      "negative_side": "fully_backed"
+    },
+    "guards": {
+      "relevance_dropped": [],
+      "type_deviations": [],
+      "weight_word_hits": [],
+      "weight_in_reason_hits": [],
+      "fear_lexicon_hits": [],
+      "directive_hits": []
+    }
+  },
+  "_audit": {
+    "teacher_tokens_approx": 2989,
+    "free_sources": [
+      "581",
+      "579",
+      "569",
+      "556",
+      "568",
+      "574"
+    ],
+    "catalyst_window": [
+      "2026-06-13",
+      "2026-06-23"
+    ]
+  }
+}

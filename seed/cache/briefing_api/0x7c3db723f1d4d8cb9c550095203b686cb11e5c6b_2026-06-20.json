@@ -1,0 +1,283 @@
+{
+  "meta": {
+    "wallet": "0x7c3db723f1d4d8cb9c550095203b686cb11e5c6b",
+    "market": "Will Donald Trump visit Turkey in 2026?",
+    "analyzed_side": "Yes",
+    "as_of": "2026-06-20",
+    "mode": "live",
+    "catalyst_anchor": "2026-06-20",
+    "settle": "还有约194.0天"
+  },
+  "who_trader_profile": {
+    "wallet": "0x7c3db723f1d4d8cb9c550095203b686cb11e5c6b",
+    "quality": {
+      "combined_risk_score": 30,
+      "max_drawdown": 0.4579,
+      "drawdown_frequency": 0.0667,
+      "avg_trade_size": 491.41,
+      "markets_traded": 237,
+      "num_markets_traded": 237,
+      "category_diversity_score": 1.3947,
+      "market_concentration_ratio": 0.4448,
+      "annualized_return": null,
+      "gain_to_pain_ratio": 1.1529,
+      "equity_curve_pattern": "volatile",
+      "perfect_timing_flag": false,
+      "flagged_metrics": "{position_size_volatility,sybil_risk}",
+      "losing_trades": 501,
+      "best_market_pnl": 45123.87,
+      "dominant_market_pnl": 31170.89,
+      "window_days": "15"
+    },
+    "category_specialization": [
+      {
+        "category": "Politics",
+        "roi": 4.3417,
+        "win_rate": 0.7967,
+        "total_pnl": 115784.5,
+        "total_trades": 4864
+      },
+      {
+        "category": "Politics / Global",
+        "roi": 4.3682,
+        "win_rate": 0.7967,
+        "total_pnl": 115073.74,
+        "total_trades": 4786
+      },
+      {
+        "category": "Other",
+        "roi": 3.9863,
+        "win_rate": 0.7717,
+        "total_pnl": 109147.78,
+        "total_trades": 5527
+      },
+      {
+        "category": "Politics / US",
+        "roi": 4.0014,
+        "win_rate": 0.7654,
+        "total_pnl": 76615.12,
+        "total_trades": 2455
+      },
+      {
+        "category": "Politics / US / Trump",
+        "roi": 3.9999,
+        "win_rate": 0.7652,
+        "total_pnl": 76291.96,
+        "total_trades": 2450
+      },
+      {
+        "category": "Tech & AI",
+        "roi": 12.2354,
+        "win_rate": 0.8947,
+        "total_pnl": 1788.43,
+        "total_trades": 87
+      },
+      {
+        "category": "Weather & Science",
+        "roi": 10.563,
+        "win_rate": 0.8235,
+        "total_pnl": 934.63,
+        "total_trades": 46
+      },
+      {
+        "category": "Sports",
+        "roi": 4.2358,
+        "win_rate": 0.6034,
+        "total_pnl": 842.71,
+        "total_trades": 322
+      },
+      {
+        "category": "Sports / Soccer",
+        "roi": 2.5259,
+        "win_rate": 0.6018,
+        "total_pnl": 498.06,
+        "total_trades": 320
+      },
+      {
+        "category": "Sports / Basketball / NBA",
+        "roi": 194.9023,
+        "win_rate": 0.6667,
+        "total_pnl": 344.65,
+        "total_trades": 2
+      },
+      {
+        "category": "Sports / Basketball",
+        "roi": 194.9023,
+        "win_rate": 0.6667,
+        "total_pnl": 344.65,
+        "total_trades": 2
+      },
+      {
+        "category": "Politics / US / Elections",
+        "roi": 4.3836,
+        "win_rate": 0.8,
+        "total_pnl": 323.16,
+        "total_trades": 5
+      },
+      {
+        "category": "Culture & Entertainment",
+        "roi": 3.2631,
+        "win_rate": 0.5556,
+        "total_pnl": 208.93,
+        "total_trades": 32
+      },
+      {
+        "category": "Finance & Markets",
+        "roi": -3.6247,
+        "win_rate": 0.6909,
+        "total_pnl": -1364.67,
+        "total_trades": 130
+      },
+      {
+        "category": "Crypto",
+        "roi": -10.6642,
+        "win_rate": 0.125,
+        "total_pnl": -7012.84,
+        "total_trades": 380
+      },
+      {
+        "category": "Crypto / Prices",
+        "roi": -11.5066,
+        "win_rate": 0.1064,
+        "total_pnl": -7443.99,
+        "total_trades": 379
+      }
+    ],
+    "official_rank": {
+      "period": "30d",
+      "rank": 193,
+      "roi": "0.028401",
+      "win_rate": "0.7851",
+      "sharpe_ratio": "0.0332",
+      "total_pnl": "127745.4424",
+      "total_invested": "4497945.01",
+      "total_trades": 8725,
+      "markets_traded": 321
+    },
+    "realized_pnl_recent": {
+      "window": [
+        "2026-05-20",
+        "2026-06-20"
+      ],
+      "days_returned": 11,
+      "realized_pnl_sum": 13367.16
+    },
+    "h_score": {
+      "available": false,
+      "note": "不在 H-Score 榜首页（584 无按地址查，官方排名见 official_rank/579）"
+    }
+  },
+  "what_position_actions": {
+    "wallet": "0x7c3db723f1d4d8cb9c550095203b686cb11e5c6b",
+    "condition_id": "0xebb9a87581bb1de91adc9bf9d1a9528cc203976a7f3ab2c9f98b8ef8ff531f30",
+    "analyzed_side": "Yes",
+    "market": {
+      "question": "Will Donald Trump visit Turkey in 2026?",
+      "winning_outcome": null,
+      "closed": false,
+      "settle_date": "2026-12-31",
+      "days_to_settlement": 194.0,
+      "settle_note": "还有约194.0天"
+    },
+    "two_side_distribution": {
+      "hedged": false,
+      "by_outcome": {
+        "Yes": {
+          "trades": 2,
+          "shares": 2141.1
+        }
+      },
+      "note": "仅单边建仓"
+    },
+    "actions": {
+      "entry_time": "2026-06-17 19:47",
+      "last_add_time": "2026-06-19 08:09",
+      "num_buys": 2,
+      "num_sells": 0,
+      "added_over_time": true,
+      "avg_entry_price": 0.9422,
+      "net_shares": 2141.1,
+      "net_cost_usd": 2017.27
+    },
+    "unrealized": {
+      "current_price": 0.94,
+      "price_source": "568最新close",
+      "current_value_usd": 2012.67,
+      "unrealized_pnl_usd": -4.6,
+      "unrealized_pct": -0.23,
+      "note": "持仓中浮盈亏"
+    }
+  },
+  "price_context": {
+    "as_of": "2026-06-20",
+    "analyzed_side": "Yes",
+    "price_source": "568历史close",
+    "current_price": 0.94,
+    "implied_probability_pct": 94.0,
+    "remaining_upside_per_share_usd": 0.06,
+    "remaining_upside_pct_if_win": 6.38,
+    "downside_per_share_usd": 0.94,
+    "odds_to_one": 0.06,
+    "entry_price": 0.9422,
+    "price_delta": -0.0022,
+    "price_delta_pct": -0.23
+  },
+  "catalysts": {
+    "positive": [
+      {
+        "title": "Trump says he is going to Turkey, China this year - TradingView",
+        "url": "https://www.tradingview.com/news/reuters.com,2026:newsml_S0N4040CP:0-trump-says-he-is-going-to-turkey-china-this-year/",
+        "date": "2026-06-19",
+        "reason": "特朗普表示他将在2026年访问土耳其",
+        "type": "当事人直接表态",
+        "price_reaction": {
+          "available": true,
+          "window": [
+            "2026-06-18",
+            "2026-06-20"
+          ],
+          "price_before": 0.977,
+          "price_after": 0.94,
+          "move_pct": -3.79,
+          "direction": "▼",
+          "caveat": "该新闻发布前后市场变动，时间相关非因果",
+          "market_check": "市场反应微弱(<5%)"
+        }
+      }
+    ],
+    "negative": [],
+    "balance_summary": "正向证据按类型陈列：当事人直接表态×1；负向证据按类型陈列：无。每条已刻明客观事实类型（材质）——系统不替你称量轻重，不同材质的份量请自行掂量。 系统已完成证据陈述，天平由你裁决。",
+    "honesty_caveat": {
+      "positive_side": "fully_backed",
+      "negative_side": "true_clearance"
+    },
+    "guards": {
+      "relevance_dropped": [],
+      "type_deviations": [],
+      "weight_word_hits": [],
+      "weight_in_reason_hits": [],
+      "fear_lexicon_hits": [],
+      "directive_hits": []
+    }
+  },
+  "_audit": {
+    "teacher_tokens_approx": 2106,
+    "free_sources": [
+      "581",
+      "579",
+      "569",
+      "556",
+      "568",
+      "574"
+    ],
+    "catalyst_window": [
+      "2026-06-10",
+      "2026-06-20"
+    ]
+  },
+  "organized_text": "**证据材质的失重悖论**\n\n支持侧只有一条证据，但材质是最硬的\"当事人直接表态\"——特朗普亲口说今年要去土耳其。这本该是重磅催化剂，可市场给出的反应是下跌近4%，幅度微弱到几乎可视为无反应。这揭示了尖锐的测谎矛盾：当事人表态通常是市场最信任的信号源，但这次真金白银却选择\"听而不信\"，甚至略微逆向定价。可能的解读包括：市场认为这是外交辞令而非确定行程，或者特朗普过往类似表态的兑现率让交易者保持警惕。\n\n威胁侧完全空白，没有任何反向证据——无人否认、无行程冲突、无地缘阻碍被报道。从证据天平看，这是\"单侧有料 vs 纯真空\"的格局。但恰恰是这种不对称让张力浮现：若支持证据足够硬，为何市场不买账？若市场怀疑有隐藏变量（如行程可变性、安全考量、外交优先级变动），这些变量目前都停留在\"未被报道\"的暗面，无法量化也无从反驳。\n\n**不可归因的提示**：玩家押注时市场已在高位（七成概率附近），当事人表态后价格未涨反跌，说明这笔仓位的时机选择踩在了\"利好出尽\"的可能节点。此时即便方向最终正确，中途波动的归因也已模糊——是表态质量不足，还是市场提前透支，或仅仅是短期噪音，三者无法拆解。\n\n系统已完成证据陈述,天平由你裁决。\n\n系统已完成证据陈述，天平由你裁决。",
+  "organize_guards": {
+    "directive_hits": [],
+    "fear_lexicon_hits": []
+  }
+}

@@ -1,0 +1,287 @@
+{
+  "meta": {
+    "wallet": "0xc6587b11a2209e46dfe3928b31c5514a8e33b784",
+    "market": "Will the Democratic Party control the House after the 2026 Midterm elections?",
+    "analyzed_side": "No",
+    "as_of": "2026-06-20",
+    "mode": "live",
+    "catalyst_anchor": "2026-06-20",
+    "settle": "还有约136.0天"
+  },
+  "who_trader_profile": {
+    "wallet": "0xc6587b11a2209e46dfe3928b31c5514a8e33b784",
+    "quality": {
+      "combined_risk_score": 0,
+      "max_drawdown": 3.6485,
+      "drawdown_frequency": 0.1111,
+      "avg_trade_size": 3731.48,
+      "markets_traded": 14,
+      "num_markets_traded": 14,
+      "category_diversity_score": 0.1008,
+      "market_concentration_ratio": 0.7674,
+      "annualized_return": 38.4181,
+      "gain_to_pain_ratio": 10.5387,
+      "equity_curve_pattern": "volatile",
+      "perfect_timing_flag": false,
+      "flagged_metrics": "{}",
+      "losing_trades": 2,
+      "best_market_pnl": 251741.95,
+      "dominant_market_pnl": 251741.95,
+      "window_days": "15"
+    },
+    "category_specialization": [
+      {
+        "category": "Politics / US / Trump",
+        "roi": 156.4996,
+        "win_rate": 0.9,
+        "total_pnl": 276692.64,
+        "total_trades": 49
+      },
+      {
+        "category": "Politics / US",
+        "roi": 156.4996,
+        "win_rate": 0.9,
+        "total_pnl": 276692.64,
+        "total_trades": 49
+      },
+      {
+        "category": "Politics",
+        "roi": 94.7296,
+        "win_rate": 0.8571,
+        "total_pnl": 275715.58,
+        "total_trades": 78
+      },
+      {
+        "category": "Other",
+        "roi": 94.7296,
+        "win_rate": 0.8571,
+        "total_pnl": 275715.58,
+        "total_trades": 78
+      },
+      {
+        "category": "Politics / Global",
+        "roi": 95.5134,
+        "win_rate": 0.8462,
+        "total_pnl": 273499.9,
+        "total_trades": 77
+      },
+      {
+        "category": "Politics / US / Elections",
+        "roi": 47.0588,
+        "win_rate": 1.0,
+        "total_pnl": 2215.68,
+        "total_trades": 1
+      },
+      {
+        "category": "Finance & Markets",
+        "roi": -15.3458,
+        "win_rate": 0.0,
+        "total_pnl": -16077.42,
+        "total_trades": 24
+      }
+    ],
+    "official_rank": {
+      "period": "30d",
+      "rank": 782347,
+      "roi": "-0.543278",
+      "win_rate": "0.6071",
+      "sharpe_ratio": "-0.0548",
+      "total_pnl": "-250986.7920",
+      "total_invested": "461985.57",
+      "total_trades": 111,
+      "markets_traded": 26
+    },
+    "realized_pnl_recent": {
+      "window": [
+        "2026-05-20",
+        "2026-06-20"
+      ],
+      "days_returned": 11,
+      "realized_pnl_sum": -12682.46
+    },
+    "h_score": {
+      "available": true,
+      "h_score": "61.702",
+      "tier": "Sharp",
+      "leaderboard_rank": 2558
+    }
+  },
+  "what_position_actions": {
+    "wallet": "0xc6587b11a2209e46dfe3928b31c5514a8e33b784",
+    "condition_id": "0xd5d9fc47718bd553592d126b1fa5e87183d27f3936975b0c04cc0f2dec1f1bb4",
+    "analyzed_side": "No",
+    "market": {
+      "question": "Will the Democratic Party control the House after the 2026 Midterm elections?",
+      "winning_outcome": null,
+      "closed": false,
+      "settle_date": "2026-11-03",
+      "days_to_settlement": 136.0,
+      "settle_note": "还有约136.0天"
+    },
+    "two_side_distribution": {
+      "hedged": false,
+      "by_outcome": {
+        "No": {
+          "trades": 1,
+          "shares": 50000.0
+        }
+      },
+      "note": "仅单边建仓"
+    },
+    "actions": {
+      "entry_time": "2026-04-29 14:07",
+      "last_add_time": "2026-04-29 14:07",
+      "num_buys": 1,
+      "num_sells": 22,
+      "added_over_time": false,
+      "avg_entry_price": 0.15,
+      "net_shares": 0.0,
+      "net_cost_usd": -500.0
+    },
+    "unrealized": {
+      "current_price": 0.19,
+      "price_source": "568最新close",
+      "current_value_usd": 0.0,
+      "unrealized_pnl_usd": 500.0,
+      "unrealized_pct": -100.0,
+      "note": "持仓中浮盈亏"
+    }
+  },
+  "price_context": {
+    "as_of": "2026-06-20",
+    "analyzed_side": "No",
+    "price_source": "568历史close",
+    "current_price": 0.19,
+    "implied_probability_pct": 19.0,
+    "remaining_upside_per_share_usd": 0.81,
+    "remaining_upside_pct_if_win": 426.32,
+    "downside_per_share_usd": 0.19,
+    "odds_to_one": 4.26,
+    "entry_price": 0.15,
+    "price_delta": 0.04,
+    "price_delta_pct": 26.67
+  },
+  "catalysts": {
+    "positive": [
+      {
+        "title": "Commentary: Gerrymanders, judges and an alley-oop: A look at the midterm fight for control of Congress - Los Angeles Times",
+        "url": "https://www.latimes.com/politics/story/2026-06-17/midterm-election-handicapping-senate-house-control-congress-democrats-republicans",
+        "date": "2026-06-17",
+        "reason": "文章指出共和党在重新划区战役结束后占据优势，表明共和党而非民主党在众议院竞争中处于有利位置。",
+        "type": "其他背景",
+        "price_reaction": {
+          "available": true,
+          "window": [
+            "2026-06-16",
+            "2026-06-18"
+          ],
+          "price_before": 0.18,
+          "price_after": 0.19,
+          "move_pct": 5.56,
+          "direction": "▲",
+          "caveat": "该新闻发布前后市场变动，时间相关非因果",
+          "market_check": "市场印证该分类"
+        }
+      },
+      {
+        "title": "Republicans gained edge over Democrats in redistricting battle, internal party assessment finds - BBC",
+        "url": "https://www.bbc.com/news/articles/clye2v78x2yo",
+        "date": "2026-06-10",
+        "reason": "根据众议院共和党内部评估，重新划区为共和党在众议院增加了10个倾向共和党的席位，增强了共和党保持控制权的能力。",
+        "type": "其他背景",
+        "price_reaction": {
+          "available": true,
+          "window": [
+            "2026-06-09",
+            "2026-06-11"
+          ],
+          "price_before": 0.18,
+          "price_after": 0.18,
+          "move_pct": 0.0,
+          "direction": "—",
+          "caveat": "该新闻发布前后市场变动，时间相关非因果",
+          "market_check": "市场反应微弱(<5%)"
+        }
+      }
+    ],
+    "negative": [
+      {
+        "title": "Republicans' Chances of Losing Control of House: 3 Election Forecasts - Newsweek",
+        "url": "https://www.newsweek.com/republicans-chances-of-losing-control-of-house-3-election-forecasts-12054968",
+        "date": "2026-06-10",
+        "reason": "三家选举预测机构的最新众议院评级显示民主党可能翻转控制权，共和党目前虽有更多安全/倾向席位，但民主党被认为处于可翻转位置。该预测与押注方向No（民主党不控制众议院）相反。",
+        "type": "市场价格信号",
+        "price_reaction": {
+          "available": true,
+          "window": [
+            "2026-06-09",
+            "2026-06-11"
+          ],
+          "price_before": 0.18,
+          "price_after": 0.18,
+          "move_pct": 0.0,
+          "direction": "—",
+          "caveat": "该新闻发布前后市场变动，时间相关非因果",
+          "market_check": "市场反应微弱(<5%)",
+          "same_window": "同窗2条新闻，变动为合计、不可归因到单条"
+        }
+      },
+      {
+        "title": "Progressive Randy Villegas' Chances of Winning California House Race - Newsweek",
+        "url": "https://www.newsweek.com/progressive-randy-villegas-chances-winning-california-house-race-12052954",
+        "date": "2026-06-10",
+        "reason": "预测市场显示民主党在加州第22选区占据优势，该选区被认为是2026年最的众议院竞选之一。民主党在个别选区的优势可能累积影响整体控制权。",
+        "type": "市场价格信号",
+        "price_reaction": {
+          "available": true,
+          "window": [
+            "2026-06-09",
+            "2026-06-11"
+          ],
+          "price_before": 0.18,
+          "price_after": 0.18,
+          "move_pct": 0.0,
+          "direction": "—",
+          "caveat": "该新闻发布前后市场变动，时间相关非因果",
+          "market_check": "市场反应微弱(<5%)",
+          "same_window": "同窗2条新闻，变动为合计、不可归因到单条"
+        }
+      }
+    ],
+    "balance_summary": "正向证据按类型陈列：其他背景×2；负向证据按类型陈列：市场价格信号×2。每条已刻明客观事实类型（材质）——系统不替你称量轻重，不同材质的份量请自行掂量。 系统已完成证据陈述，天平由你裁决。",
+    "honesty_caveat": {
+      "positive_side": "fully_backed",
+      "negative_side": "fully_backed"
+    },
+    "guards": {
+      "relevance_dropped": [],
+      "type_deviations": [],
+      "weight_word_hits": [],
+      "weight_in_reason_hits": [
+        {
+          "reason": "预测市场显示民主党在加州第22选区占据优势，该选区被认为是2026年最关键的众议院竞选之一。民主党在个别关键选区的优势可能累积影响整体控制权。",
+          "words": [
+            "关键"
+          ]
+        }
+      ],
+      "fear_lexicon_hits": [],
+      "directive_hits": []
+    }
+  },
+  "_audit": {
+    "teacher_tokens_approx": 2561,
+    "free_sources": [
+      "581",
+      "579",
+      "569",
+      "556",
+      "568",
+      "574"
+    ],
+    "catalyst_window": [
+      "2026-06-10",
+      "2026-06-20"
+    ]
+  }
+}

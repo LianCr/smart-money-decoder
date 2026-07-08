@@ -19,6 +19,7 @@ api/main.py — smart-money-decoder 的 FastAPI 后端
 
 import json
 import os
+import shutil
 import sys
 import time
 from datetime import date
@@ -28,21 +29,32 @@ from dotenv import load_dotenv
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
+from fastapi.staticfiles import StaticFiles
 
 load_dotenv()
 
+# ── 种子缓存（部署用）：云端磁盘 ephemeral，每次冷启动从 git 跟踪的 seed/ 恢复 ──
+# 本地 .cache/.data 已存在 → 不覆盖；只有全新环境（如 Render 冷启动）才复制。
+for _src, _dst in [(Path("seed/cache"), Path(".cache")), (Path("seed/data"), Path(".data"))]:
+    if _src.exists() and not _dst.exists():
+        try:
+            shutil.copytree(_src, _dst)
+            print(f"🌱 种子缓存恢复：{_src} → {_dst}", flush=True)
+        except Exception as e:
+            print(f"⚠ 种子缓存恢复失败：{e}", flush=True)
+
+from core.config import BRIEFING_AS_OF
 from fetcher.polymarket import get_top_political_position
 from fetcher.activity import get_entry_time, ActivityAPIError
 from fetcher.trades import get_entry_time_v2, get_wallet_profile, get_wallet_pnl_history
 from fetcher.news import get_news_for_market
 from analyzer.decoder import decode_position, DecoderError
-from api.backtest_mock import MOCK_BACKTEST
 from briefing.assemble import load_or_build_briefing
 from briefing.organize import organize_briefing
 from fetcher.positions import get_top_political_position_hz
 from briefing.market_context import load_or_build as build_market_context
 from briefing.market_context import get_behavior_flags
-from analyzer.reasoner_v3 import reason_v3, ReasonerError, build_facts
+from analyzer.reasoner_v3 import build_facts
 from analyzer.market_thesis import build_market_thesis, map_wallet
 from fetcher.heisenberg import call as hz_call, results as hz_results, AGENTS as HZ_AGENTS
 from briefing import board_feed
@@ -107,11 +119,7 @@ BRIEFING_CACHE  = Path(".cache/briefing_api")   # 完整简报响应缓存（结
 DASHBOARD_CACHE = Path(".cache/dashboard")      # 统一看板整份响应缓存（①-⑥），命中=零 token 秒回
 REASONER_CACHE  = Path(".cache/reasoner_v3")     # ⑥ reasoner 独立缓存：改 ⑤/② 重建看板不重烧 ⑥
 BOARD_AI_CACHE  = Path(".cache/board_ai")        # ⑤综述+②what_bet 独立缓存：改新闻流结构/前端不重烧 AI
-# 🔴 里程碑（2026-06-25）：拔掉 6-20 快照钉子，推进到数据世界"现在"(6-25 固定)。
-# 一次性解锁：当前数据 + 社媒动量并排(585 仅实时) + 记分牌从今天起真实积累。
-# 暂用固定 6-25（不用 wall-clock date.today()）以免数据世界每天前进、缓存天天过期重烧；
-# 真上 Bedrock/有预算时再切 date.today() 走逐日实时。
-BRIEFING_AS_OF  = os.environ.get("BRIEFING_AS_OF", "2026-06-25")
+# 🔴 BRIEFING_AS_OF 已收口到 core/config.py（单一出口，改那边）。
 
 
 def _difficulty(entry_price):
@@ -283,7 +291,7 @@ _Q_STOP = {"will", "the", "a", "an", "be", "is", "are", "by", "out", "as", "of",
 
 def _entities_from_question(q: str) -> list[str]:
     import re
-    toks = re.findall(r"[A-Za-z]{3,}", q or "")
+    toks = re.findall(r"[A-Za-z]{3,}(?:-[A-Za-z]{3,})*", q or "")   # 连字名保留整体（Jae-myung 不拆；US-Iran 仍取 Iran，US 2 字母跳过）
     ents, seen = [], set()
     for t in toks:
         low = t.lower()
@@ -419,17 +427,45 @@ def _tag_catalyst_relations(cats: dict, entry_time):
     return cats
 
 
+def _purge_wallet_caches(wallet: str, cid: str, outcome: str) -> int:
+    """强制刷新：删掉该 (钱包,as_of) 及其所在盘的各层缓存文件 → 后续正常流程全部重建并重新落盘。
+    只删文件、不动缓存 key 格式；market_thesis 按 (cid,as_of) 共享，删了会连带其他共持钱包下次重烧（语义正确：刷新=要最新）。"""
+    from briefing.assemble import _cache_path as briefing_cache_path
+    from briefing.market_context import cache_file as mc_cache_file
+    from analyzer.market_thesis import _cache_path as thesis_cache_path
+    w = wallet.lower()
+    targets = [
+        DASHBOARD_CACHE / f"{w}_{BRIEFING_AS_OF}.json",
+        BRIEFING_CACHE / f"{w}_{BRIEFING_AS_OF}.json",
+        REASONER_CACHE / f"{w}_{BRIEFING_AS_OF}.json",
+        BOARD_AI_CACHE / f"{w}_{BRIEFING_AS_OF}.json",
+        briefing_cache_path(wallet, cid, BRIEFING_AS_OF, "live"),
+        mc_cache_file(cid, BRIEFING_AS_OF, outcome, wallet),
+        thesis_cache_path(cid, BRIEFING_AS_OF),
+    ]
+    n = 0
+    for p in targets:
+        try:
+            if p.exists():
+                p.unlink()
+                n += 1
+        except Exception:
+            pass
+    return n
+
+
 @app.get("/dashboard")
-def dashboard(wallet: str):
+def dashboard(wallet: str, refresh: int = 0):
     """v3 统一看板：①身份 ②这一注 ③实时盘面 ④行为流 ⑤世界催化剂 ⑥Edge/Reasoning。
-    复用已封板模块输出（briefing + behavioral_flag + reasoner ⑥ + pnl 曲线），整份按(钱包,as_of)硬缓存。"""
+    复用已封板模块输出（briefing + behavioral_flag + reasoner ⑥ + pnl 曲线），整份按(钱包,as_of)硬缓存。
+    refresh=1：绕过并删除该钱包各层缓存强制重建（烧 token，demo 前刷新最新数据用）。"""
     t0 = time.time()
     wallet = (wallet or "").strip()
-    _log(f"\n=== /dashboard wallet={wallet[:14]}… ===")
+    _log(f"\n=== /dashboard wallet={wallet[:14]}…{' [REFRESH]' if refresh else ''} ===")
 
     cache_key  = f"{wallet.lower()}_{BRIEFING_AS_OF}"
     cache_path = DASHBOARD_CACHE / f"{cache_key}.json"
-    if cache_path.exists():
+    if not refresh and cache_path.exists():
         try:
             _log(f"   ⚡ CACHE HIT {cache_key} — 零 token 秒回")
             return json.loads(cache_path.read_text(encoding="utf-8"))
@@ -446,6 +482,10 @@ def dashboard(wallet: str):
             return _err(404, reason, position["message"])
         return _err(502, reason, position["message"])
     cid, outcome = position["market_id"], position["outcome"]
+
+    if refresh:
+        n = _purge_wallet_caches(wallet, cid, outcome)
+        _log(f"   ♻ 强制刷新：清掉 {n} 个缓存文件，全链路重建")
 
     slug = _market_slug(cid)
     market_q = position["market_question"]
@@ -496,6 +536,7 @@ def dashboard(wallet: str):
             reasoning = {
                 **reasoning,
                 "confidence": thesis["confidence"],                  # 单一信心，市场级
+                "confidence_source": "market_thesis",                # 降级可见：信心是哪套系统算的
                 "market_lean": thesis["market_lean"],
                 "lean_strength": thesis["lean_strength"],
                 "pivotal_unknown": thesis["pivotal_unknown"],
@@ -507,6 +548,8 @@ def dashboard(wallet: str):
             }
         except Exception as e:
             _log(f"   ⚠ market_thesis 失败，⑥ 退回旧矩阵：{type(e).__name__}: {e}")
+            # 降级不许静默（产品灵魂=诚实）：payload 里标明信心来自旧 pnl 锚定矩阵
+            reasoning = {**reasoning, "confidence_source": "fallback_v2_matrix"}
 
         # ① 画像 + PnL 曲线（best-effort，不阻塞）
         profile = get_wallet_profile(wallet)
@@ -654,3 +697,34 @@ def briefing(wallet: str):
     except Exception:
         pass
     return response
+
+
+@app.get("/demo-wallets")
+def demo_wallets():
+    """已缓存看板的钱包清单（入口页"秒开"列表用）：这些钱包点开零 token 秒回。"""
+    out, seen = [], set()
+    try:
+        for p in sorted(DASHBOARD_CACHE.glob(f"*_{BRIEFING_AS_OF}.json")):
+            try:
+                d = json.loads(p.read_text(encoding="utf-8"))
+            except Exception:
+                continue
+            w = d.get("wallet")
+            if not w or w.lower() in seen:
+                continue
+            seen.add(w.lower())
+            prof = (d.get("identity") or {}).get("profile") or {}
+            out.append({
+                "wallet": w,
+                "name": prof.get("name") or prof.get("pseudonym"),
+                "market_question": ((d.get("position") or {}).get("meta") or {}).get("market"),
+            })
+    except Exception:
+        pass
+    return {"as_of": BRIEFING_AS_OF, "wallets": out}
+
+
+# ── 生产托管：前端构建产物同源挂载（放在所有 API 路由之后，未匹配的路径落到 SPA）──
+_FRONTEND_DIST = Path("frontend/dist")
+if _FRONTEND_DIST.exists():
+    app.mount("/", StaticFiles(directory=str(_FRONTEND_DIST), html=True), name="frontend")

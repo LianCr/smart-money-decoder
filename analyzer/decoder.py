@@ -17,19 +17,9 @@ import re
 from datetime import datetime, timezone
 from pathlib import Path
 
-import requests
-from dotenv import load_dotenv
-
-load_dotenv()
-
-# ── 启动时校验 key，缺失直接报错 ────────────────────────────────────────────────
-CLASSROOM_API_KEY = os.environ.get("CLASSROOM_API_KEY")
-if not CLASSROOM_API_KEY:
-    raise RuntimeError("缺少 CLASSROOM_API_KEY，请在 .env 文件里配置")
+from core.llm import call_gateway, GatewayError
 
 # ── 配置项 ────────────────────────────────────────────────────────────────────
-CLASSROOM_API_URL = "https://4dm65e698a.execute-api.us-west-2.amazonaws.com/prod/invoke"
-MODEL             = "claude-sonnet-4.5"
 MAX_TOKENS        = 2000
 REQUEST_TIMEOUT   = 30
 USE_CACHE         = os.environ.get("USE_DECODER_CACHE", "false").lower() == "true"
@@ -218,33 +208,11 @@ def _call_classroom_gateway(system_prompt: str, user_payload: dict) -> str:
     )
 
     try:
-        resp = requests.post(
-            CLASSROOM_API_URL,
-            headers={
-                "Content-Type": "application/json",
-                "x-api-key":    CLASSROOM_API_KEY,
-            },
-            json={
-                "model":     MODEL,
-                "input":     combined_input,
-                "maxTokens": MAX_TOKENS,
-            },
-            timeout=REQUEST_TIMEOUT,
-        )
-    except requests.exceptions.Timeout:
-        raise DecoderError("GATEWAY_TIMEOUT", "解码网关超时，请稍后重试")
-    except requests.exceptions.ConnectionError:
-        raise DecoderError("GATEWAY_UNREACHABLE", "无法连接解码网关，请检查网络")
-
-    if resp.status_code == 429:
-        raise DecoderError("GATEWAY_RATE_LIMITED", "解码网关请求过于频繁，请稍后重试")
-    if resp.status_code != 200:
-        raise DecoderError(
-            "GATEWAY_HTTP_ERROR",
-            f"解码网关返回状态码 {resp.status_code}：{resp.text[:200]}",
-        )
-
-    output = resp.json().get("output", "").strip()
+        output = call_gateway(combined_input, max_tokens=MAX_TOKENS, timeout=REQUEST_TIMEOUT).strip()
+    except GatewayError as e:
+        reason = {"TIMEOUT": "GATEWAY_TIMEOUT", "UNREACHABLE": "GATEWAY_UNREACHABLE",
+                  "RATE_LIMITED": "GATEWAY_RATE_LIMITED"}.get(e.reason, "GATEWAY_HTTP_ERROR")
+        raise DecoderError(reason, e.message)
     if not output:
         raise DecoderError("GATEWAY_EMPTY", "解码网关返回空 output")
     return output

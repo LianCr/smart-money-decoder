@@ -1,0 +1,255 @@
+{
+  "meta": {
+    "wallet": "0x6bab41a0dc40d6dd4c1a915b8c01969479fd1292",
+    "market": "Will Luiz Inácio Lula da Silva win the 2026 Brazilian presidential election?",
+    "analyzed_side": "Yes",
+    "as_of": "2026-06-20",
+    "mode": "live",
+    "catalyst_anchor": "2026-06-20",
+    "settle": "还有约106.0天"
+  },
+  "who_trader_profile": {
+    "wallet": "0x6bab41a0dc40d6dd4c1a915b8c01969479fd1292",
+    "quality": {
+      "combined_risk_score": 35,
+      "max_drawdown": 0.0067,
+      "drawdown_frequency": 0,
+      "avg_trade_size": 753.13,
+      "markets_traded": 33,
+      "num_markets_traded": 33,
+      "category_diversity_score": 0.3936,
+      "market_concentration_ratio": 0.6057,
+      "annualized_return": null,
+      "gain_to_pain_ratio": 26.9178,
+      "equity_curve_pattern": "volatile",
+      "perfect_timing_flag": false,
+      "flagged_metrics": "{suspicious_win_rate,position_size_volatility}",
+      "losing_trades": 11,
+      "best_market_pnl": 134173.29,
+      "dominant_market_pnl": 134173.29,
+      "window_days": "15"
+    },
+    "category_specialization": [
+      {
+        "category": "Other",
+        "roi": 25.4891,
+        "win_rate": 0.9591,
+        "total_pnl": 167790.88,
+        "total_trades": 875
+      },
+      {
+        "category": "Politics",
+        "roi": 32.0234,
+        "win_rate": 0.9625,
+        "total_pnl": 167059.44,
+        "total_trades": 642
+      },
+      {
+        "category": "Politics / Global",
+        "roi": 34.0936,
+        "win_rate": 0.9554,
+        "total_pnl": 166527.45,
+        "total_trades": 582
+      },
+      {
+        "category": "Politics / US",
+        "roi": 37.2157,
+        "win_rate": 0.9667,
+        "total_pnl": 159087.95,
+        "total_trades": 406
+      },
+      {
+        "category": "Politics / US / Trump",
+        "roi": 50.0486,
+        "win_rate": 0.9479,
+        "total_pnl": 157863.52,
+        "total_trades": 317
+      },
+      {
+        "category": "Finance & Markets",
+        "roi": 9.1511,
+        "win_rate": 1.0,
+        "total_pnl": 2004.42,
+        "total_trades": 95
+      },
+      {
+        "category": "Sports",
+        "roi": 0.7376,
+        "win_rate": 0.9701,
+        "total_pnl": 1263.43,
+        "total_trades": 294
+      },
+      {
+        "category": "Politics / US / Elections",
+        "roi": 1.0927,
+        "win_rate": 1.0,
+        "total_pnl": 1224.43,
+        "total_trades": 89
+      },
+      {
+        "category": "Sports / Soccer",
+        "roi": 0.5333,
+        "win_rate": 0.9756,
+        "total_pnl": 893.12,
+        "total_trades": 264
+      },
+      {
+        "category": "Culture & Entertainment",
+        "roi": 1.6006,
+        "win_rate": 1.0,
+        "total_pnl": 531.99,
+        "total_trades": 60
+      },
+      {
+        "category": "Esports / Counter-Strike",
+        "roi": 9.6649,
+        "win_rate": 0.9615,
+        "total_pnl": 370.3,
+        "total_trades": 30
+      },
+      {
+        "category": "Esports",
+        "roi": 9.6649,
+        "win_rate": 0.9615,
+        "total_pnl": 370.3,
+        "total_trades": 30
+      }
+    ],
+    "official_rank": {
+      "period": "30d",
+      "rank": 85,
+      "roi": "0.219352",
+      "win_rate": "0.8762",
+      "sharpe_ratio": "0.1052",
+      "total_pnl": "319200.6364",
+      "total_invested": "1455197.04",
+      "total_trades": 1540,
+      "markets_traded": 51
+    },
+    "realized_pnl_recent": {
+      "window": [
+        "2026-05-20",
+        "2026-06-20"
+      ],
+      "days_returned": 11,
+      "realized_pnl_sum": -11409.5
+    },
+    "h_score": {
+      "available": false,
+      "note": "不在 H-Score 榜首页（584 无按地址查，官方排名见 official_rank/579）"
+    }
+  },
+  "what_position_actions": {
+    "wallet": "0x6bab41a0dc40d6dd4c1a915b8c01969479fd1292",
+    "condition_id": "0xdf8e2dc5860027decbe6164555c3c1c9645c3bd33e16b9dc57ca87125047d4a8",
+    "analyzed_side": "Yes",
+    "market": {
+      "question": "Will Luiz Inácio Lula da Silva win the 2026 Brazilian presidential election?",
+      "winning_outcome": null,
+      "closed": false,
+      "settle_date": "2026-10-04",
+      "days_to_settlement": 106.0,
+      "settle_note": "还有约106.0天"
+    },
+    "two_side_distribution": {
+      "hedged": false,
+      "by_outcome": {
+        "Yes": {
+          "trades": 168,
+          "shares": 9289.9
+        }
+      },
+      "note": "仅单边建仓"
+    },
+    "actions": {
+      "entry_time": "2026-05-13 19:59",
+      "last_add_time": "2026-06-10 02:55",
+      "num_buys": 168,
+      "num_sells": 0,
+      "added_over_time": true,
+      "avg_entry_price": 0.438,
+      "net_shares": 9289.9,
+      "net_cost_usd": 4069.24
+    },
+    "unrealized": {
+      "current_price": 0.52,
+      "price_source": "568最新close",
+      "current_value_usd": 4830.75,
+      "unrealized_pnl_usd": 761.51,
+      "unrealized_pct": 18.71,
+      "note": "持仓中浮盈亏"
+    }
+  },
+  "price_context": {
+    "as_of": "2026-06-20",
+    "analyzed_side": "Yes",
+    "price_source": "568历史close",
+    "current_price": 0.52,
+    "implied_probability_pct": 52.0,
+    "remaining_upside_per_share_usd": 0.48,
+    "remaining_upside_pct_if_win": 92.31,
+    "downside_per_share_usd": 0.52,
+    "odds_to_one": 0.92,
+    "entry_price": 0.438,
+    "price_delta": 0.082,
+    "price_delta_pct": 18.72
+  },
+  "catalysts": {
+    "positive": [
+      {
+        "title": "Brazil's Lula widens lead over Flavio Bolsonaro ahead of presidential vote, poll shows - Reuters",
+        "url": "https://www.reuters.com/world/americas/brazils-lula-widens-lead-over-flavio-bolsonaro-ahead-presidential-vote-poll-2026-06-10/",
+        "date": "2026-06-10",
+        "reason": "民调显示Lula在2026年总统选举前对主要对手Flavio Bolsonaro的领先优势扩大",
+        "type": "民调数据",
+        "price_reaction": {
+          "available": true,
+          "window": [
+            "2026-06-09",
+            "2026-06-11"
+          ],
+          "price_before": 0.41,
+          "price_after": 0.45,
+          "move_pct": 9.76,
+          "direction": "▲",
+          "caveat": "该新闻发布前后市场变动，时间相关非因果",
+          "market_check": "市场印证该分类"
+        }
+      }
+    ],
+    "negative": [],
+    "balance_summary": "正向证据按类型陈列：民调数据×1；负向证据按类型陈列：无。每条已刻明客观事实类型（材质）——系统不替你称量轻重，不同材质的份量请自行掂量。 系统已完成证据陈述，天平由你裁决。",
+    "honesty_caveat": {
+      "positive_side": "fully_backed",
+      "negative_side": "true_clearance"
+    },
+    "guards": {
+      "relevance_dropped": [],
+      "type_deviations": [],
+      "weight_word_hits": [],
+      "weight_in_reason_hits": [],
+      "fear_lexicon_hits": [],
+      "directive_hits": []
+    }
+  },
+  "_audit": {
+    "teacher_tokens_approx": 1949,
+    "free_sources": [
+      "581",
+      "579",
+      "569",
+      "556",
+      "568",
+      "574"
+    ],
+    "catalyst_window": [
+      "2026-06-10",
+      "2026-06-20"
+    ]
+  },
+  "organized_text": "**证据天平的材质**\n\n支持侧目前只有一条民调数据——路透社报道Lula对主要对手Flavio Bolsonaro的领先优势扩大。这是典型的\"快照型\"证据：捕捉某个时间切面的公众情绪，但距离结算日还有三个多月，民调本身的保质期和转化率需要用户自行掂量。市场在该消息后上涨近10%，价格与分类方向一致，未出现测谎信号。\n\n威胁侧目前无记录证据——这并非\"利好确凿\"的同义词，而是提示用户：距结算尚有时日，静默期内可能酝酿尚未浮出水面的变量（健康、丑闻、联盟分裂等政治盘的经典逆转因子），当前天平呈现的是\"单侧有声、另侧待填\"的非对称状态。\n\n**不可归因提示**：正向催化剂仅一条，若后续出现同向证据叠加，需警惕\"多条同窗期消息合计不可归因于单一事件\"的陷阱——价格可能已提前消化预期或对某条过度反应。\n\n系统已完成证据陈述，天平由你裁决。",
+  "organize_guards": {
+    "directive_hits": [],
+    "fear_lexicon_hits": []
+  }
+}

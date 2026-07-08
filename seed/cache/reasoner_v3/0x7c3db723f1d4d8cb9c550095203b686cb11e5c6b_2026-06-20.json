@@ -1,0 +1,32 @@
+{
+  "follow_call": "NO BASIS",
+  "confidence": "medium",
+  "reasoning": "这个钱包单边押注特朗普会去土耳其，支持证据只有特朗普本人的一句表态，但市场对这句话反应很冷淡，价格甚至微跌。威胁面没有明确新闻，但也没有实质进展支撑这个方向。钱包近48小时没动，价格基本在原地，距离结算还有半年多，现在跟进缺乏足够依据。信心定为中等是因为钱包持仓至今几乎没赚没亏，处在僵持状态。",
+  "confidence_reasons": [
+    "底座矩阵:medium(pnl=-0.2%)"
+  ],
+  "facts": {
+    "market_question": "Will Donald Trump visit Turkey in 2026?",
+    "outcome": "Yes",
+    "today": "2026-06-20",
+    "price_room_left": 6.38,
+    "price_already_moved": -0.23,
+    "resolution_date_human": "还有约194.0天",
+    "position_type": "single_side_conviction",
+    "recent_action": "flat_no_movement",
+    "support_catalysts": [
+      {
+        "title": "Trump says he is going to Turkey, China this year - TradingView",
+        "material_tag": "当事人直接表态",
+        "market_reaction": "weak",
+        "move_pct": -3.79,
+        "same_window": false
+      }
+    ],
+    "threat_catalysts": [],
+    "confidence": "medium",
+    "confidence_reasons": [
+      "底座矩阵:medium(pnl=-0.2%)"
+    ]
+  }
+}

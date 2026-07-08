@@ -12,6 +12,7 @@ fetcher/markets.py — 市场反向找大户（扫榜推荐"正解源"原语）
 from collections import defaultdict
 from datetime import datetime, timedelta, timezone
 
+from core.config import BRIEFING_AS_OF
 from fetcher.heisenberg import AGENTS, HeisenbergError, call, results
 
 
@@ -22,7 +23,7 @@ def _f(x):
         return None
 
 
-def get_market_holders(cid, as_of="2026-06-25", top_n=10, window_days=60):
+def get_market_holders(cid, as_of=BRIEFING_AS_OF, top_n=10, window_days=60):
     """某盘当前净持仓最大的大户 → [(wallet, net_value), ...]（556 按 cid 全量、proxy_wallet=ALL、聚合净买入额）。
     net = Σ(BUY size×price) − Σ(SELL size×price)；只留净>0（仍持有的多头侧）。空盘/已清仓自然返空。"""
     if not (cid and str(cid).startswith("0x")):

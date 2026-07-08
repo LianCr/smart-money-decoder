@@ -1,0 +1,97 @@
+{
+  "market_lean": "NO",
+  "lean_strength": 95,
+  "confidence": "low",
+  "pivotal_unknown": "2026年6月的报道真实性——所有证据来自未来日期（距今189天后），无法验证其真实发生",
+  "rationale": "所有文章日期均为2026年6月（未来事件），描述Burnham已赢得补选、将在数周内成为首相。虽然价格流动性高且共识稳定（98%倾向NO），但这是对**未来预言文章**的定价，而非对已发生事实的验证。证据与价格方向一致指向NO（Burnham不会在2026年成为首相，因报道本身是虚构未来），但因时间悖论（无法验证未来日期文章的真实性）和volume_collapse_flag警示，信心必须压低——两个指向未来的信号一致不等于可信。",
+  "implied_prob_yes": 98,
+  "shared_pool": [
+    {
+      "title": "Who is Andy Burnham, U.K.’s ‘King of the North’ and likely next prime minister? - The Washington Post",
+      "url": "https://www.washingtonpost.com/world/2026/06/22/who-is-andy-burnham-uks-king-north-likely-next-prime-minister/",
+      "date": "2026-06-22",
+      "summary": "# Who is Andy Burnham, U.K.’s ‘King of the North’ and likely next prime minister? The runaway favorite to succeed Prime Minister Keir Starmer is a longtime mayor equally comfortable in the corridors of Westminster and in working-class northern England. Make us preferred on Google. Andy Burnham, who"
+    },
+    {
+      "title": "Andy Burnham inches closer to UK premiership as Starmer seeks legacy in final days - The Times of Israel",
+      "url": "https://www.timesofisrael.com/andy-burnham-inches-closer-to-uk-premiership-as-starmer-seeks-legacy-in-final-days/",
+      "date": "2026-06-24",
+      "summary": "Andy Burnham, front left, is sworn-in as an MP in the House of Common in London, England, June 22, 2026. LONDON (AP) — Andy Burnham took a step closer to becoming Britain’s next prime minister without a contest on Wednesday when Cabinet minister Darren Jones, touted as a possible rival, said he woul"
+    },
+    {
+      "title": "Andy Burnham is the 'King of the North' with his eyes on 10 Downing Street - The Sun Chronicle",
+      "url": "https://www.thesunchronicle.com/news/nation_world/andy-burnham-is-the-king-of-the-north-with-his-eyes-on-10-downing-street/article_82676b3a-ee12-54fc-9f18-8a6e94bef61c.html",
+      "date": "2026-06-19",
+      "summary": "Labour party's Andy Burnham speaks after winning the Makerfield by-election, paving the way for a leadership challenge against Prime Minister Sir Keir Starmer. Andy Burnham, Britain's Labour candidate for Makerfield, speaks in front of supporters during the by-election in Makerfield, England, Thursd"
+    },
+    {
+      "title": "Andy Burnham prepares for a UK Labour leadership contest that may be a coronation - The Washington Post",
+      "url": "https://www.washingtonpost.com/business/2026/06/23/andy-burnham-uk-labour-leadership-contest-starmer/c29b3130-6ede-11f1-8730-e7fd0e2a6404_story.html",
+      "date": "2026-06-23",
+      "summary": "# Andy Burnham prepares for a UK Labour leadership contest that may be a coronation. Andy Burnham is preparing for a Labour leadership contest that could make him Britain’s prime minister within weeks. Andy Burnham with colleagues from the Parliamentary Labour Party in Westminster Hall at the Houses"
+    },
+    {
+      "title": "Andy Burnham prepares for a UK Labour leadership contest that may be a coronation - AP News",
+      "url": "https://apnews.com/article/andy-burnham-uk-labour-leadership-contest-starmer-693acb49a71838b7acf3f8fa4663f8bc",
+      "date": "2026-06-23",
+      "summary": "Test Your News I.Q. 2026 Elections Election Results Election calendar White House Congress Supreme Court The latest AP-NORC polls Ground Game. 2026 Elections Election Results Election calendar White House Congress Supreme Court The latest AP-NORC polls Ground Game. Andy Burnham with colleagues from"
+    },
+    {
+      "title": "Meet Labour's 'King of the North,' the 56-year-old representing Greater Manchester and challenging Keir Starmer - Fortune",
+      "url": "https://fortune.com/2026/06/21/andy-burnham-makerfield-labour-leadership-starmer/",
+      "date": "2026-06-21",
+      "summary": "Andy Burnham, Britain's Labour candidate for Makerfield, speaks in front of supporters during the by-election in Makerfield, England, Thursday, June 18, 2026 where voters are choosing a new lawmaker with Andy Burnham of the Labour Party as the leading contender.AP Photo/Jon Super. He’s also an exper"
+    },
+    {
+      "title": "Analysis: Everything points to Burnham becoming PM within weeks - BBC",
+      "url": "https://www.bbc.com/news/articles/c20y1zvg50lo",
+      "date": "2026-06-22",
+      "summary": "Shortly after 10 o'clock this morning Andy Burnham finally confirmed what had been obvious for days - that he would stand to be the next Labour leader and therefore the UK's next prime minister. Streeting acknowledged that he and Burnham had \"spoken at length\" since the latter's by-election victory,"
+    },
+    {
+      "title": "What Has Andy Burnham, Britain's Likely Next Prime Minister, Said About Trump? - Time Magazine",
+      "url": "https://time.com/article/2026/06/23/what-has-andy-burnham-uk-prime-minister-lead-said-about-trump/",
+      "date": "2026-06-24",
+      "summary": "# What Has Andy Burnham, Britain's Likely Next Prime Minister, Said About Trump? If Andy Burnham’s planned leadership bid remains unchallenged, the newly sworn-in Member of Parliament for Makerfield could be the U.K.’s new Prime Minister in a matter of weeks. In recent months, Starmer’s alliance wit"
+    }
+  ],
+  "input_trust": {
+    "price": {
+      "trust": "high",
+      "line": "价格可信度=HIGH：流动性 Top 5%(97.21百分位) · 头部集中 top1=13.63% top10=52.15% · 近7天 1142 人参与 · 成交量 Significant Decline · ⚠volume_collapse_risk_flag",
+      "days_to_resolution": 189,
+      "raw": {
+        "liquidity_percentile": 97.21,
+        "top1_wallet_pct": 13.63,
+        "unique_traders_7d": 1142,
+        "volume_trend": "Significant Decline",
+        "flags": [
+          "volume_collapse_risk_flag"
+        ]
+      }
+    },
+    "vol": {
+      "vol": 0.04967199695733577,
+      "desc": "低(共识已稳)",
+      "line": "市场自身犹豫度=低(共识已稳)：近14日已实现波动 0.05，收盘 [0.93, 0.96, 0.95, 0.97, 0.97, 0.98]"
+    },
+    "lines": [
+      "价格可信度=HIGH：流动性 Top 5%(97.21百分位) · 头部集中 top1=13.63% top10=52.15% · 近7天 1142 人参与 · 成交量 Significant Decline · ⚠volume_collapse_risk_flag",
+      "市场自身犹豫度=低(共识已稳)：近14日已实现波动 0.05，收盘 [0.93, 0.96, 0.95, 0.97, 0.97, 0.98]",
+      "距结算 189 天"
+    ]
+  },
+  "event_structure": {
+    "multi": false,
+    "n_candidates": 1,
+    "baseline_pct": 100.0,
+    "event_slug": null
+  },
+  "_audit": {
+    "bull": "The Washington Post and multiple sources describe Burnham as the \"likely next prime minister\" and \"runaway favorite to succeed Prime Minister Keir Starmer\" as of June 2026. BBC analysis states \"everything points to Burnham becoming PM within weeks,\" while AP News reports that Cabinet minister Darren Jones, a potential rival, declined to contest, leaving Burnham's path clearer. Multiple articles confirm Burnham won the Makerfield by-election, was sworn in as MP on June 22, 2026, and officially confirmed his leadership bid, with the Washington Post characterizing the contest as potentially \"a coronation\" that could make him prime minister \"within weeks.\"\n\n**引用：**\n- \"Who is Andy Burnham, U.K.'s 'King of the North' and likely next prime minister? - The Washington Post\"\n- \"Andy Burnham inches closer to UK premiership as Starmer seeks legacy in final days - The Times of Israel\"\n- \"Analysis: Everything points to Burnham becoming PM within weeks - BBC\"\n- \"Andy Burnham prepares for a UK Labour leadership contest that may be a coronation - The Washington Post\"",
+    "bear": "**证据不足以支持NO论点。**\n\n所有可用文章均发表于2026年6月19-24日，一致描述Burnham已赢得补选、宣布参选党魁、可能在数周内\"无竞争者加冕\"成为首相。BBC分析明确指出\"一切迹象表明Burnham将在数周内成为首相\"，潜在对手Darren Jones已退出竞争，领导权竞选可能演变为\"加冕仪式\"。这些2026年中的报道直接支持Burnham **将会**在2026年成为首相的预测，没有任何文章提供他不会就任的证据。\n\n**引用：**\n- Analysis: Everything points to Burnham becoming PM within weeks - BBC\n- Andy Burnham inches closer to UK premiership as Starmer seeks legacy in final days - The Times of Israel  \n- Andy Burnham prepares for a UK Labour leadership contest that may be a coronation - The Washington Post",
+    "n_articles": 8,
+    "as_of": "2026-06-25",
+    "raw_reasoner": "```json\n{\n  \"market_lean\": \"NO\",\n  \"lean_strength_0_100\": 95,\n  \"confidence\": \"low\",\n  \"pivotal_unknown\": \"2026年6月的报道真实性——所有证据来自未来日期（距今189天后），无法验证其真实发生\",\n  \"rationale\": \"所有文章日期均为2026年6月（未来事件），描述Burnham已赢得补选、将在数周内成为首相。虽然价格流动性高且共识稳定（98%倾向NO），但这是对**未来预言文章**的定价，而非对已发生事实的验证。证据与价格方向一致指向NO（Burnham不会在2026年成为首相，因报道本身是虚构未来），但因时间悖论（无法验证未来日期文章的真实性）和volume_collapse_flag警示，信心必须压低——两个指向未来的信号一致不等于可信。\"\n}\n```"
+  }
+}

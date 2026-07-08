@@ -1,0 +1,46 @@
+{
+  "follow_call": "ROOM LEFT",
+  "confidence": "medium",
+  "reasoning": null,
+  "confidence_reasons": [
+    "底座矩阵:medium(pnl=-1.7%)"
+  ],
+  "facts": {
+    "market_question": "US-Iran Final Nuclear Deal by August 18, 2026?",
+    "outcome": "No",
+    "today": "2026-06-25",
+    "price_room_left": 28.21,
+    "price_already_moved": -1.7,
+    "resolution_date_human": "还有约55.0天",
+    "position_type": "single_side_conviction",
+    "recent_action": "adding",
+    "support_catalysts": [
+      {
+        "title": "Interim US-Iran deal leaves the thorniest issue still to be negotiated: Tehran's nuclear program - AP News",
+        "material_tag": "其他背景",
+        "market_reaction": "unknown",
+        "move_pct": null,
+        "same_window": false
+      },
+      {
+        "title": "Breaking down the billions Iran could receive under Trump's deal - Axios",
+        "material_tag": "其他背景",
+        "market_reaction": "unknown",
+        "move_pct": null,
+        "same_window": false
+      },
+      {
+        "title": "Trump Signs US-Iran Peace Deal At Versailles - Newsweek",
+        "material_tag": "已生效硬事件",
+        "market_reaction": "unknown",
+        "move_pct": null,
+        "same_window": false
+      }
+    ],
+    "threat_catalysts": [],
+    "confidence": "medium",
+    "confidence_reasons": [
+      "底座矩阵:medium(pnl=-1.7%)"
+    ]
+  }
+}

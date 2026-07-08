@@ -17,6 +17,7 @@ fetcher/actions.py — B·持仓+动作 fetcher（v3 简报数据层 · 批3）
 
 from datetime import datetime, timezone
 
+from core.config import BRIEFING_AS_OF
 from fetcher.heisenberg import AGENTS, HeisenbergError, call, paginate, results
 
 
@@ -56,7 +57,7 @@ def _current_price(token_id, as_of_date):
     return _f(rs[-1].get("close"))
 
 
-def get_position_actions(wallet, cid, outcome, as_of_date="2026-06-20"):
+def get_position_actions(wallet, cid, outcome, as_of_date=BRIEFING_AS_OF):
     """组装该钱包在该市场、analyzed 侧(outcome) 的动作画像。子源失败不拖垮整体。"""
     out = {"wallet": wallet, "condition_id": cid, "analyzed_side": outcome}
 

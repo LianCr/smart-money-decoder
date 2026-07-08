@@ -16,6 +16,7 @@ import json
 from datetime import datetime, timezone
 from pathlib import Path
 
+from core.config import BRIEFING_AS_OF
 from fetcher.heisenberg import AGENTS, call, results
 from fetcher.profile import get_trader_profile
 from fetcher.actions import get_position_actions
@@ -56,7 +57,7 @@ def _entry_unix(entry_str):
         return None
 
 
-def assemble_briefing(wallet, outcome, slug=None, cid=None, as_of="2026-06-20", mode="live"):
+def assemble_briefing(wallet, outcome, slug=None, cid=None, as_of=BRIEFING_AS_OF, mode="live"):
     """
     组装一份完整简报。slug 或 cid 二选一定位市场。
     mode：'live'(实战，催化剂锚 as_of/现在) | 'replay'(复盘，催化剂锚鲸鱼建仓时间)。
@@ -113,7 +114,7 @@ def _cache_path(wallet, key, as_of, mode):
     return CACHE_DIR / f"{hashlib.md5(sig.encode()).hexdigest()}.json"
 
 
-def load_or_build_briefing(wallet, outcome, slug=None, cid=None, as_of="2026-06-20", mode="live"):
+def load_or_build_briefing(wallet, outcome, slug=None, cid=None, as_of=BRIEFING_AS_OF, mode="live"):
     """命中缓存直接返回（不烧 token）；未命中才 assemble（烧 dual_catalyst）并落盘。"""
     path = _cache_path(wallet, slug or cid or "", as_of, mode)
     if path.exists():

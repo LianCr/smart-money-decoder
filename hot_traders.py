@@ -17,7 +17,7 @@ from fetcher.positions import get_top_political_position_hz
 from fetcher.markets import get_market_holders
 from recommend import SEEDS
 
-AS_OF = "2026-06-25"
+from core.config import BRIEFING_AS_OF as AS_OF
 OUT = Path(".data/hot_traders.json")
 
 

@@ -1,0 +1,81 @@
+{
+  "market_context": {
+    "market_id": "0x1be62d973dc8fb45de714eb2113118b6ac3e47694f8b0801c0c41d992d0b7c9f",
+    "market_slug": "will-trump-agree-to-iranian-transit-fees-in-the-strait-of-hormuz-by-june-30",
+    "market_question": "Will Trump agree to Iranian transit fees in the Strait of Hormuz by June 30?",
+    "analyzed_side": "No",
+    "as_of": "2026-06-20",
+    "wallet": "0x6d9fc316c3b8377060a44b852ba664adbfd59790",
+    "behavioral_flag": {
+      "flag": "STATIC",
+      "fact": "近 48h 仅 0 买 / 0 卖，无显著动作（沉闷持仓）",
+      "honest_note": "动态行为：基本没动",
+      "windows": {
+        "3h": {
+          "buys": 0,
+          "sells": 0,
+          "buy_usd": 0.0,
+          "sell_usd": 0.0
+        },
+        "24h": {
+          "buys": 0,
+          "sells": 0,
+          "buy_usd": 0.0,
+          "sell_usd": 0.0
+        },
+        "48h": {
+          "buys": 0,
+          "sells": 0,
+          "buy_usd": 0.0,
+          "sell_usd": 0.0
+        }
+      }
+    },
+    "ai_experimental_summary": "**市场综述 | 霍尔木兹海峡通行费协议（截至6月20日）**\n\n**巨鲸动态：**近48小时市场完全静止，0笔买入/0笔卖出，大户保持观望未作仓位调整。\n\n**事态进展：**特朗普宣布海峡将于周日重开，美伊接近签署第一阶段协议，但德黑兰称备忘录仍需数日；国务卿卢比奥公开定性通行费为\"非法且不可接受\"；美方对伊朗布雷船只实施军事打击的同时确认和平谈判持续进行。协议框架存在但核心条款表述存在分歧，6月30日截止日临近，各方立场交织。",
+    "timeline_events": [
+      {
+        "timestamp": "2026-06-16",
+        "type": "catalyst",
+        "title": "trump says hormuz reopen after sunday us iran deal tehran says memorandum may take days",
+        "source": "ibtimes.co.in",
+        "price_impact_string": "No 价格变动 +12%（83% → 95%）",
+        "fact_summary": "特朗普表示霍尔木兹海峡将在周日美伊协议后重新开放，德黑兰称备忘录可能需要数天时间",
+        "temporal_note": "该事件与价格变动时间相关，非确证因果 · 同窗多条,合计不可归因到单条"
+      },
+      {
+        "timestamp": "2026-06-16",
+        "type": "catalyst",
+        "title": "iran war day 107 washington tehran close to signing first stage of deal",
+        "source": "dominicanrepublicpost.com",
+        "price_impact_string": "No 价格变动 +12%（83% → 95%）",
+        "fact_summary": "华盛顿和德黑兰接近签署第一阶段协议",
+        "temporal_note": "该事件与价格变动时间相关，非确证因果 · 同窗多条,合计不可归因到单条"
+      },
+      {
+        "timestamp": "2026-05-28",
+        "type": "catalyst",
+        "title": "unlawful illegal unsustainable and unacceptable us state secy marco rubio slams tolls on strait of hormuz",
+        "source": "austinglobe.com",
+        "price_impact_string": "No 价格变动 +10%（85% → 95%）",
+        "fact_summary": "美国国务卿卢比奥公开抨击霍尔木兹海峡通行费为非法且不可接受",
+        "temporal_note": "该事件与价格变动时间相关，非确证因果 · 同窗多条,合计不可归因到单条"
+      },
+      {
+        "timestamp": "2026-05-28",
+        "type": "catalyst",
+        "title": "us strikes iranian mine laying vessels as trump affirms ongoing peace talks",
+        "source": "klif.com",
+        "price_impact_string": "No 价格变动 +10%（85% → 95%）",
+        "fact_summary": "美国对伊朗布雷船只实施打击，特朗普同时确认和平谈判仍在进行",
+        "temporal_note": "该事件与价格变动时间相关，非确证因果 · 同窗多条,合计不可归因到单条"
+      }
+    ],
+    "_audit": {
+      "jumps_found": 2,
+      "events": 4,
+      "behavior": "STATIC",
+      "teacher_tokens_approx": 1792,
+      "boundaries": "因果→时间相关 · 无催化剂留白(行为感知内幕) · 价格窗≤as_of · 行为=事实非判断 · 综述无判断"
+    }
+  }
+}

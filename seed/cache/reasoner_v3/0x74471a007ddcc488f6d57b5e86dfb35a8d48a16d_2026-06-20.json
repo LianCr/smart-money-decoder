@@ -1,0 +1,61 @@
+{
+  "follow_call": "ROOM LEFT",
+  "confidence": "high",
+  "reasoning": "这个钱包单方向押注内塔尼亚胡不会连任，买入成本很低，价格才涨了一点点，还有很大的上涨空间。近48小时他基本没动，保持原仓位。支持他方向的证据包括民调数据和多条政治压力信号，虽然市场对这些消息的反应都比较温和，但方向是一致的；反向威胁只有一条类似的情绪信号，力度相当。信心评级为高是因为他目前浮盈约2.8%，底座盈利表现稳定。",
+  "confidence_reasons": [
+    "底座矩阵:high(pnl=+2.8%)"
+  ],
+  "facts": {
+    "market_question": "Will Benjamin Netanyahu be the next Prime Minister of Israel?",
+    "outcome": "No",
+    "today": "2026-06-20",
+    "price_room_left": 49.25,
+    "price_already_moved": 2.76,
+    "resolution_date_human": "还有约194.0天",
+    "position_type": "single_side_conviction",
+    "recent_action": "flat_no_movement",
+    "support_catalysts": [
+      {
+        "title": "Israel's Next Leader - The Times of Israel",
+        "material_tag": "民调数据",
+        "market_reaction": "weak",
+        "move_pct": -4.48,
+        "same_window": true
+      },
+      {
+        "title": "Likud insists Netanyahu will run and win election after Trump doubts political future - Ynetnews",
+        "material_tag": "周边压力情绪信号",
+        "market_reaction": "weak",
+        "move_pct": -1.52,
+        "same_window": false
+      },
+      {
+        "title": "Benjamin Netanyahu's election hopes 'undermined' if conflict with Lebanon continues - Sky News Australia",
+        "material_tag": "周边压力情绪信号",
+        "market_reaction": "unknown",
+        "move_pct": null,
+        "same_window": false
+      },
+      {
+        "title": "Netanyahu, Israel's arch-survivor, set to face voter fury over Iran deal - Yahoo",
+        "material_tag": "周边压力情绪信号",
+        "market_reaction": "weak",
+        "move_pct": -4.48,
+        "same_window": true
+      }
+    ],
+    "threat_catalysts": [
+      {
+        "title": "Trump says not clear Netanyahu will run in upcoming elections, remain in politics - Ynetnews",
+        "material_tag": "周边压力情绪信号",
+        "market_reaction": "weak",
+        "move_pct": -1.52,
+        "same_window": false
+      }
+    ],
+    "confidence": "high",
+    "confidence_reasons": [
+      "底座矩阵:high(pnl=+2.8%)"
+    ]
+  }
+}

@@ -16,18 +16,15 @@ import json
 import os
 import re
 
-import requests
 from dotenv import load_dotenv
 
 # 复用双向催化剂已定的守卫词表与固定结语（DRY，同一套诚实纪律）
 from analyzer.dual_catalyst import DIRECTIVE_WORDS, FEAR_WORDS, FIXED_CLOSING
+from core.llm import call_gateway
 
 load_dotenv()
 
-CLASSROOM_API_URL = "https://4dm65e698a.execute-api.us-west-2.amazonaws.com/prod/invoke"
-CLASSROOM_API_KEY = os.environ.get("CLASSROOM_API_KEY")
 LLM_BACKEND = os.environ.get("DUAL_CATALYST_BACKEND", "gateway")
-GATEWAY_MODEL = "claude-sonnet-4.5"
 BEDROCK_MODEL = "claude-sonnet-4-6"   # 🔴 4.6 非 3.5；inference-profile id 等账号开好再填
 MAX_TOKENS_OUT = 1200
 REQUEST_TIMEOUT = 30
@@ -92,13 +89,7 @@ def _wr_lie(rk):
 
 
 def _call_gateway(combined):
-    resp = requests.post(CLASSROOM_API_URL,
-                         headers={"Content-Type": "application/json", "x-api-key": CLASSROOM_API_KEY},
-                         json={"model": GATEWAY_MODEL, "input": combined, "maxTokens": MAX_TOKENS_OUT},
-                         timeout=REQUEST_TIMEOUT)
-    if resp.status_code != 200:
-        raise RuntimeError(f"gateway {resp.status_code}: {resp.text[:200]}")
-    return resp.json().get("output", "")
+    return call_gateway(combined, max_tokens=MAX_TOKENS_OUT, timeout=REQUEST_TIMEOUT)
 
 
 def _approx_tokens(t):

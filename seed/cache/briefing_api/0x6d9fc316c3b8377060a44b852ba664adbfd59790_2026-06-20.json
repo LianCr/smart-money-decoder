@@ -1,0 +1,242 @@
+{
+  "meta": {
+    "wallet": "0x6d9fc316c3b8377060a44b852ba664adbfd59790",
+    "market": "Will Trump agree to Iranian transit fees in the Strait of Hormuz by June 30?",
+    "analyzed_side": "No",
+    "as_of": "2026-06-20",
+    "mode": "live",
+    "catalyst_anchor": "2026-06-20",
+    "settle": "还有约10.0天"
+  },
+  "who_trader_profile": {
+    "wallet": "0x6d9fc316c3b8377060a44b852ba664adbfd59790",
+    "quality": {
+      "combined_risk_score": 0,
+      "max_drawdown": 1.2558,
+      "drawdown_frequency": 0.2,
+      "avg_trade_size": 178.54,
+      "markets_traded": 71,
+      "num_markets_traded": 71,
+      "category_diversity_score": 0.4311,
+      "market_concentration_ratio": 0.2332,
+      "annualized_return": 2.4459,
+      "gain_to_pain_ratio": 1.3681,
+      "equity_curve_pattern": "volatile",
+      "perfect_timing_flag": false,
+      "flagged_metrics": "{}",
+      "losing_trades": 445,
+      "best_market_pnl": 41405.35,
+      "dominant_market_pnl": 41405.35,
+      "window_days": "15"
+    },
+    "category_specialization": [
+      {
+        "category": "Politics / US",
+        "roi": 25.6223,
+        "win_rate": 0.4974,
+        "total_pnl": 47336.11,
+        "total_trades": 1313
+      },
+      {
+        "category": "Politics / US / Trump",
+        "roi": 25.6223,
+        "win_rate": 0.4974,
+        "total_pnl": 47336.11,
+        "total_trades": 1313
+      },
+      {
+        "category": "Other",
+        "roi": 10.0516,
+        "win_rate": 0.5721,
+        "total_pnl": 42746.44,
+        "total_trades": 2382
+      },
+      {
+        "category": "Politics",
+        "roi": 10.0516,
+        "win_rate": 0.5721,
+        "total_pnl": 42746.44,
+        "total_trades": 2382
+      },
+      {
+        "category": "Politics / Global",
+        "roi": 10.0516,
+        "win_rate": 0.5721,
+        "total_pnl": 42746.44,
+        "total_trades": 2382
+      },
+      {
+        "category": "Finance & Markets",
+        "roi": 0.0,
+        "win_rate": 0.0,
+        "total_pnl": 0.0,
+        "total_trades": 16
+      }
+    ],
+    "official_rank": {
+      "period": "30d",
+      "rank": 392,
+      "roi": "0.063920",
+      "win_rate": "0.6764",
+      "sharpe_ratio": "0.0636",
+      "total_pnl": "66633.3761",
+      "total_invested": "1042453.86",
+      "total_trades": 5091,
+      "markets_traded": 126
+    },
+    "realized_pnl_recent": {
+      "window": [
+        "2026-05-20",
+        "2026-06-20"
+      ],
+      "days_returned": 11,
+      "realized_pnl_sum": 11730.91
+    },
+    "h_score": {
+      "available": false,
+      "note": "不在 H-Score 榜首页（584 无按地址查，官方排名见 official_rank/579）"
+    }
+  },
+  "what_position_actions": {
+    "wallet": "0x6d9fc316c3b8377060a44b852ba664adbfd59790",
+    "condition_id": "0x1be62d973dc8fb45de714eb2113118b6ac3e47694f8b0801c0c41d992d0b7c9f",
+    "analyzed_side": "No",
+    "market": {
+      "question": "Will Trump agree to Iranian transit fees in the Strait of Hormuz by June 30?",
+      "winning_outcome": null,
+      "closed": false,
+      "settle_date": "2026-06-30",
+      "days_to_settlement": 10.0,
+      "settle_note": "还有约10.0天"
+    },
+    "two_side_distribution": {
+      "hedged": true,
+      "by_outcome": {
+        "Yes": {
+          "trades": 1,
+          "shares": 30000.0
+        },
+        "No": {
+          "trades": 6,
+          "shares": 3005.1
+        }
+      },
+      "note": "两边都大额建仓 = 做市/对冲玩家（非单边赌徒，接 #28）"
+    },
+    "actions": {
+      "entry_time": "2026-06-17 22:51",
+      "last_add_time": "2026-06-17 23:38",
+      "num_buys": 6,
+      "num_sells": 3,
+      "added_over_time": true,
+      "avg_entry_price": 0.899,
+      "net_shares": 0.0,
+      "net_cost_usd": -248.41
+    },
+    "unrealized": {
+      "current_price": 0.98,
+      "price_source": "568最新close",
+      "note": "无净仓或拿不到现价"
+    }
+  },
+  "price_context": {
+    "as_of": "2026-06-20",
+    "analyzed_side": "No",
+    "price_source": "568历史close",
+    "current_price": 0.98,
+    "implied_probability_pct": 98.0,
+    "remaining_upside_per_share_usd": 0.02,
+    "remaining_upside_pct_if_win": 2.04,
+    "downside_per_share_usd": 0.98,
+    "odds_to_one": 0.02,
+    "entry_price": 0.899,
+    "price_delta": 0.081,
+    "price_delta_pct": 9.01
+  },
+  "catalysts": {
+    "positive": [
+      {
+        "title": "Trump vows Iran will not charge Strait of Hormuz tolls, but says US might - Al Jazeera",
+        "url": "https://www.aljazeera.com/news/2026/6/20/trump-vows-iran-will-not-charge-strait-of-hormuz-tolls-but-says-us-might",
+        "date": "2026-06-20",
+        "reason": "Trump明确承诺伊朗不会收取霍尔木兹海峡通行费，这与他同意伊朗收费的方向相反",
+        "type": "当事人直接表态",
+        "price_reaction": {
+          "available": false,
+          "reason": "as_of_leak_guard",
+          "note": "新闻后价格尚未发生(回测防泄漏)，反应不可知",
+          "market_check": "市场反应不可知",
+          "same_window": "同窗2条新闻，变动为合计、不可归因到单条"
+        }
+      },
+      {
+        "title": "Trump Rules Out Iran Hormuz Tolls, Says US Would Be Entitled Instead - Newsweek",
+        "url": "https://www.newsweek.com/trump-iran-hormuz-tolls-us-entitled-ceasefire-12099668",
+        "date": "2026-06-20",
+        "reason": "Trump表示在60天停火期间和之后都不允许伊朗对通过霍尔木兹海峡的船只收费",
+        "type": "当事人直接表态",
+        "price_reaction": {
+          "available": false,
+          "reason": "as_of_leak_guard",
+          "note": "新闻后价格尚未发生(回测防泄漏)，反应不可知",
+          "market_check": "市场反应不可知",
+          "same_window": "同窗2条新闻，变动为合计、不可归因到单条"
+        }
+      },
+      {
+        "title": "US and Iran agree Strait of Hormuz will be toll-free for 60 days. They differ on what happens after that. - Yahoo Finance",
+        "url": "https://finance.yahoo.com/markets/article/us-and-iran-agree-strait-of-hormuz-will-be-toll-free-for-60-days-they-differ-on-what-happens-after-that-155107788.html",
+        "date": "2026-06-15",
+        "reason": "Trump表态最终协议将实现霍尔木兹海峡的免费开放",
+        "type": "当事人直接表态",
+        "price_reaction": {
+          "available": true,
+          "window": [
+            "2026-06-14",
+            "2026-06-16"
+          ],
+          "price_before": 0.914,
+          "price_after": 0.951,
+          "move_pct": 4.05,
+          "direction": "▲",
+          "caveat": "该新闻发布前后市场变动，时间相关非因果",
+          "market_check": "市场反应微弱(<5%)"
+        }
+      }
+    ],
+    "negative": [],
+    "balance_summary": "正向证据按类型陈列：当事人直接表态×3；负向证据按类型陈列：无。每条已刻明客观事实类型（材质）——系统不替你称量轻重，不同材质的份量请自行掂量。 系统已完成证据陈述，天平由你裁决。",
+    "honesty_caveat": {
+      "positive_side": "fully_backed",
+      "negative_side": "true_clearance"
+    },
+    "guards": {
+      "relevance_dropped": [],
+      "type_deviations": [],
+      "weight_word_hits": [],
+      "weight_in_reason_hits": [],
+      "fear_lexicon_hits": [],
+      "directive_hits": []
+    }
+  },
+  "_audit": {
+    "teacher_tokens_approx": 2651,
+    "free_sources": [
+      "581",
+      "579",
+      "569",
+      "556",
+      "568",
+      "574"
+    ],
+    "catalyst_window": [
+      "2026-06-10",
+      "2026-06-20"
+    ]
+  },
+  "organized_text": "**证据材质与市场测谎的张力**\n\n支持\"No\"的三条证据均为当事人Trump的直接表态，属于最硬核的材质——他在不同场合反复明确表示不允许伊朗收取通行费，甚至声称美国才有资格收费。这些表态的指向性清晰且一致，构成了单边的证据堆叠。威胁侧则呈现真实清场状态，没有找到任何反向证据。\n\n但市场的态度值得玩味：前两条Trump的明确承诺因发布在同一窗口期无法追踪单独反应，而第三条Yahoo Finance报道的Trump\"最终协议将实现免费开放\"表态，市场仅给出4.05%的微弱反应。这暴露了一个结构性张力——当事人三次公开否认会同意收费，但市场并未大幅抬升\"No\"的价格，仿佛在对Trump的承诺保持某种谨慎距离。这可能意味着市场已习惯于Trump表态与最终结果之间存在落差，或是在等待伊朗方面的实质动作。\n\n玩家采取了两边对冲而非单边押注的姿态，尽管其在政治盘中有专长积累。这种非信念式建仓本身也是一种态度：即便证据材质坚硬且单边，但对冲结构暗示玩家并未将Trump的多次表态视为可锁定结局的保证。6月30日截止前的10天内，任何实质性的美伊协议细节披露都可能重新定价这个天平。\n\n系统已完成证据陈述，天平由你裁决。",
+  "organize_guards": {
+    "directive_hits": [],
+    "fear_lexicon_hits": []
+  }
+}

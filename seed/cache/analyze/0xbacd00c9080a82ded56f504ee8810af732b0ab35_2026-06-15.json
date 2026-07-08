@@ -1,0 +1,685 @@
+{
+  "profile": {
+    "address": "0xbacd00c9080a82ded56f504ee8810af732b0ab35",
+    "name": "ScottyNooo",
+    "pseudonym": "Dearest-Agenda",
+    "profile_image": "https://polymarket-upload.s3.us-east-2.amazonaws.com/profile-image-2861114-c1c15cef-e455-4932-9b26-66ad799b1a4a.webp"
+  },
+  "pnl_history": [
+    {
+      "t": 1746576000,
+      "p": 77.407005
+    },
+    {
+      "t": 1746748800,
+      "p": 1015.3696
+    },
+    {
+      "t": 1747008000,
+      "p": 970.5147
+    },
+    {
+      "t": 1747180800,
+      "p": 908.37274
+    },
+    {
+      "t": 1747440000,
+      "p": 920.3756
+    },
+    {
+      "t": 1747612800,
+      "p": 711.26715
+    },
+    {
+      "t": 1747872000,
+      "p": 524.15576
+    },
+    {
+      "t": 1748044800,
+      "p": 528.7845
+    },
+    {
+      "t": 1748304000,
+      "p": 487.16684
+    },
+    {
+      "t": 1748476800,
+      "p": 535.5151
+    },
+    {
+      "t": 1748736000,
+      "p": 602.2205
+    },
+    {
+      "t": 1748995200,
+      "p": 133.12535
+    },
+    {
+      "t": 1749168000,
+      "p": 313.32846
+    },
+    {
+      "t": 1749427200,
+      "p": 349.52457
+    },
+    {
+      "t": 1749600000,
+      "p": 350.57608
+    },
+    {
+      "t": 1749859200,
+      "p": 359.67087
+    },
+    {
+      "t": 1750032000,
+      "p": 291.55707
+    },
+    {
+      "t": 1750291200,
+      "p": 342.03204
+    },
+    {
+      "t": 1750464000,
+      "p": 418.87885
+    },
+    {
+      "t": 1750723200,
+      "p": 319.93097
+    },
+    {
+      "t": 1750982400,
+      "p": 423.77692
+    },
+    {
+      "t": 1751155200,
+      "p": 512.0284
+    },
+    {
+      "t": 1751414400,
+      "p": 564.0477
+    },
+    {
+      "t": 1751587200,
+      "p": 574.69727
+    },
+    {
+      "t": 1751846400,
+      "p": 557.6577
+    },
+    {
+      "t": 1752019200,
+      "p": 532.0983
+    },
+    {
+      "t": 1752278400,
+      "p": 525.7089
+    },
+    {
+      "t": 1752451200,
+      "p": 498.01965
+    },
+    {
+      "t": 1752710400,
+      "p": 495.88956
+    },
+    {
+      "t": 1752969600,
+      "p": 465.81033
+    },
+    {
+      "t": 1753142400,
+      "p": 453.69077
+    },
+    {
+      "t": 1753401600,
+      "p": 460.39426
+    },
+    {
+      "t": 1753574400,
+      "p": 462.5751
+    },
+    {
+      "t": 1753833600,
+      "p": 456.033
+    },
+    {
+      "t": 1754006400,
+      "p": 458.21384
+    },
+    {
+      "t": 1754265600,
+      "p": 543.2627
+    },
+    {
+      "t": 1754438400,
+      "p": 709.24554
+    },
+    {
+      "t": 1754697600,
+      "p": 1124.6428
+    },
+    {
+      "t": 1754956800,
+      "p": 3253.2222
+    },
+    {
+      "t": 1755129600,
+      "p": 13605.8
+    },
+    {
+      "t": 1755388800,
+      "p": 10829.583
+    },
+    {
+      "t": 1755561600,
+      "p": 71922.12
+    },
+    {
+      "t": 1755820800,
+      "p": 10608.981
+    },
+    {
+      "t": 1755993600,
+      "p": 85617.91
+    },
+    {
+      "t": 1756252800,
+      "p": 69199.37
+    },
+    {
+      "t": 1756425600,
+      "p": 51108.883
+    },
+    {
+      "t": 1756684800,
+      "p": 47393.203
+    },
+    {
+      "t": 1756944000,
+      "p": 55685.332
+    },
+    {
+      "t": 1757116800,
+      "p": 53680.97
+    },
+    {
+      "t": 1757376000,
+      "p": 65610.54
+    },
+    {
+      "t": 1757548800,
+      "p": 61159.562
+    },
+    {
+      "t": 1757808000,
+      "p": 86981.64
+    },
+    {
+      "t": 1757980800,
+      "p": 94802.69
+    },
+    {
+      "t": 1758240000,
+      "p": 141397.69
+    },
+    {
+      "t": 1758412800,
+      "p": 130589.195
+    },
+    {
+      "t": 1758672000,
+      "p": 156619.81
+    },
+    {
+      "t": 1758844800,
+      "p": 126571.164
+    },
+    {
+      "t": 1759104000,
+      "p": 100440.23
+    },
+    {
+      "t": 1759363200,
+      "p": 118077.11
+    },
+    {
+      "t": 1759536000,
+      "p": 132854.73
+    },
+    {
+      "t": 1759795200,
+      "p": 146722.52
+    },
+    {
+      "t": 1759968000,
+      "p": 200167.08
+    },
+    {
+      "t": 1760227200,
+      "p": 183176.9
+    },
+    {
+      "t": 1760400000,
+      "p": 176344.5
+    },
+    {
+      "t": 1760659200,
+      "p": 166867.84
+    },
+    {
+      "t": 1760832000,
+      "p": 186658.62
+    },
+    {
+      "t": 1761091200,
+      "p": 176004.12
+    },
+    {
+      "t": 1761350400,
+      "p": 182039.44
+    },
+    {
+      "t": 1761523200,
+      "p": 202774.94
+    },
+    {
+      "t": 1761782400,
+      "p": 221009.38
+    },
+    {
+      "t": 1761955200,
+      "p": 239849.34
+    },
+    {
+      "t": 1762214400,
+      "p": 225598.62
+    },
+    {
+      "t": 1762387200,
+      "p": 291140.75
+    },
+    {
+      "t": 1762646400,
+      "p": 278805.9
+    },
+    {
+      "t": 1762819200,
+      "p": 386419.53
+    },
+    {
+      "t": 1763078400,
+      "p": -128652.71
+    },
+    {
+      "t": 1763337600,
+      "p": -152609.39
+    },
+    {
+      "t": 1763510400,
+      "p": -159307.14
+    },
+    {
+      "t": 1763769600,
+      "p": -146326.03
+    },
+    {
+      "t": 1763942400,
+      "p": -119194.28
+    },
+    {
+      "t": 1764201600,
+      "p": -164236.36
+    },
+    {
+      "t": 1764374400,
+      "p": -176011.77
+    },
+    {
+      "t": 1764633600,
+      "p": -145279.5
+    },
+    {
+      "t": 1764806400,
+      "p": -171962.78
+    },
+    {
+      "t": 1765065600,
+      "p": -197282.39
+    },
+    {
+      "t": 1765324800,
+      "p": -166677.69
+    },
+    {
+      "t": 1765497600,
+      "p": -178150.1
+    },
+    {
+      "t": 1765756800,
+      "p": -158017.17
+    },
+    {
+      "t": 1765929600,
+      "p": -143606.48
+    },
+    {
+      "t": 1766188800,
+      "p": 74589.35
+    },
+    {
+      "t": 1766361600,
+      "p": 130599.96
+    },
+    {
+      "t": 1766620800,
+      "p": 253384.75
+    },
+    {
+      "t": 1766793600,
+      "p": 287324.6
+    },
+    {
+      "t": 1767052800,
+      "p": 280337.12
+    },
+    {
+      "t": 1767312000,
+      "p": 320909.56
+    },
+    {
+      "t": 1767484800,
+      "p": 317109.5
+    },
+    {
+      "t": 1767744000,
+      "p": 329558.66
+    },
+    {
+      "t": 1767916800,
+      "p": 340961.38
+    },
+    {
+      "t": 1768176000,
+      "p": 372829.38
+    },
+    {
+      "t": 1768348800,
+      "p": 375856.84
+    },
+    {
+      "t": 1768608000,
+      "p": 391778.9
+    },
+    {
+      "t": 1768780800,
+      "p": 379947.2
+    },
+    {
+      "t": 1769040000,
+      "p": 383832.97
+    },
+    {
+      "t": 1769299200,
+      "p": 363743.0
+    },
+    {
+      "t": 1769472000,
+      "p": 361772.34
+    },
+    {
+      "t": 1769731200,
+      "p": 421026.47
+    },
+    {
+      "t": 1769904000,
+      "p": 508686.16
+    },
+    {
+      "t": 1770163200,
+      "p": 678674.1
+    },
+    {
+      "t": 1770336000,
+      "p": 660788.06
+    },
+    {
+      "t": 1770595200,
+      "p": 650390.3
+    },
+    {
+      "t": 1770768000,
+      "p": 634875.1
+    },
+    {
+      "t": 1771027200,
+      "p": 744565.25
+    },
+    {
+      "t": 1771200000,
+      "p": 740694.25
+    },
+    {
+      "t": 1771459200,
+      "p": 780140.7
+    },
+    {
+      "t": 1771718400,
+      "p": 797176.6
+    },
+    {
+      "t": 1771891200,
+      "p": 815495.4
+    },
+    {
+      "t": 1772150400,
+      "p": 779088.8
+    },
+    {
+      "t": 1772323200,
+      "p": 1080735.1
+    },
+    {
+      "t": 1772582400,
+      "p": 1161078.8
+    },
+    {
+      "t": 1772755200,
+      "p": 1179864.6
+    },
+    {
+      "t": 1773014400,
+      "p": 1191644.6
+    },
+    {
+      "t": 1773187200,
+      "p": 1205442.8
+    },
+    {
+      "t": 1773446400,
+      "p": 1189532.8
+    },
+    {
+      "t": 1773705600,
+      "p": 1185610.5
+    },
+    {
+      "t": 1773878400,
+      "p": 1173726.6
+    },
+    {
+      "t": 1774137600,
+      "p": 1215404.8
+    },
+    {
+      "t": 1774310400,
+      "p": 1253526.4
+    },
+    {
+      "t": 1774569600,
+      "p": 1270670.0
+    },
+    {
+      "t": 1774742400,
+      "p": 1288386.2
+    },
+    {
+      "t": 1775001600,
+      "p": 1318669.5
+    },
+    {
+      "t": 1775174400,
+      "p": 1290116.1
+    },
+    {
+      "t": 1775433600,
+      "p": 1293583.8
+    },
+    {
+      "t": 1775692800,
+      "p": 1422415.5
+    },
+    {
+      "t": 1775865600,
+      "p": 1432695.9
+    },
+    {
+      "t": 1776124800,
+      "p": 1488949.8
+    },
+    {
+      "t": 1776297600,
+      "p": 1532069.1
+    },
+    {
+      "t": 1776556800,
+      "p": 1369310.6
+    },
+    {
+      "t": 1776729600,
+      "p": 1320131.6
+    },
+    {
+      "t": 1776988800,
+      "p": 1021359.44
+    },
+    {
+      "t": 1777161600,
+      "p": 993704.9
+    },
+    {
+      "t": 1777420800,
+      "p": 932833.4
+    },
+    {
+      "t": 1777680000,
+      "p": 933492.06
+    },
+    {
+      "t": 1777852800,
+      "p": 948984.44
+    },
+    {
+      "t": 1778112000,
+      "p": 1010204.9
+    },
+    {
+      "t": 1778284800,
+      "p": 1059781.5
+    },
+    {
+      "t": 1778544000,
+      "p": 904502.4
+    },
+    {
+      "t": 1778716800,
+      "p": 905279.25
+    },
+    {
+      "t": 1778976000,
+      "p": 920313.1
+    },
+    {
+      "t": 1779148800,
+      "p": 947285.5
+    },
+    {
+      "t": 1779408000,
+      "p": 995226.44
+    },
+    {
+      "t": 1779667200,
+      "p": 1010345.0
+    },
+    {
+      "t": 1779840000,
+      "p": 1003130.8
+    },
+    {
+      "t": 1780099200,
+      "p": 955277.8
+    },
+    {
+      "t": 1780272000,
+      "p": 853596.06
+    },
+    {
+      "t": 1780531200,
+      "p": 831344.5
+    },
+    {
+      "t": 1780704000,
+      "p": 818200.3
+    },
+    {
+      "t": 1780963200,
+      "p": 827410.7
+    },
+    {
+      "t": 1781136000,
+      "p": 829163.7
+    },
+    {
+      "t": 1781395200,
+      "p": 998610.0
+    },
+    {
+      "t": 1781560800,
+      "p": 1338087.8
+    }
+  ],
+  "market_question": "Will the Iranian regime fall by June 30?",
+  "outcome": "No",
+  "resolution_date": "2026-06-30T00:00:00Z",
+  "entry_time": 1768083864,
+  "time_anchored": true,
+  "search_query": "Iranian regime fall",
+  "price_info": {
+    "entry_price": 0.8737,
+    "current_price": 0.9945,
+    "position_value": 125103.5741,
+    "cash_pnl": 15186.9071,
+    "pnl_pct": 13.8167
+  },
+  "what_bet": "The wallet is betting No on the overthrow or collapse of Iran's Islamic Republic by June 30, 2026. Under the resolution criteria, the wallet wins unless the Supreme Leader, Guardian Council, and IRGC clerical control are dissolved or replaced by a fundamentally different governing system that exercises sovereign power over the majority of Iran's population. Routine reforms, leadership succession, or internal power shifts that preserve the Islamic Republic's core structures do not count as regime fall.",
+  "catalyst": [
+    {
+      "title": "Facing protests and new threats from Trump, is the Iranian regime on its last legs? - The Conversation",
+      "url": "https://theconversation.com/facing-protests-and-new-threats-from-trump-is-the-iranian-regime-on-its-last-legs-272795",
+      "published_at": "2026-01-06",
+      "relation": "BEFORE_ENTRY",
+      "why_relevant": "Describes nationwide protests calling for regime downfall and severe regime crackdown, events that typically precede regime instability narratives but which the wallet judged insufficient to meet the resolution criteria's requirement for actual dissolution of core Islamic Republic structures."
+    },
+    {
+      "title": "Will the Regime in Iran Fall? History Offers Some Clues. - The Free Press",
+      "url": "https://www.thefp.com/p/will-the-regime-in-iran-fall-history",
+      "published_at": "2026-01-10",
+      "relation": "BEFORE_ENTRY",
+      "why_relevant": "Discusses telltale signs of revolution visible in Iran and the changing alchemy of power, speculative indicators that the wallet appears to have assessed as media narrative rather than evidence of imminent collapse meeting the strict threshold of ceasing to govern."
+    }
+  ],
+  "edge_analysis": "The wallet entered at 0.8737 and the position has moved 0.1208 in favor, currently priced at 0.9945. A follower buying No today at 0.9945 has maximum upside of 0.0055 per share if the regime survives and maximum loss of 0.9945 per share if it falls. The wallet captured nearly all available movement; the market now prices regime survival through June 30, 2026 at near-certainty.",
+  "follow_call": "CHASED",
+  "confidence": "high",
+  "reasoning": "High confidence is warranted because time-anchored catalysts show the wallet entered against protest-driven regime-fall speculation in early January, and the 13.82 percent gain reflects the market's subsequent repricing toward regime persistence. However, the thesis has been almost fully realized—follower max upside is 0.0055—leaving minimal edge for anyone entering at 0.9945 with fifteen days until settlement and asymmetric downside risk of 0.9945 per share.",
+  "warnings": []
+}

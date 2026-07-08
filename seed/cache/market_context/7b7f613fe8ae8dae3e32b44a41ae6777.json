@@ -1,0 +1,81 @@
+{
+  "market_context": {
+    "market_id": "0xbee2cd40473495f713c69b9dfbce9fc2837fa4011568222c83c83bb773e35053",
+    "market_slug": "starmer-out-by-june-30-2026-862-594-548-219-739-726-569-741-645",
+    "market_question": "Starmer out by June 30, 2026?",
+    "analyzed_side": "Yes",
+    "as_of": "2026-06-20",
+    "wallet": "0x9d84ce0306f8551e02efef1680475fc0f1dc1344",
+    "behavioral_flag": {
+      "flag": "STATIC",
+      "fact": "近 48h 仅 2 买 / 0 卖，无显著动作（沉闷持仓）",
+      "honest_note": "动态行为：基本没动",
+      "windows": {
+        "3h": {
+          "buys": 0,
+          "sells": 0,
+          "buy_usd": 0.0,
+          "sell_usd": 0.0
+        },
+        "24h": {
+          "buys": 0,
+          "sells": 0,
+          "buy_usd": 0.0,
+          "sell_usd": 0.0
+        },
+        "48h": {
+          "buys": 2,
+          "sells": 0,
+          "buy_usd": 6699.0,
+          "sell_usd": 0.0
+        }
+      }
+    },
+    "ai_experimental_summary": "**市场「Starmer 2026年6月30日前下台？」现状综述**\n\n**巨鲸动向**：近48小时仅2笔买入、0卖出，持仓方呈沉闷观望状态，无显著资金动作。\n\n**客观事态**：卫生大臣Streeting准备最早下周发起党内领导权竞选；多名前部长传出可能挑战Starmer；大曼彻斯特市长伯纳姆在梅克菲尔德补选获胜后受关注。距截止日期（6月30日）剩余10天，党内压力浮现但尚未形成明确倒阁时间线。市场与政局均处观望期。",
+    "timeline_events": [
+      {
+        "timestamp": "2026-06-19",
+        "type": "catalyst",
+        "title": "streeting prepared to trigger leadership contest as early as next week",
+        "source": "breakingnews.ie",
+        "price_impact_string": "Yes 价格变动 +35%（31% → 66%）",
+        "fact_summary": "Streeting准备最早在下周发起领导权竞选",
+        "temporal_note": "该事件与价格变动时间相关，非确证因果 · 同窗多条,合计不可归因到单条"
+      },
+      {
+        "timestamp": "2026-06-19",
+        "type": "catalyst",
+        "title": "former uk minister could challenge pm starmer soon",
+        "source": "newcastleherald.com.au",
+        "price_impact_string": "Yes 价格变动 +35%（31% → 66%）",
+        "fact_summary": "英国前部长可能很快挑战首相Starmer",
+        "temporal_note": "该事件与价格变动时间相关，非确证因果 · 同窗多条,合计不可归因到单条"
+      },
+      {
+        "timestamp": "2026-06-20",
+        "type": "catalyst",
+        "title": "labours andy burnham wins a special election setting up a showdown with starmer to lead britain",
+        "source": "wpsu.org",
+        "price_impact_string": "Yes 价格变动 +23%（66% → 89%）",
+        "fact_summary": "安迪·伯纳姆在补选中获胜",
+        "temporal_note": "该事件与价格变动时间相关，非确证因果 · 同窗多条,合计不可归因到单条"
+      },
+      {
+        "timestamp": "2026-06-20",
+        "type": "catalyst",
+        "title": "andy burnham keir starmer makerfield uk",
+        "source": "huffingtonpost.co.uk",
+        "price_impact_string": "Yes 价格变动 +23%（66% → 89%）",
+        "fact_summary": "安迪·伯纳姆在梅克菲尔德补选相关事件中被报道",
+        "temporal_note": "该事件与价格变动时间相关，非确证因果 · 同窗多条,合计不可归因到单条"
+      }
+    ],
+    "_audit": {
+      "jumps_found": 2,
+      "events": 4,
+      "behavior": "STATIC",
+      "teacher_tokens_approx": 1745,
+      "boundaries": "因果→时间相关 · 无催化剂留白(行为感知内幕) · 价格窗≤as_of · 行为=事实非判断 · 综述无判断"
+    }
+  }
+}

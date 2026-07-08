@@ -1,0 +1,41 @@
+{
+  "follow_call": "CHASED",
+  "confidence": "medium",
+  "reasoning": "这个钱包两边都压了不少，不是单纯赌一个方向，可能在做对冲或者套利。价格已经朝他'不会同意'的方向跑了接近20个点，现在只剩2个点左右的空间，好价格已经过去了。催化剂方面，特朗普本人直接表态说不会让伊朗收费，这些消息支持他的No仓位，但市场对这些表态的反应还不清楚。近48小时他基本没动仓位。信心定为中等，是因为虽然他这笔单子浮盈接近20%，但由于他是对冲型仓位，系统把信心封顶到了中等。",
+  "confidence_reasons": [
+    "底座矩阵:high(pnl=+19.7%)",
+    "R2:两侧均衡(对冲/做市)→封medium"
+  ],
+  "facts": {
+    "market_question": "Will Trump agree to Iranian transit fees in the Strait of Hormuz by June 30?",
+    "outcome": "No",
+    "today": "2026-06-20",
+    "price_room_left": 2.04,
+    "price_already_moved": 19.7,
+    "resolution_date_human": "还有约10.0天",
+    "position_type": "hedged",
+    "recent_action": "flat_no_movement",
+    "support_catalysts": [
+      {
+        "title": "Trump vows Iran will not charge Strait of Hormuz tolls, but says US might - Al Jazeera",
+        "material_tag": "当事人直接表态",
+        "market_reaction": "unknown",
+        "move_pct": null,
+        "same_window": true
+      },
+      {
+        "title": "Trump Rules Out Iran Hormuz Tolls, Says US Would Be Entitled Instead - Newsweek",
+        "material_tag": "当事人直接表态",
+        "market_reaction": "unknown",
+        "move_pct": null,
+        "same_window": true
+      }
+    ],
+    "threat_catalysts": [],
+    "confidence": "medium",
+    "confidence_reasons": [
+      "底座矩阵:high(pnl=+19.7%)",
+      "R2:两侧均衡(对冲/做市)→封medium"
+    ]
+  }
+}

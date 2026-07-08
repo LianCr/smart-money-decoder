@@ -1,0 +1,72 @@
+{
+  "market_context": {
+    "market_id": "0xf4c72ff42c3f1ee9f25e835e62ca52d71a9cafbcc11f93c01af709af8ee5ff09",
+    "market_slug": "lee-jae-myung-out-as-president-of-south-korea-in-2026",
+    "market_question": "Lee Jae-myung out as president of South Korea in 2026?",
+    "analyzed_side": "No",
+    "as_of": "2026-06-25",
+    "wallet": "0x2d2b732a3dba4b7f790d8b08666e5707bff7b548",
+    "behavioral_flag": {
+      "flag": "STATIC",
+      "fact": "近 48h 仅 0 买 / 0 卖，无显著动作（沉闷持仓）",
+      "honest_note": "动态行为：基本没动",
+      "windows": {
+        "3h": {
+          "buys": 0,
+          "sells": 0,
+          "buy_usd": 0.0,
+          "sell_usd": 0.0
+        },
+        "24h": {
+          "buys": 0,
+          "sells": 0,
+          "buy_usd": 0.0,
+          "sell_usd": 0.0
+        },
+        "48h": {
+          "buys": 0,
+          "sells": 0,
+          "buy_usd": 0.0,
+          "sell_usd": 0.0
+        }
+      }
+    },
+    "ai_experimental_summary": "",
+    "timeline_events": [
+      {
+        "timestamp": "2026-06-23",
+        "type": "price_only",
+        "title": null,
+        "source": null,
+        "price_impact_string": "No 价格变动 +7%（85% → 92%）",
+        "fact_summary": "价格异动，但该时间窗 GDELT 三层洗不出对题公开新闻（可能抢跑/薄盘/内幕，系统无法证实）。",
+        "temporal_note": "未归因（无强关联新闻）"
+      },
+      {
+        "timestamp": "2026-06-22",
+        "type": "price_only",
+        "title": null,
+        "source": null,
+        "price_impact_string": "No 价格变动 -7%（92% → 85%）",
+        "fact_summary": "价格异动，但该时间窗 GDELT 三层洗不出对题公开新闻（可能抢跑/薄盘/内幕，系统无法证实）。",
+        "temporal_note": "未归因（无强关联新闻）"
+      },
+      {
+        "timestamp": "2026-06-05",
+        "type": "price_only",
+        "title": null,
+        "source": null,
+        "price_impact_string": "No 价格变动 -5%（91% → 86%）",
+        "fact_summary": "价格异动，但该时间窗 GDELT 三层洗不出对题公开新闻（可能抢跑/薄盘/内幕，系统无法证实）。",
+        "temporal_note": "未归因（无强关联新闻）"
+      }
+    ],
+    "_audit": {
+      "jumps_found": 3,
+      "events": 3,
+      "behavior": "STATIC",
+      "teacher_tokens_approx": 1986,
+      "boundaries": "因果→时间相关 · 无催化剂留白(行为感知内幕) · 价格窗≤as_of · 行为=事实非判断 · 综述无判断"
+    }
+  }
+}

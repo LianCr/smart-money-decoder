@@ -68,7 +68,7 @@ def _ff(x):
         return None
 
 
-def price_credibility(cid):
+def price_credibility(cid, as_of):
     """575 Market Insights → 价格可信度紧凑结论。薄盘/鲸控/参与稀 → 价格作为锚要降权。
     返回 {trust:high|med|low, line, days_to_resolution, raw} 或 None。"""
     try:
@@ -97,7 +97,7 @@ def price_credibility(cid):
     ed = str(x.get("end_date", ""))[:10]
     if ed:
         try:
-            days = (datetime.strptime(ed, "%Y-%m-%d") - datetime.strptime(_AS_OF_HOLDER[0], "%Y-%m-%d")).days
+            days = (datetime.strptime(ed, "%Y-%m-%d") - datetime.strptime(as_of, "%Y-%m-%d")).days
         except Exception:
             pass
     return {"trust": trust, "line": line, "days_to_resolution": days,
@@ -128,8 +128,6 @@ def realized_vol(token, as_of, days=14):
     line = f"市场自身犹豫度={desc}：近{len(closes)}日已实现波动 {round(vol, 3)}，收盘 {[round(c0, 2) for c0 in closes[-6:]]}"
     return {"vol": vol, "desc": desc, "line": line}
 
-
-_AS_OF_HOLDER = ["2026-06-25"]   # price_credibility 算 days 用（build 时设）
 
 _EVENT_MAP = {}
 EVENT_CACHE = Path(".cache/event_structure.json")
@@ -247,8 +245,7 @@ def build_market_thesis(market_title, cid, as_of, implied_prob_yes,
     market_blob = f"市场：{market_title}\n{price_line}\n\n文章池（只许用这些）：\n{pool_txt}"
 
     # Phase 1 可信度修正（575 价格可信度 + 568 已实现波动 + 距结算）——代码算、喂 reasoner 给价格/证据打折
-    _AS_OF_HOLDER[0] = as_of
-    pc = price_credibility(cid)
+    pc = price_credibility(cid, as_of)
     rv = realized_vol(held_token(cid, a), as_of)
     cred_lines = [s for s in [pc and pc["line"], rv and rv["line"],
                               pc and pc.get("days_to_resolution") is not None and f"距结算 {pc['days_to_resolution']} 天"] if s]
@@ -299,29 +296,43 @@ def map_wallet(thesis, wallet_side):
 
 
 def _parse_json(text):
-    """先正常 json.loads；失败则逐字段正则兜底（防 rationale 内部未转义引号/markdown 围栏炸掉整个 JSON）。"""
+    """robust：先 json.loads，再用正则**补齐任何缺失字段**（即便 loads 成功但漏字段、或内部未转义引号/markdown 围栏炸掉），
+    最后归一 market_lean。比"成功就直接 return"更稳——漏一个 market_lean 不会让整条 ⑥ 退化。"""
     import re
     t = re.sub(r"```(?:json)?", "", text or "").strip()
     m = re.search(r"\{.*\}", t, re.DOTALL)
     blob = m.group(0) if m else t
     try:
-        return json.loads(blob)
+        out = json.loads(blob)
+        if not isinstance(out, dict):
+            out = {}
     except Exception:
-        pass
-    out = {}
-    ml = re.search(r'"market_lean"\s*:\s*"?(YES|NO|unclear)"?', blob, re.I)
-    if ml:
-        out["market_lean"] = ml.group(1).upper()
-    ls = re.search(r'"lean_strength_0_100"\s*:\s*(\d+)', blob)
-    if ls:
-        out["lean_strength_0_100"] = int(ls.group(1))
-    cf = re.search(r'"confidence"\s*:\s*"?(high|med|medium|low)"?', blob, re.I)
-    if cf:
-        out["confidence"] = cf.group(1).lower()
-    pv = re.search(r'"pivotal_unknown"\s*:\s*"(.*?)"\s*,\s*"rationale"', blob, re.DOTALL)
-    if pv:
-        out["pivotal_unknown"] = pv.group(1)
-    ra = re.search(r'"rationale"\s*:\s*"(.*?)"\s*\}?\s*$', blob, re.DOTALL)
-    if ra:
-        out["rationale"] = ra.group(1)
+        out = {}
+    if not out.get("market_lean"):
+        mm = re.search(r'"market_lean"\s*:\s*"?\s*(YES|NO|unclear)', blob, re.I)
+        if mm:
+            out["market_lean"] = mm.group(1)
+    if out.get("lean_strength_0_100") is None:
+        ls = re.search(r'"lean_strength_0_100"\s*:\s*(\d+)', blob)
+        if ls:
+            out["lean_strength_0_100"] = int(ls.group(1))
+    if not out.get("confidence"):
+        cf = re.search(r'"confidence"\s*:\s*"?(high|med|medium|low)', blob, re.I)
+        if cf:
+            out["confidence"] = cf.group(1).lower()
+    if not out.get("pivotal_unknown"):
+        pv = re.search(r'"pivotal_unknown"\s*:\s*"(.*?)"\s*,\s*"rationale"', blob, re.DOTALL)
+        if pv:
+            out["pivotal_unknown"] = pv.group(1)
+    if not out.get("rationale"):
+        ra = re.search(r'"rationale"\s*:\s*"(.*?)"\s*\}?\s*$', blob, re.DOTALL)
+        if ra:
+            out["rationale"] = ra.group(1)
+    ml = str(out.get("market_lean") or "").upper().strip()   # 归一：'no'/'NO（倾向）'/带空格 → YES|NO
+    if ml.startswith("YES"):
+        out["market_lean"] = "YES"
+    elif ml.startswith("NO"):
+        out["market_lean"] = "NO"
+    elif ml.startswith("UNCLEAR"):
+        out["market_lean"] = "unclear"
     return out

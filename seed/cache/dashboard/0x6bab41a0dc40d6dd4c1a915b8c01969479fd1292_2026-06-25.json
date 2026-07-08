@@ -1,0 +1,1257 @@
+{
+  "wallet": "0x6bab41a0dc40d6dd4c1a915b8c01969479fd1292",
+  "as_of": "2026-06-25",
+  "identity": {
+    "profile": {
+      "address": "0x6bab41a0dc40d6dd4c1a915b8c01969479fd1292",
+      "name": "Dropper",
+      "pseudonym": "Complete-Fly",
+      "profile_image": "https://polymarket-upload.s3.us-east-2.amazonaws.com/images_0a57a0c2-437f-41be-9ab8-5376ab6f3ca7_1726693550341.jpeg"
+    },
+    "pnl_history": [
+      {
+        "t": 1732752000,
+        "p": 50018.496
+      },
+      {
+        "t": 1733011200,
+        "p": 51709.27
+      },
+      {
+        "t": 1733356800,
+        "p": 55636.44
+      },
+      {
+        "t": 1733616000,
+        "p": 59210.71
+      },
+      {
+        "t": 1733961600,
+        "p": 65386.2
+      },
+      {
+        "t": 1734307200,
+        "p": 68492.586
+      },
+      {
+        "t": 1734566400,
+        "p": 80929.92
+      },
+      {
+        "t": 1734912000,
+        "p": 79945.29
+      },
+      {
+        "t": 1735171200,
+        "p": 81806.22
+      },
+      {
+        "t": 1735516800,
+        "p": 78907.35
+      },
+      {
+        "t": 1735862400,
+        "p": 78783.24
+      },
+      {
+        "t": 1736121600,
+        "p": 79593.93
+      },
+      {
+        "t": 1736467200,
+        "p": 81111.914
+      },
+      {
+        "t": 1736812800,
+        "p": 82102.72
+      },
+      {
+        "t": 1737072000,
+        "p": 91911.66
+      },
+      {
+        "t": 1737417600,
+        "p": 112266.52
+      },
+      {
+        "t": 1737676800,
+        "p": 116597.914
+      },
+      {
+        "t": 1738022400,
+        "p": 126342.93
+      },
+      {
+        "t": 1738368000,
+        "p": 128804.07
+      },
+      {
+        "t": 1738627200,
+        "p": 129202.12
+      },
+      {
+        "t": 1738972800,
+        "p": 133145.3
+      },
+      {
+        "t": 1739318400,
+        "p": 144513.42
+      },
+      {
+        "t": 1739577600,
+        "p": 149202.52
+      },
+      {
+        "t": 1739923200,
+        "p": 152673.98
+      },
+      {
+        "t": 1740182400,
+        "p": 151816.48
+      },
+      {
+        "t": 1740528000,
+        "p": 147191.69
+      },
+      {
+        "t": 1740873600,
+        "p": 143120.52
+      },
+      {
+        "t": 1741132800,
+        "p": 142584.97
+      },
+      {
+        "t": 1741478400,
+        "p": 142021.67
+      },
+      {
+        "t": 1741824000,
+        "p": 144190.12
+      },
+      {
+        "t": 1742083200,
+        "p": 150195.16
+      },
+      {
+        "t": 1742428800,
+        "p": 150424.61
+      },
+      {
+        "t": 1742688000,
+        "p": 156139.47
+      },
+      {
+        "t": 1743033600,
+        "p": 157681.78
+      },
+      {
+        "t": 1743379200,
+        "p": 163559.97
+      },
+      {
+        "t": 1743638400,
+        "p": 176305.69
+      },
+      {
+        "t": 1743984000,
+        "p": 187549.44
+      },
+      {
+        "t": 1744329600,
+        "p": 182991.8
+      },
+      {
+        "t": 1744588800,
+        "p": 183438.5
+      },
+      {
+        "t": 1744934400,
+        "p": 190068.86
+      },
+      {
+        "t": 1745193600,
+        "p": 198899.95
+      },
+      {
+        "t": 1745539200,
+        "p": 202445.02
+      },
+      {
+        "t": 1745884800,
+        "p": 181990.34
+      },
+      {
+        "t": 1746144000,
+        "p": 202695.22
+      },
+      {
+        "t": 1746489600,
+        "p": 209903.25
+      },
+      {
+        "t": 1746835200,
+        "p": 217393.81
+      },
+      {
+        "t": 1747094400,
+        "p": 215729.52
+      },
+      {
+        "t": 1747440000,
+        "p": 223791.95
+      },
+      {
+        "t": 1747699200,
+        "p": 234639.84
+      },
+      {
+        "t": 1748044800,
+        "p": 236361.88
+      },
+      {
+        "t": 1748390400,
+        "p": 239022.39
+      },
+      {
+        "t": 1748649600,
+        "p": 240304.02
+      },
+      {
+        "t": 1748995200,
+        "p": 247794.0
+      },
+      {
+        "t": 1749340800,
+        "p": 250959.1
+      },
+      {
+        "t": 1749600000,
+        "p": 256491.03
+      },
+      {
+        "t": 1749945600,
+        "p": 252051.36
+      },
+      {
+        "t": 1750204800,
+        "p": 264626.16
+      },
+      {
+        "t": 1750550400,
+        "p": 271176.44
+      },
+      {
+        "t": 1750896000,
+        "p": 298896.1
+      },
+      {
+        "t": 1751155200,
+        "p": 321163.0
+      },
+      {
+        "t": 1751500800,
+        "p": 323236.62
+      },
+      {
+        "t": 1751760000,
+        "p": 327811.5
+      },
+      {
+        "t": 1752105600,
+        "p": 341705.5
+      },
+      {
+        "t": 1752451200,
+        "p": 343704.22
+      },
+      {
+        "t": 1752710400,
+        "p": 350425.44
+      },
+      {
+        "t": 1753056000,
+        "p": 351920.84
+      },
+      {
+        "t": 1753401600,
+        "p": 360343.97
+      },
+      {
+        "t": 1753660800,
+        "p": 353972.78
+      },
+      {
+        "t": 1754006400,
+        "p": 368612.38
+      },
+      {
+        "t": 1754265600,
+        "p": 367450.34
+      },
+      {
+        "t": 1754611200,
+        "p": 370136.56
+      },
+      {
+        "t": 1754956800,
+        "p": 376083.9
+      },
+      {
+        "t": 1755216000,
+        "p": 379973.5
+      },
+      {
+        "t": 1755561600,
+        "p": 392784.06
+      },
+      {
+        "t": 1755907200,
+        "p": 405683.34
+      },
+      {
+        "t": 1756166400,
+        "p": 410102.88
+      },
+      {
+        "t": 1756512000,
+        "p": 429808.28
+      },
+      {
+        "t": 1756771200,
+        "p": 446189.84
+      },
+      {
+        "t": 1757116800,
+        "p": 453512.88
+      },
+      {
+        "t": 1757462400,
+        "p": 457868.22
+      },
+      {
+        "t": 1757721600,
+        "p": 467285.78
+      },
+      {
+        "t": 1758067200,
+        "p": 466297.47
+      },
+      {
+        "t": 1758412800,
+        "p": 501033.2
+      },
+      {
+        "t": 1758672000,
+        "p": 505623.47
+      },
+      {
+        "t": 1759017600,
+        "p": 518386.22
+      },
+      {
+        "t": 1759276800,
+        "p": 524715.75
+      },
+      {
+        "t": 1759622400,
+        "p": 543581.6
+      },
+      {
+        "t": 1759968000,
+        "p": 528542.0
+      },
+      {
+        "t": 1760227200,
+        "p": 552684.25
+      },
+      {
+        "t": 1760572800,
+        "p": 560462.25
+      },
+      {
+        "t": 1760918400,
+        "p": 570715.3
+      },
+      {
+        "t": 1761177600,
+        "p": 586947.25
+      },
+      {
+        "t": 1761523200,
+        "p": 589022.4
+      },
+      {
+        "t": 1761782400,
+        "p": 605650.44
+      },
+      {
+        "t": 1762128000,
+        "p": 582654.0
+      },
+      {
+        "t": 1762473600,
+        "p": 601379.25
+      },
+      {
+        "t": 1762732800,
+        "p": 604639.0
+      },
+      {
+        "t": 1763078400,
+        "p": 581065.8
+      },
+      {
+        "t": 1763424000,
+        "p": 587780.8
+      },
+      {
+        "t": 1763683200,
+        "p": 594383.06
+      },
+      {
+        "t": 1764028800,
+        "p": 616995.25
+      },
+      {
+        "t": 1764288000,
+        "p": 609134.7
+      },
+      {
+        "t": 1764633600,
+        "p": 625013.1
+      },
+      {
+        "t": 1764979200,
+        "p": 720262.25
+      },
+      {
+        "t": 1765238400,
+        "p": 753496.1
+      },
+      {
+        "t": 1765584000,
+        "p": 748392.4
+      },
+      {
+        "t": 1765929600,
+        "p": 750275.6
+      },
+      {
+        "t": 1766188800,
+        "p": 764972.25
+      },
+      {
+        "t": 1766534400,
+        "p": 781921.9
+      },
+      {
+        "t": 1766793600,
+        "p": 798833.7
+      },
+      {
+        "t": 1767139200,
+        "p": 806177.1
+      },
+      {
+        "t": 1767484800,
+        "p": 807831.9
+      },
+      {
+        "t": 1767744000,
+        "p": 808244.4
+      },
+      {
+        "t": 1768089600,
+        "p": 822665.1
+      },
+      {
+        "t": 1768348800,
+        "p": 825185.5
+      },
+      {
+        "t": 1768694400,
+        "p": 849635.1
+      },
+      {
+        "t": 1769040000,
+        "p": 867569.6
+      },
+      {
+        "t": 1769299200,
+        "p": 874643.4
+      },
+      {
+        "t": 1769644800,
+        "p": 880584.6
+      },
+      {
+        "t": 1769990400,
+        "p": 890962.2
+      },
+      {
+        "t": 1770249600,
+        "p": 894101.2
+      },
+      {
+        "t": 1770595200,
+        "p": 901149.56
+      },
+      {
+        "t": 1770854400,
+        "p": 905971.75
+      },
+      {
+        "t": 1771200000,
+        "p": 908963.9
+      },
+      {
+        "t": 1771545600,
+        "p": 901758.75
+      },
+      {
+        "t": 1771804800,
+        "p": 903513.25
+      },
+      {
+        "t": 1772150400,
+        "p": 924026.0
+      },
+      {
+        "t": 1772496000,
+        "p": 962030.1
+      },
+      {
+        "t": 1772755200,
+        "p": 984771.8
+      },
+      {
+        "t": 1773100800,
+        "p": 990317.25
+      },
+      {
+        "t": 1773360000,
+        "p": 989849.2
+      },
+      {
+        "t": 1773705600,
+        "p": 992989.4
+      },
+      {
+        "t": 1774051200,
+        "p": 1004722.1
+      },
+      {
+        "t": 1774310400,
+        "p": 1014281.2
+      },
+      {
+        "t": 1774656000,
+        "p": 1021112.44
+      },
+      {
+        "t": 1775001600,
+        "p": 1042011.1
+      },
+      {
+        "t": 1775260800,
+        "p": 1038466.1
+      },
+      {
+        "t": 1775606400,
+        "p": 1018313.7
+      },
+      {
+        "t": 1775865600,
+        "p": 1027677.7
+      },
+      {
+        "t": 1776211200,
+        "p": 1037770.2
+      },
+      {
+        "t": 1776556800,
+        "p": 1056451.0
+      },
+      {
+        "t": 1776816000,
+        "p": 1067069.8
+      },
+      {
+        "t": 1777161600,
+        "p": 1060921.0
+      },
+      {
+        "t": 1777507200,
+        "p": 1154118.5
+      },
+      {
+        "t": 1777766400,
+        "p": 1102042.1
+      },
+      {
+        "t": 1778112000,
+        "p": 1100053.9
+      },
+      {
+        "t": 1778371200,
+        "p": 1100413.2
+      },
+      {
+        "t": 1778716800,
+        "p": 1096866.4
+      },
+      {
+        "t": 1779062400,
+        "p": 1096402.0
+      },
+      {
+        "t": 1779321600,
+        "p": 1104445.6
+      },
+      {
+        "t": 1779667200,
+        "p": 1105614.9
+      },
+      {
+        "t": 1780012800,
+        "p": 1122787.2
+      },
+      {
+        "t": 1780272000,
+        "p": 1114890.0
+      },
+      {
+        "t": 1780617600,
+        "p": 1266947.9
+      },
+      {
+        "t": 1780876800,
+        "p": 1268449.9
+      },
+      {
+        "t": 1781222400,
+        "p": 1314562.4
+      },
+      {
+        "t": 1781568000,
+        "p": 1450891.0
+      },
+      {
+        "t": 1781827200,
+        "p": 1457564.6
+      },
+      {
+        "t": 1782172800,
+        "p": 1456142.5
+      },
+      {
+        "t": 1782428400,
+        "p": 1458824.8
+      }
+    ],
+    "who_trader_profile": {
+      "wallet": "0x6bab41a0dc40d6dd4c1a915b8c01969479fd1292",
+      "quality": {
+        "combined_risk_score": 35,
+        "max_drawdown": 0.0088,
+        "drawdown_frequency": 0,
+        "avg_trade_size": 618.35,
+        "markets_traded": 28,
+        "num_markets_traded": 28,
+        "category_diversity_score": 0.5316,
+        "market_concentration_ratio": 0.6061,
+        "annualized_return": null,
+        "gain_to_pain_ratio": 100,
+        "equity_curve_pattern": "volatile",
+        "perfect_timing_flag": false,
+        "flagged_metrics": "{suspicious_win_rate,position_size_volatility}",
+        "losing_trades": 13,
+        "best_market_pnl": 134173.29,
+        "dominant_market_pnl": 134173.29,
+        "window_days": "15"
+      },
+      "category_specialization": [
+        {
+          "category": "Other",
+          "roi": 47.9861,
+          "win_rate": 0.9015,
+          "total_pnl": 176743.12,
+          "total_trades": 597
+        },
+        {
+          "category": "Politics",
+          "roi": 74.5349,
+          "win_rate": 0.9141,
+          "total_pnl": 176382.01,
+          "total_trades": 394
+        },
+        {
+          "category": "Politics / Global",
+          "roi": 72.2602,
+          "win_rate": 0.9194,
+          "total_pnl": 167458.06,
+          "total_trades": 382
+        },
+        {
+          "category": "Politics / US / Trump",
+          "roi": 90.9667,
+          "win_rate": 0.9429,
+          "total_pnl": 160567.47,
+          "total_trades": 213
+        },
+        {
+          "category": "Politics / US",
+          "roi": 90.9667,
+          "win_rate": 0.9429,
+          "total_pnl": 160567.47,
+          "total_trades": 213
+        },
+        {
+          "category": "Sports / Soccer",
+          "roi": 6.7267,
+          "win_rate": 0.7143,
+          "total_pnl": 9285.08,
+          "total_trades": 216
+        },
+        {
+          "category": "Sports",
+          "roi": 6.7267,
+          "win_rate": 0.625,
+          "total_pnl": 9285.06,
+          "total_trades": 216
+        },
+        {
+          "category": "Culture & Entertainment",
+          "roi": 182.1015,
+          "win_rate": 0.75,
+          "total_pnl": 8923.95,
+          "total_trades": 12
+        },
+        {
+          "category": "Finance & Markets",
+          "roi": 6.6451,
+          "win_rate": 0.8182,
+          "total_pnl": 1455.51,
+          "total_trades": 97
+        },
+        {
+          "category": "Esports / Counter-Strike",
+          "roi": 0.0,
+          "win_rate": 0.0,
+          "total_pnl": -0.02,
+          "total_trades": 0
+        },
+        {
+          "category": "Esports",
+          "roi": 0.0,
+          "win_rate": 0.0,
+          "total_pnl": -0.02,
+          "total_trades": 0
+        }
+      ],
+      "official_rank": {
+        "period": "30d",
+        "rank": 87,
+        "roi": "0.225582",
+        "win_rate": "0.8762",
+        "sharpe_ratio": "0.1085",
+        "total_pnl": "320104.5538",
+        "total_invested": "1419014.82",
+        "total_trades": 1501,
+        "markets_traded": 50
+      },
+      "realized_pnl_recent": {
+        "window": [
+          "2026-05-20",
+          "2026-06-20"
+        ],
+        "days_returned": 11,
+        "realized_pnl_sum": -11409.5
+      },
+      "h_score": {
+        "available": true,
+        "h_score": "74.629",
+        "tier": "Elite",
+        "leaderboard_rank": 792
+      }
+    }
+  },
+  "position": {
+    "meta": {
+      "wallet": "0x6bab41a0dc40d6dd4c1a915b8c01969479fd1292",
+      "market": "Will Luiz Inácio Lula da Silva win the 2026 Brazilian presidential election?",
+      "analyzed_side": "Yes",
+      "as_of": "2026-06-25",
+      "mode": "live",
+      "catalyst_anchor": "2026-06-25",
+      "settle": "还有约101.0天"
+    },
+    "what_position_actions": {
+      "wallet": "0x6bab41a0dc40d6dd4c1a915b8c01969479fd1292",
+      "condition_id": "0xdf8e2dc5860027decbe6164555c3c1c9645c3bd33e16b9dc57ca87125047d4a8",
+      "analyzed_side": "Yes",
+      "market": {
+        "question": "Will Luiz Inácio Lula da Silva win the 2026 Brazilian presidential election?",
+        "winning_outcome": null,
+        "closed": false,
+        "settle_date": "2026-10-04",
+        "days_to_settlement": 101.0,
+        "settle_note": "还有约101.0天"
+      },
+      "two_side_distribution": {
+        "hedged": false,
+        "by_outcome": {
+          "Yes": {
+            "trades": 168,
+            "shares": 9289.9
+          }
+        },
+        "note": "仅单边建仓"
+      },
+      "actions": {
+        "entry_time": "2026-05-13 19:59",
+        "last_add_time": "2026-06-10 02:55",
+        "num_buys": 168,
+        "num_sells": 0,
+        "added_over_time": true,
+        "avg_entry_price": 0.438,
+        "net_shares": 9289.9,
+        "net_cost_usd": 4069.24
+      },
+      "unrealized": {
+        "current_price": 0.56,
+        "price_source": "568最新close",
+        "current_value_usd": 5202.35,
+        "unrealized_pnl_usd": 1133.11,
+        "unrealized_pct": 27.85,
+        "note": "持仓中浮盈亏"
+      }
+    },
+    "price_context": {
+      "as_of": "2026-06-25",
+      "analyzed_side": "Yes",
+      "price_source": "568历史close",
+      "current_price": 0.56,
+      "implied_probability_pct": 56.0,
+      "remaining_upside_per_share_usd": 0.44,
+      "remaining_upside_pct_if_win": 78.57,
+      "downside_per_share_usd": 0.56,
+      "odds_to_one": 0.79,
+      "entry_price": 0.438,
+      "price_delta": 0.122,
+      "price_delta_pct": 27.85
+    },
+    "what_the_bet": "押注卢拉（Luiz Inácio Lula da Silva）将赢得2026年10月4日的巴西总统选举（包括可能的第二轮投票），如果可信报道共识或巴西高等选举法院官方结果确认他获胜则算赢。",
+    "resolution_criteria": "A presidential election is scheduled to take place in Brazil on October 4, 2026.\n\nThis market will resolve according to the listed candidate that wins this election.\n\nThis market includes any potential second round. If the result of this election isn't known by June 30, 2027, 11:59 PM ET, the market will resolve to \"Other\".\n\nThis market will resolve based on the result of the election as indicated by a consensus of credible reporting. If there is ambiguity, this market will resolve based solely on the official results as reported by the Brazilian government, specifically the Superior Electoral Court (Tribunal Superior Eleitoral, TSE) (e.g., https://dadosabertos.tse.jus.br/)."
+  },
+  "market": {
+    "slug": "will-luiz-incio-lula-da-silva-win-the-2026-brazilian-presidential-election",
+    "market_id": "0xdf8e2dc5860027decbe6164555c3c1c9645c3bd33e16b9dc57ca87125047d4a8"
+  },
+  "price_series": [
+    {
+      "date": "2026-04-27",
+      "price": 0.36
+    },
+    {
+      "date": "2026-04-28",
+      "price": 0.36
+    },
+    {
+      "date": "2026-05-01",
+      "price": 0.38
+    },
+    {
+      "date": "2026-05-02",
+      "price": 0.39
+    },
+    {
+      "date": "2026-05-03",
+      "price": 0.37
+    },
+    {
+      "date": "2026-05-04",
+      "price": 0.37
+    },
+    {
+      "date": "2026-05-05",
+      "price": 0.36
+    },
+    {
+      "date": "2026-05-06",
+      "price": 0.37
+    },
+    {
+      "date": "2026-05-07",
+      "price": 0.38
+    },
+    {
+      "date": "2026-05-08",
+      "price": 0.37
+    },
+    {
+      "date": "2026-05-09",
+      "price": 0.41
+    },
+    {
+      "date": "2026-05-10",
+      "price": 0.39
+    },
+    {
+      "date": "2026-05-11",
+      "price": 0.4
+    },
+    {
+      "date": "2026-05-12",
+      "price": 0.39
+    },
+    {
+      "date": "2026-05-13",
+      "price": 0.41
+    },
+    {
+      "date": "2026-05-14",
+      "price": 0.43
+    },
+    {
+      "date": "2026-05-15",
+      "price": 0.45
+    },
+    {
+      "date": "2026-05-16",
+      "price": 0.44
+    },
+    {
+      "date": "2026-05-17",
+      "price": 0.45
+    },
+    {
+      "date": "2026-05-18",
+      "price": 0.44
+    },
+    {
+      "date": "2026-05-19",
+      "price": 0.44
+    },
+    {
+      "date": "2026-05-20",
+      "price": 0.45
+    },
+    {
+      "date": "2026-05-21",
+      "price": 0.45
+    },
+    {
+      "date": "2026-05-22",
+      "price": 0.46
+    },
+    {
+      "date": "2026-05-23",
+      "price": 0.46
+    },
+    {
+      "date": "2026-05-24",
+      "price": 0.44
+    },
+    {
+      "date": "2026-05-25",
+      "price": 0.4
+    },
+    {
+      "date": "2026-05-26",
+      "price": 0.41
+    },
+    {
+      "date": "2026-05-27",
+      "price": 0.4
+    },
+    {
+      "date": "2026-05-28",
+      "price": 0.41
+    },
+    {
+      "date": "2026-05-29",
+      "price": 0.4
+    },
+    {
+      "date": "2026-05-30",
+      "price": 0.41
+    },
+    {
+      "date": "2026-05-31",
+      "price": 0.41
+    },
+    {
+      "date": "2026-06-01",
+      "price": 0.41
+    },
+    {
+      "date": "2026-06-02",
+      "price": 0.39
+    },
+    {
+      "date": "2026-06-03",
+      "price": 0.4
+    },
+    {
+      "date": "2026-06-04",
+      "price": 0.4
+    },
+    {
+      "date": "2026-06-05",
+      "price": 0.42
+    },
+    {
+      "date": "2026-06-06",
+      "price": 0.4
+    },
+    {
+      "date": "2026-06-07",
+      "price": 0.41
+    },
+    {
+      "date": "2026-06-08",
+      "price": 0.41
+    },
+    {
+      "date": "2026-06-09",
+      "price": 0.41
+    },
+    {
+      "date": "2026-06-10",
+      "price": 0.45
+    },
+    {
+      "date": "2026-06-11",
+      "price": 0.45
+    },
+    {
+      "date": "2026-06-12",
+      "price": 0.47
+    },
+    {
+      "date": "2026-06-13",
+      "price": 0.5
+    },
+    {
+      "date": "2026-06-14",
+      "price": 0.49
+    },
+    {
+      "date": "2026-06-15",
+      "price": 0.51
+    },
+    {
+      "date": "2026-06-16",
+      "price": 0.52
+    },
+    {
+      "date": "2026-06-17",
+      "price": 0.51
+    },
+    {
+      "date": "2026-06-18",
+      "price": 0.51
+    },
+    {
+      "date": "2026-06-19",
+      "price": 0.52
+    },
+    {
+      "date": "2026-06-20",
+      "price": 0.52
+    },
+    {
+      "date": "2026-06-21",
+      "price": 0.52
+    },
+    {
+      "date": "2026-06-22",
+      "price": 0.55
+    },
+    {
+      "date": "2026-06-23",
+      "price": 0.55
+    },
+    {
+      "date": "2026-06-24",
+      "price": 0.56
+    },
+    {
+      "date": "2026-06-25",
+      "price": 0.56
+    }
+  ],
+  "behavior": {
+    "flag": "STATIC",
+    "fact": "近 48h 仅 0 买 / 0 卖，无显著动作（沉闷持仓）",
+    "honest_note": "动态行为：基本没动",
+    "windows": {
+      "3h": {
+        "buys": 0,
+        "sells": 0,
+        "buy_usd": 0.0,
+        "sell_usd": 0.0
+      },
+      "24h": {
+        "buys": 0,
+        "sells": 0,
+        "buy_usd": 0.0,
+        "sell_usd": 0.0
+      },
+      "48h": {
+        "buys": 0,
+        "sells": 0,
+        "buy_usd": 0.0,
+        "sell_usd": 0.0
+      }
+    }
+  },
+  "news_stream": [
+    {
+      "date": "2026-06-18",
+      "title": "Brazil executes warrant against Lula ally in widening financial scandal - Al Jazeera",
+      "summary": "Federal police raided a senator closely allied with Lula as part of corruption investigations into Banco Master. Corruption scandals involving close allies can reduce incumbent support and electoral performance in Brazilian presidential elections.",
+      "url": "https://www.aljazeera.com/news/2026/6/18/brazil-executes-warrant-against-lula-ally-in-widening-financial-scandal",
+      "origin": "Tavily",
+      "direction": "threat",
+      "reaction": {
+        "available": true,
+        "kind": "weak",
+        "move_pct": 1.96,
+        "window": [
+          "2026-06-17",
+          "2026-06-19"
+        ]
+      },
+      "same_window": false
+    },
+    {
+      "date": "2026-06-17",
+      "title": "Brazil's Lula warns Trump not to meddle in Brazil's elections - The Washington Post",
+      "summary": "文章显示Lula在2026年6月作为现任总统就即将到来的总统选举发表警告，表明他仍在位并参与选举相关事务",
+      "url": "https://www.washingtonpost.com/world/2026/06/17/brazil-us-lula-trump/d8e4a1a2-6a8c-11f1-830e-133d20cadd28_story.html",
+      "origin": "Tavily",
+      "direction": "support",
+      "reaction": {
+        "available": true,
+        "kind": "weak",
+        "move_pct": -1.92,
+        "window": [
+          "2026-06-16",
+          "2026-06-18"
+        ]
+      },
+      "same_window": true
+    },
+    {
+      "date": "2026-06-17",
+      "title": "Brazil's Lula warns Trump not to meddle in Brazil's elections - AP News",
+      "summary": "文章确认Lula在2026年6月以巴西总统身份就选举发表声明，显示他在选举前夕仍担任总统职位",
+      "url": "https://apnews.com/article/brazil-us-lula-trump-58191e76e4b65f16d24f7d0b8cc61755",
+      "origin": "Tavily",
+      "direction": "support",
+      "reaction": {
+        "available": true,
+        "kind": "weak",
+        "move_pct": -1.92,
+        "window": [
+          "2026-06-16",
+          "2026-06-18"
+        ]
+      },
+      "same_window": true
+    }
+  ],
+  "social": {
+    "keywords": "{luiz,lula,silva,brazilian}",
+    "acceleration": 0.0,
+    "author_diversity_pct": 82.5,
+    "tweet_count": 40,
+    "organic": true,
+    "posts": [
+      {
+        "username": "FabrizioRomano",
+        "content": "🚨 EXCLUSIVE: Inter Miami complete deal to sign Casemiro as new midfielder, here we go!\n\nVerbal agreement sealed with all parties involved and all formal steps resolved, now waiting to sign and announce the Brazilian.\n\nCa",
+        "url": "https://x.com/FabrizioRomano/status/2068295942483198454",
+        "likes": 88332.0,
+        "retweets": 7824.0,
+        "created_on": "2026-06-20T11:32:34Z"
+      },
+      {
+        "username": "Dexerto",
+        "content": "A Brazilian psychic teared up while claiming that aliens will invade the Brazil vs Scotland match at the World Cup\n\nShe says UFOs will abduct players and hundreds of fans from the stadium https://t.co/jhbwYv8CF7",
+        "url": "https://x.com/Dexerto/status/2069858169438769434",
+        "likes": 16317.0,
+        "retweets": 634.0,
+        "created_on": "2026-06-24T19:00:18Z"
+      },
+      {
+        "username": "ggreenwald",
+        "content": "Oh, dear. Brazil's now-imprisoned former President Jair Bolsonaro chose his son -- Senator Flavio Bolsonaro -- to be the party's candidate against Lula in the October election. Polls show a reasonably tight contest.\n\nBut",
+        "url": "https://x.com/ggreenwald/status/2069894924753850691",
+        "likes": 5480.0,
+        "retweets": 534.0,
+        "created_on": "2026-06-24T21:26:21Z"
+      },
+      {
+        "username": "FluentInFinance",
+        "content": "JUST IN: The first human trial of \"reverse-aging\" drugs has started.\n\nLife Biosciences dosed the first patients with ER-100, a drug built to make damaged eye cells act younger.\n\nThe method is called cellular reprogrammin",
+        "url": "https://x.com/FluentInFinance/status/2068415301436182953",
+        "likes": 173.0,
+        "retweets": 33.0,
+        "created_on": "2026-06-20T19:26:51Z"
+      }
+    ],
+    "note": "社媒=情绪非事实，可能被刷量；author_diversity<20% 当噪音看。仅实时，不进回测。"
+  },
+  "world_summary": "**巨鲸动态**  \n近48小时无交易，持仓无变化。\n\n**事态进展**  \n2026年6月Lula以现任总统身份就即将到来的选举发表声明，确认其在位。同期联邦警察突击搜查Lula盟友参议员，涉Banco Master腐败调查。Polymarket盘面显示Lula隐含概率50.5%居首；6月Quaest、MDA等多项民调显示Lula首轮支持率41-43%，领先主要对手Flávio Bolsonaro的28-34%。Bolsonaro阵营因音频泄露关联涉案银行家引发选民审视，差距扩大。右翼阵营包括Caiado、Zema、Santos等人物分散，反对派未形成统一力量。治安与经济议题持续受关注。",
+  "reasoning": {
+    "follow_call": "ROOM LEFT",
+    "confidence": "high",
+    "reasoning": "这个钱包单边押注卢拉赢,当前价格还有很大空间,之前涨幅只占了很小一部分。近48小时他没动仓位。支持面有卢拉警告特朗普别干涉巴西选举的消息,但市场反应偏弱;威胁面有盟友牵涉财务丑闻的已生效事件,市场同样反应弱。信心评级高是因为他这个仓位已经浮盈近28%,说明方向目前在兑现,但市场还没完全消化这个走势,跟单空间仍然充足。",
+    "confidence_reasons": [
+      "底座矩阵:high(pnl=+27.9%)"
+    ],
+    "facts": {
+      "market_question": "Will Luiz Inácio Lula da Silva win the 2026 Brazilian presidential election?",
+      "outcome": "Yes",
+      "today": "2026-06-25",
+      "price_room_left": 78.57,
+      "price_already_moved": 27.85,
+      "resolution_date_human": "还有约101.0天",
+      "position_type": "single_side_conviction",
+      "recent_action": "flat_no_movement",
+      "support_catalysts": [
+        {
+          "title": "Brazil's Lula warns Trump not to meddle in Brazil's elections - The Washington Post",
+          "material_tag": "其他背景",
+          "market_reaction": "weak",
+          "move_pct": -1.92,
+          "same_window": true
+        },
+        {
+          "title": "Brazil's Lula warns Trump not to meddle in Brazil's elections - AP News",
+          "material_tag": "其他背景",
+          "market_reaction": "weak",
+          "move_pct": -1.92,
+          "same_window": true
+        }
+      ],
+      "threat_catalysts": [
+        {
+          "title": "Brazil executes warrant against Lula ally in widening financial scandal - Al Jazeera",
+          "material_tag": "已生效硬事件",
+          "market_reaction": "weak",
+          "move_pct": 1.96,
+          "same_window": false
+        }
+      ],
+      "confidence": "high",
+      "confidence_reasons": [
+        "底座矩阵:high(pnl=+27.9%)"
+      ]
+    }
+  }
+}

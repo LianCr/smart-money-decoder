@@ -1,0 +1,464 @@
+{
+  "profile": {
+    "address": "0xc84f7e76ec28ef20e7773b7b4926bfb7378be0c5",
+    "name": "BrightStars",
+    "pseudonym": "Foolish-Propane",
+    "profile_image": null
+  },
+  "pnl_history": [
+    {
+      "t": 1772323200,
+      "p": 5357.278
+    },
+    {
+      "t": 1772409600,
+      "p": 16530.217
+    },
+    {
+      "t": 1772496000,
+      "p": 17541.154
+    },
+    {
+      "t": 1772582400,
+      "p": 18598.697
+    },
+    {
+      "t": 1772668800,
+      "p": 7767.7646
+    },
+    {
+      "t": 1772755200,
+      "p": 5934.469
+    },
+    {
+      "t": 1772841600,
+      "p": -853.4738
+    },
+    {
+      "t": 1772928000,
+      "p": 5944.926
+    },
+    {
+      "t": 1773014400,
+      "p": 29188.963
+    },
+    {
+      "t": 1773100800,
+      "p": 29139.48
+    },
+    {
+      "t": 1773187200,
+      "p": 29289.371
+    },
+    {
+      "t": 1773273600,
+      "p": 29545.76
+    },
+    {
+      "t": 1773360000,
+      "p": 31163.12
+    },
+    {
+      "t": 1773446400,
+      "p": 32144.81
+    },
+    {
+      "t": 1773532800,
+      "p": 33069.812
+    },
+    {
+      "t": 1773619200,
+      "p": 34665.535
+    },
+    {
+      "t": 1773705600,
+      "p": 35047.195
+    },
+    {
+      "t": 1773792000,
+      "p": 35987.652
+    },
+    {
+      "t": 1773878400,
+      "p": 37952.63
+    },
+    {
+      "t": 1773964800,
+      "p": 39256.637
+    },
+    {
+      "t": 1774051200,
+      "p": 39387.77
+    },
+    {
+      "t": 1774137600,
+      "p": 40964.254
+    },
+    {
+      "t": 1774224000,
+      "p": 40828.69
+    },
+    {
+      "t": 1774310400,
+      "p": 40379.047
+    },
+    {
+      "t": 1774396800,
+      "p": 42769.152
+    },
+    {
+      "t": 1774483200,
+      "p": 42425.2
+    },
+    {
+      "t": 1774569600,
+      "p": 42076.69
+    },
+    {
+      "t": 1774656000,
+      "p": 41139.23
+    },
+    {
+      "t": 1774742400,
+      "p": 40079.734
+    },
+    {
+      "t": 1774828800,
+      "p": 38128.656
+    },
+    {
+      "t": 1774915200,
+      "p": 39278.906
+    },
+    {
+      "t": 1775001600,
+      "p": 45421.773
+    },
+    {
+      "t": 1775088000,
+      "p": 45538.04
+    },
+    {
+      "t": 1775174400,
+      "p": 41993.34
+    },
+    {
+      "t": 1775260800,
+      "p": 37396.465
+    },
+    {
+      "t": 1775347200,
+      "p": 36295.016
+    },
+    {
+      "t": 1775433600,
+      "p": 37454.17
+    },
+    {
+      "t": 1775520000,
+      "p": 41086.035
+    },
+    {
+      "t": 1775606400,
+      "p": 151215.02
+    },
+    {
+      "t": 1775692800,
+      "p": 153206.9
+    },
+    {
+      "t": 1775779200,
+      "p": 153469.38
+    },
+    {
+      "t": 1775865600,
+      "p": 154376.6
+    },
+    {
+      "t": 1775952000,
+      "p": 157647.45
+    },
+    {
+      "t": 1776038400,
+      "p": 160602.95
+    },
+    {
+      "t": 1776124800,
+      "p": 160284.75
+    },
+    {
+      "t": 1776211200,
+      "p": 161520.45
+    },
+    {
+      "t": 1776297600,
+      "p": 152396.34
+    },
+    {
+      "t": 1776384000,
+      "p": 169542.16
+    },
+    {
+      "t": 1776470400,
+      "p": 174137.05
+    },
+    {
+      "t": 1776556800,
+      "p": 157144.92
+    },
+    {
+      "t": 1776643200,
+      "p": 150225.53
+    },
+    {
+      "t": 1776729600,
+      "p": 151634.97
+    },
+    {
+      "t": 1776816000,
+      "p": 138315.4
+    },
+    {
+      "t": 1776902400,
+      "p": 137700.8
+    },
+    {
+      "t": 1776988800,
+      "p": 135749.62
+    },
+    {
+      "t": 1777075200,
+      "p": 137586.83
+    },
+    {
+      "t": 1777161600,
+      "p": 137594.75
+    },
+    {
+      "t": 1777248000,
+      "p": 137679.9
+    },
+    {
+      "t": 1777334400,
+      "p": 137056.58
+    },
+    {
+      "t": 1777420800,
+      "p": 137616.06
+    },
+    {
+      "t": 1777507200,
+      "p": 136770.42
+    },
+    {
+      "t": 1777593600,
+      "p": 135036.81
+    },
+    {
+      "t": 1777680000,
+      "p": 138236.84
+    },
+    {
+      "t": 1777766400,
+      "p": 134349.1
+    },
+    {
+      "t": 1777852800,
+      "p": 137335.95
+    },
+    {
+      "t": 1777939200,
+      "p": 133876.25
+    },
+    {
+      "t": 1778025600,
+      "p": 132653.5
+    },
+    {
+      "t": 1778112000,
+      "p": 128583.125
+    },
+    {
+      "t": 1778198400,
+      "p": 129122.1
+    },
+    {
+      "t": 1778284800,
+      "p": 125137.555
+    },
+    {
+      "t": 1778371200,
+      "p": 127277.37
+    },
+    {
+      "t": 1778457600,
+      "p": 127071.61
+    },
+    {
+      "t": 1778544000,
+      "p": 129434.85
+    },
+    {
+      "t": 1778630400,
+      "p": 129056.34
+    },
+    {
+      "t": 1778716800,
+      "p": 129001.26
+    },
+    {
+      "t": 1778803200,
+      "p": 126590.484
+    },
+    {
+      "t": 1778889600,
+      "p": 127231.734
+    },
+    {
+      "t": 1778976000,
+      "p": 129050.234
+    },
+    {
+      "t": 1779062400,
+      "p": 129322.016
+    },
+    {
+      "t": 1779148800,
+      "p": 124927.69
+    },
+    {
+      "t": 1779235200,
+      "p": 138252.81
+    },
+    {
+      "t": 1779321600,
+      "p": 110509.47
+    },
+    {
+      "t": 1779408000,
+      "p": 103640.96
+    },
+    {
+      "t": 1779494400,
+      "p": 175622.28
+    },
+    {
+      "t": 1779580800,
+      "p": 111736.13
+    },
+    {
+      "t": 1779667200,
+      "p": 107427.445
+    },
+    {
+      "t": 1779753600,
+      "p": 148669.28
+    },
+    {
+      "t": 1779840000,
+      "p": 187252.64
+    },
+    {
+      "t": 1779926400,
+      "p": 160196.42
+    },
+    {
+      "t": 1780012800,
+      "p": 148027.05
+    },
+    {
+      "t": 1780099200,
+      "p": 133318.3
+    },
+    {
+      "t": 1780185600,
+      "p": 114352.79
+    },
+    {
+      "t": 1780272000,
+      "p": 98006.695
+    },
+    {
+      "t": 1780358400,
+      "p": 87242.414
+    },
+    {
+      "t": 1780444800,
+      "p": 86436.195
+    },
+    {
+      "t": 1780531200,
+      "p": 81939.66
+    },
+    {
+      "t": 1780617600,
+      "p": 86118.96
+    },
+    {
+      "t": 1780704000,
+      "p": 76821.56
+    },
+    {
+      "t": 1780790400,
+      "p": 61845.76
+    },
+    {
+      "t": 1780876800,
+      "p": 61581.035
+    },
+    {
+      "t": 1780963200,
+      "p": 49807.895
+    },
+    {
+      "t": 1781049600,
+      "p": 50540.97
+    },
+    {
+      "t": 1781136000,
+      "p": 30105.404
+    },
+    {
+      "t": 1781222400,
+      "p": 145478.11
+    },
+    {
+      "t": 1781308800,
+      "p": 178786.03
+    },
+    {
+      "t": 1781395200,
+      "p": 232150.45
+    },
+    {
+      "t": 1781481600,
+      "p": 507293.47
+    },
+    {
+      "t": 1781553600,
+      "p": 640875.2
+    }
+  ],
+  "market_question": "US x Iran permanent peace deal by June 15, 2026?",
+  "outcome": "Yes",
+  "resolution_date": "2026-12-31T00:00:00Z",
+  "entry_time": 1779924060,
+  "time_anchored": true,
+  "search_query": "US Iran peace deal",
+  "price_info": {
+    "entry_price": 0.3975,
+    "current_price": 0.949,
+    "position_value": 535588.9849,
+    "cash_pnl": 311197.5175,
+    "pnl_pct": 138.685
+  },
+  "what_bet": "The wallet holds Yes at 39.75¢ on a market asking whether the U.S. and Iran will sign or jointly announce a permanent peace deal—one that explicitly ends military hostilities on a lasting basis, not a temporary ceasefire—by June 15, 2026 (the market title date). The market's resolution_date_human is December 31, 2026, creating a structural discrepancy: the title says June 15, 2026 while settlement is December 31, 2026. This wallet is betting that a qualifying deal will be reached by the June deadline, per resolution criteria requiring either a signed treaty or clear public confirmation from both governments that hostilities have permanently ceased.",
+  "catalyst": [],
+  "edge_analysis": "The wallet entered at 39.75¢ and the position now trades at 94.9¢—a price_delta of 55.15¢ and unrealized profit of 138.685 percent. A follower buying Yes today at 94.9¢ faces follower_max_upside of 5.1¢ per share if the deal materializes and follower_max_loss of 94.9¢ if it does not. Effectively all favorable price movement has already occurred; the market now prices in near-certainty of the event the wallet originally bet on.",
+  "follow_call": "CHASED",
+  "confidence": "low",
+  "reasoning": "Confidence is low because no catalyst articles were retrieved despite time-anchored search, leaving the original trigger unknown, and because the 55.15¢ rally has compressed remaining upside to 5.1¢—a highly asymmetric 18.6:1 risk-reward against the follower. The wallet captured the repricing; today's buyer inherits binary execution risk at a price that already reflects the thesis.",
+  "warnings": [
+    "No relevant news found in the search window; the trade's catalyst is unknown."
+  ]
+}

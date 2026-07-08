@@ -1,0 +1,75 @@
+{
+  "market_context": {
+    "market_id": "0x80b3af88cb991980e8da1ce86b9794a0957f96ec98c29319dd7ba65e9744d82b",
+    "market_slug": "fed-rate-hike-in-2026",
+    "market_question": "Fed rate hike in 2026?",
+    "analyzed_side": "No",
+    "as_of": "2026-06-20",
+    "wallet": "0x71edffd0d70a1da823ff07a3c6fc81457294d338",
+    "behavioral_flag": {
+      "flag": "STATIC",
+      "fact": "近 48h 仅 1 买 / 0 卖，无显著动作（沉闷持仓）",
+      "honest_note": "动态行为：基本没动",
+      "windows": {
+        "3h": {
+          "buys": 0,
+          "sells": 0,
+          "buy_usd": 0.0,
+          "sell_usd": 0.0
+        },
+        "24h": {
+          "buys": 0,
+          "sells": 0,
+          "buy_usd": 0.0,
+          "sell_usd": 0.0
+        },
+        "48h": {
+          "buys": 1,
+          "sells": 0,
+          "buy_usd": 1541.0,
+          "sell_usd": 0.0
+        }
+      }
+    },
+    "ai_experimental_summary": "**市场综述 (as of 2026-06-20)**\n\n**巨鲸动态**：近48小时仅录得1笔买入、0卖出，持仓维持沉闷状态，未见显著调仓动作。\n\n**宏观背景**：市场正处全球利率决策关键周，交易员等待美联储主席沃什表态。强劲美国就业数据已促使市场将美联储降息预期推迟至12月。当前焦点集中于Fed rate hike in 2026的定价逻辑与政策路径信号释放。\n\n*以上为客观事实陈述，不构成操作建议*",
+    "timeline_events": [
+      {
+        "timestamp": "2026-06-17",
+        "type": "catalyst",
+        "title": "46194 euro to dollar forecast traders brace for key signals from fed chair warsh",
+        "source": "currencynews.co.uk",
+        "url": "https://www.currencynews.co.uk/forecast/20260615-46194_euro-to-dollar-forecast-traders-brace-for-key-signals-from-fed-chair-warsh.html",
+        "price_impact_string": "No 价格变动 -16%（64% → 48%）",
+        "fact_summary": "交易员等待美联储主席沃什发出关键信号",
+        "temporal_note": "该事件与价格变动时间相关，非确证因果 · 同窗多条,合计不可归因到单条"
+      },
+      {
+        "timestamp": "2026-06-17",
+        "type": "catalyst",
+        "title": "will the fed blink markets enter high stakes week of global rate decisions",
+        "source": "actionforex.com",
+        "url": "https://www.actionforex.com/action-insight/market-overview/643835-will-the-fed-blink-markets-enter-high-stakes-week-of-global-rate-decisions/",
+        "price_impact_string": "No 价格变动 -16%（64% → 48%）",
+        "fact_summary": "市场进入全球利率决策的关键一周",
+        "temporal_note": "该事件与价格变动时间相关，非确证因果 · 同窗多条,合计不可归因到单条"
+      },
+      {
+        "timestamp": "2026-06-07",
+        "type": "catalyst",
+        "title": "strong us jobs data pushes fed cut to december",
+        "source": "newsghana.com.gh",
+        "url": "https://www.newsghana.com.gh/strong-us-jobs-data-pushes-fed-cut-to-december/",
+        "price_impact_string": "No 价格变动 -14%（52% → 38%）",
+        "fact_summary": "强劲的美国就业数据使美联储降息时间被推迟至12月",
+        "temporal_note": "该事件与价格变动时间相关，非确证因果"
+      }
+    ],
+    "_audit": {
+      "jumps_found": 2,
+      "events": 3,
+      "behavior": "STATIC",
+      "teacher_tokens_approx": 1640,
+      "boundaries": "因果→时间相关 · 无催化剂留白(行为感知内幕) · 价格窗≤as_of · 行为=事实非判断 · 综述无判断"
+    }
+  }
+}

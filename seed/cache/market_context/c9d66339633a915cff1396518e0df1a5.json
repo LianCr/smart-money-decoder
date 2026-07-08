@@ -1,0 +1,125 @@
+{
+  "market_context": {
+    "market_id": "0x41ba322441190c465ec75e5866c6a5a3d429cf4d1efe2682026e8dcd5dbc37db",
+    "market_slug": "will-trump-agree-to-iranian-enrichment-of-uranium-by-june-30",
+    "market_question": "Will Trump agree to Iranian enrichment of uranium by June 30?",
+    "analyzed_side": "No",
+    "as_of": "2026-06-25",
+    "wallet": "0x3c593aeb73ebdadbc9ce76d4264a6a2af4011766",
+    "behavioral_flag": {
+      "flag": "STATIC",
+      "fact": "近 48h 仅 0 买 / 0 卖，无显著动作（沉闷持仓）",
+      "honest_note": "动态行为：基本没动",
+      "windows": {
+        "3h": {
+          "buys": 0,
+          "sells": 0,
+          "buy_usd": 0.0,
+          "sell_usd": 0.0
+        },
+        "24h": {
+          "buys": 0,
+          "sells": 0,
+          "buy_usd": 0.0,
+          "sell_usd": 0.0
+        },
+        "48h": {
+          "buys": 0,
+          "sells": 0,
+          "buy_usd": 0.0,
+          "sell_usd": 0.0
+        }
+      }
+    },
+    "ai_experimental_summary": "**市场宏观综述（截至2025-06-25）**\n\n**巨鲸动态：**近48小时市场出现0买入/0卖出的完全沉寂状态，大额资金呈观望姿态，无显著仓位调整。\n\n**局势进展：**特朗普宣布美伊战争结束并提及重大核协议，协议经数周打击威胁和秘密外交谈判达成。此前美方完成针对近20个目标的报复性打击行动。欧洲股市因和平预期上涨。但美方同步释放双重信号：国防部长赫格塞斯强调保留恢复军事打击能力，并警告可按需重启冲突。协议具体条款与铀浓缩限度细节尚待披露。",
+    "timeline_events": [
+      {
+        "timestamp": "2026-06-14",
+        "type": "catalyst",
+        "title": "trump says u s has ended war with iran cites major nuclear deal",
+        "source": "khaama.com",
+        "url": "https://www.khaama.com/trump-says-u-s-has-ended-war-with-iran-cites-major-nuclear-deal/",
+        "price_impact_string": "No 价格变动 -14%（92% → 78%）",
+        "fact_summary": "特朗普表示美国已结束与伊朗的战争并提及重大核协议",
+        "temporal_note": "该事件与价格变动时间相关，非确证因果 · 同窗多条,合计不可归因到单条"
+      },
+      {
+        "timestamp": "2026-06-14",
+        "type": "catalyst",
+        "title": "european shares rally on us iran peace deal hopes",
+        "source": "finanzen.ch",
+        "url": "https://www.finanzen.ch/nachrichten/aktien/european-shares-rally-on-us-iran-peace-deal-hopes-1036245341",
+        "price_impact_string": "No 价格变动 -14%（92% → 78%）",
+        "fact_summary": "欧洲股市因美伊和平协议希望而上涨",
+        "temporal_note": "该事件与价格变动时间相关，非确证因果 · 同窗多条,合计不可归因到单条"
+      },
+      {
+        "timestamp": "2026-06-01",
+        "type": "catalyst",
+        "title": "u s warns it can restart military conflict with iran if needed",
+        "source": "jowhar.com",
+        "url": "https://jowhar.com/u-s-warns-it-can-restart-military-conflict-with-iran-if-needed/",
+        "price_impact_string": "No 价格变动 +8%（87% → 95%）",
+        "fact_summary": "美国警告称如有需要可重启与伊朗的军事冲突",
+        "temporal_note": "该事件与价格变动时间相关，非确证因果 · 同窗多条,合计不可归因到单条"
+      },
+      {
+        "timestamp": "2026-06-01",
+        "type": "catalyst",
+        "title": "us more than capable of resuming strikes against iran hegseth says",
+        "source": "afghanistannews.net",
+        "url": "http://www.afghanistannews.net/news/279091296/us-more-than-capable-of-resuming-strikes-against-iran-hegseth-says",
+        "price_impact_string": "No 价格变动 +8%（87% → 95%）",
+        "fact_summary": "美国国防部长赫格塞斯表示美国完全有能力恢复对伊朗的打击",
+        "temporal_note": "该事件与价格变动时间相关，非确证因果 · 同窗多条,合计不可归因到单条"
+      },
+      {
+        "timestamp": "2026-06-12",
+        "type": "catalyst",
+        "title": "us launches new strikes on iran after helicopter",
+        "source": "newstribune.com",
+        "url": "https://www.newstribune.com/news/2026/jun/10/us-launches-new-strikes-on-iran-after-helicopter/",
+        "price_impact_string": "No 价格变动 -7%（94% → 86%）",
+        "fact_summary": "美国在直升机事件后对伊朗发动新的打击",
+        "temporal_note": "该事件与价格变动时间相关，非确证因果 · 同窗多条,合计不可归因到单条"
+      },
+      {
+        "timestamp": "2026-06-12",
+        "type": "catalyst",
+        "title": "us concludes retaliatory strikes on iran says nearly 20 targets hit",
+        "source": "caribbeanherald.com",
+        "url": "http://www.caribbeanherald.com/news/279113394/us-concludes-retaliatory-strikes-on-iran-says-nearly-20-targets-hit",
+        "price_impact_string": "No 价格变动 -7%（94% → 86%）",
+        "fact_summary": "美国完成对伊朗的报复性打击，称打击了近20个目标",
+        "temporal_note": "该事件与价格变动时间相关，非确证因果 · 同窗多条,合计不可归因到单条"
+      },
+      {
+        "timestamp": "2026-06-18",
+        "type": "catalyst",
+        "title": "us iran the deal that is not a deal",
+        "source": "eaworldview.com",
+        "url": "https://eaworldview.com/2026/06/us-iran-the-deal-that-is-not-a-deal/",
+        "price_impact_string": "No 价格变动 +6%（86% → 92%）",
+        "fact_summary": "有关美国伊朗协议性质的报道发布",
+        "temporal_note": "该事件与价格变动时间相关，非确证因果 · 同窗多条,合计不可归因到单条"
+      },
+      {
+        "timestamp": "2026-06-18",
+        "type": "catalyst",
+        "title": "how the us iran deal was negotiated after weeks of strikes threats and secret diplomacy article",
+        "source": "moneycontrol.com",
+        "url": "https://www.moneycontrol.com/world/how-the-us-iran-deal-was-negotiated-after-weeks-of-strikes-threats-and-secret-diplomacy-article-13950988.html",
+        "price_impact_string": "No 价格变动 +6%（86% → 92%）",
+        "fact_summary": "报道披露美国伊朗协议经过数周打击威胁和秘密外交谈判达成",
+        "temporal_note": "该事件与价格变动时间相关，非确证因果 · 同窗多条,合计不可归因到单条"
+      }
+    ],
+    "_audit": {
+      "jumps_found": 4,
+      "events": 8,
+      "behavior": "STATIC",
+      "teacher_tokens_approx": 3236,
+      "boundaries": "因果→时间相关 · 无催化剂留白(行为感知内幕) · 价格窗≤as_of · 行为=事实非判断 · 综述无判断"
+    }
+  }
+}

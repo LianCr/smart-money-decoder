@@ -13,7 +13,9 @@ fetcher/profile.py — A·主体画像 fetcher（v3 简报数据层 · 批2）
 """
 
 import json
+from datetime import datetime, timedelta
 
+from core.config import BRIEFING_AS_OF
 from fetcher.heisenberg import AGENTS, HeisenbergError, call, results
 
 # 581 想要的核心字段（存在才取，缺了不报错）
@@ -94,12 +96,14 @@ def _hscore_besteffort(wallet):
     return {"available": False, "note": "不在 H-Score 榜首页（584 无按地址查，官方排名见 official_rank/579）"}
 
 
-def get_trader_profile(wallet, lb_period="30d",
-                       pnl_window=("2026-05-20", "2026-06-20")):
+def get_trader_profile(wallet, lb_period="30d", pnl_window=None):
     """
     组装钱包画像。任一子源失败不拖垮整体——失败的位置返回 {"error": reason}，其余照常。
-    pnl_window：569 近窗（数据世界相对"今天"≈2026-06-20，传窄窗避免截断）。
+    pnl_window：569 近窗（默认锚 BRIEFING_AS_OF 往前 30 天；569 宽窗只回前几天，须传窄窗避免截断）。
     """
+    if pnl_window is None:
+        end = datetime.strptime(BRIEFING_AS_OF, "%Y-%m-%d")
+        pnl_window = ((end - timedelta(days=30)).strftime("%Y-%m-%d"), BRIEFING_AS_OF)
     profile = {"wallet": wallet}
 
     try:

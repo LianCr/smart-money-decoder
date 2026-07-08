@@ -1,0 +1,1286 @@
+{
+  "wallet": "0xbaa2bcb5439e985ce4ccf815b4700027d1b92c73",
+  "as_of": "2026-06-20",
+  "identity": {
+    "profile": {
+      "address": "0xbaa2bcb5439e985ce4ccf815b4700027d1b92c73",
+      "name": "denizz",
+      "pseudonym": "Illustrious-Spectacles",
+      "profile_image": null
+    },
+    "pnl_history": [
+      {
+        "t": 1732752000,
+        "p": 60870.375
+      },
+      {
+        "t": 1733011200,
+        "p": 66857.53
+      },
+      {
+        "t": 1733356800,
+        "p": 65633.07
+      },
+      {
+        "t": 1733616000,
+        "p": 110471.125
+      },
+      {
+        "t": 1733961600,
+        "p": 130638.67
+      },
+      {
+        "t": 1734307200,
+        "p": 126597.016
+      },
+      {
+        "t": 1734566400,
+        "p": 128790.414
+      },
+      {
+        "t": 1734912000,
+        "p": 70220.38
+      },
+      {
+        "t": 1735171200,
+        "p": 69378.24
+      },
+      {
+        "t": 1735516800,
+        "p": 71655.9
+      },
+      {
+        "t": 1735862400,
+        "p": 68088.01
+      },
+      {
+        "t": 1736121600,
+        "p": 70386.22
+      },
+      {
+        "t": 1736467200,
+        "p": 71271.62
+      },
+      {
+        "t": 1736812800,
+        "p": 104686.8
+      },
+      {
+        "t": 1737072000,
+        "p": 104080.3
+      },
+      {
+        "t": 1737417600,
+        "p": 227735.05
+      },
+      {
+        "t": 1737676800,
+        "p": 231036.58
+      },
+      {
+        "t": 1738022400,
+        "p": 233138.83
+      },
+      {
+        "t": 1738368000,
+        "p": 240512.56
+      },
+      {
+        "t": 1738627200,
+        "p": 238260.05
+      },
+      {
+        "t": 1738972800,
+        "p": 246483.64
+      },
+      {
+        "t": 1739318400,
+        "p": 244521.84
+      },
+      {
+        "t": 1739577600,
+        "p": 254848.95
+      },
+      {
+        "t": 1739923200,
+        "p": 271089.7
+      },
+      {
+        "t": 1740182400,
+        "p": 256303.44
+      },
+      {
+        "t": 1740528000,
+        "p": 273072.97
+      },
+      {
+        "t": 1740873600,
+        "p": 275381.97
+      },
+      {
+        "t": 1741132800,
+        "p": 286985.8
+      },
+      {
+        "t": 1741478400,
+        "p": 312655.44
+      },
+      {
+        "t": 1741824000,
+        "p": 308808.28
+      },
+      {
+        "t": 1742083200,
+        "p": 322831.12
+      },
+      {
+        "t": 1742428800,
+        "p": 340947.9
+      },
+      {
+        "t": 1742688000,
+        "p": 359199.5
+      },
+      {
+        "t": 1743033600,
+        "p": 390860.8
+      },
+      {
+        "t": 1743379200,
+        "p": 404194.56
+      },
+      {
+        "t": 1743638400,
+        "p": 410341.3
+      },
+      {
+        "t": 1743984000,
+        "p": 439197.84
+      },
+      {
+        "t": 1744329600,
+        "p": 462404.78
+      },
+      {
+        "t": 1744588800,
+        "p": 485946.66
+      },
+      {
+        "t": 1744934400,
+        "p": 430170.4
+      },
+      {
+        "t": 1745193600,
+        "p": 430270.3
+      },
+      {
+        "t": 1745539200,
+        "p": 431579.7
+      },
+      {
+        "t": 1745884800,
+        "p": 432320.97
+      },
+      {
+        "t": 1746144000,
+        "p": 466009.44
+      },
+      {
+        "t": 1746489600,
+        "p": 443164.78
+      },
+      {
+        "t": 1746835200,
+        "p": 452494.53
+      },
+      {
+        "t": 1747094400,
+        "p": 477311.72
+      },
+      {
+        "t": 1747440000,
+        "p": 413406.03
+      },
+      {
+        "t": 1747699200,
+        "p": 420877.66
+      },
+      {
+        "t": 1748044800,
+        "p": 380146.22
+      },
+      {
+        "t": 1748390400,
+        "p": 402120.47
+      },
+      {
+        "t": 1748649600,
+        "p": 385769.53
+      },
+      {
+        "t": 1748995200,
+        "p": 361440.06
+      },
+      {
+        "t": 1749340800,
+        "p": 356117.53
+      },
+      {
+        "t": 1749600000,
+        "p": 364781.53
+      },
+      {
+        "t": 1749945600,
+        "p": 323460.56
+      },
+      {
+        "t": 1750204800,
+        "p": 313935.25
+      },
+      {
+        "t": 1750550400,
+        "p": 265827.22
+      },
+      {
+        "t": 1750896000,
+        "p": 319962.12
+      },
+      {
+        "t": 1751155200,
+        "p": 338226.97
+      },
+      {
+        "t": 1751500800,
+        "p": 347483.88
+      },
+      {
+        "t": 1751760000,
+        "p": 362129.03
+      },
+      {
+        "t": 1752105600,
+        "p": 360877.72
+      },
+      {
+        "t": 1752451200,
+        "p": 288945.12
+      },
+      {
+        "t": 1752710400,
+        "p": 312851.44
+      },
+      {
+        "t": 1753056000,
+        "p": 301355.9
+      },
+      {
+        "t": 1753401600,
+        "p": 225810.45
+      },
+      {
+        "t": 1753660800,
+        "p": 221725.39
+      },
+      {
+        "t": 1754006400,
+        "p": 186953.27
+      },
+      {
+        "t": 1754265600,
+        "p": 179745.16
+      },
+      {
+        "t": 1754611200,
+        "p": 178443.2
+      },
+      {
+        "t": 1754956800,
+        "p": 179902.03
+      },
+      {
+        "t": 1755216000,
+        "p": 182704.17
+      },
+      {
+        "t": 1755561600,
+        "p": 195136.3
+      },
+      {
+        "t": 1755907200,
+        "p": 190276.48
+      },
+      {
+        "t": 1756166400,
+        "p": 190894.17
+      },
+      {
+        "t": 1756512000,
+        "p": 198798.9
+      },
+      {
+        "t": 1756771200,
+        "p": 203019.25
+      },
+      {
+        "t": 1757116800,
+        "p": 206964.98
+      },
+      {
+        "t": 1757462400,
+        "p": 209623.12
+      },
+      {
+        "t": 1757721600,
+        "p": 213905.7
+      },
+      {
+        "t": 1758067200,
+        "p": 215074.48
+      },
+      {
+        "t": 1758412800,
+        "p": 215148.73
+      },
+      {
+        "t": 1758672000,
+        "p": 216260.02
+      },
+      {
+        "t": 1759017600,
+        "p": 218324.72
+      },
+      {
+        "t": 1759276800,
+        "p": 203579.75
+      },
+      {
+        "t": 1759622400,
+        "p": 187908.56
+      },
+      {
+        "t": 1759968000,
+        "p": 354709.66
+      },
+      {
+        "t": 1760227200,
+        "p": 378048.56
+      },
+      {
+        "t": 1760572800,
+        "p": 405196.47
+      },
+      {
+        "t": 1760918400,
+        "p": 417254.84
+      },
+      {
+        "t": 1761177600,
+        "p": 433919.5
+      },
+      {
+        "t": 1761523200,
+        "p": 447483.9
+      },
+      {
+        "t": 1761782400,
+        "p": 442943.8
+      },
+      {
+        "t": 1762128000,
+        "p": 458284.78
+      },
+      {
+        "t": 1762473600,
+        "p": 460109.88
+      },
+      {
+        "t": 1762732800,
+        "p": 475252.2
+      },
+      {
+        "t": 1763078400,
+        "p": 479412.5
+      },
+      {
+        "t": 1763424000,
+        "p": 483756.12
+      },
+      {
+        "t": 1763683200,
+        "p": 479530.28
+      },
+      {
+        "t": 1764028800,
+        "p": 472332.47
+      },
+      {
+        "t": 1764288000,
+        "p": 481129.8
+      },
+      {
+        "t": 1764633600,
+        "p": 452086.53
+      },
+      {
+        "t": 1764979200,
+        "p": 463812.38
+      },
+      {
+        "t": 1765238400,
+        "p": 473818.03
+      },
+      {
+        "t": 1765584000,
+        "p": 479142.12
+      },
+      {
+        "t": 1765929600,
+        "p": 485807.12
+      },
+      {
+        "t": 1766188800,
+        "p": 501212.34
+      },
+      {
+        "t": 1766534400,
+        "p": 507473.16
+      },
+      {
+        "t": 1766793600,
+        "p": 495826.56
+      },
+      {
+        "t": 1767139200,
+        "p": 519789.25
+      },
+      {
+        "t": 1767484800,
+        "p": 420661.22
+      },
+      {
+        "t": 1767744000,
+        "p": 504284.56
+      },
+      {
+        "t": 1768089600,
+        "p": 434370.66
+      },
+      {
+        "t": 1768348800,
+        "p": 435687.7
+      },
+      {
+        "t": 1768694400,
+        "p": 530177.56
+      },
+      {
+        "t": 1769040000,
+        "p": 550682.1
+      },
+      {
+        "t": 1769299200,
+        "p": 546789.25
+      },
+      {
+        "t": 1769644800,
+        "p": 561902.06
+      },
+      {
+        "t": 1769990400,
+        "p": 605866.6
+      },
+      {
+        "t": 1770249600,
+        "p": 640245.06
+      },
+      {
+        "t": 1770595200,
+        "p": 628710.25
+      },
+      {
+        "t": 1770854400,
+        "p": 633961.6
+      },
+      {
+        "t": 1771200000,
+        "p": 655118.1
+      },
+      {
+        "t": 1771545600,
+        "p": 587872.25
+      },
+      {
+        "t": 1771804800,
+        "p": 593940.44
+      },
+      {
+        "t": 1772150400,
+        "p": 595190.6
+      },
+      {
+        "t": 1772496000,
+        "p": 820940.8
+      },
+      {
+        "t": 1772755200,
+        "p": 817297.8
+      },
+      {
+        "t": 1773100800,
+        "p": 916042.75
+      },
+      {
+        "t": 1773360000,
+        "p": 895198.75
+      },
+      {
+        "t": 1773705600,
+        "p": 865252.5
+      },
+      {
+        "t": 1774051200,
+        "p": 862344.3
+      },
+      {
+        "t": 1774310400,
+        "p": 901183.25
+      },
+      {
+        "t": 1774656000,
+        "p": 886537.2
+      },
+      {
+        "t": 1775001600,
+        "p": 944771.9
+      },
+      {
+        "t": 1775260800,
+        "p": 842365.5
+      },
+      {
+        "t": 1775606400,
+        "p": 1472274.4
+      },
+      {
+        "t": 1775865600,
+        "p": 1570970.9
+      },
+      {
+        "t": 1776211200,
+        "p": 1757597.1
+      },
+      {
+        "t": 1776556800,
+        "p": 1775779.6
+      },
+      {
+        "t": 1776816000,
+        "p": 1720804.2
+      },
+      {
+        "t": 1777161600,
+        "p": 1679291.2
+      },
+      {
+        "t": 1777507200,
+        "p": 1727205.4
+      },
+      {
+        "t": 1777766400,
+        "p": 1788522.9
+      },
+      {
+        "t": 1778112000,
+        "p": 1798893.6
+      },
+      {
+        "t": 1778371200,
+        "p": 1826896.4
+      },
+      {
+        "t": 1778716800,
+        "p": 1751641.8
+      },
+      {
+        "t": 1779062400,
+        "p": 1754870.6
+      },
+      {
+        "t": 1779321600,
+        "p": 1791180.4
+      },
+      {
+        "t": 1779667200,
+        "p": 1712711.5
+      },
+      {
+        "t": 1780012800,
+        "p": 1570509.8
+      },
+      {
+        "t": 1780272000,
+        "p": 1451600.1
+      },
+      {
+        "t": 1780617600,
+        "p": 1413327.5
+      },
+      {
+        "t": 1780876800,
+        "p": 1399141.6
+      },
+      {
+        "t": 1781222400,
+        "p": 1592598.5
+      },
+      {
+        "t": 1781568000,
+        "p": 2560648.5
+      },
+      {
+        "t": 1781827200,
+        "p": 2627883.8
+      },
+      {
+        "t": 1782172800,
+        "p": 2415413.0
+      },
+      {
+        "t": 1782424800,
+        "p": 2426312.5
+      }
+    ],
+    "who_trader_profile": {
+      "wallet": "0xbaa2bcb5439e985ce4ccf815b4700027d1b92c73",
+      "quality": {
+        "combined_risk_score": 10,
+        "max_drawdown": 1.9817,
+        "drawdown_frequency": 0.2,
+        "avg_trade_size": 425.24,
+        "markets_traded": 89,
+        "num_markets_traded": 89,
+        "category_diversity_score": 0.7504,
+        "market_concentration_ratio": 0.498,
+        "annualized_return": 14.5541,
+        "gain_to_pain_ratio": 8.9154,
+        "equity_curve_pattern": "volatile",
+        "perfect_timing_flag": false,
+        "flagged_metrics": "{position_size_volatility}",
+        "losing_trades": 804,
+        "best_market_pnl": 812693.27,
+        "dominant_market_pnl": 812693.27,
+        "window_days": "15"
+      },
+      "category_specialization": [
+        {
+          "category": "Other",
+          "roi": 60.0452,
+          "win_rate": 0.3604,
+          "total_pnl": 1024995.89,
+          "total_trades": 4014
+        },
+        {
+          "category": "Politics",
+          "roi": 59.8116,
+          "win_rate": 0.3604,
+          "total_pnl": 1024995.89,
+          "total_trades": 4030
+        },
+        {
+          "category": "Politics / Global",
+          "roi": 59.8213,
+          "win_rate": 0.3604,
+          "total_pnl": 1024995.89,
+          "total_trades": 4027
+        },
+        {
+          "category": "Politics / US",
+          "roi": 102.4774,
+          "win_rate": 0.4078,
+          "total_pnl": 804892.39,
+          "total_trades": 2289
+        },
+        {
+          "category": "Politics / US / Trump",
+          "roi": 102.4774,
+          "win_rate": 0.4078,
+          "total_pnl": 804892.39,
+          "total_trades": 2289
+        },
+        {
+          "category": "Finance & Markets",
+          "roi": -44.696,
+          "win_rate": 0.2022,
+          "total_pnl": -4838.36,
+          "total_trades": 275
+        }
+      ],
+      "official_rank": {
+        "period": "30d",
+        "rank": 32,
+        "roi": "0.199093",
+        "win_rate": "0.3258",
+        "sharpe_ratio": "0.0299",
+        "total_pnl": "655845.8052",
+        "total_invested": "3294163.14",
+        "total_trades": 8041,
+        "markets_traded": 142
+      },
+      "realized_pnl_recent": {
+        "window": [
+          "2026-05-20",
+          "2026-06-20"
+        ],
+        "days_returned": 11,
+        "realized_pnl_sum": -268035.55
+      },
+      "h_score": {
+        "available": false,
+        "note": "不在 H-Score 榜首页（584 无按地址查，官方排名见 official_rank/579）"
+      }
+    }
+  },
+  "position": {
+    "meta": {
+      "wallet": "0xbaa2bcb5439e985ce4ccf815b4700027d1b92c73",
+      "market": "Will Trump agree to Iranian transit fees in the Strait of Hormuz by June 30?",
+      "analyzed_side": "No",
+      "as_of": "2026-06-20",
+      "mode": "live",
+      "catalyst_anchor": "2026-06-20",
+      "settle": "还有约10.0天"
+    },
+    "what_position_actions": {
+      "wallet": "0xbaa2bcb5439e985ce4ccf815b4700027d1b92c73",
+      "condition_id": "0x1be62d973dc8fb45de714eb2113118b6ac3e47694f8b0801c0c41d992d0b7c9f",
+      "analyzed_side": "No",
+      "market": {
+        "question": "Will Trump agree to Iranian transit fees in the Strait of Hormuz by June 30?",
+        "winning_outcome": null,
+        "closed": false,
+        "settle_date": "2026-06-30",
+        "days_to_settlement": 10.0,
+        "settle_note": "还有约10.0天"
+      },
+      "two_side_distribution": {
+        "hedged": true,
+        "by_outcome": {
+          "Yes": {
+            "trades": 13,
+            "shares": 103977.3
+          },
+          "No": {
+            "trades": 31,
+            "shares": 24694.3
+          }
+        },
+        "note": "两边都大额建仓 = 做市/对冲玩家（非单边赌徒，接 #28）"
+      },
+      "actions": {
+        "entry_time": "2026-06-15 22:41",
+        "last_add_time": "2026-06-17 09:10",
+        "num_buys": 31,
+        "num_sells": 0,
+        "added_over_time": true,
+        "avg_entry_price": 0.8187,
+        "net_shares": 24694.3,
+        "net_cost_usd": 20218.33
+      },
+      "unrealized": {
+        "current_price": 0.98,
+        "price_source": "568最新close",
+        "current_value_usd": 24200.45,
+        "unrealized_pnl_usd": 3982.12,
+        "unrealized_pct": 19.7,
+        "note": "持仓中浮盈亏"
+      }
+    },
+    "price_context": {
+      "as_of": "2026-06-20",
+      "analyzed_side": "No",
+      "price_source": "568历史close",
+      "current_price": 0.98,
+      "implied_probability_pct": 98.0,
+      "remaining_upside_per_share_usd": 0.02,
+      "remaining_upside_pct_if_win": 2.04,
+      "downside_per_share_usd": 0.98,
+      "odds_to_one": 0.02,
+      "entry_price": 0.8187,
+      "price_delta": 0.1613,
+      "price_delta_pct": 19.7
+    },
+    "what_the_bet": "押**No**，赌的是美国在2026年6月30日晚11:59前**不会**同意伊朗对通过霍尔木兹海峡的船只收取过境费，只要美国没有同意就算赢。",
+    "resolution_criteria": "This market will resolve to “Yes” if the United States agrees to Iran charging fees on ships transiting the Strait of Hormuz by June 30, 2026, 11:59 PM ET. Otherwise, this market will resolve to “No”.\n\nIran charging fees on ships transiting the Strait of Hormuz refers to U.S. acceptance of Iran imposing tolls, transit fees, passage charges, or other mandatory payments on commercial vessels in exchange for transit through the Strait of Hormuz.\n\nThe United States will be considered to have agreed to Iran charging such fees if:\n- Donald Trump or another authorized representative of the Government of the United States publicly announces that the United States has definitively agreed to accept Iran charging such fees on ships transiting the Strait of Hormuz.\n- Iran charging such fees is included as part of a treaty or deal formally established between the United States and Iran, including through signing or other formal means.\n\nAgreement refers to an explicit acceptance, authorization, or consent to the specified action. Only announcements of definitive agreement will qualify. Suggestions, negotiations, expressions of openness, or other non-definitive statements will not qualify.\n\nAny definitive agreement or commitment made before the resolution date will qualify, regardless of when or whether the specified action is implemented.\n\nThe primary resolution source for this market will be official statements from Donald Trump, the U.S. government, and their official representatives; however, a consensus of credible reporting may also be used to verify the details of an announcement or formal agreement."
+  },
+  "market": {
+    "slug": "will-trump-agree-to-iranian-transit-fees-in-the-strait-of-hormuz-by-june-30",
+    "market_id": "0x1be62d973dc8fb45de714eb2113118b6ac3e47694f8b0801c0c41d992d0b7c9f"
+  },
+  "price_series": [
+    {
+      "date": "2026-05-22",
+      "price": 0.91
+    },
+    {
+      "date": "2026-05-23",
+      "price": 0.9
+    },
+    {
+      "date": "2026-05-24",
+      "price": 0.85
+    },
+    {
+      "date": "2026-05-25",
+      "price": 0.82
+    },
+    {
+      "date": "2026-05-26",
+      "price": 0.86
+    },
+    {
+      "date": "2026-05-27",
+      "price": 0.85
+    },
+    {
+      "date": "2026-05-28",
+      "price": 0.95
+    },
+    {
+      "date": "2026-05-29",
+      "price": 0.94
+    },
+    {
+      "date": "2026-05-30",
+      "price": 0.91
+    },
+    {
+      "date": "2026-05-31",
+      "price": 0.952
+    },
+    {
+      "date": "2026-06-01",
+      "price": 0.957
+    },
+    {
+      "date": "2026-06-02",
+      "price": 0.97
+    },
+    {
+      "date": "2026-06-03",
+      "price": 0.97
+    },
+    {
+      "date": "2026-06-04",
+      "price": 0.969
+    },
+    {
+      "date": "2026-06-05",
+      "price": 0.97
+    },
+    {
+      "date": "2026-06-06",
+      "price": 0.969
+    },
+    {
+      "date": "2026-06-07",
+      "price": 0.967
+    },
+    {
+      "date": "2026-06-08",
+      "price": 0.963
+    },
+    {
+      "date": "2026-06-09",
+      "price": 0.957
+    },
+    {
+      "date": "2026-06-10",
+      "price": 0.971
+    },
+    {
+      "date": "2026-06-11",
+      "price": 0.964
+    },
+    {
+      "date": "2026-06-12",
+      "price": 0.939
+    },
+    {
+      "date": "2026-06-13",
+      "price": 0.912
+    },
+    {
+      "date": "2026-06-14",
+      "price": 0.914
+    },
+    {
+      "date": "2026-06-15",
+      "price": 0.834
+    },
+    {
+      "date": "2026-06-16",
+      "price": 0.951
+    },
+    {
+      "date": "2026-06-17",
+      "price": 0.9
+    },
+    {
+      "date": "2026-06-18",
+      "price": 0.888
+    },
+    {
+      "date": "2026-06-19",
+      "price": 0.95
+    },
+    {
+      "date": "2026-06-20",
+      "price": 0.98
+    }
+  ],
+  "behavior": {
+    "flag": "STATIC",
+    "fact": "近 48h 仅 0 买 / 4 卖，无显著动作（沉闷持仓）",
+    "honest_note": "动态行为：基本没动",
+    "windows": {
+      "3h": {
+        "buys": 0,
+        "sells": 0,
+        "buy_usd": 0.0,
+        "sell_usd": 0.0
+      },
+      "24h": {
+        "buys": 0,
+        "sells": 1,
+        "buy_usd": 0.0,
+        "sell_usd": 378.0
+      },
+      "48h": {
+        "buys": 0,
+        "sells": 4,
+        "buy_usd": 0.0,
+        "sell_usd": 502.0
+      }
+    }
+  },
+  "news_stream": [
+    {
+      "date": "2026-06-20",
+      "title": "Trump vows Iran will not charge Strait of Hormuz tolls, but says US might - Al Jazeera",
+      "summary": "Trump pledged that Iran will not be allowed to charge tolls in the Strait of Hormuz during or after the 60-day ceasefire window.",
+      "url": "https://www.aljazeera.com/news/2026/6/20/trump-vows-iran-will-not-charge-strait-of-hormuz-tolls-but-says-us-might",
+      "origin": "Tavily",
+      "direction": "support",
+      "reaction": {
+        "available": false
+      },
+      "same_window": true
+    },
+    {
+      "date": "2026-06-20",
+      "title": "Trump Rules Out Iran Hormuz Tolls, Says US Would Be Entitled Instead - Newsweek",
+      "summary": "Trump stated that Iran will not be allowed to charge ships transiting the Strait of Hormuz during or after the 60-day ceasefire window.",
+      "url": "https://www.newsweek.com/trump-iran-hormuz-tolls-us-entitled-ceasefire-deal-12099668",
+      "origin": "Tavily",
+      "direction": "support",
+      "reaction": {
+        "available": false
+      },
+      "same_window": true
+    },
+    {
+      "date": "2026-06-19",
+      "title": "japan undecided on sending military to hormuz",
+      "summary": "日本尚未决定是否向霍尔木兹海峡派遣军事力量",
+      "url": "https://www.surinametimes.com/artikel/japan-undecided-on-sending-military-to-hormuz",
+      "origin": "GDELT",
+      "direction": null,
+      "reaction": {
+        "available": true,
+        "kind": "confirm",
+        "move_pct": 10.36,
+        "window": [
+          "2026-06-18",
+          "2026-06-20"
+        ]
+      },
+      "same_window": true
+    },
+    {
+      "date": "2026-06-19",
+      "title": "shipping firms await safety assurances before hormuz return",
+      "summary": "航运公司等待安全保证后才返回霍尔木兹海峡",
+      "url": "http://www.vietnamtribune.com/news/279125061/shipping-firms-await-safety-assurances-before-hormuz-return",
+      "origin": "GDELT",
+      "direction": null,
+      "reaction": {
+        "available": true,
+        "kind": "confirm",
+        "move_pct": 10.36,
+        "window": [
+          "2026-06-18",
+          "2026-06-20"
+        ]
+      },
+      "same_window": true
+    },
+    {
+      "date": "2026-06-17",
+      "title": "us iran peace deal likely to ease india s energy supplies full recovery still a year away say analysts",
+      "summary": "美国与伊朗达成和平协议可能缓解印度能源供应",
+      "url": "https://www.moneycontrol.com/news/india/us-iran-peace-deal-likely-to-ease-india-s-energy-supplies-full-recovery-still-a-year-away-say-analysts-13949920.html",
+      "origin": "GDELT",
+      "direction": null,
+      "reaction": {
+        "available": true,
+        "kind": "reject",
+        "move_pct": -6.62,
+        "window": [
+          "2026-06-16",
+          "2026-06-18"
+        ]
+      },
+      "same_window": true
+    },
+    {
+      "date": "2026-06-17",
+      "title": "trump praises putin and xi over iran peace deal",
+      "summary": "特朗普称赞普京和习近平在伊朗和平协议中的作用",
+      "url": "http://www.irishsun.com/news/279123665/trump-praises-putin-and-xi-over-iran-peace-deal",
+      "origin": "GDELT",
+      "direction": null,
+      "reaction": {
+        "available": true,
+        "kind": "reject",
+        "move_pct": -6.62,
+        "window": [
+          "2026-06-16",
+          "2026-06-18"
+        ]
+      },
+      "same_window": true
+    },
+    {
+      "date": "2026-06-17",
+      "title": "us iran reach initial deal to close conflict",
+      "summary": "美国与伊朗达成初步协议以结束冲突",
+      "url": "https://www.arkansasonline.com/news/2026/jun/15/us-iran-reach-initial-deal-to-close-conflict/",
+      "origin": "GDELT",
+      "direction": null,
+      "reaction": {
+        "available": true,
+        "kind": "reject",
+        "move_pct": -6.62,
+        "window": [
+          "2026-06-16",
+          "2026-06-18"
+        ]
+      },
+      "same_window": true
+    },
+    {
+      "date": "2026-06-16",
+      "title": "trump says hormuz reopen after sunday us iran deal tehran says memorandum may take days",
+      "summary": "特朗普表示霍尔木兹海峡将在周日美伊协议后重新开放，德黑兰称备忘录可能需要数日",
+      "url": "https://www.ibtimes.co.in/trump-says-hormuz-reopen-after-sunday-us-iran-deal-tehran-says-memorandum-may-take-days-902917",
+      "origin": "GDELT",
+      "direction": null,
+      "reaction": {
+        "available": true,
+        "kind": "confirm",
+        "move_pct": 7.91,
+        "window": [
+          "2026-06-15",
+          "2026-06-17"
+        ]
+      },
+      "same_window": true
+    },
+    {
+      "date": "2026-06-16",
+      "title": "iran war day 107 washington tehran close to signing first stage of deal",
+      "summary": "华盛顿和德黑兰接近签署第一阶段协议",
+      "url": "https://dominicanrepublicpost.com/iran-war-day-107-washington-tehran-close-to-signing-first-stage-of-deal/",
+      "origin": "GDELT",
+      "direction": null,
+      "reaction": {
+        "available": true,
+        "kind": "confirm",
+        "move_pct": 7.91,
+        "window": [
+          "2026-06-15",
+          "2026-06-17"
+        ]
+      },
+      "same_window": true
+    },
+    {
+      "date": "2026-06-15",
+      "title": "iran fm says draft us deal to be signed remotely possibly in coming days",
+      "summary": "伊朗外长表示美伊协议草案可能在未来几天远程签署",
+      "url": "https://www.naharnet.com/stories/en/320663-iran-fm-says-draft-us-deal-to-be-signed-remotely-possibly-in-coming-days",
+      "origin": "GDELT",
+      "direction": null,
+      "reaction": {
+        "available": true,
+        "kind": "weak",
+        "move_pct": 4.05,
+        "window": [
+          "2026-06-14",
+          "2026-06-16"
+        ]
+      },
+      "same_window": true
+    },
+    {
+      "date": "2026-06-15",
+      "title": "oil tankers sneaking past iran blockade",
+      "summary": "有油轮试图偷偷通过伊朗封锁",
+      "url": "https://www.arkansasonline.com/news/2026/jun/13/oil-tankers-sneaking-past-iran-blockade/",
+      "origin": "GDELT",
+      "direction": null,
+      "reaction": {
+        "available": true,
+        "kind": "weak",
+        "move_pct": 4.05,
+        "window": [
+          "2026-06-14",
+          "2026-06-16"
+        ]
+      },
+      "same_window": true
+    },
+    {
+      "date": "2026-05-28",
+      "title": "unlawful illegal unsustainable and unacceptable us state secy marco rubio slams tolls on strait of hormuz",
+      "summary": "美国国务卿卢比奥公开谴责霍尔木兹海峡通行费为非法且不可接受",
+      "url": "http://www.austinglobe.com/news/279075922/unlawful-illegal-unsustainable-and-unacceptable-us-state-secy-marco-rubio-slams-tolls-on-strait-of-hormuz",
+      "origin": "GDELT",
+      "direction": null,
+      "reaction": {
+        "available": true,
+        "kind": "confirm",
+        "move_pct": 10.59,
+        "window": [
+          "2026-05-27",
+          "2026-05-29"
+        ]
+      },
+      "same_window": true
+    },
+    {
+      "date": "2026-05-28",
+      "title": "marco rubio says iran deal may take a few days after us self defence strikes",
+      "summary": "卢比奥表示美国自卫打击后伊朗协议可能需要几天时间达成",
+      "url": "https://www.thenews.com.pk/latest/1403868-marco-rubio-says-iran-deal-may-take-a-few-days-after-us-self-defence-strikes",
+      "origin": "GDELT",
+      "direction": null,
+      "reaction": {
+        "available": true,
+        "kind": "confirm",
+        "move_pct": 10.59,
+        "window": [
+          "2026-05-27",
+          "2026-05-29"
+        ]
+      },
+      "same_window": true
+    },
+    {
+      "date": "2026-05-28",
+      "title": "us strikes iranian mine laying vessels as trump affirms ongoing peace talks",
+      "summary": "美国打击伊朗布雷船只同时特朗普确认和平谈判持续进行",
+      "url": "https://www.klif.com/2026/05/26/us-strikes-iranian-mine-laying-vessels-as-trump-affirms-ongoing-peace-talks/",
+      "origin": "GDELT",
+      "direction": null,
+      "reaction": {
+        "available": true,
+        "kind": "confirm",
+        "move_pct": 10.59,
+        "window": [
+          "2026-05-27",
+          "2026-05-29"
+        ]
+      },
+      "same_window": true
+    },
+    {
+      "date": "2026-05-24",
+      "title": "sweden nato role reopening strait of hormuz",
+      "summary": "瑞典在北约框架下讨论重新开放霍尔木兹海峡的角色",
+      "url": "https://www.politico.eu/article/sweden-nato-role-reopening-strait-of-hormuz/",
+      "origin": "GDELT",
+      "direction": null,
+      "reaction": {
+        "available": true,
+        "kind": "reject",
+        "move_pct": -8.89,
+        "window": [
+          "2026-05-23",
+          "2026-05-25"
+        ]
+      },
+      "same_window": true
+    },
+    {
+      "date": "2026-05-24",
+      "title": "pakistan seeks breakthrough us iran peace talks",
+      "summary": "巴基斯坦寻求在美伊和平谈判中取得突破",
+      "url": "https://www.asiaone.com/world/pakistan-seeks-breakthrough-us-iran-peace-talks",
+      "origin": "GDELT",
+      "direction": null,
+      "reaction": {
+        "available": true,
+        "kind": "reject",
+        "move_pct": -8.89,
+        "window": [
+          "2026-05-23",
+          "2026-05-25"
+        ]
+      },
+      "same_window": true
+    }
+  ],
+  "world_summary": "# 市场综述：霍尔木兹海峡通行费争议（No 侧视角）\n\n## 巨鲸动态\n近48小时仅录得0笔买入/4笔卖出，持仓处于沉闷状态，无显著资金调仓。\n\n## 事态进展\n特朗普公开表态伊朗在60天停火期内外均不得在霍尔木兹海峡收取通行费，国务卿卢比奥定性此类费用为\"非法且不可接受\"。华盛顿与德黑兰正就第一阶段框架协议进行接触，特朗普确认和平谈判同步推进，德黑兰方面表示备忘录签署可能需数日。美方同时打击伊朗布雷船只。市场层面，布伦特原油已跌向83美元，交易员关注石油出口制裁豁免及数百亿美元资产解冻议题，海峡重新开放预期已部分反映在油价中。6月30日截止日临近，谈判框架聚焦冲突终止而非通行费合法化。",
+  "reasoning": {
+    "follow_call": "CHASED",
+    "confidence": "medium",
+    "reasoning": "这个钱包两边都压了不少，不是单纯赌一个方向，可能在做对冲或者套利。价格已经朝他'不会同意'的方向跑了接近20个点，现在只剩2个点左右的空间，好价格已经过去了。催化剂方面，特朗普本人直接表态说不会让伊朗收费，这些消息支持他的No仓位，但市场对这些表态的反应还不清楚。近48小时他基本没动仓位。信心定为中等，是因为虽然他这笔单子浮盈接近20%，但由于他是对冲型仓位，系统把信心封顶到了中等。",
+    "confidence_reasons": [
+      "底座矩阵:high(pnl=+19.7%)",
+      "R2:两侧均衡(对冲/做市)→封medium"
+    ],
+    "facts": {
+      "market_question": "Will Trump agree to Iranian transit fees in the Strait of Hormuz by June 30?",
+      "outcome": "No",
+      "today": "2026-06-20",
+      "price_room_left": 2.04,
+      "price_already_moved": 19.7,
+      "resolution_date_human": "还有约10.0天",
+      "position_type": "hedged",
+      "recent_action": "flat_no_movement",
+      "support_catalysts": [
+        {
+          "title": "Trump vows Iran will not charge Strait of Hormuz tolls, but says US might - Al Jazeera",
+          "material_tag": "当事人直接表态",
+          "market_reaction": "unknown",
+          "move_pct": null,
+          "same_window": true
+        },
+        {
+          "title": "Trump Rules Out Iran Hormuz Tolls, Says US Would Be Entitled Instead - Newsweek",
+          "material_tag": "当事人直接表态",
+          "market_reaction": "unknown",
+          "move_pct": null,
+          "same_window": true
+        }
+      ],
+      "threat_catalysts": [],
+      "confidence": "medium",
+      "confidence_reasons": [
+        "底座矩阵:high(pnl=+19.7%)",
+        "R2:两侧均衡(对冲/做市)→封medium"
+      ]
+    }
+  }
+}

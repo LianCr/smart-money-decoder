@@ -1,0 +1,26 @@
+{
+  "follow_call": "NO BASIS",
+  "confidence": "low",
+  "reasoning": null,
+  "confidence_reasons": [
+    "底座矩阵:low(pnl=-1.6%)",
+    "R4:支持/威胁证据双空→打low"
+  ],
+  "facts": {
+    "market_question": "Will United Russia (ER) gain the most seats in the next Russian parliamentary election?",
+    "outcome": "Yes",
+    "today": "2026-06-25",
+    "price_room_left": 66.67,
+    "price_already_moved": -1.54,
+    "resolution_date_human": "还有约97.0天",
+    "position_type": "single_side_conviction",
+    "recent_action": "flat_no_movement",
+    "support_catalysts": [],
+    "threat_catalysts": [],
+    "confidence": "low",
+    "confidence_reasons": [
+      "底座矩阵:low(pnl=-1.6%)",
+      "R4:支持/威胁证据双空→打low"
+    ]
+  }
+}

@@ -1,0 +1,78 @@
+{
+  "as_of": "2026-06-25",
+  "generated_at": 1782450954,
+  "period": "7d",
+  "source": "579_7d_universe + 581_window7_politics",
+  "traders": [
+    {
+      "wallet": "0x9d84ce0306f8551e02efef1680475fc0f1dc1344",
+      "weekly_politics_pnl": 257022.88,
+      "trades": 2208,
+      "win_rate": 0.9259674818840579,
+      "overall_rank_7d": 72
+    },
+    {
+      "wallet": "0x5a218c7ad04135830a45c41aaed7294df7809318",
+      "weekly_politics_pnl": 79565.78,
+      "trades": 32681,
+      "win_rate": 0.39848264740980993,
+      "overall_rank_7d": 98
+    },
+    {
+      "wallet": "0xbacd00c9080a82ded56f504ee8810af732b0ab35",
+      "weekly_politics_pnl": 74672.53,
+      "trades": 2415,
+      "win_rate": 0.5122147826086957,
+      "overall_rank_7d": null
+    },
+    {
+      "wallet": "0xb51b3beffd13cde071ed799e70a7b0b598e8b4d9",
+      "weekly_politics_pnl": 46596.77,
+      "trades": 2002,
+      "win_rate": 0.6996446053946054,
+      "overall_rank_7d": null
+    },
+    {
+      "wallet": "0x23d81ba9371e576015c1e562db09c689f56b0288",
+      "weekly_politics_pnl": 43052.0,
+      "trades": 956,
+      "win_rate": 0.9694542887029288,
+      "overall_rank_7d": 56
+    },
+    {
+      "wallet": "0xa83c7adfd9c81b49f69b8a16e8c77641fa9aa8f4",
+      "weekly_politics_pnl": 40101.8,
+      "trades": 756,
+      "win_rate": 0.9275793650793651,
+      "overall_rank_7d": null
+    },
+    {
+      "wallet": "0x85b8b010ac6e24a23625621724a15513c80d6b6a",
+      "weekly_politics_pnl": 37168.44,
+      "trades": 766,
+      "win_rate": 1.0,
+      "overall_rank_7d": null
+    },
+    {
+      "wallet": "0x08458f7e9d2858027de579e4c3ca305475496b6f",
+      "weekly_politics_pnl": 19156.98,
+      "trades": 2064,
+      "win_rate": 0.7101859011627908,
+      "overall_rank_7d": null
+    },
+    {
+      "wallet": "0xfd8f5bba5b09d286b6d1db35cda8249bdd356f11",
+      "weekly_politics_pnl": 11000.52,
+      "trades": 1635,
+      "win_rate": 0.8542979204892968,
+      "overall_rank_7d": null
+    },
+    {
+      "wallet": "0x3007ea6df4389c173a5119162be94aac6bba763a",
+      "weekly_politics_pnl": 6814.39,
+      "trades": 195,
+      "win_rate": 0.711620512820513,
+      "overall_rank_7d": null
+    }
+  ]
+}

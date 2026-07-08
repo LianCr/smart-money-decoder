@@ -1,0 +1,40 @@
+{
+  "follow_call": "ROOM LEFT",
+  "confidence": "medium",
+  "reasoning": "这个钱包押民主党夺回众议院，单边持仓，最近48小时没动。价格几乎没怎么涨，跟单还有不少空间。支持方向的催化剂是当事人直接表态（沃伦参议员关于中期选举议题的发言），但市场还没明确反应；威胁方向只有背景评论且市场反应很弱。信心定为中等是因为目前浮亏约1.2%，按底座矩阵规则封顶在中等。",
+  "confidence_reasons": [
+    "底座矩阵:medium(pnl=-1.2%)"
+  ],
+  "facts": {
+    "market_question": "Will the Democratic Party control the House after the 2026 Midterm elections?",
+    "outcome": "Yes",
+    "today": "2026-06-25",
+    "price_room_left": 21.95,
+    "price_already_moved": -1.6,
+    "resolution_date_human": "还有约131.0天",
+    "position_type": "single_side_conviction",
+    "recent_action": "flat_no_movement",
+    "support_catalysts": [
+      {
+        "title": "Sen. Elizabeth Warren: \"Thank you Donald Trump\" for the issue that will decide the midterms - CNN",
+        "material_tag": "当事人直接表态",
+        "market_reaction": "unknown",
+        "move_pct": null,
+        "same_window": false
+      }
+    ],
+    "threat_catalysts": [
+      {
+        "title": "Commentary: Gerrymanders, judges and an alley-oop: A look at the midterm fight for control of Congress - Los Angeles Times",
+        "material_tag": "其他背景",
+        "market_reaction": "weak",
+        "move_pct": -2.44,
+        "same_window": false
+      }
+    ],
+    "confidence": "medium",
+    "confidence_reasons": [
+      "底座矩阵:medium(pnl=-1.2%)"
+    ]
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "follow_call": null,
+  "confidence": null,
+  "reasoning": null,
+  "guard_tripped": "DURATION_COMPUTED",
+  "guard_message": "reasoning 出现时长推算（禁止日期/时长数学）"
+}
