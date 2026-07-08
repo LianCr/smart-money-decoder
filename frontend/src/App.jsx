@@ -1721,12 +1721,40 @@ const CALL_CN = { "ROOM LEFT": "还有空间", CHASED: "太迟了", "NO BASIS": 
 function Recommendations({ onPick }) {
   const { t, lang } = useLang();
   const [data, setData] = useState(null);
-  useEffect(() => { fetch(`${API}/recommendations`).then((r) => r.json()).then(setData).catch(() => {}); }, []);
+  const [scanSecs, setScanSecs] = useState(0);
+  const pollRef = useRef(null);
+  useEffect(() => {
+    fetch(`${API}/recommendations`).then((r) => r.json()).then(setData).catch(() => {});
+    return () => clearInterval(pollRef.current);
+  }, []);
+  const refreshing = !!(data && data.refreshing);
+  useEffect(() => {                                   // 扫榜期间：10s 轮询 + 计时
+    clearInterval(pollRef.current);
+    if (!refreshing) return;
+    const t0 = Date.now();
+    pollRef.current = setInterval(() => {
+      setScanSecs(Math.floor((Date.now() - t0) / 1000));
+      fetch(`${API}/recommendations`).then((r) => r.json()).then(setData).catch(() => {});
+    }, 10000);
+    return () => clearInterval(pollRef.current);
+  }, [refreshing]);
+  function rescan() {
+    if (refreshing) return;
+    if (!window.confirm(t("重新扫榜会重跑全流程找最新推荐（几分钟、AI 验证消耗 token 额度）。确定？"))) return;
+    setScanSecs(0);
+    fetch(`${API}/recommendations?refresh=1`).then((r) => r.json()).then(setData).catch(() => {});
+  }
   const cands = (data && data.candidates) || [];
-  if (!cands.length) return null;
+  if (!cands.length && !refreshing) return null;
   return (
     <div className="recs">
-      <div className="recs-h">{t("值得看的聪明钱 ·")} <b>{t("政治盘专家")}</b>{t("（从热门政治盘反向找的共持大户 · 政治专长筛 · ∩月榜）")}<span className="recs-sub">{t("点一个直接 decode")}</span></div>
+      <div className="recs-h">{t("值得看的聪明钱 ·")} <b>{t("政治盘专家")}</b>{t("（从热门政治盘反向找的共持大户 · 政治专长筛 · ∩月榜）")}<span className="recs-sub">{t("点一个直接 decode")}</span>
+        <button className="recs-refresh" onClick={rescan} disabled={refreshing}
+          title={t("重扫热门政治盘找最新的值得看钱包（几分钟 + AI 验证烧 token）")}>
+          {refreshing ? `⟳ ${t("扫榜中")}… ${scanSecs}s` : `↻ ${t("刷新推荐榜")}`}
+        </button>
+      </div>
+      {data && data.refresh_error && <div className="recs-err">⚠ {t("上次刷新失败：")}{data.refresh_error}</div>}
       <div className="recs-list">
         {cands.map((c, i) => {
           const pw = c.politics_win_rate;
@@ -1797,7 +1825,7 @@ function BoardView() {
   }
 
   function refreshCurrent() {
-    const w = wallet.trim() || (data && data.wallet);
+    const w = (data && data.wallet) || wallet.trim();
     if (!w || loading) return;
     if (!window.confirm(t("强制刷新会绕过缓存、重新调用数据源与 AI（耗时 1-3 分钟、消耗 token 额度）。确定重建吗？"))) return;
     run(w, true);
@@ -1818,8 +1846,6 @@ function BoardView() {
         <button className="cmd-trigger" onClick={() => run()} disabled={loading || !wallet.trim()}>
           {loading ? t("生成中") : t("生成看板")}
         </button>
-        <button className="cmd-refresh" onClick={refreshCurrent} disabled={loading || !(wallet.trim() || (data && data.wallet))}
-          title={t("绕过缓存重建这份看板（重新拉数据 + 重跑 AI，耗时且消耗 token）")}>↻</button>
       </div>
 
       {showHome && <Recommendations onPick={(w) => { setWallet(w); run(w); }} />}

@@ -340,6 +340,13 @@ export default {
   "个账号——这种热闹很可能是刷出来的：当氛围看，别当民意": "accounts — this buzz is likely manufactured: read it as atmosphere, not public opinion",
   "社媒反映的是情绪和声量、不是事实——方向判断请看左列新闻与顶部结论": "Social shows emotion and volume, not facts — for direction, see the news column and the verdict above",
 
+  // ── 推荐榜刷新 ──
+  "重新扫榜会重跑全流程找最新推荐（几分钟、AI 验证消耗 token 额度）。确定？": "Rescanning re-runs the full discovery pipeline for fresh picks (takes minutes; AI verification consumes token quota). Proceed?",
+  "重扫热门政治盘找最新的值得看钱包（几分钟 + AI 验证烧 token）": "Re-scan hot politics markets for the latest wallets worth watching (minutes + AI verification burns tokens)",
+  "扫榜中": "Scanning",
+  "刷新推荐榜": "Refresh picks",
+  "上次刷新失败：": "Last refresh failed: ",
+
   // ── Footer ──
   "解码 Polymarket 聪明钱的政治押注 · 只读公开数据 · 非投资建议": "Decoding smart-money political bets on Polymarket · read-only public data · not investment advice",
   "数字归代码，AI 只做解读": "numbers belong to code, AI only interprets",

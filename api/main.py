@@ -600,16 +600,57 @@ def dashboard(wallet: str, refresh: int = 0):
 
 RECOMMEND_FILE = Path(".data/recommendations.json")
 
+# 推荐榜后台刷新状态（单飞：同一时刻只允许一次扫榜在跑）
+_REC_LOCK = __import__("threading").Lock()
+_REC_STATE = {"running": False, "started_at": None, "error": None}
+
+
+def _run_rec_scan():
+    """后台线程：真跑 recommend.scan（几分钟、ai_top>0 烧 token——用户已批准）。
+    🛡 空榜保护：上游失败返回空候选时恢复旧榜，绝不用空覆盖好数据。"""
+    backup = None
+    try:
+        if RECOMMEND_FILE.exists():
+            backup = RECOMMEND_FILE.read_text(encoding="utf-8")
+        import recommend
+        cands = recommend.scan(ai_top=int(os.environ.get("AI_TOP", "3")))
+        if not cands and backup and json.loads(backup).get("candidates"):
+            RECOMMEND_FILE.write_text(backup, encoding="utf-8")
+            _REC_STATE["error"] = "扫榜返回空（上游数据源失败？）——已保留旧榜"
+        else:
+            _REC_STATE["error"] = None
+    except Exception as e:
+        if backup:
+            try:
+                RECOMMEND_FILE.write_text(backup, encoding="utf-8")
+            except Exception:
+                pass
+        _REC_STATE["error"] = f"{type(e).__name__}: {e}"
+        _log(f"   ✗ 推荐榜刷新失败：{_REC_STATE['error']}")
+    finally:
+        _REC_STATE["running"] = False
+
 
 @app.get("/recommendations")
-def recommendations():
-    """扫榜推荐：读 recommend.py 定期写的候选清单（免费扫榜层）。空=还没扫过。"""
+def recommendations(refresh: int = 0):
+    """扫榜推荐：读 recommend.py 写的候选清单。refresh=1 → 后台重扫（几分钟+烧 token），
+    期间照常返回旧榜（stale-while-revalidate），前端轮询 refreshing 直到出新榜。"""
+    if refresh:
+        with _REC_LOCK:
+            if not _REC_STATE["running"]:
+                _REC_STATE.update(running=True, started_at=int(time.time()), error=None)
+                __import__("threading").Thread(target=_run_rec_scan, daemon=True).start()
+                _log("\n=== /recommendations REFRESH：后台扫榜启动 ===")
+    out = {"as_of": BRIEFING_AS_OF, "candidates": []}
     if RECOMMEND_FILE.exists():
         try:
-            return json.loads(RECOMMEND_FILE.read_text(encoding="utf-8"))
+            out = json.loads(RECOMMEND_FILE.read_text(encoding="utf-8"))
         except Exception:
             pass
-    return {"as_of": BRIEFING_AS_OF, "candidates": []}
+    out["refreshing"] = _REC_STATE["running"]
+    if _REC_STATE["error"]:
+        out["refresh_error"] = _REC_STATE["error"]
+    return out
 
 
 HOT_TRADERS_FILE = Path(".data/hot_traders.json")

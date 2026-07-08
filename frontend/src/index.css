@@ -1237,3 +1237,11 @@ a.db-news-t:hover { color: var(--bf-accent); text-decoration: underline; }
 /* 社媒指标砖：值/副行分层，不再挤压换行 */
 .soc-m-sub { display: block; font-size: 10px; color: var(--fg-4); margin-top: 3px; }
 .soc-bot { line-height: 1.55; }
+
+/* 推荐榜刷新 */
+.recs-refresh { margin-left: auto; background: none; border: 1px solid var(--border); border-radius: 4px; color: var(--fg-3); font-size: 11px; padding: 3px 10px; cursor: pointer; font-family: inherit; white-space: nowrap; }
+.recs-refresh:hover:not(:disabled) { color: var(--accent); border-color: var(--accent); }
+.recs-refresh:disabled { color: var(--accent); opacity: 0.75; cursor: default; }
+.recs-h { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; }
+.recs-err { font-size: 10.5px; color: #f0b429; margin: 4px 0 6px; }
+/* 撤掉 cmd-refresh 后无引用，样式保留无害 */

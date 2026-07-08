@@ -71,7 +71,7 @@ def _politics_cat(cats):
     return None
 
 
-DASH_URL = "http://localhost:8000/dashboard"
+DASH_URL = f"http://localhost:{os.environ.get('PORT', '8000')}/dashboard"   # Render 上 $PORT≠8000，自指本服务
 
 
 def ai_verify(cands, top=3):
