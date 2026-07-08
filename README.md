@@ -1,5 +1,9 @@
 # Smart Money Decoder
 
+### 🌐 Live app → **[smart-money-decoder.onrender.com](https://smart-money-decoder.onrender.com)**
+
+> No setup needed — open it in your browser. Hosted on Render's free tier, so the first visit may take ~1 minute to cold-start; cached demo wallets load instantly after that.
+
 Decode the political bets of [Polymarket](https://polymarket.com) "smart money" — and put the decoder's judgment on trial against history.
 
 Paste a wallet address; the tool finds the trader's largest political position, reconstructs the news around when they entered, and generates an AI **interpretation card** that answers one question: *should you follow this bet?* A second view, **Track Record**, replays that same decoder at historical points in time and scores its calls against how the markets actually resolved.
@@ -21,7 +25,9 @@ The two views below (**Decode card** + **Track Record backtest**) are the origin
 
 ---
 
-## 🎬 Demo
+## 🎬 Demo video (v1)
+
+> **Note:** this walkthrough was recorded on the original **v1 experience** (Decode card + Track Record). The product has since evolved into the v3 recommendation-first unified board — try the latest version live at [smart-money-decoder.onrender.com](https://smart-money-decoder.onrender.com). The video is kept as a record of the project's starting point.
 
 Watch the walkthrough: paste a wallet, watch the pipeline decode a live political bet, then see the decoder's track record put on trial against history. Click the thumbnail to play on YouTube.
 
