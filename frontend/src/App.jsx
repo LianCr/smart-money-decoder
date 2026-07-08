@@ -971,31 +971,52 @@ function NewsStream({ items }) {
   const { t } = useLang();
   if (!items || !items.length)
     return <div className="bf-empty">{t("该时点窗内三源都没洗出对题新闻 — 如实留空")}</div>;
+  // 按日分组：日级价格变动本就属于"这一天"而非某一条 → 反应 chip 挂组头（诚实归因层级），
+  // 组内不再逐条重复免责；"反应不可知"沉默不显示（无信号不该喊话）
+  const groups = [];
+  const gi = new Map();
+  for (const it of items) {
+    const k = it.date || "—";
+    if (!gi.has(k)) { gi.set(k, groups.length); groups.push({ date: k, items: [], reaction: null }); }
+    const g = groups[gi.get(k)];
+    g.items.push(it);
+    if (!g.reaction && it.reaction && it.reaction.available) g.reaction = it.reaction;
+  }
   return (
     <div className="db-stream">
-      {items.map((it, i) => {
-        const dir = DIR_META[it.direction];
-        const dom = domainOf(it.url, it.source);
-        return (
-          <div className={`db-news ${it.direction || ""}`} key={i}>
-            <div className="db-news-top">
-              <span className="db-news-date num">{it.date || "—"}</span>
-              {dir && <span className={`db-dir ${dir.cls}`}>{t(dir.txt)}</span>}
-              <ReactionTag r={it.reaction} />
-            </div>
-            {it.url ? <a className="db-news-t" href={it.url} target="_blank" rel="noreferrer">{t(it.title)}</a>
-                    : <div className="db-news-t">{t(it.title)}</div>}
-            {it.summary && <div className="db-news-s">{t(it.summary)}</div>}
-            {it.same_window && <div className="db-news-sw">{t("同日多条 · 前后变动为合计,不可归因到单条")}</div>}
-            {dom && (
-              <a className="db-news-src" href={it.url} target="_blank" rel="noreferrer" title={dom}>
-                <img className="db-news-fav" src={faviconUrl(dom)} alt="" loading="lazy" onError={(e) => { e.currentTarget.style.display = "none"; }} />
-                <span className="db-news-dom">{dom}</span>
-              </a>
+      {groups.map((g) => (
+        <div className="db-day" key={g.date}>
+          <div className="db-day-h">
+            <span className="db-day-date num">{g.date}</span>
+            {g.items.length > 1 && <span className="db-day-n num">×{g.items.length}</span>}
+            {g.reaction && <ReactionTag r={g.reaction} />}
+            {g.reaction && g.items.length > 1 && (
+              <span className="db-day-agg" title={t("同日多条 · 前后变动为合计,不可归因到单条")}>{t("当日合计")}</span>
             )}
           </div>
-        );
-      })}
+          {g.items.map((it, i) => {
+            const dir = DIR_META[it.direction];
+            const dom = domainOf(it.url, it.source);
+            return (
+              <div className={`db-news ${it.direction || ""}`} key={i}>
+                {it.url ? <a className="db-news-t" href={it.url} target="_blank" rel="noreferrer">{t(it.title)}</a>
+                        : <div className="db-news-t">{t(it.title)}</div>}
+                {it.summary && <div className="db-news-s">{t(it.summary)}</div>}
+                <div className="db-news-meta">
+                  {dir && <span className={`db-dir ${dir.cls}`}>{t(dir.txt)}</span>}
+                  {dom && (
+                    <a className="db-news-src" href={it.url} target="_blank" rel="noreferrer" title={dom}>
+                      <img className="db-news-fav" src={faviconUrl(dom)} alt="" loading="lazy" onError={(e) => { e.currentTarget.style.display = "none"; }} />
+                      <span className="db-news-dom">{dom}</span>
+                    </a>
+                  )}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      ))}
+      <div className="db-stream-foot">{t("反应 = 持有侧价格当日变动 · 时间相关非因果 · 同日多条共享同一变动")}</div>
     </div>
   );
 }
@@ -1006,22 +1027,30 @@ function SocialPulse({ s }) {
   if (!s) return <div className="bf-empty">{t("该话题暂无社媒数据（或未配置）")}</div>;
   const acc = s.acceleration;
   const heating = typeof acc === "number" && acc > 1;
-  const div = s.author_diversity_pct;
+  const div = s.author_diversity_pct;          // 语义：每 100 条讨论来自约 N 个不同账号
   const organic = s.organic;
+  const per100 = typeof div === "number" ? Math.max(1, Math.round(div)) : null;
   return (
     <div className="soc">
       <div className="soc-metrics">
         <div className="soc-m">
-          <div className="soc-m-lab">{t("情绪动量")}</div>
-          <div className={`soc-m-val ${heating ? "hot" : "cold"}`}>{heating ? t("🔥 升温") : t("❄ 降温")} <span className="soc-acc num">{typeof acc === "number" ? acc.toFixed(2) : "—"}</span></div>
+          <div className="soc-m-lab">{t("讨论热度")}</div>
+          <div className={`soc-m-val ${heating ? "hot" : "cold"}`}>
+            {typeof acc !== "number" ? "—"
+              : acc < 0.1 ? `❄ ${t("讨论几乎停了")}`
+              : heating ? `🔥 ${t("升温中")}` : `❄ ${t("降温中")}`}
+          </div>
+          {typeof acc === "number" && acc >= 0.1 && (
+            <div className="soc-m-sub"><span className="num">{acc.toFixed(1)}×</span> {t("平时讨论量")}</div>
+          )}
         </div>
         <div className="soc-m">
           <div className="soc-m-lab">{(s.tweet_count || 0).toLocaleString()} {t("条讨论")}</div>
-          <div className={`soc-bot ${organic ? "ok" : "bad"}`}>{organic ? `${t("✓ 有机")} ${div}%` : `${t("🤖 疑似刷量")} ${div}%`}</div>
+          <div className={`soc-bot ${organic ? "ok" : "bad"}`} title={organic ? t("✓ 账号分散 · 像真人讨论") : t("🤖 账号集中 · 像刷量")}>{organic ? t("✓ 像真人讨论") : t("🤖 像刷量")}</div>
         </div>
       </div>
-      {!organic && (
-        <div className="soc-warn">{t("⚠ 作者多样性")} {div}% {t("< 20% —— 很可能是刷量/机器人，当噪音看，别当真情绪")}</div>
+      {!organic && per100 != null && (
+        <div className="soc-warn">{t("⚠ 每 100 条讨论只来自约")} {per100} {t("个账号——这种热闹很可能是刷出来的：当氛围看，别当民意")}</div>
       )}
       <div className="soc-posts">
         {(s.posts || []).map((p, i) => {
@@ -1046,7 +1075,7 @@ function SocialPulse({ s }) {
           );
         })}
       </div>
-      <div className="soc-foot">🔖 {t("热帖标 = 互动热度（♥+↻），")}<b>{t("非情绪判断")}</b>{t("——社媒是情绪不是事实，方向请看新闻与 ⑥")}</div>
+      <div className="soc-foot">{t("社媒反映的是情绪和声量、不是事实——方向判断请看左列新闻与顶部结论")}</div>
     </div>
   );
 }

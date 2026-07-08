@@ -1220,3 +1220,20 @@ a.db-news-t:hover { color: var(--bf-accent); text-decoration: underline; }
 .sf-sep { color: var(--border); }
 .sf-meta { font-size: 10.5px; color: var(--fg-4); letter-spacing: 0.03em; white-space: nowrap; }
 @media (max-width: 720px) { .sf-inner { flex-direction: column; align-items: flex-start; } .sf-meta { white-space: normal; } }
+
+/* ── 新闻列按日分组 ─────────────────────────────────────────────────── */
+.db-day { margin-bottom: 14px; }
+.db-day-h { display: flex; align-items: center; gap: 8px; padding: 4px 0 6px; border-bottom: 1px solid var(--border); margin-bottom: 8px; }
+.db-day-date { font-size: 11px; color: var(--fg-2); font-weight: 700; letter-spacing: 0.04em; }
+.db-day-n { font-size: 10px; color: var(--fg-4); border: 1px solid var(--border); border-radius: 3px; padding: 0 5px; }
+.db-day-agg { font-size: 9.5px; color: var(--fg-4); border: 1px dashed var(--border); border-radius: 3px; padding: 1px 6px; cursor: help; }
+.db-day .db-news { border-left: 2px solid var(--border); padding-left: 10px; margin: 0 0 10px 2px; }
+.db-day .db-news.support { border-left-color: rgba(52,211,153,0.45); }
+.db-day .db-news.threat { border-left-color: rgba(248,113,113,0.45); }
+.db-news-meta { display: flex; align-items: center; gap: 8px; margin-top: 4px; }
+.db-stream-foot { font-size: 10px; color: var(--fg-4); margin-top: 4px; padding-top: 8px; border-top: 1px dashed var(--border); }
+.soc-m-sub { font-size: 10px; color: var(--fg-4); margin-left: 2px; }
+
+/* 社媒指标砖：值/副行分层，不再挤压换行 */
+.soc-m-sub { display: block; font-size: 10px; color: var(--fg-4); margin-top: 3px; }
+.soc-bot { line-height: 1.55; }

@@ -324,6 +324,22 @@ export default {
   "判断进记分牌。": "Judgments go on the scorecard. ",
   "每个判断存档，等市场真结算后与现实对账（Track Record 页可查）。": "Every judgment is archived and reconciled against reality once markets actually settle (see Track Record).",
 
+  // ── 新闻分组 / 社媒大白话 ──
+  "当日合计": "day total",
+  "反应 = 持有侧价格当日变动 · 时间相关非因果 · 同日多条共享同一变动": "Reaction = held-side price move that day · time-correlated, not causal · same-day items share one move",
+  "讨论热度": "Buzz",
+  "讨论几乎停了": "Discussion has nearly stopped",
+  "升温中": "Heating up",
+  "降温中": "Cooling down",
+  "平时讨论量": "the usual volume",
+  "✓ 账号分散 · 像真人讨论": "✓ Many different accounts — looks like real people",
+  "✓ 像真人讨论": "✓ Looks organic",
+  "🤖 像刷量": "🤖 Looks botted",
+  "🤖 账号集中 · 像刷量": "🤖 Few accounts posting a lot — looks manufactured",
+  "⚠ 每 100 条讨论只来自约": "⚠ Every 100 posts come from only ~",
+  "个账号——这种热闹很可能是刷出来的：当氛围看，别当民意": "accounts — this buzz is likely manufactured: read it as atmosphere, not public opinion",
+  "社媒反映的是情绪和声量、不是事实——方向判断请看左列新闻与顶部结论": "Social shows emotion and volume, not facts — for direction, see the news column and the verdict above",
+
   // ── Footer ──
   "解码 Polymarket 聪明钱的政治押注 · 只读公开数据 · 非投资建议": "Decoding smart-money political bets on Polymarket · read-only public data · not investment advice",
   "数字归代码，AI 只做解读": "numbers belong to code, AI only interprets",
