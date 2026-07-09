@@ -1718,6 +1718,9 @@ function HotTraders({ onPick }) {
 // 扫榜推荐（免费扫榜层）：点一个直接 decode
 const BEH_ICON = { ADD: "📈", EXIT: "📉", STATIC: "⏸" };
 const CALL_CN = { "ROOM LEFT": "还有空间", CHASED: "太迟了", "NO BASIS": "没依据" };
+// 信心值 → CSS 变体类。⑥ 输出既有 "med"(market_thesis 归一) 也有 "medium"(v2/v3 矩阵)，
+// 之前直接把原始值当 class 用 → "med" 无样式命中、文字回落到按钮默认深色 = 深底上看不见。
+const CONF_CLS = { high: "high", medium: "medium", med: "medium", low: "low" };
 function Recommendations({ onPick }) {
   const { t, lang } = useLang();
   const [data, setData] = useState(null);
@@ -1782,9 +1785,11 @@ function Recommendations({ onPick }) {
               )}
               {c.source_market && <div className="rec-src">{t("↳ 从「")}{c.source_market}{t("」共持发现")}</div>}
               <div className="rec-beh">{BEH_ICON[c.behavior] || "·"} {t(c.behavior_fact) || c.behavior || "—"}</div>
-              {c.ai_pick && (
+              {c.ai_pick && (c.ai_confidence || c.ai_follow_call || c.ai_verdict) && (
                 <div className="rec-verdict">
-                  <span className={`rec-conf ${c.ai_confidence}`}>⑥ {t(CONF_CN[c.ai_confidence] || c.ai_confidence)} {t("信心")}</span>
+                  {c.ai_confidence && (
+                    <span className={`rec-conf ${CONF_CLS[c.ai_confidence] || ""}`}>⑥ {t(CONF_CN[c.ai_confidence] || c.ai_confidence)} {t("信心")}</span>
+                  )}
                   {c.ai_follow_call && <span className="rec-call">{t(CALL_CN[c.ai_follow_call] || c.ai_follow_call)}</span>}
                   {c.ai_verdict && <span className="rec-verdict-txt">{t(c.ai_verdict)}</span>}
                 </div>
@@ -1906,6 +1911,9 @@ function BoardView() {
       {error && <ErrorBox error={error} />}
       {data && (
         <>
+          {data.refresh_error && (
+            <div className="db-stale-warn">⚠ {t("刷新失败，已回退到上次成功的看板（数据仍是旧的）")} · <span className="num">{data.refresh_error}</span></div>
+          )}
           <div className="db-refresh-bar">
             <span className="db-refresh-asof num">as-of {data.as_of}</span>
             <button className="db-refresh" onClick={refreshCurrent} disabled={loading}

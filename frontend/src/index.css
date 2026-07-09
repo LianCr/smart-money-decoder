@@ -1062,7 +1062,10 @@ a.db-news-t:hover { color: var(--bf-accent); text-decoration: underline; }
 .recs-h { font-size: 13px; font-weight: 700; color: var(--fg-1); margin-bottom: 14px; display: flex; align-items: baseline; gap: 9px; flex-wrap: wrap; }
 .recs-sub { font-size: 11px; color: var(--bf-accent); font-weight: 400; }
 .recs-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 10px; }
-.rec { text-align: left; background: var(--bg-1); border: 1px solid var(--line-1); border-radius: 4px; padding: 12px 14px; cursor: pointer; transition: border-color 0.15s, background 0.15s; }
+/* display:flex column + flex-start：<button> 默认把内容垂直居中，网格里被高邻卡撑高后
+   内容悬在卡片中间、上方一大块空白（bug 实拍）。color 显式声明：按钮不继承 body 色，
+   没写颜色的子元素会回落到 UA 默认深色 → 深底上不可见。 */
+.rec { display: flex; flex-direction: column; align-items: stretch; justify-content: flex-start; color: var(--fg-2); text-align: left; background: var(--bg-1); border: 1px solid var(--line-1); border-radius: 4px; padding: 12px 14px; cursor: pointer; transition: border-color 0.15s, background 0.15s; }
 .rec:hover { border-color: var(--bf-accent); background: var(--bg-2); }
 .rec.pick { border-color: rgba(0,229,255,0.4); box-shadow: inset 0 0 24px var(--accent-bg); }
 .rec-top { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
@@ -1091,6 +1094,8 @@ a.db-news-t:hover { color: var(--bf-accent); text-decoration: underline; }
 .db-refresh { background: none; border: 1px solid var(--border); border-radius: 4px; color: var(--fg-3); font-size: 11px; padding: 3px 10px; cursor: pointer; font-family: inherit; }
 .db-refresh:hover { color: var(--amber, #f0b429); border-color: var(--amber, #f0b429); }
 .db-refresh:disabled { opacity: 0.4; cursor: default; }
+/* 刷新失败回退旧板的提示横幅（诚实降级：明说数据是旧的 + 带原始错误） */
+.db-stale-warn { font-size: 11px; color: #f0b429; background: rgba(240,180,41,0.08); border: 1px solid rgba(240,180,41,0.3); border-radius: 4px; padding: 6px 10px; margin: 6px 0; line-height: 1.5; word-break: break-all; }
 .mon-q { font-size: 10px; color: var(--fg-4); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 40%; margin-left: auto; }
 /* cmdbar 强刷按钮 */
 .cmd-refresh { background: none; border: 1px solid var(--border); border-left: none; color: var(--fg-3); font-size: 15px; padding: 0 14px; cursor: pointer; align-self: stretch; }
@@ -1157,9 +1162,11 @@ a.db-news-t:hover { color: var(--bf-accent); text-decoration: underline; }
 .vh-trust-h { font-size: 10px; font-weight: 700; color: var(--accent); margin-bottom: 3px; }
 .vh-trust-l { font-size: 11px; line-height: 1.6; color: var(--fg-2); }
 .rec-verdict { margin-top: 8px; padding-top: 8px; border-top: 1px dashed var(--border); display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px; }
-.rec-conf { font-size: 10px; font-weight: 700; padding: 1px 6px; border-radius: 2px; }
+/* 基类自带可读色（bug 实拍：⑥ 输出 "med" 时 class 无命中 → 文字回落按钮默认深色，深底上不可见）。
+   .med 别名兜底同理——即使上游又冒出新值，最坏也是灰底可读，绝不隐形。 */
+.rec-conf { font-size: 10px; font-weight: 700; padding: 1px 6px; border-radius: 2px; color: var(--fg-2); background: rgba(255,255,255,0.07); }
 .rec-conf.high { color: var(--pos); background: var(--pos-bg); }
-.rec-conf.medium { color: #f0b429; background: rgba(240,180,41,0.12); }
+.rec-conf.medium, .rec-conf.med { color: #f0b429; background: rgba(240,180,41,0.12); }
 .rec-conf.low { color: var(--fg-3); background: rgba(255,255,255,0.05); }
 .rec-call { font-size: 10px; font-weight: 700; color: var(--accent); }
 .rec-verdict-txt { flex-basis: 100%; font-size: 11px; line-height: 1.5; color: var(--fg-2); margin-top: 2px; }

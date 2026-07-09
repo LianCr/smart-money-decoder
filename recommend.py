@@ -14,8 +14,9 @@ recommend.py — 扫榜推荐 · 方法 E「市场反向找大户」（免费、
 
 🟡 轻量轮询（cron 一行，免费扫层、不带 ⑥；要 ⑥ 手动 ai_top>0 跑）：
     0 */6 * * * cd /path/to/smart-money-decoder && AI_TOP=0 .venv/bin/python -u recommend.py >> .data/recommend.log 2>&1
-🔴 诚实提醒：BRIEFING_AS_OF 钉死 6-25、数据世界冻结 → 现在轮询每次结果一样，这是把"自动转起来的机制"先搭好；
-   真新鲜度要等解开 as_of（上 Bedrock/有预算走 date.today()）才生效。
+🔴 as_of 语义（2026-07-08 起）：默认（cron/直跑）仍钉 BRIEFING_AS_OF；用户点"刷新推荐榜"时
+   api 传 as_of=今天 → 免费数据层锚今天、ai_verify 带 fresh=1（⑥ 也在今天验证）= 真·实时，
+   烧 token 只走用户确认的门。
 """
 import os
 import json
@@ -74,17 +75,27 @@ def _politics_cat(cats):
 DASH_URL = f"http://localhost:{os.environ.get('PORT', '8000')}/dashboard"   # Render 上 $PORT≠8000，自指本服务
 
 
-def ai_verify(cands, top=3):
+def ai_verify(cands, top=3, fresh=False):
     """方法 C：对 top N 候选跑完整 ⑥（经本地 /dashboard，按(钱包,as_of)硬缓存→重复零 token）。
     🔴 烧老师 token（每个未缓存钱包 ~12k）；需后端在线，离线则优雅跳过、ai_pick 留 False。
+    fresh=True（用户点刷新时）：传 fresh=1 → 看板在**今天**验证（今天已有缓存则直接用，不重复烧）。
+    🛡 诚实守卫：只有真拿到 ⑥ 裁决（confidence 非空）才标 ai_pick —— 看板返回错误 JSON/空 reasoning
+    时绝不产出"有 AI 精选徽章但信心/推理全空"的残卡（宁可不标，也不装验证过）。
     同时用看板 facts 回填 market/outcome，确保卡片显示与点开看板的 ⑥ 判断**针对同一注**（不错配）。"""
     for c in cands[:top]:
+        params = {"wallet": c["wallet"]}
+        if fresh:
+            params["fresh"] = 1
         try:
-            j = requests.get(DASH_URL, params={"wallet": c["wallet"]}, timeout=240).json()
+            j = requests.get(DASH_URL, params=params, timeout=240).json()
         except Exception as e:
             print(f"  ⑥ 验证 {c['wallet'][:12]}… 失败(后端未在线?)：{e}", flush=True)
             continue
-        rs = j.get("reasoning") or {}
+        rs = (j.get("reasoning") or {}) if isinstance(j, dict) else {}
+        if j.get("error") or not rs.get("confidence"):    # 看板报错 / 裁决缺失 → 不标精选（诚实降级）
+            why = j.get("error") or j.get("reason") or "reasoning 无 confidence"
+            print(f"  ⑥ 验证 {c['wallet'][:12]}… 未获裁决({why})——保持非精选", flush=True)
+            continue
         facts = rs.get("facts") or {}
         if facts.get("market_question"):          # 与看板同一注（防 max_pages/快照差异错配）
             c["market_question"] = facts["market_question"]
@@ -96,6 +107,7 @@ def ai_verify(cands, top=3):
         c["position_type"] = facts.get("position_type")
         c["market_lean"] = rs.get("market_lean")        # 市场命题级独立倾向（同盘分歧时显示"我们倾向 X"）
         c["alignment"] = rs.get("alignment")            # 这一注 顺/逆 edge
+        c["verified_as_of"] = j.get("as_of")            # ⑥ 验证锚的日期（卡片可显示数据新鲜度）
         print(f"  ⑥ {c['wallet'][:12]}… {rs.get('confidence')} · {rs.get('follow_call')} · lean={rs.get('market_lean')}", flush=True)
 
 
@@ -129,7 +141,11 @@ def _mark_consensus(cands):
                 c["consensus_count"] = len(group)
 
 
-def scan(per_market=10, gate_pnl=2000.0, enrich_top=14, keep=8, ai_top=3):
+def scan(per_market=10, gate_pnl=2000.0, enrich_top=14, keep=8, ai_top=3, as_of=None):
+    """as_of=None → 钉死的 BRIEFING_AS_OF（cron/快照语义不变）；
+    用户点刷新时由 api 传今天 → 免费数据层锚今天、ai_verify 带 fresh=1（⑥ 也在今天，真·实时）。"""
+    as_of = as_of or AS_OF
+    live = as_of != AS_OF
     # 0) 579 月榜（交叉信号 bonus 用）
     b579 = _retry(lambda: results(call(AGENTS["leaderboard"][0],
                   {"wallet_address": "ALL", "leaderboard_period": "30d"}))) or []
@@ -138,7 +154,7 @@ def scan(per_market=10, gate_pnl=2000.0, enrich_top=14, keep=8, ai_top=3):
     # 1) 种子 → 热门政治盘 cid（去重）
     markets = {}
     for w in SEEDS:
-        pos = _retry(get_top_political_position_hz, w, as_of=AS_OF, max_pages=15)
+        pos = _retry(get_top_political_position_hz, w, as_of=as_of, max_pages=15)
         if pos and not pos.get("error") and pos.get("market_id"):
             markets[pos["market_id"]] = pos["market_question"]
         time.sleep(0.5)
@@ -147,7 +163,7 @@ def scan(per_market=10, gate_pnl=2000.0, enrich_top=14, keep=8, ai_top=3):
     # 2) 每盘 → 共持大户 → 钱包池（去重，记最大净持仓 + 来源盘）
     pool, pool_mkt = {}, {}
     for cid, q in markets.items():
-        for w, v in _retry(get_market_holders, cid, as_of=AS_OF, top_n=per_market) or []:
+        for w, v in _retry(get_market_holders, cid, as_of=as_of, top_n=per_market) or []:
             if v > pool.get(w, 0):
                 pool[w], pool_mkt[w] = v, q
         time.sleep(0.3)
@@ -169,12 +185,12 @@ def scan(per_market=10, gate_pnl=2000.0, enrich_top=14, keep=8, ai_top=3):
     cands = []
     for w, pol, pp in graded[:enrich_top]:
         time.sleep(0.4)
-        pos = _retry(get_top_political_position_hz, w, as_of=AS_OF, max_pages=15)
+        pos = _retry(get_top_political_position_hz, w, as_of=as_of, max_pages=15)
         if not pos or pos.get("error"):
             print(f"  · {w[:12]}… 政治 pnl={pp:.0f} 但无未结算政治顶仓(跳)", flush=True)
             continue
         time.sleep(0.3)
-        bf = _retry(get_behavior_flags, w, pos["market_id"], AS_OF) or {}
+        bf = _retry(get_behavior_flags, w, pos["market_id"], as_of) or {}
         beh = bf.get("flag")
         in579 = w.lower() in addrs579
         # 🔴 打分：被验证的体量+胜率为主，ROI 封顶防小样本高方差盖过真鲸鱼（实测 21 注/306% ROI 曾压过 $1.26M 鲸鱼）。
@@ -207,13 +223,13 @@ def scan(per_market=10, gate_pnl=2000.0, enrich_top=14, keep=8, ai_top=3):
     # 方法 C：对 top ai_top 跑 ⑥ AI 验证（烧 token、需后端在线；ai_top=0 关闭）
     if ai_top:
         print(f"\n方法 C：对 top {ai_top} 跑 ⑥ AI 验证（~12k/个，命中缓存更省）…", flush=True)
-        ai_verify(cands, top=ai_top)
+        ai_verify(cands, top=ai_top, fresh=live)
     _mark_disagreements(cands)        # 同盘分歧检测（纯代码，0 token）
     _mark_consensus(cands)            # 同侧专家共识（弱信号，与分歧对称）
 
     OUT.parent.mkdir(parents=True, exist_ok=True)
     method = "E_market_reverse_ai_verified" if ai_top else "E_market_reverse"
-    OUT.write_text(json.dumps({"as_of": AS_OF, "generated_at": int(time.time()),
+    OUT.write_text(json.dumps({"as_of": as_of, "generated_at": int(time.time()),
                                "method": method, "candidates": cands},
                               ensure_ascii=False, indent=2), encoding="utf-8")
     print(f"\n✓ 市场反向 · 政治专家候选 {len(cands)} 个写入 {OUT}", flush=True)

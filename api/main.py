@@ -44,6 +44,7 @@ for _src, _dst in [(Path("seed/cache"), Path(".cache")), (Path("seed/data"), Pat
             print(f"⚠ 种子缓存恢复失败：{e}", flush=True)
 
 from core.config import BRIEFING_AS_OF
+from core.cachefiles import newest_dated
 from fetcher.polymarket import get_top_political_position
 from fetcher.activity import get_entry_time, ActivityAPIError
 from fetcher.trades import get_entry_time_v2, get_wallet_profile, get_wallet_pnl_history
@@ -355,18 +356,18 @@ def _code_follow_call(facts: dict) -> str:
     return "ROOM LEFT"
 
 
-def _reasoner_cached(briefing: dict, behavior: dict, wallet: str) -> dict:
+def _reasoner_cached(briefing: dict, behavior: dict, wallet: str, as_of: str = BRIEFING_AS_OF) -> dict:
     """⑥ 代码层（瘦身后不再调网关）：build_facts(代码矩阵/价格/时长) + 代码 follow_call。
     信心/倾向/理由由 dashboard 用 market_thesis 覆盖。按 钱包,as_of 缓存。"""
     REASONER_CACHE.mkdir(parents=True, exist_ok=True)
-    p = REASONER_CACHE / f"{wallet.lower()}_{BRIEFING_AS_OF}.json"
+    p = REASONER_CACHE / f"{wallet.lower()}_{as_of}.json"
     if p.exists():
         try:
             return json.loads(p.read_text(encoding="utf-8"))
         except Exception:
             pass
     try:
-        facts = build_facts(briefing, behavior, BRIEFING_AS_OF)
+        facts = build_facts(briefing, behavior, as_of)
         r = {"follow_call": _code_follow_call(facts), "confidence": facts.get("confidence"),
              "reasoning": None, "confidence_reasons": facts.get("confidence_reasons"), "facts": facts}
     except Exception as e:
@@ -379,10 +380,11 @@ def _reasoner_cached(briefing: dict, behavior: dict, wallet: str) -> dict:
     return r
 
 
-def _board_ai_cached(wallet, market_q, outcome, behavior, gdelt_events, tavily_cats, gamma_ctx, resolution):
+def _board_ai_cached(wallet, market_q, outcome, behavior, gdelt_events, tavily_cats, gamma_ctx, resolution,
+                     as_of: str = BRIEFING_AS_OF):
     """⑤综述 + ②what_bet 独立缓存（按 钱包,as_of）：新闻流结构/前端改动时不重烧这两个网关调用。"""
     BOARD_AI_CACHE.mkdir(parents=True, exist_ok=True)
-    p = BOARD_AI_CACHE / f"{wallet.lower()}_{BRIEFING_AS_OF}.json"
+    p = BOARD_AI_CACHE / f"{wallet.lower()}_{as_of}.json"
     if p.exists():
         try:
             c = json.loads(p.read_text(encoding="utf-8"))
@@ -427,21 +429,22 @@ def _tag_catalyst_relations(cats: dict, entry_time):
     return cats
 
 
-def _purge_wallet_caches(wallet: str, cid: str, outcome: str) -> int:
+def _purge_wallet_caches(wallet: str, cid: str, outcome: str, as_of: str = BRIEFING_AS_OF) -> int:
     """强制刷新：删掉该 (钱包,as_of) 及其所在盘的各层缓存文件 → 后续正常流程全部重建并重新落盘。
-    只删文件、不动缓存 key 格式；market_thesis 按 (cid,as_of) 共享，删了会连带其他共持钱包下次重烧（语义正确：刷新=要最新）。"""
+    只删文件、不动缓存 key 格式；market_thesis 按 (cid,as_of) 共享，删了会连带其他共持钱包下次重烧（语义正确：刷新=要最新）。
+    🔴 只删传入 as_of（=今天）这一天的 key —— 旧日期快照不碰，重建失败时它天然是回退底。"""
     from briefing.assemble import _cache_path as briefing_cache_path
     from briefing.market_context import cache_file as mc_cache_file
     from analyzer.market_thesis import _cache_path as thesis_cache_path
     w = wallet.lower()
     targets = [
-        DASHBOARD_CACHE / f"{w}_{BRIEFING_AS_OF}.json",
-        BRIEFING_CACHE / f"{w}_{BRIEFING_AS_OF}.json",
-        REASONER_CACHE / f"{w}_{BRIEFING_AS_OF}.json",
-        BOARD_AI_CACHE / f"{w}_{BRIEFING_AS_OF}.json",
-        briefing_cache_path(wallet, cid, BRIEFING_AS_OF, "live"),
-        mc_cache_file(cid, BRIEFING_AS_OF, outcome, wallet),
-        thesis_cache_path(cid, BRIEFING_AS_OF),
+        DASHBOARD_CACHE / f"{w}_{as_of}.json",
+        BRIEFING_CACHE / f"{w}_{as_of}.json",
+        REASONER_CACHE / f"{w}_{as_of}.json",
+        BOARD_AI_CACHE / f"{w}_{as_of}.json",
+        briefing_cache_path(wallet, cid, as_of, "live"),
+        mc_cache_file(cid, as_of, outcome, wallet),
+        thesis_cache_path(cid, as_of),
     ]
     n = 0
     for p in targets:
@@ -454,53 +457,81 @@ def _purge_wallet_caches(wallet: str, cid: str, outcome: str) -> int:
     return n
 
 
-@app.get("/dashboard")
-def dashboard(wallet: str, refresh: int = 0):
-    """v3 统一看板：①身份 ②这一注 ③实时盘面 ④行为流 ⑤世界催化剂 ⑥Edge/Reasoning。
-    复用已封板模块输出（briefing + behavioral_flag + reasoner ⑥ + pnl 曲线），整份按(钱包,as_of)硬缓存。
-    refresh=1：绕过并删除该钱包各层缓存强制重建（烧 token，demo 前刷新最新数据用）。"""
-    t0 = time.time()
-    wallet = (wallet or "").strip()
-    _log(f"\n=== /dashboard wallet={wallet[:14]}…{' [REFRESH]' if refresh else ''} ===")
-
-    cache_key  = f"{wallet.lower()}_{BRIEFING_AS_OF}"
-    cache_path = DASHBOARD_CACHE / f"{cache_key}.json"
-    if not refresh and cache_path.exists():
+def _stale_dashboard_fallback(wallet: str, reason: str, message: str):
+    """刷新/保鲜重建失败 → 回退该钱包最新的旧快照 + 带 refresh_error（stale-while-revalidate，
+    与 /recommendations 的空榜保护同一哲学：绝不让一次失败的刷新毁掉能用的旧板）。没有旧板才 502。"""
+    newest = newest_dated(DASHBOARD_CACHE, wallet.lower())
+    if newest:
         try:
-            _log(f"   ⚡ CACHE HIT {cache_key} — 零 token 秒回")
-            return json.loads(cache_path.read_text(encoding="utf-8"))
+            stale = json.loads(newest[0].read_text(encoding="utf-8"))
+            stale["refresh_error"] = f"{reason}: {message}"
+            _log(f"   ⚠ 重建失败，回退旧快照 as_of={newest[1]}（refresh_error 已标注）")
+            return stale
         except Exception:
             pass
+    return _err(502, reason, message)
+
+
+@app.get("/dashboard")
+def dashboard(wallet: str, refresh: int = 0, fresh: int = 0):
+    """v3 统一看板：①身份 ②这一注 ③实时盘面 ④行为流 ⑤世界催化剂 ⑥Edge/Reasoning。
+    复用已封板模块输出（briefing + behavioral_flag + reasoner ⑥ + pnl 曲线），整份按(钱包,as_of)硬缓存。
+    refresh=1：强制在**今天**重建（烧 token、用户确认过）——实时刷新的正门。
+    fresh=1（扫榜 ai_verify 用）：要"今天"的数据，但今天已有缓存就直接用（不重复烧）。
+    默认（都不传）：读该钱包最新日期的缓存快照，零 token 秒回；一份都没有才在钉死的
+    BRIEFING_AS_OF 上重建（demo 快照经济学不变）。旧日期快照永不被刷新删除 → 失败可回退。"""
+    t0 = time.time()
+    wallet = (wallet or "").strip()
+    today = date.today().isoformat()
+    as_of = today if (refresh or fresh) else BRIEFING_AS_OF
+    _log(f"\n=== /dashboard wallet={wallet[:14]}…{' [REFRESH]' if refresh else ''}"
+         f"{' [FRESH]' if fresh and not refresh else ''} as_of={as_of} ===")
+
+    if not refresh:
+        newest = newest_dated(DASHBOARD_CACHE, wallet.lower())
+        if newest and (not fresh or newest[1] >= today):
+            try:
+                _log(f"   ⚡ CACHE HIT {newest[0].stem} — 零 token 秒回")
+                return json.loads(newest[0].read_text(encoding="utf-8"))
+            except Exception:
+                pass
+
+    cache_key  = f"{wallet.lower()}_{as_of}"
+    cache_path = DASHBOARD_CACHE / f"{cache_key}.json"
 
     # ① 顶仓
-    position = get_top_political_position_hz(wallet, as_of=BRIEFING_AS_OF)
+    position = get_top_political_position_hz(wallet, as_of=as_of)
     if position.get("error"):
         reason = position["reason"]
         if reason in _BAD_REQUEST_REASONS:
             return _err(400, reason, position["message"])
         if reason in _NO_POSITION_REASONS:
             return _err(404, reason, position["message"])
+        if refresh or fresh:
+            return _stale_dashboard_fallback(wallet, reason, position["message"])
         return _err(502, reason, position["message"])
     cid, outcome = position["market_id"], position["outcome"]
 
     if refresh:
-        n = _purge_wallet_caches(wallet, cid, outcome)
-        _log(f"   ♻ 强制刷新：清掉 {n} 个缓存文件，全链路重建")
+        n = _purge_wallet_caches(wallet, cid, outcome, as_of)
+        _log(f"   ♻ 强制刷新：清掉今日 {n} 个缓存文件，在 as_of={as_of} 全链路重建（旧快照保留可回退）")
 
     slug = _market_slug(cid)
     market_q = position["market_question"]
     try:
         # ②⑤ 完整简报（who/what/price/catalysts·Tavily）—— 已封板，命中缓存零 token
-        b = load_or_build_briefing(wallet, outcome, cid=cid, as_of=BRIEFING_AS_OF, mode="live")
+        b = load_or_build_briefing(wallet, outcome, cid=cid, as_of=as_of, mode="live")
         if isinstance(b, dict) and b.get("error"):
+            if refresh or fresh:
+                return _stale_dashboard_fallback(wallet, "BRIEFING_BUILD_FAILED", b["error"])
             return _err(502, "BRIEFING_BUILD_FAILED", b["error"])
 
         # ④ 巨鲸 48h 行为流（免费 556+算术）
-        behavior = get_behavior_flags(wallet, cid, BRIEFING_AS_OF)
+        behavior = get_behavior_flags(wallet, cid, as_of)
 
         # ⑤ 三源合并：GDELT(market_context·缓存命中零 token) + Tavily(briefing) + gamma context
         try:
-            mc = build_market_context(cid, BRIEFING_AS_OF,
+            mc = build_market_context(cid, as_of,
                                       _entities_from_question(market_q), outcome, wallet=wallet)
             gdelt_events = (mc.get("market_context", {}) or {}).get("timeline_events", [])
         except Exception:
@@ -508,10 +539,11 @@ def dashboard(wallet: str, refresh: int = 0):
         tok = board_feed.held_token(cid, outcome)
         resolution, gamma_ctx = board_feed.gamma_meta(slug)
         tavily_cats = b.get("catalysts", {}) or {}
-        news_stream = board_feed.build_news_stream(gdelt_events, tavily_cats, tok, BRIEFING_AS_OF)
+        news_stream = board_feed.build_news_stream(gdelt_events, tavily_cats, tok, as_of)
         # ⑤综述 + ②what_bet：独立缓存，改新闻流结构/前端时零 token 重建
         world_summary, what_bet = _board_ai_cached(
-            wallet, market_q, outcome, behavior, gdelt_events, tavily_cats, gamma_ctx, resolution)
+            wallet, market_q, outcome, behavior, gdelt_events, tavily_cats, gamma_ctx, resolution,
+            as_of=as_of)
 
         # 社媒情绪动量（585，免费，🔴情绪非事实、仅实时——前端与新闻视觉分开 + 刷量标显眼）
         # max_posts=12：社媒供给充足，拉满补齐新闻列长度（两列视觉平衡）
@@ -520,19 +552,19 @@ def dashboard(wallet: str, refresh: int = 0):
         # ⑥ Edge/Reasoning：reason_v3 仍供 follow_call + 代码 facts（价格/时长/对冲）；
         # 🔴 信心改由「市场命题级对抗推理」直出（market_thesis，按 cid,as_of 缓存→两个反向钱包共享同一份市场观，
         #    信心一致、差异挪到 顺/逆 edge），替代旧 pnl 锚定矩阵。gateway/Tavily 挂则优雅退回旧矩阵。
-        reasoning = _reasoner_cached(b, behavior, wallet)
+        reasoning = _reasoner_cached(b, behavior, wallet, as_of=as_of)
         try:
             pc = b.get("price_context", {}) or {}
             cp = pc.get("current_price")
             cp = (cp / 100.0) if (cp and cp > 1) else cp                       # 归一到 0-1
             yes_price = cp if str(outcome).lower() == "yes" else (None if cp is None else 1 - cp)
             implied_yes = round(yes_price * 100) if yes_price is not None else 50
-            thesis = build_market_thesis(market_q, cid, BRIEFING_AS_OF, implied_yes, social=social)
+            thesis = build_market_thesis(market_q, cid, as_of, implied_yes, social=social)
             algn = map_wallet(thesis, outcome)
             # ⑤ 改市场级：从 thesis 共享池重建新闻流 → 两个反向钱包看到同一批新闻（不再按方向切）
             if thesis.get("shared_pool"):
                 news_stream = board_feed.build_market_news_stream(
-                    gdelt_events, thesis["shared_pool"], tok, BRIEFING_AS_OF)
+                    gdelt_events, thesis["shared_pool"], tok, as_of)
             reasoning = {
                 **reasoning,
                 "confidence": thesis["confidence"],                  # 单一信心，市场级
@@ -555,11 +587,13 @@ def dashboard(wallet: str, refresh: int = 0):
         profile = get_wallet_profile(wallet)
         pnl_history = get_wallet_pnl_history(wallet)
     except Exception as e:
+        if refresh or fresh:
+            return _stale_dashboard_fallback(wallet, "DASHBOARD_PIPELINE_FAILED", f"{type(e).__name__}: {e}")
         return _err(502, "DASHBOARD_PIPELINE_FAILED", f"{type(e).__name__}: {e}")
 
     response = {
         "wallet": wallet,
-        "as_of": BRIEFING_AS_OF,
+        "as_of": as_of,
         "identity": {                                # ①
             "profile": profile,
             "pnl_history": pnl_history,
@@ -573,7 +607,7 @@ def dashboard(wallet: str, refresh: int = 0):
             "resolution_criteria": resolution,       # 官方结算规则原文
         },
         "market": {"slug": slug, "market_id": cid},  # ③
-        "price_series": board_feed.price_series(tok, BRIEFING_AS_OF),  # 上帝视角时间轴(568日线,免费)
+        "price_series": board_feed.price_series(tok, as_of),  # 上帝视角时间轴(568日线,免费)
         "behavior": behavior,                        # ④
         "news_stream": news_stream,                  # ⑤ 三源合并时间线（source 链接 + 反应符号）
         "social": social,                            # ⑤ 社媒情绪动量（585·情绪非事实·仅实时）
@@ -613,7 +647,9 @@ def _run_rec_scan():
         if RECOMMEND_FILE.exists():
             backup = RECOMMEND_FILE.read_text(encoding="utf-8")
         import recommend
-        cands = recommend.scan(ai_top=int(os.environ.get("AI_TOP", "3")))
+        # 🔴 用户点刷新=要最新 → 扫榜锚今天（免费数据层）；ai_verify 用 fresh=1 保证 ⑥ 也在今天（烧 token 已确认）
+        cands = recommend.scan(ai_top=int(os.environ.get("AI_TOP", "3")),
+                               as_of=date.today().isoformat())
         if not cands and backup and json.loads(backup).get("candidates"):
             RECOMMEND_FILE.write_text(backup, encoding="utf-8")
             _REC_STATE["error"] = "扫榜返回空（上游数据源失败？）——已保留旧榜"

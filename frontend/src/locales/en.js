@@ -346,6 +346,7 @@ export default {
   "扫榜中": "Scanning",
   "刷新推荐榜": "Refresh picks",
   "上次刷新失败：": "Last refresh failed: ",
+  "刷新失败，已回退到上次成功的看板（数据仍是旧的）": "Refresh failed — showing the last good board (data is still stale)",
 
   // ── Footer ──
   "解码 Polymarket 聪明钱的政治押注 · 只读公开数据 · 非投资建议": "Decoding smart-money political bets on Polymarket · read-only public data · not investment advice",
