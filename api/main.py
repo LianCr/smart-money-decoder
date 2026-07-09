@@ -612,6 +612,8 @@ def dashboard(wallet: str, refresh: int = 0, fresh: int = 0):
             "who_trader_profile": b.get("who_trader_profile", {}),
         },
         "position": {                                # ②
+            "near_settled": position.get("near_settled"),   # 入口守卫打的标：整本仓位均无悬念
+            "held_price": position.get("held_price"),
             "meta": b.get("meta", {}),
             "what_position_actions": b.get("what_position_actions", {}),
             "price_context": b.get("price_context", {}),

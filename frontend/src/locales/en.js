@@ -347,6 +347,8 @@ export default {
   "刷新推荐榜": "Refresh picks",
   "上次刷新失败：": "Last refresh failed: ",
   "刷新失败，已回退到上次成功的看板（数据仍是旧的）": "Refresh failed — showing the last good board (data is still stale)",
+  "⚠ 近结算盘：该钱包整本政治仓位都推到了 ≥95¢（持有侧现价": "⚠ Near-settled: every political position in this wallet is pushed to ≥95¢ (held side now",
+  "）——无悬念、无跟单价值，这里如实展示他最大的那注": ") — no suspense, nothing to follow; honestly showing their largest bet anyway",
 
   // ── Footer ──
   "解码 Polymarket 聪明钱的政治押注 · 只读公开数据 · 非投资建议": "Decoding smart-money political bets on Polymarket · read-only public data · not investment advice",

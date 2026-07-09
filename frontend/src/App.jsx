@@ -1484,6 +1484,9 @@ function VerdictHero({ d }) {
 
   // ⑥ 体检 chip（纯前端代码算，不改 AI 输出、不拦截——"不加守卫≠不可观测"的界面化）
   const advisories = [];
+  if (pos.near_settled) {
+    advisories.push(`${t("⚠ 近结算盘：该钱包整本政治仓位都推到了 ≥95¢（持有侧现价")} ${Math.round((pos.held_price || 0) * 100)}¢${t("）——无悬念、无跟单价值，这里如实展示他最大的那注")}`);
+  }
   if (r.market_lean && r.thesis_audit) {
     const nArt = r.thesis_audit.n_articles;
     if (typeof nArt === "number" && nArt < 3) advisories.push(`${t("⚠ 证据薄：共享文章池仅")} ${nArt} ${t("篇，裁决人输入有限")}`);

@@ -253,6 +253,9 @@ def scan(per_market=10, gate_pnl=2000.0, enrich_top=14, keep=8, ai_top=5, as_of=
         if not pos or pos.get("error"):
             print(f"  · {w[:12]}… 政治 pnl={pp:.0f} 但无未结算政治顶仓(跳)", flush=True)
             continue
+        if pos.get("near_settled"):               # 🔴 整本仓位全是 ≥95¢ 近结算盘 → 不值得推荐
+            print(f"  · {w[:12]}… 全仓近结算(持有侧 {pos.get('held_price')})——无悬念不推", flush=True)
+            continue
         time.sleep(0.3)
         bf = _retry(get_behavior_flags, w, pos["market_id"], as_of) or {}
         beh = bf.get("flag")
