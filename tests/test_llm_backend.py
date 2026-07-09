@@ -96,6 +96,8 @@ try:
     check("body.messages 形状", call["json"].get("messages"),
           [{"role": "user", "content": "hi"}])
     check("body.model 是官方 id", call["json"].get("model"), llm.ANTHROPIC_MODEL)
+    # Sonnet 5 不传 thinking 会默认开自适应思考、挤占 max_tokens 炸 JSON —— 必须显式关
+    check("body.thinking 显式禁用", call["json"].get("thinking"), {"type": "disabled"})
 
     # 2. 课堂网关路径：output 字段 + 旧 body 形状
     ok = _FakeResp(200, {"output": "from-gateway"})
