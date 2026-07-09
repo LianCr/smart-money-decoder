@@ -112,6 +112,48 @@ try:
     recommend.ai_verify([c1, c2], top=1)
     check("top=1 只发 1 次请求", len(fake.calls), 1)
     check("top 之外的候选不动", c2["ai_pick"], False)
+
+    # ── 并行验证（2026-07-08）：不同盘真并发、同盘串行（防 thesis 重复建/市场观分裂）──
+    import threading as _th
+    import time as _tm
+    import copy as _cp
+
+    class _SlowFake:
+        """线程安全假 requests：每次 get 睡 0.15s，记录并发峰值。"""
+        def __init__(self):
+            self.lock = _th.Lock()
+            self.inflight = 0
+            self.peak = 0
+            self.calls = 0
+
+        def get(self, url, params=None, timeout=None):
+            with self.lock:
+                self.inflight += 1
+                self.peak = max(self.peak, self.inflight)
+                self.calls += 1
+            _tm.sleep(0.15)
+            with self.lock:
+                self.inflight -= 1
+            class _R:
+                def json(_s):
+                    return _cp.deepcopy(FULL)
+            return _R()
+
+    # 3 个不同盘的候选 → 并发峰值应 ≥2（真并行）
+    slow = _SlowFake(); recommend.requests = slow
+    cs = [dict(_cand("0x" + ch * 40), market_question=f"盘{ch}?") for ch in "abc"]
+    t0 = _tm.time()
+    recommend.ai_verify(cs, top=3)
+    check("不同盘 3 候选全部验证", all(c["ai_pick"] for c in cs), True)
+    check("不同盘真并发（峰值≥2）", slow.peak >= 2, True)
+    check("并行总耗时 < 串行(0.45s)", _tm.time() - t0 < 0.4, True)
+
+    # 2 个同盘候选 → 串行（峰值==1），防止并行各建 market_thesis 分裂市场观
+    slow = _SlowFake(); recommend.requests = slow
+    cs = [dict(_cand("0x" + ch * 40), market_question="同一个盘?") for ch in "de"]
+    recommend.ai_verify(cs, top=2)
+    check("同盘候选照常验证", all(c["ai_pick"] for c in cs), True)
+    check("同盘串行（峰值==1）", slow.peak, 1)
 finally:
     recommend.requests = _real
 
