@@ -173,6 +173,51 @@ def _mark_consensus(cands):
                 c["consensus_count"] = len(group)
 
 
+def sync_candidates_with_boards(cands, cache_dir):
+    """serve-time 对齐（2026-07-09，修"卡上一套、点进去另一套"）：推荐卡的 ⑥ 字段是
+    扫榜时刻的冻结副本，而点进去的看板是活的（读最新缓存/当天重建）——日期翻天、
+    用户强刷、近结算守卫换盘 都会让两边分叉（实测同一 as_of 也分叉：扫完后看板被
+    重建过）。单一真相源 = 看板缓存：/recommendations 每次返回前用该钱包最新看板
+    缓存回写卡片字段（纯文件读、零 token）→ 卡片和点进去读的是同一份数据。
+    返回 {中文:英文} 增量翻译（供并入顶层 i18n_en）。"""
+    from core.cachefiles import newest_dated
+    extra = {}
+    for c in cands or []:
+        try:
+            newest = newest_dated(cache_dir, str(c.get("wallet", "")).lower())
+            if not newest:
+                continue                          # 从没建过看板 → 保留扫榜时的值
+            d = json.loads(newest[0].read_text(encoding="utf-8"))
+        except Exception:
+            continue
+        r = d.get("reasoning") or {}
+        if not r.get("confidence"):               # 看板守卫拦截/无裁决 → 不覆盖（诚实语义）
+            continue
+        facts = r.get("facts") or {}
+        if facts.get("market_question"):          # 守卫可能换了盘——卡片必须描述同一注
+            c["market_question"] = facts["market_question"]
+            c["outcome"] = facts.get("outcome", c.get("outcome"))
+        c["ai_pick"] = True                       # 有真实 ⑥ 裁决（扫榜验证或用户点开构建，同一套系统）
+        c["ai_confidence"] = r.get("confidence")
+        c["ai_follow_call"] = r.get("follow_call")
+        c["ai_verdict"] = r.get("reasoning")
+        c["position_type"] = facts.get("position_type")
+        c["market_lean"] = r.get("market_lean")
+        c["alignment"] = r.get("alignment")
+        c["verified_as_of"] = d.get("as_of")
+        i18n = d.get("i18n_en") or {}
+        for zh in (c.get("ai_verdict"), r.get("pivotal_unknown")):
+            if zh and i18n.get(zh):
+                extra[zh] = i18n[zh]
+    # 同盘分歧/共识按对齐后的市场重算（先清旧标——守卫换盘后旧标可能已失效）
+    for c in cands or []:
+        for k in ("disagreement", "disagreement_lean", "disagreement_with_edge", "consensus_count"):
+            c.pop(k, None)
+    _mark_disagreements(cands or [])
+    _mark_consensus(cands or [])
+    return extra
+
+
 def diversify(cands, keep=8, per_market=2):
     """多样性收榜（纯代码）：打分已降序，每盘最多 per_market 个；池子本身不够多样时
     放宽补满到 keep（诚实：不造多样性，只在有得选时选得开）。"""

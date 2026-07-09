@@ -701,6 +701,15 @@ def recommendations(refresh: int = 0):
             out = json.loads(RECOMMEND_FILE.read_text(encoding="utf-8"))
         except Exception:
             pass
+    # 🔴 serve-time 对齐：卡片 ⑥ 以该钱包最新看板缓存为准（单一真相源，纯文件读零 token）——
+    # 否则扫榜后的重建/翻天/守卫换盘会造成"卡上一套、点进去另一套"
+    try:
+        import recommend as _rec
+        extra = _rec.sync_candidates_with_boards(out.get("candidates"), DASHBOARD_CACHE)
+        if extra:
+            out.setdefault("i18n_en", {}).update(extra)
+    except Exception as e:
+        _log(f"   ⚠ 推荐卡对齐失败（不阻塞）：{type(e).__name__}: {e}")
     out["refreshing"] = _REC_STATE["running"]
     if _REC_STATE["error"]:
         out["refresh_error"] = _REC_STATE["error"]
