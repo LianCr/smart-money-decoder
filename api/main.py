@@ -45,6 +45,7 @@ for _src, _dst in [(Path("seed/cache"), Path(".cache")), (Path("seed/data"), Pat
 
 from core.config import BRIEFING_AS_OF
 from core.cachefiles import newest_dated
+from core.translate import attach_i18n_en
 from fetcher.polymarket import get_top_political_position
 from fetcher.activity import get_entry_time, ActivityAPIError
 from fetcher.trades import get_entry_time_v2, get_wallet_profile, get_wallet_pnl_history
@@ -492,7 +493,18 @@ def dashboard(wallet: str, refresh: int = 0, fresh: int = 0):
         if newest and (not fresh or newest[1] >= today):
             try:
                 _log(f"   ⚡ CACHE HIT {newest[0].stem} — 零 token 秒回")
-                return json.loads(newest[0].read_text(encoding="utf-8"))
+                cached = json.loads(newest[0].read_text(encoding="utf-8"))
+                # 翻译懒自愈：7-08 起的新快照若缺 i18n_en（挂钩上线前建的）补一次翻译并回写。
+                # 6-25 老快照跳过——它们的内容在离线词典 ai_en.js 里，本来就翻得出。
+                if "i18n_en" not in cached and cached.get("as_of", "") >= "2026-07-08":
+                    if attach_i18n_en(cached):
+                        _log("   🌐 i18n_en 懒自愈：补翻译并回写缓存")
+                        try:
+                            newest[0].write_text(json.dumps(cached, ensure_ascii=False, indent=2),
+                                                 encoding="utf-8")
+                        except Exception:
+                            pass
+                return cached
             except Exception:
                 pass
 
@@ -614,6 +626,10 @@ def dashboard(wallet: str, refresh: int = 0, fresh: int = 0):
         "world_summary": world_summary,              # ⑤ 三源合并综述（巨鲸动态/事态进展）
         "reasoning": reasoning,                      # ⑥
     }
+    # 🌐 EN 运行时词典：把 payload 里全部中文显示串翻成英文挂 i18n_en（随缓存持久化，
+    # 失败不阻塞——前端回退中文+ZhNote 即旧行为）
+    if attach_i18n_en(response):
+        _log(f"   🌐 i18n_en 已挂（{len(response['i18n_en'])} 条）")
     _log(f"   ✓ 看板生成完毕（耗时 {time.time() - t0:.1f}s）")
 
     try:
@@ -765,6 +781,8 @@ def briefing(wallet: str):
         return _err(502, "BRIEFING_PIPELINE_FAILED", f"{type(e).__name__}: {e}")
 
     response = {**b, "organized_text": organized["text"], "organize_guards": organized["guards"]}
+    if attach_i18n_en(response):
+        _log(f"   🌐 i18n_en 已挂（{len(response['i18n_en'])} 条）")
     _log(f"   ✓ 简报生成完毕（耗时 {time.time() - t0:.1f}s）")
 
     try:

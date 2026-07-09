@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { scaleLinear, scaleTime } from "d3-scale";
 import { line as d3line, area as d3area, curveMonotoneX } from "d3-shape";
 import { extent } from "d3-array";
-import { useLang, LangToggle, ZhNote } from "./i18n.jsx";
+import { useLang, LangToggle, ZhNote, registerAiTranslations } from "./i18n.jsx";
 
 // 生产构建走同源（后端托管 dist），本地开发默认打 localhost:8000
 const API = import.meta.env.VITE_API_BASE ?? (import.meta.env.DEV ? "http://localhost:8000" : "");
@@ -701,6 +701,7 @@ function BriefingView() {
     try {
       const resp = await fetch(`${API}/briefing?wallet=${encodeURIComponent(w)}`);
       const j = await resp.json();
+      registerAiTranslations(j.i18n_en);
       if (!resp.ok || j.error) setError({ reason: j.error || `HTTP ${resp.status}`, message: j.message || t("请求失败") });
       else setData(j);
     } catch (e) {
@@ -1727,7 +1728,8 @@ function Recommendations({ onPick }) {
   const [scanSecs, setScanSecs] = useState(0);
   const pollRef = useRef(null);
   useEffect(() => {
-    fetch(`${API}/recommendations`).then((r) => r.json()).then(setData).catch(() => {});
+    fetch(`${API}/recommendations`).then((r) => r.json())
+      .then((j) => { registerAiTranslations(j.i18n_en); setData(j); }).catch(() => {});
     return () => clearInterval(pollRef.current);
   }, []);
   const refreshing = !!(data && data.refreshing);
@@ -1737,7 +1739,8 @@ function Recommendations({ onPick }) {
     const t0 = Date.now();
     pollRef.current = setInterval(() => {
       setScanSecs(Math.floor((Date.now() - t0) / 1000));
-      fetch(`${API}/recommendations`).then((r) => r.json()).then(setData).catch(() => {});
+      fetch(`${API}/recommendations`).then((r) => r.json())
+        .then((j) => { registerAiTranslations(j.i18n_en); setData(j); }).catch(() => {});
     }, 10000);
     return () => clearInterval(pollRef.current);
   }, [refreshing]);
@@ -1745,7 +1748,8 @@ function Recommendations({ onPick }) {
     if (refreshing) return;
     if (!window.confirm(t("重新扫榜会重跑全流程找最新推荐（几分钟、AI 验证消耗 token 额度）。确定？"))) return;
     setScanSecs(0);
-    fetch(`${API}/recommendations?refresh=1`).then((r) => r.json()).then(setData).catch(() => {});
+    fetch(`${API}/recommendations?refresh=1`).then((r) => r.json())
+      .then((j) => { registerAiTranslations(j.i18n_en); setData(j); }).catch(() => {});
   }
   const cands = (data && data.candidates) || [];
   if (!cands.length && !refreshing) return null;
@@ -1822,6 +1826,7 @@ function BoardView() {
     try {
       const resp = await fetch(`${API}/dashboard?wallet=${encodeURIComponent(w)}${refresh ? "&refresh=1" : ""}`);
       const j = await resp.json();
+      registerAiTranslations(j.i18n_en);   // EN 运行时词典：后端翻好的 AI 文案，注册后 t() 直接命中
       if (!resp.ok || j.error) setError({ reason: j.error || `HTTP ${resp.status}`, message: j.message || t("请求失败") });
       else setData(j);
     } catch (e) {

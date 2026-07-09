@@ -108,6 +108,11 @@ def ai_verify(cands, top=3, fresh=False):
         c["market_lean"] = rs.get("market_lean")        # 市场命题级独立倾向（同盘分歧时显示"我们倾向 X"）
         c["alignment"] = rs.get("alignment")            # 这一注 顺/逆 edge
         c["verified_as_of"] = j.get("as_of")            # ⑥ 验证锚的日期（卡片可显示数据新鲜度）
+        # 🌐 顺手带走裁决文本的英文翻译（看板构建时已翻好），EN 模式推荐卡不再中英掺杂
+        i18n = j.get("i18n_en") or {}
+        for zh in (c.get("ai_verdict"), rs.get("pivotal_unknown")):
+            if zh and i18n.get(zh):
+                c.setdefault("i18n_en", {})[zh] = i18n[zh]
         print(f"  ⑥ {c['wallet'][:12]}… {rs.get('confidence')} · {rs.get('follow_call')} · lean={rs.get('market_lean')}", flush=True)
 
 
@@ -228,8 +233,11 @@ def scan(per_market=10, gate_pnl=2000.0, enrich_top=14, keep=8, ai_top=5, as_of=
 
     OUT.parent.mkdir(parents=True, exist_ok=True)
     method = "E_market_reverse_ai_verified" if ai_top else "E_market_reverse"
+    i18n_en = {}                                  # 🌐 汇总各候选的翻译 → 顶层，前端一次注册
+    for c in cands:
+        i18n_en.update(c.pop("i18n_en", {}) or {})
     OUT.write_text(json.dumps({"as_of": as_of, "generated_at": int(time.time()),
-                               "method": method, "candidates": cands},
+                               "method": method, "candidates": cands, "i18n_en": i18n_en},
                               ensure_ascii=False, indent=2), encoding="utf-8")
     print(f"\n✓ 市场反向 · 政治专家候选 {len(cands)} 个写入 {OUT}", flush=True)
     return cands
