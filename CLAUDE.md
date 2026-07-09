@@ -40,7 +40,7 @@
 | positions API 地址 | `data-api.polymarket.com`（不是 gamma-api） |
 | CLOB 历史价 | `clob.polymarket.com/prices-history?market=<tokenId>&...`；token=记录里的 `asset` 字段；短命市场 T-7 未创建返回 None |
 | **decoder 缓存 key 含 current_price** | 盘中市价漂移会 miss → 单靠它省不了 token。**靠 `/analyze` 外层"(钱包,日期)"缓存兜底** |
-| 课堂网关模型 | **只有 `claude-sonnet-4.5`（点号不是横杠）能用，haiku 返回 502**。maxTokens 上限 2048 |
+| 课堂网关模型（旧后端） | **只有 `claude-sonnet-4.5`（点号不是横杠）能用，haiku 返回 502**。maxTokens 上限 2048。官方 API 后端无此限制（模型 id 是横杠 `claude-sonnet-4-5`） |
 | **[Heisenberg v3] 参数真名因 endpoint 而异** | 官方 context 文档参数名不可靠，**实测真名**：569 PnL=`wallet`（传 proxy_wallet→400）· 556 Trades=`proxy_wallet`（文档写 `wallet_proxy` **被静默忽略→返回全局交易流**，错配比报错危险）· 581 Wallet360=`proxy_wallet` · 579 Leaderboard=`wallet_address`。打之前先核对真名 |
 | **[Heisenberg v3] `pagination.limit` 上限 200** | 传 >200（如 500）直接 404 `'max' tag` 校验失败、静默返空——别把它误判成"无数据" |
 | **[Heisenberg v3] 569 宽窗口只返回前若干天** | 宽时间窗（如 80 天）只回前 10 天左右，**结算日的亏损落在返回范围外→看着像 0**。要看某盘结算盈亏必须把 start/end **窄锚到结算期**附近分段查 |
@@ -81,26 +81,20 @@ cd frontend && npm install && npm run dev       # 前端 → http://localhost:51
 python -m backtest._market_lift                 # 路 A lift 取样器（~24min，会烧 token，非必要别跑）
 ```
 
-**`.env` 必填**：`TAVILY_API_KEY`（app.tavily.com）· `CLASSROOM_API_KEY`（课堂网关，老师分配，pending 时 403）
+**`.env` 必填**：`TAVILY_API_KEY`（app.tavily.com）· `ANTHROPIC_API_KEY`（官方 API，console.anthropic.com，用户自己的 key）。`CLASSROOM_API_KEY` 为旧课堂网关回落位（**2026-07-08 起该网关域名 NXDOMAIN 已失效**，除非老师重新部署并配 `GATEWAY_URL`）
 **开发开关**：`USE_FAKE_KEYWORDS=true`（跳过 AI 关键词，403 时用）· `USE_DECODER_CACHE=false`（调 prompt 时关）
 
 **部署（Render 免费档）**：`render.yaml` Blueprint 一键部署——FastAPI 同源托管 `frontend/dist`（生产前端 `API=""`，本地 dev 仍打 8000）。`seed/` 是 git 跟踪的缓存快照（~2.2MB），云端磁盘 ephemeral、每次冷启动由 api/main.py 自动恢复 → 已缓存钱包零 token 秒回；`GET /demo-wallets` 给入口页"秒开"列表。**`/dashboard?refresh=1` = 在今天强制重建**（真·实时；只删"今天"key 的各层缓存含共享 market_thesis，**旧日期快照永不删=失败回退底**，烧 token；前端看板右上 ↻ 按钮带确认框，失败回旧板+refresh_error 横幅）；`fresh=1`（扫榜 ai_verify 用）=要今天的数据但今天已有缓存不重烧。完全开放模式：陌生钱包/刷新都会真烧 token（产品决策 2026-07-07，用户自担额度）。**i18n**：前端 `src/i18n.jsx` 中文原文即 key、`locales/en.js` 查表、缺失回退中文；AI 生成内容不翻、EN 模式 ZhNote 小标诚实标注；右上 中|EN 胶囊。
 
-**课堂网关调用**（不用 anthropic SDK，直接 requests.post）：
-```python
-resp = requests.post(
-    "https://4dm65e698a.execute-api.us-west-2.amazonaws.com/prod/invoke",
-    headers={"Content-Type": "application/json", "x-api-key": CLASSROOM_API_KEY},
-    json={"model": "claude-sonnet-4.5", "input": prompt, "maxTokens": 2000}, timeout=15)
-output = resp.json()["output"]   # 结果在 output，不是 content[0].text
-```
+**LLM 调用（core/llm.py 双后端，全部走 `call_gateway`，不用 SDK 直接 requests.post）**：
+有 `ANTHROPIC_API_KEY` → 官方 `https://api.anthropic.com/v1/messages`（headers 带 `x-api-key` + `anthropic-version: 2023-06-01`，模型 `claude-sonnet-4-5` 可用 `ANTHROPIC_MODEL` 覆盖，文本在 `content[]` 的 text 块）；否则回落课堂网关（`CLASSROOM_API_KEY`，**2026-07-08 起默认域名 NXDOMAIN**，坑：模型名 `claude-sonnet-4.5` 点号、maxTokens≤2048、结果在 `["output"]`）。错误分类两后端共用：NO_KEY/TIMEOUT/UNREACHABLE/RATE_LIMITED(含 529)/HTTP_ERROR。
 
 ---
 
 ## 架构
 
 ```
-core/llm.py             →  🔴 课堂网关唯一客户端（URL/model/错误分类一处定义；Bedrock 迁移点就这一处）。全部 AI 调用走 call_gateway，不许再复制 requests.post
+core/llm.py             →  🔴 LLM 唯一客户端·双后端（ANTHROPIC_API_KEY→官方 API / 回落课堂网关；URL/model/错误分类一处定义）。全部 AI 调用走 call_gateway，不许再复制 requests.post
 core/config.py          →  🔴 BRIEFING_AS_OF 单一出口（改它 re-key 全部缓存→重烧，别随手改）
 fetcher/polymarket.py   →  get_top_political_position(address)   # 持仓+政治过滤+$5k
 fetcher/trades.py       →  get_entry_time_v2(addr, cid)          # 建仓时间·首选（按市场查 /trades）
