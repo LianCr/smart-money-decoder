@@ -617,12 +617,14 @@ body {
 .bf-kv { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; margin-bottom: 9px; }
 .bf-kv span { font-family: var(--sans); font-size: 11px; color: var(--fg-3); }
 /* 多巴胺发光数字：默认锐青发光；语义值锁绿/红发光 */
-.bf-kv b { font-family: var(--mono); font-size: 13px; font-weight: 600; color: var(--bf-accent); text-align: right; text-shadow: 0 0 6px var(--accent-glow); letter-spacing: -0.01em; }
+/* white-space:nowrap + flex-shrink:0：值都是短数字串，绝不允许被长英文标签挤断行
+   （EN 模式 "2026-07-08 ·\n0.926" 换行惨案）——挤不下时让左侧标签自己换行 */
+.bf-kv b { font-family: var(--mono); font-size: 13px; font-weight: 600; color: var(--bf-accent); text-align: right; text-shadow: 0 0 6px var(--accent-glow); letter-spacing: -0.01em; white-space: nowrap; flex-shrink: 0; }
 .bf-kv b.pos { color: var(--pos); text-shadow: 0 0 6px var(--pos-glow); }
 .bf-kv b.neg { color: var(--neg); text-shadow: 0 0 6px var(--neg-glow); }
 .bf-lie { margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--line-2); font-family: var(--sans); font-size: 11px; line-height: 1.45; color: var(--neg); text-shadow: 0 0 6px var(--neg-glow); }
 .bf-note { margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--line-2); font-family: var(--sans); font-size: 11px; line-height: 1.45; color: var(--fg-3); }
-.bf-sub { font-family: var(--mono); font-size: 9.5px; color: var(--fg-3); margin-top: 8px; word-break: break-all; }
+.bf-sub { font-family: var(--mono); font-size: 9.5px; color: var(--fg-3); margin-top: 8px; overflow-wrap: anywhere; }
 
 /* ② 双向证据天平 → 对称解剖台：左右两栏 gap-x-24，右栏顶天立地竖线 */
 .bf-dialectic { display: grid; grid-template-columns: 1fr 1fr; column-gap: 24px; margin: 28px 0; }
@@ -678,7 +680,9 @@ a.bf-cat-t:hover { color: var(--bf-accent); }
 /* 原生赔率条（替 iframe）：Yes 深绿 / No 暗红，高亮押注侧 */
 .oddsbar { margin: 2px 0; }
 .ob-bar { display: flex; gap: 3px; height: 52px; }
-.ob-seg { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1px; border-radius: 3px; overflow: hidden; transition: width 0.3s ease; min-width: 0; }
+/* min-width 52px：极端赔率（如 8¢）按百分比的段宽塞不下 "Yes 8¢" 标签（Context 页实拍
+   文字被裁）。保证标签永远放得下，比例微失真无妨——精确数字就写在段里。 */
+.ob-seg { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1px; border-radius: 3px; overflow: hidden; transition: width 0.3s ease; min-width: 52px; }
 .ob-seg.yes { background: var(--pos-bg); border: 1px solid rgba(0,230,118,0.3); }
 .ob-seg.no { background: var(--neg-bg); border: 1px solid rgba(255,61,0,0.3); }
 .ob-seg.dim { opacity: 0.4; }
@@ -1095,7 +1099,7 @@ a.db-news-t:hover { color: var(--bf-accent); text-decoration: underline; }
 .db-refresh:hover { color: var(--amber, #f0b429); border-color: var(--amber, #f0b429); }
 .db-refresh:disabled { opacity: 0.4; cursor: default; }
 /* 刷新失败回退旧板的提示横幅（诚实降级：明说数据是旧的 + 带原始错误） */
-.db-stale-warn { font-size: 11px; color: #f0b429; background: rgba(240,180,41,0.08); border: 1px solid rgba(240,180,41,0.3); border-radius: 4px; padding: 6px 10px; margin: 6px 0; line-height: 1.5; word-break: break-all; }
+.db-stale-warn { font-size: 11px; color: #f0b429; background: rgba(240,180,41,0.08); border: 1px solid rgba(240,180,41,0.3); border-radius: 4px; padding: 6px 10px; margin: 6px 0; line-height: 1.5; overflow-wrap: anywhere; }
 .mon-q { font-size: 10px; color: var(--fg-4); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 40%; margin-left: auto; }
 /* cmdbar 强刷按钮 */
 .cmd-refresh { background: none; border: 1px solid var(--border); border-left: none; color: var(--fg-3); font-size: 15px; padding: 0 14px; cursor: pointer; align-self: stretch; }
@@ -1246,6 +1250,8 @@ a.db-news-t:hover { color: var(--bf-accent); text-decoration: underline; }
 .soc-bot { line-height: 1.55; }
 
 /* 推荐榜刷新 */
+.recs-updated { margin-left: auto; font-size: 10.5px; color: var(--fg-4); white-space: nowrap; }
+.recs-updated + .recs-refresh { margin-left: 0; }
 .recs-refresh { margin-left: auto; background: none; border: 1px solid var(--border); border-radius: 4px; color: var(--fg-3); font-size: 11px; padding: 3px 10px; cursor: pointer; font-family: inherit; white-space: nowrap; }
 .recs-refresh:hover:not(:disabled) { color: var(--accent); border-color: var(--accent); }
 .recs-refresh:disabled { color: var(--accent); opacity: 0.75; cursor: default; }

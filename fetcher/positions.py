@@ -113,6 +113,76 @@ def get_top_political_position_hz(wallet, as_of=BRIEFING_AS_OF, min_cost=300.0, 
     return {"error": True, "reason": "NO_OPEN_POSITIONS", "message": msg}
 
 
+def get_top_political_positions_hz(wallet, as_of=BRIEFING_AS_OF, n=3, min_cost=300.0, max_pages=15):
+    """列表版：净持仓降序的前 n 个**未结算政治盘** [{market_id, outcome, market_question}]。
+    供扫榜多样性发现（2026-07-09：种子只取最大一盘 → 全部候选挤在同 2-3 个盘，榜面单调）。
+    出错/没有 → 空列表（列表语义，不带 error dict）；单盘入口 get_top_political_position_hz
+    的错误契约（dashboard 404 语义）保持原封不动，这里刻意不复用它。"""
+    wallet = (wallet or "").strip()
+    if not (wallet.startswith("0x") and len(wallet) == 42):
+        return []
+
+    end = datetime.strptime(as_of, "%Y-%m-%d").replace(tzinfo=timezone.utc)
+    start = end - timedelta(days=60)
+    try:
+        trades = paginate(AGENTS["trades"][0],
+                          {"proxy_wallet": wallet, "condition_id": "ALL",
+                           "start_time": str(int(start.timestamp())), "end_time": str(int(end.timestamp()))},
+                          max_pages=max_pages)
+    except HeisenbergError:
+        return []
+    if not trades:
+        return []
+
+    agg, slugs = {}, {}
+    for t in trades:
+        cid, o = t.get("condition_id"), t.get("outcome")
+        if not cid:
+            continue
+        size = _f(t.get("size")) or 0
+        price = _f(t.get("price")) or 0
+        side = str(t.get("side", "")).upper()
+        d = agg.setdefault(cid, {}).setdefault(o, {"buy_shares": 0.0, "buy_cost": 0.0, "sell_shares": 0.0})
+        if side == "BUY":
+            d["buy_shares"] += size
+            d["buy_cost"] += size * price
+        elif side == "SELL":
+            d["sell_shares"] += size
+        slugs[cid] = str(t.get("slug", ""))
+
+    def _net_cost(d):
+        net = max(d["buy_shares"] - d["sell_shares"], 0.0)
+        avg = d["buy_cost"] / d["buy_shares"] if d["buy_shares"] else 0.0
+        return net * avg
+
+    out = []
+    ranked = sorted(agg.items(), key=lambda kv: -sum(_net_cost(d) for d in kv[1].values()))
+    for cid, outs in ranked:
+        if len(out) >= n:
+            break
+        total = sum(_net_cost(d) for d in outs.values())
+        if total < min_cost:
+            break                                  # 已降序，后面更小，停
+        try:
+            m = results(call(AGENTS["markets"][0], {"condition_id": cid}))
+        except HeisenbergError:
+            continue
+        if not m:                                  # 574 空 = 已结算/不存在
+            continue
+        m = m[0]
+        q = str(m.get("question", ""))
+        blob = (q + " " + slugs.get(cid, "")).lower()
+        if any(k in blob for k in SPORT_KW):
+            continue
+        end_d = str(m.get("end_date", ""))[:10]
+        if bool(m.get("closed")) or (end_d and end_d <= as_of):   # 🔴 未结算 + 未到期
+            continue
+        if any(k in blob for k in POLITICAL_KW):
+            outcome = max(outs.items(), key=lambda kv: _net_cost(kv[1]))[0]
+            out.append({"market_id": cid, "outcome": outcome, "market_question": q})
+    return out
+
+
 if __name__ == "__main__":
     import json
     for w in ["0x9d84ce0306f8551e02efef1680475fc0f1dc1344",

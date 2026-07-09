@@ -154,6 +154,39 @@ try:
     recommend.ai_verify(cs, top=2)
     check("同盘候选照常验证", all(c["ai_pick"] for c in cs), True)
     check("同盘串行（峰值==1）", slow.peak, 1)
+
+    # ── 多样性选择器（2026-07-09，纯代码）────────────────────────────────────
+    def _mk(i, mq, score):
+        return {"wallet": f"0x{i}", "market_question": mq, "score": score}
+
+    # diversify：盘够多样时每盘最多 2 个；分数序保持
+    pool = [_mk(1, "A", 90), _mk(2, "A", 80), _mk(3, "A", 70), _mk(4, "A", 60),
+            _mk(5, "B", 50), _mk(6, "B", 40), _mk(7, "C", 30), _mk(8, "D", 20),
+            _mk(9, "E", 10), _mk(10, "F", 5)]
+    got = recommend.diversify(pool, keep=8, per_market=2)
+    check("diversify 每盘最多 2 个", max(sum(1 for c in got if c["market_question"] == m)
+                                      for m in "ABCDEF"), 2)
+    check("diversify 补满 keep=8", len(got), 8)
+    check("diversify 保持分数序（第一个是最高分）", got[0]["wallet"], "0x1")
+
+    # diversify：盘不够多样但名额富余 → 多样性优先取完后放宽补满（A 拿第 3 个名额）
+    pool = [_mk(1, "A", 90), _mk(2, "A", 80), _mk(3, "A", 70),
+            _mk(4, "B", 60), _mk(5, "B", 50)]
+    got = recommend.diversify(pool, keep=5, per_market=2)
+    check("名额富余时放宽补满", len(got), 5)
+
+    # diversify：池子不够多样（全同盘）→ 放宽补满，不硬造多样性
+    pool = [_mk(i, "X", 100 - i) for i in range(6)]
+    got = recommend.diversify(pool, keep=4, per_market=2)
+    check("全同盘放宽补满", len(got), 4)
+
+    # verify_targets：5 个名额跨盘优先（每盘先取分最高的）
+    pool = [_mk(1, "A", 90), _mk(2, "A", 80), _mk(3, "B", 70), _mk(4, "B", 60),
+            _mk(5, "C", 50), _mk(6, "D", 40)]
+    got = recommend.verify_targets(pool, 5)
+    mqs = [c["market_question"] for c in got]
+    check("verify_targets 前 4 个跨 4 盘", mqs[:4], ["A", "B", "C", "D"])
+    check("verify_targets 第 5 个按分补（A 第二名）", got[4]["wallet"], "0x2")
 finally:
     recommend.requests = _real
 

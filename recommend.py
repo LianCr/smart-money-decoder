@@ -28,7 +28,7 @@ from pathlib import Path
 import requests
 
 from fetcher.heisenberg import call, results, AGENTS, HeisenbergError
-from fetcher.positions import get_top_political_position_hz
+from fetcher.positions import get_top_political_position_hz, get_top_political_positions_hz
 from fetcher.markets import get_market_holders
 from fetcher.profile import _wallet360
 from briefing.market_context import get_behavior_flags
@@ -173,6 +173,39 @@ def _mark_consensus(cands):
                 c["consensus_count"] = len(group)
 
 
+def diversify(cands, keep=8, per_market=2):
+    """多样性收榜（纯代码）：打分已降序，每盘最多 per_market 个；池子本身不够多样时
+    放宽补满到 keep（诚实：不造多样性，只在有得选时选得开）。"""
+    out, count = [], {}
+    for c in cands:
+        mq = c.get("market_question")
+        if count.get(mq, 0) < per_market:
+            out.append(c)
+            count[mq] = count.get(mq, 0) + 1
+        if len(out) == keep:
+            return out
+    for c in cands:
+        if c not in out:
+            out.append(c)
+            if len(out) == keep:
+                break
+    return out
+
+
+def verify_targets(cands, top):
+    """AI 精选名额跨盘优先（纯代码）：第一轮每盘取分最高的一个，占不满再按分补——
+    5 个名额尽量给 5 个不同的盘，而不是同一个盘的前 5 名。"""
+    seen, first, rest = set(), [], []
+    for c in cands:
+        mq = c.get("market_question")
+        if mq not in seen:
+            first.append(c)
+            seen.add(mq)
+        else:
+            rest.append(c)
+    return (first + rest)[:top]
+
+
 def scan(per_market=10, gate_pnl=2000.0, enrich_top=14, keep=8, ai_top=5, as_of=None):
     """as_of=None → BRIEFING_AS_OF（现默认=今天，全实时）。
     ai_verify 恒 fresh=1：⑥ 验证永远锚当天（当天已有缓存不重复烧）。"""
@@ -182,12 +215,12 @@ def scan(per_market=10, gate_pnl=2000.0, enrich_top=14, keep=8, ai_top=5, as_of=
                   {"wallet_address": "ALL", "leaderboard_period": "30d"}))) or []
     addrs579 = {str(r.get("address", "")).lower() for r in b579}
 
-    # 1) 种子 → 热门政治盘 cid（去重）
+    # 1) 种子 → 热门政治盘 cid（去重）。🎨 多样性（2026-07-09）：每个种子取前 3 个
+    #    政治盘（原来只取最大 1 个 → 4 个种子高度重叠、全部候选挤在同 2-3 个盘，榜面单调）
     markets = {}
     for w in SEEDS:
-        pos = _retry(get_top_political_position_hz, w, as_of=as_of, max_pages=15)
-        if pos and not pos.get("error") and pos.get("market_id"):
-            markets[pos["market_id"]] = pos["market_question"]
+        for pos in _retry(get_top_political_positions_hz, w, as_of=as_of, n=3, max_pages=15) or []:
+            markets.setdefault(pos["market_id"], pos["market_question"])
         time.sleep(0.5)
     print(f"种子 {len(SEEDS)} → 热门政治盘 {len(markets)} 个", flush=True)
 
@@ -249,12 +282,13 @@ def scan(per_market=10, gate_pnl=2000.0, enrich_top=14, keep=8, ai_top=5, as_of=
               f"{'∩579 ' if in579 else ''}{beh} · {pos['market_question'][:34]} {pos['outcome']}", flush=True)
 
     cands.sort(key=lambda c: -c["score"])
-    cands = cands[:keep]
+    cands = diversify(cands, keep=keep)           # 🎨 每盘最多 2 个进榜（有得选时）
 
     # 方法 C：对 top ai_top 跑 ⑥ AI 验证（烧 token、需后端在线；ai_top=0 关闭）
     if ai_top:
-        print(f"\n方法 C：对 top {ai_top} 跑 ⑥ AI 验证（~12k/个，命中缓存更省）…", flush=True)
-        ai_verify(cands, top=ai_top, fresh=True)
+        targets = verify_targets(cands, ai_top)   # 🎨 精选名额跨盘优先
+        print(f"\n方法 C：对 {len(targets)} 个候选（跨盘优先）跑 ⑥ AI 验证…", flush=True)
+        ai_verify(targets, top=ai_top, fresh=True)
     _mark_disagreements(cands)        # 同盘分歧检测（纯代码，0 token）
     _mark_consensus(cands)            # 同侧专家共识（弱信号，与分歧对称）
 
