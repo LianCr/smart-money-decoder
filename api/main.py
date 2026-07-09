@@ -43,6 +43,19 @@ for _src, _dst in [(Path("seed/cache"), Path(".cache")), (Path("seed/data"), Pat
         except Exception as e:
             print(f"⚠ 种子缓存恢复失败：{e}", flush=True)
 
+# ── GitHub 状态恢复（跨部署持久）：seed 之后再叠加远端 bundle，谁新用谁 ──────
+# Render 免费档磁盘 ephemeral：重部署/冷启动清盘只剩 seed(6-25 快照)。刷新过的
+# 推荐榜/看板缓存/记分牌存在 app-state 分支，这里拉回来 → 用户重进网站看到的
+# 永远是"上一次刷新"的结果（公开仓库 raw 拉取，恢复端无需 token）。
+try:
+    from core.persist import fetch_bundle, restore_bundle
+    _bundle = fetch_bundle()
+    if _bundle:
+        _n = restore_bundle(_bundle)
+        print(f"☁️ GitHub 状态恢复：{_n} 个文件（app-state 分支）", flush=True)
+except Exception as _e:
+    print(f"⚠ GitHub 状态恢复失败（不阻塞）：{_e}", flush=True)
+
 from core.config import BRIEFING_AS_OF
 from core.cachefiles import newest_dated
 from core.translate import attach_i18n_en
@@ -657,6 +670,33 @@ _REC_LOCK = __import__("threading").Lock()
 _REC_STATE = {"running": False, "started_at": None, "error": None}
 
 
+def _persist_app_state():
+    """扫榜成功后把状态存回 GitHub app-state 分支（跨部署持久）：推荐榜 + 热门条 +
+    记分牌档案 + 每个 AI 精选钱包的最新看板缓存（点进去秒开且与卡片一致）。
+    未配 GITHUB_TOKEN 自动跳过（core/persist 打一行提示）。"""
+    try:
+        from core.persist import build_bundle, save_bundle
+        data_files = {
+            ".data/recommendations.json": RECOMMEND_FILE,
+            ".data/hot_traders.json": HOT_TRADERS_FILE,
+            ".data/scorecard.json": scorecard.ARCHIVE,
+        }
+        cache_files = {}
+        try:
+            recs = json.loads(RECOMMEND_FILE.read_text(encoding="utf-8"))
+            for c in recs.get("candidates", []):
+                if not c.get("ai_pick"):
+                    continue
+                newest = newest_dated(DASHBOARD_CACHE, str(c.get("wallet", "")).lower())
+                if newest:
+                    cache_files[f".cache/dashboard/{newest[0].name}"] = newest[0]
+        except Exception:
+            pass
+        save_bundle(build_bundle(data_files, cache_files))
+    except Exception as e:
+        _log(f"   ⚠ 状态持久化失败（不阻塞）：{type(e).__name__}: {e}")
+
+
 def _run_rec_scan():
     """后台线程：真跑 recommend.scan（几分钟、ai_top>0 烧 token——用户已批准）。
     🛡 空榜保护：上游失败返回空候选时恢复旧榜，绝不用空覆盖好数据。"""
@@ -673,6 +713,7 @@ def _run_rec_scan():
             _REC_STATE["error"] = "扫榜返回空（上游数据源失败？）——已保留旧榜"
         else:
             _REC_STATE["error"] = None
+            _persist_app_state()          # ☁️ 刷新成功 → 存回 GitHub，跨部署/冷启动持久
     except Exception as e:
         if backup:
             try:
