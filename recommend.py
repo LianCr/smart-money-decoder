@@ -14,9 +14,9 @@ recommend.py — 扫榜推荐 · 方法 E「市场反向找大户」（免费、
 
 🟡 轻量轮询（cron 一行，免费扫层、不带 ⑥；要 ⑥ 手动 ai_top>0 跑）：
     0 */6 * * * cd /path/to/smart-money-decoder && AI_TOP=0 .venv/bin/python -u recommend.py >> .data/recommend.log 2>&1
-🔴 as_of 语义（2026-07-08 起）：默认（cron/直跑）仍钉 BRIEFING_AS_OF；用户点"刷新推荐榜"时
-   api 传 as_of=今天 → 免费数据层锚今天、ai_verify 带 fresh=1（⑥ 也在今天验证）= 真·实时，
-   烧 token 只走用户确认的门。
+🔴 as_of 语义（2026-07-08 晚起全实时）：BRIEFING_AS_OF 默认=今天（自有 ANTHROPIC_API_KEY，
+   省 token 钉死历史约束已解除）。ai_verify 恒带 fresh=1：今天已有看板缓存直接用（不重复烧），
+   否则在今天重建 → 推荐卡的 ⑥ 判断永远是当天的。AI 精选 top 5。
 """
 import os
 import json
@@ -141,11 +141,10 @@ def _mark_consensus(cands):
                 c["consensus_count"] = len(group)
 
 
-def scan(per_market=10, gate_pnl=2000.0, enrich_top=14, keep=8, ai_top=3, as_of=None):
-    """as_of=None → 钉死的 BRIEFING_AS_OF（cron/快照语义不变）；
-    用户点刷新时由 api 传今天 → 免费数据层锚今天、ai_verify 带 fresh=1（⑥ 也在今天，真·实时）。"""
+def scan(per_market=10, gate_pnl=2000.0, enrich_top=14, keep=8, ai_top=5, as_of=None):
+    """as_of=None → BRIEFING_AS_OF（现默认=今天，全实时）。
+    ai_verify 恒 fresh=1：⑥ 验证永远锚当天（当天已有缓存不重复烧）。"""
     as_of = as_of or AS_OF
-    live = as_of != AS_OF
     # 0) 579 月榜（交叉信号 bonus 用）
     b579 = _retry(lambda: results(call(AGENTS["leaderboard"][0],
                   {"wallet_address": "ALL", "leaderboard_period": "30d"}))) or []
@@ -223,7 +222,7 @@ def scan(per_market=10, gate_pnl=2000.0, enrich_top=14, keep=8, ai_top=3, as_of=
     # 方法 C：对 top ai_top 跑 ⑥ AI 验证（烧 token、需后端在线；ai_top=0 关闭）
     if ai_top:
         print(f"\n方法 C：对 top {ai_top} 跑 ⑥ AI 验证（~12k/个，命中缓存更省）…", flush=True)
-        ai_verify(cands, top=ai_top, fresh=live)
+        ai_verify(cands, top=ai_top, fresh=True)
     _mark_disagreements(cands)        # 同盘分歧检测（纯代码，0 token）
     _mark_consensus(cands)            # 同侧专家共识（弱信号，与分歧对称）
 
@@ -237,4 +236,4 @@ def scan(per_market=10, gate_pnl=2000.0, enrich_top=14, keep=8, ai_top=3, as_of=
 
 
 if __name__ == "__main__":
-    scan(ai_top=int(os.environ.get("AI_TOP", "3")))   # 轮询设 AI_TOP=0 关 ⑥（纯免费扫层）
+    scan(ai_top=int(os.environ.get("AI_TOP", "5")))   # 轮询设 AI_TOP=0 关 ⑥（纯免费扫层）

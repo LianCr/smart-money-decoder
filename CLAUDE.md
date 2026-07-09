@@ -118,7 +118,7 @@ scorecard.py            →  诚实记分牌：record_judgment(钩子,/analyze=d
 frontend/ (Vite+React)  →  src/App.jsx 单页（统一看板:英雄结论+D3上帝视角时间轴(实时光标)+原生赔率条(替iframe)+新闻×社媒并排 / Decode / 完整简报 / 市场Context / Track Record含记分牌）· src/index.css · 依赖 d3-scale/shape/array
 backtest/               →  独立模块，诊断脚本带 _ 前缀；产物全 git 跟踪、静态、零 token
 ```
-**🔴 简报 AS_OF（里程碑 2026-06-25 已拔钉子）**：常量 `BRIEFING_AS_OF`（**唯一定义在 `core/config.py`**）默认从 `2026-06-20` 快照**推进到 `2026-06-25`（数据世界"现在"，固定）**——解锁当前数据 + 社媒动量并排 + 记分牌从今天积累。**默认路径仍钉 6-25 不用 `date.today()`**（用 today 会缓存天天过期重烧，每钱包整建 ~12k）；**但 2026-07-08 起 refresh/fresh 路径锚今天**：`/dashboard?refresh=1`、扫榜刷新（`recommend.scan(as_of=今天)` + ai_verify `fresh=1`）在 `date.today()` 上重建——"实时"只走用户确认烧 token 的门。缓存按日期多快照共存，默认读取该钱包**最新日期**那份（`core/cachefiles.newest_dated`），旧快照永不被刷新删除→重建失败自动回退（`_stale_dashboard_fallback`）。改 BRIEFING_AS_OF 本身仍会 re-key 默认路径缓存，别随手改。
+**🔴 简报 AS_OF（2026-07-08 晚起全实时）**：`BRIEFING_AS_OF`（**唯一定义在 `core/config.py`**）**默认 = `date.today()`**——课堂网关死亡后切自有 `ANTHROPIC_API_KEY`，"钉死 6-25 省老师 token"的历史约束解除。经济性由缓存层兜住：/dashboard 默认读该钱包**最新日期**快照（`core/cachefiles.newest_dated`，旧快照零 token 秒回），只有 新钱包/↻刷新/扫榜 ai_verify(fresh=1) 才在今天真烧（自有 key，~$0.05/钱包）。旧日期快照永不被刷新删除→重建失败自动回退（`_stale_dashboard_fallback`）。环境变量 `BRIEFING_AS_OF` 可覆盖回某天（回测/复现用）。已知边界：值在进程启动时求值，长驻进程跨天需重启才换日（Render 免费档常冷启动，实际无感）。AI 精选 = 推荐榜 top 5（`AI_TOP` 可调）。
 **🔴 数据层第七道守卫**：参数名写错→API 返 200 静默返全局流（状态分类抓不到），heisenberg 客户端核对"返回钱包==请求钱包"拦截，加新 endpoint 时别绕过。
 **🔴 诚实记分牌三契约**（`scorecard.py`，改它不许越）：① 顶上是「判断方向命中率」，**永不算跟单收益率**（不碰任何 $ 收益）；② NO BASIS **不进命中率**分子分母，单列（+"事后看其实有清晰方向"自审）；③ 顶上冷数字**纯代码算、不调 AI**。档案从装上往后累积、第一天空=正常（**绝不回填造假**）；命中率要等盘真结算才长出来。574 `winning_outcome` 实测=字面 `"Yes"/"No"`。
 

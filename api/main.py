@@ -648,7 +648,7 @@ def _run_rec_scan():
             backup = RECOMMEND_FILE.read_text(encoding="utf-8")
         import recommend
         # 🔴 用户点刷新=要最新 → 扫榜锚今天（免费数据层）；ai_verify 用 fresh=1 保证 ⑥ 也在今天（烧 token 已确认）
-        cands = recommend.scan(ai_top=int(os.environ.get("AI_TOP", "3")),
+        cands = recommend.scan(ai_top=int(os.environ.get("AI_TOP", "5")),
                                as_of=date.today().isoformat())
         if not cands and backup and json.loads(backup).get("candidates"):
             RECOMMEND_FILE.write_text(backup, encoding="utf-8")
