@@ -7,7 +7,8 @@ from pathlib import Path
 
 sys.path.insert(0, ".")
 
-from core.dashboard_jobs import DashboardSingleFlight, stale_while_building
+from core.dashboard_jobs import (
+    DashboardSingleFlight, stale_while_building, resolve_contention)
 from core.redis_coord import RedisCoordinator
 
 
@@ -73,6 +74,19 @@ with tempfile.TemporaryDirectory() as td:
           json.loads(path.read_text()).get("refresh_in_progress"), None)
     check("first-ever build has no fake stale result",
           stale_while_building(cache, "0xunknown"), None)
+
+# Contention policy: a plain viewer is served the last good board; a refresh
+# explicitly wants the rebuild, so it must poll (None -> caller returns 202)
+# rather than silently settle for the pre-refresh board.
+stale_board = {"as_of": "2026-07-29", "refresh_in_progress": True}
+check("plain viewer under contention gets the stale board",
+      resolve_contention(stale_board, refresh=0), stale_board)
+check("refresh under contention must poll, not settle for stale",
+      resolve_contention(stale_board, refresh=1), None)
+check("first-ever build (no stale) always polls",
+      resolve_contention(None, refresh=0), None)
+check("refresh with no stale also polls",
+      resolve_contention(None, refresh=1), None)
 
 print(f"\n{passed} passed, {failed} failed")
 sys.exit(1 if failed else 0)

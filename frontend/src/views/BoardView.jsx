@@ -24,6 +24,7 @@ export function BoardView() {
   async function run(addrArg, refresh = false) {
     const w = (typeof addrArg === "string" ? addrArg : wallet).trim();
     if (!w) return;
+    const wantFresh = refresh;   // remember the ↻ intent across polls
     setLoading(true); setData(null); setError(null);
     try {
       for (let attempt = 0; attempt < 80; attempt += 1) {
@@ -32,6 +33,13 @@ export function BoardView() {
         if (resp.status === 202 && j.error === "DASHBOARD_BUILD_IN_PROGRESS") {
           await new Promise((resolve) => setTimeout(resolve, (j.retry_after || 3) * 1000));
           refresh = false; // poll the completed cache; never request a second forced rebuild
+          continue;
+        }
+        // On a user refresh, a stale board means a build is still running —
+        // keep polling for the fresh result instead of settling for the old one.
+        if (wantFresh && j && j.refresh_in_progress) {
+          await new Promise((resolve) => setTimeout(resolve, 3000));
+          refresh = false;
           continue;
         }
         registerAiTranslations(j.i18n_en);   // EN 运行时词典：后端翻好的 AI 文案，注册后 t() 直接命中

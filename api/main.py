@@ -60,7 +60,7 @@ from core.config import BRIEFING_AS_OF
 from core.cachefiles import newest_dated
 from core.redis_coord import coordinator
 from core.refresh_jobs import RecommendationRefresh
-from core.dashboard_jobs import DashboardSingleFlight, stale_while_building
+from core.dashboard_jobs import DashboardSingleFlight, stale_while_building, resolve_contention
 from core.translate import attach_i18n_en
 from fetcher.polymarket import get_top_political_position
 from fetcher.activity import get_entry_time, ActivityAPIError
@@ -679,9 +679,11 @@ def dashboard(wallet: str, refresh: int = 0, fresh: int = 0):
     as_of = date.today().isoformat() if (refresh or fresh) else BRIEFING_AS_OF
     lease = _DASHBOARD_FLIGHT.enter(wallet, as_of)
     if not lease.acquired:
-        stale = stale_while_building(DASHBOARD_CACHE, wallet)
-        if stale:
-            return stale
+        # Plain viewer → last good board; refresh → poll (202) for the real rebuild
+        # instead of silently settling for the pre-refresh board.
+        served = resolve_contention(stale_while_building(DASHBOARD_CACHE, wallet), refresh)
+        if served is not None:
+            return served
         return JSONResponse(status_code=202, content={
             "error": "DASHBOARD_BUILD_IN_PROGRESS",
             "message": "同一钱包的看板正在生成，请稍候。",
