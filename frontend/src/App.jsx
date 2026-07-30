@@ -3,9 +3,9 @@ import { scaleLinear, scaleTime } from "d3-scale";
 import { line as d3line, area as d3area, curveMonotoneX } from "d3-shape";
 import { extent } from "d3-array";
 import { useLang, LangToggle, ZhNote, registerAiTranslations } from "./i18n.jsx";
-
-// 生产构建走同源（后端托管 dist），本地开发默认打 localhost:8000
-const API = import.meta.env.VITE_API_BASE ?? (import.meta.env.DEV ? "http://localhost:8000" : "");
+import { API, EXAMPLES, TRADERS_URL, LEADERBOARD_URL, STAGES, STAGES_BRIEFING, STAGES_CONTEXT, STAGES_BOARD } from "./utils/config.js";
+import { price, money, abbrev, fmtPnlCompact, renderInline } from "./utils/format.jsx";
+import { CONF_LABEL, CONF_CN, FOLLOW_LABEL_CN, REACT_SYM, flagsCN } from "./utils/labels.js";
 
 const FOLLOW_CLASS = { "ROOM LEFT": "green", CHASED: "amber", "NO BASIS": "red" };
 const RELATION = {
@@ -13,40 +13,9 @@ const RELATION = {
   AFTER_ENTRY: { cls: "after", label: "AFTER ENTRY" },
   UNANCHORED: { cls: "unanchored", label: "UNANCHORED" },
 };
-const CONF_LABEL = { high: "HIGH", medium: "MED", low: "LOW" };
 const CONF_COLOR = { high: "var(--green)", medium: "var(--amber)", low: "var(--red)" };
 
-const STAGES = ["定位最大政治仓位", "追溯链上建仓时间", "检索时间窗新闻", "AI 解读 / 置信度矩阵"];
-const STAGES_BRIEFING = ["画像 · 这人靠不靠谱", "动作 · 建仓/对冲/盈亏", "价格 · 空间/赔率", "双向催化剂 + 市场测谎", "第三个 AI 诚实整理"];
-const STAGES_CONTEXT = ["定位顶仓盘面", "扫描价格异动(≤as-of)", "GDELT 三层洗催化剂", "巨鲸 48h 进出动作流", "冷静客观宏观综述"];
-const STAGES_BOARD = ["身份+体量画像", "这一注+现状", "实时盘面嵌入", "行为流 × 世界催化剂", "Edge 矩阵 + 局势判断"];
 
-// 首页示例钱包：地址已正向 /analyze 验证、能产出精彩政治盘卡（2026-06-15 实测）。
-// 置信度全谱：ImJustKen=高(Netanyahu) / debased=中(Vance 2028) / denizz=低(+555% 美伊)。
-// pnl = 我方系统算的「历史累计盈亏」(pnl_history 末值) 的粗粒度快照，作"聪明钱"身份背书、非实时行情。
-// 🔴 DEMO 前必预热体检（CLAUDE.md 已记）：①denizz 的盘 by June 15 当日结算，若 demo 在 6/15 之后已消失，
-//    换 aenews2(0x44c1…ebc1) 或退回 Annica(0x689ae…779e)；②顺手核对 pnl 粗粒度是否还对，漂太多就更新。
-const EXAMPLES = [
-  { nick: "ImJustKen", addr: "0x9d84ce0306f8551e02efef1680475fc0f1dc1344", pnl: "+$3.1M" },
-  { nick: "debased", addr: "0x24c8cf69a0e0a17eee21f69d29752bfa32e823e1", pnl: "+$1.7M" },
-  { nick: "denizz", addr: "0xbaa2bcb5439e985ce4ccf815b4700027d1b92c73", pnl: "+$2.6M" },
-];
-const TRADERS_URL = "https://polymarketanalytics.com/traders?tab=Politics&category=Politics";
-// 示例大户 + 累计盈利数字的权威来源：Polymarket 官方政治盈利榜
-const LEADERBOARD_URL = "https://polymarket.com/leaderboard/politics/all/profit";
-
-function price(p) {
-  return typeof p === "number" ? p.toFixed(3) : "—";
-}
-function money(v) {
-  if (typeof v !== "number") return "—";
-  const s = v < 0 ? "-" : "+";
-  return s + "$" + Math.abs(v).toLocaleString("en-US", { minimumFractionDigits: 0, maximumFractionDigits: 0 });
-}
-
-function abbrev(addr) {
-  return addr && addr.length > 12 ? `${addr.slice(0, 6)}…${addr.slice(-4)}` : addr;
-}
 function avatarColor(addr) {
   let h = 0;
   for (let i = 2; i < (addr || "").length; i++) h = (h * 31 + addr.charCodeAt(i)) % 360;
@@ -54,13 +23,6 @@ function avatarColor(addr) {
 }
 function avatarInitials(addr) {
   return (addr || "0x").slice(2, 4).toUpperCase();
-}
-function fmtPnlCompact(v) {
-  const s = v < 0 ? "-" : "+";
-  const a = Math.abs(v);
-  if (a >= 1e6) return `${s}$${(a / 1e6).toFixed(2)}M`;
-  if (a >= 1e3) return `${s}$${(a / 1e3).toFixed(1)}K`;
-  return `${s}$${a.toFixed(0)}`;
 }
 // unix 秒 → "YYYY-MM"
 function fmtMonth(t) {
@@ -546,17 +508,6 @@ function OddsBar({ held, side, slug }) {
   );
 }
 
-// 系统风险标记 → 中文（绝不把内部代码字段直接显示给用户）
-const FLAG_CN = {
-  suspicious_win_rate: "异常高胜率", position_size_volatility: "仓位波动大",
-  sybil_risk: "疑似女巫账户", perfect_timing: "完美择时(可疑)", perfect_timing_flag: "完美择时(可疑)",
-  bot_like: "类机器人模式", concentration_risk: "持仓过度集中", high_drawdown: "高回撤",
-  wash_trading: "疑似刷量", low_market_diversity: "市场集中度高",
-};
-function flagsCN(raw, t = (s) => s) {
-  return String(raw || "").replace(/[{}]/g, "").split(",").map((s) => s.trim())
-    .filter(Boolean).map((k) => t(FLAG_CN[k] || k.replace(/_/g, " "))).join("、");
-}
 
 // 市场反应 chip：印证=暗绿、不一致(测谎)=暗陶红+⚠、微弱/不可知=灰。t=当前语言翻译函数（渲染点传入）
 function reactionChip(pr, t = (s) => s) {
@@ -569,11 +520,6 @@ function reactionChip(pr, t = (s) => s) {
   return { txt: `${base} ${t("反应微弱")}`, cls: "rx-weak" };
 }
 
-// 把第三个 AI 的人话简报做轻量渲染（## 标题 / **粗体** / - 列表 / --- 分隔）
-function renderInline(s) {
-  return s.split(/(\*\*.+?\*\*)/g).map((p, i) =>
-    p.startsWith("**") && p.endsWith("**") ? <b key={i}>{p.slice(2, -2)}</b> : p);
-}
 function Narrative({ text }) {
   return (
     <div className="bf-narr">
@@ -926,8 +872,6 @@ function ContextView() {
 }
 
 // ── v3 统一看板（①身份 ②这一注 ③实时盘面 ④⑤行为×催化剂 ⑥Edge）─────────────
-const FOLLOW_LABEL_CN = { "ROOM LEFT": "还有空间", CHASED: "已追高", "NO BASIS": "没依据" };
-const CONF_CN = { high: "高", medium: "中", med: "中", low: "低" };
 
 function Fold({ title, sub, children }) {
   const [open, setOpen] = useState(false);
@@ -948,12 +892,6 @@ function Fold({ title, sub, children }) {
   );
 }
 
-// ⑤ 时间线新闻流 · 市场反应符号（统一口径:持有侧价格前后涨跌,非该新闻导致）
-const REACT_SYM = {
-  confirm: { sym: "↑", txt: "印证", cls: "rx-good" },
-  reject:  { sym: "↓", txt: "不买账", cls: "rx-bad" },
-  weak:    { sym: "·", txt: "微弱", cls: "rx-weak" },
-};
 function ReactionTag({ r }) {
   const { t } = useLang();
   if (!r || !r.available) return <span className="rx rx-na">{t("市场反应不可知")}</span>;
