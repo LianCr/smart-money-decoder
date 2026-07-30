@@ -58,6 +58,8 @@ except Exception as _e:
 
 from core.config import BRIEFING_AS_OF
 from core.cachefiles import newest_dated
+from core.redis_coord import coordinator
+from core.refresh_jobs import RecommendationRefresh
 from core.translate import attach_i18n_en
 from fetcher.polymarket import get_top_political_position
 from fetcher.activity import get_entry_time, ActivityAPIError
@@ -665,9 +667,8 @@ def dashboard(wallet: str, refresh: int = 0, fresh: int = 0):
 
 RECOMMEND_FILE = Path(".data/recommendations.json")
 
-# 推荐榜后台刷新状态（单飞：同一时刻只允许一次扫榜在跑）
-_REC_LOCK = __import__("threading").Lock()
-_REC_STATE = {"running": False, "started_at": None, "error": None}
+# 推荐榜后台刷新状态：Redis 跨实例单飞；未配置/故障时自动退回进程内协调。
+_REC_REFRESH = RecommendationRefresh(coordinator)
 
 
 def _persist_app_state():
@@ -710,20 +711,16 @@ def _run_rec_scan():
                                as_of=date.today().isoformat())
         if not cands and backup and json.loads(backup).get("candidates"):
             RECOMMEND_FILE.write_text(backup, encoding="utf-8")
-            _REC_STATE["error"] = "扫榜返回空（上游数据源失败？）——已保留旧榜"
+            raise RuntimeError("扫榜返回空（上游数据源失败？）——已保留旧榜")
         else:
-            _REC_STATE["error"] = None
             _persist_app_state()          # ☁️ 刷新成功 → 存回 GitHub，跨部署/冷启动持久
-    except Exception as e:
+    except Exception:
         if backup:
             try:
                 RECOMMEND_FILE.write_text(backup, encoding="utf-8")
             except Exception:
                 pass
-        _REC_STATE["error"] = f"{type(e).__name__}: {e}"
-        _log(f"   ✗ 推荐榜刷新失败：{_REC_STATE['error']}")
-    finally:
-        _REC_STATE["running"] = False
+        raise
 
 
 @app.get("/recommendations")
@@ -731,11 +728,8 @@ def recommendations(refresh: int = 0):
     """扫榜推荐：读 recommend.py 写的候选清单。refresh=1 → 后台重扫（几分钟+烧 token），
     期间照常返回旧榜（stale-while-revalidate），前端轮询 refreshing 直到出新榜。"""
     if refresh:
-        with _REC_LOCK:
-            if not _REC_STATE["running"]:
-                _REC_STATE.update(running=True, started_at=int(time.time()), error=None)
-                __import__("threading").Thread(target=_run_rec_scan, daemon=True).start()
-                _log("\n=== /recommendations REFRESH：后台扫榜启动 ===")
+        if _REC_REFRESH.start(_run_rec_scan):
+            _log("\n=== /recommendations REFRESH：后台扫榜启动 ===")
     out = {"as_of": BRIEFING_AS_OF, "candidates": []}
     if RECOMMEND_FILE.exists():
         try:
@@ -751,9 +745,10 @@ def recommendations(refresh: int = 0):
             out.setdefault("i18n_en", {}).update(extra)
     except Exception as e:
         _log(f"   ⚠ 推荐卡对齐失败（不阻塞）：{type(e).__name__}: {e}")
-    out["refreshing"] = _REC_STATE["running"]
-    if _REC_STATE["error"]:
-        out["refresh_error"] = _REC_STATE["error"]
+    refresh_state = _REC_REFRESH.status()
+    out["refreshing"] = refresh_state["running"]
+    if refresh_state["error"]:
+        out["refresh_error"] = refresh_state["error"]
     return out
 
 
