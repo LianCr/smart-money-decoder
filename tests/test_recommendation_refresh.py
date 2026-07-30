@@ -11,11 +11,13 @@ from core.refresh_jobs import RecommendationRefresh
 class FakeRedis:
     def __init__(self):
         self.values = {}
+        self.ex = {}          # last TTL seen per key, so tests can assert expiry policy
 
     def set(self, key, value, nx=False, ex=None):
         if nx and key in self.values:
             return False
         self.values[key] = value
+        self.ex[key] = ex
         return True
 
     def get(self, key):
@@ -67,11 +69,18 @@ check("second instance does not start a duplicate scan",
 check("only one background task was scheduled", len(DeferredThread.pending), 1)
 check("other instances see shared running state",
       second.status()["running"], True)
+# A hard-killed worker must not leave 'running' visible for 24h; the running
+# status TTL is bounded to ~the lock lifetime so it self-clears near lock expiry.
+check("running status ttl is bounded to ~lock lifetime (not 24h)",
+      redis.ex["test:status:recommendations"], 35 * 60)
 
 DeferredThread.pending.pop()()
 check("the winning instance ran the scan exactly once", calls, ["scan"])
 check("completion is shared across instances", second.status()["running"], False)
 check("successful completion has no error", second.status().get("error"), None)
+# The terminal (done/error) status is kept ~24h so the last result stays visible.
+check("terminal status is retained ~24h for last-result visibility",
+      redis.ex["test:status:recommendations"], 24 * 60 * 60)
 
 
 def fail():
