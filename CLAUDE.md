@@ -68,7 +68,7 @@
 
 **代码与产品纪律**
 
-7. **代码守最佳实践：单一职责、模块化，别堆积。** `frontend/src/App.jsx` 已从 2210 行拆成 **`components/`(30 个) + `views/`(5 个) + `utils/`**（App.jsx 现 ~69 行，仅根组件 + tab 路由；commit `b6d4793`，单一职责一文件一组件）。**新增/重构 UI 一律进 `frontend/src/components/`·`views/`·`hooks/`·`utils/`，禁止回堆 App.jsx。** 🔴 剩余债：`index.css` 仍是 1260 行单文件（class 前缀 `gmt-*`/`db-*`/`vh-*`… 已按组件分区，可拆，待办）。后端同理——每个模块一摊事，跨了职责就拆。
+7. **代码守最佳实践：单一职责、模块化，别堆积。** `frontend/src/App.jsx` 已从 2210 行拆成 **`components/`(30 个) + `views/`(5 个) + `utils/`**（App.jsx 现 ~69 行，仅根组件 + tab 路由；commit `b6d4793`，单一职责一文件一组件）。**新增/重构 UI 一律进 `frontend/src/components/`·`views/`·`hooks/`·`utils/`，禁止回堆 App.jsx。** `index.css` 也已按区拆成 `frontend/src/styles/`（16 文件 + `index.css` 作 `@import` 清单，**保序=构建 CSS 字节一致**；commit `7e3d75e`）——改样式进对应区文件、别动 @import 顺序（顺序里含刻意的后置覆盖）。后端同理——每个模块一摊事，跨了职责就拆。
 8. **纯前端（视觉）改动不准碰** API / 缓存 / 回测数据 / decoder 逻辑。视觉归视觉，逻辑归逻辑。（把巨石文件拆成组件属重构、不算逻辑改动；但一旦动了逻辑就按逻辑改动走 TDD。）
 9. **垂直 task 完成即英文 commit。** 见 `AGENTS.md`（该规则的正本）：每个可独立测试的垂直 task 一旦完成并验证，**立即用英文单独 commit**——不攒、不把多个 task 混进一个 commit、不夹带无关改动；完成的活没 commit 不许开下一个 task。
 10. **不删内容、不粉饰。** "AI 推理"原文、诚实 caveat 是产品诚实性的体现，只能视觉弱化不能删。
