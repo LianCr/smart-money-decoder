@@ -14,18 +14,21 @@ recommend.py — 扫榜推荐 · 方法 E「市场反向找大户」（免费、
 
 🟡 轻量轮询（cron 一行，免费扫层、不带 ⑥；要 ⑥ 手动 ai_top>0 跑）：
     0 */6 * * * cd /path/to/smart-money-decoder && AI_TOP=0 .venv/bin/python -u recommend.py >> .data/recommend.log 2>&1
-🔴 诚实提醒：BRIEFING_AS_OF 钉死 6-25、数据世界冻结 → 现在轮询每次结果一样，这是把"自动转起来的机制"先搭好；
-   真新鲜度要等解开 as_of（上 Bedrock/有预算走 date.today()）才生效。
+🔴 as_of 语义（2026-07-08 晚起全实时）：BRIEFING_AS_OF 默认=今天（自有 ANTHROPIC_API_KEY，
+   省 token 钉死历史约束已解除）。ai_verify 恒带 fresh=1：今天已有看板缓存直接用（不重复烧），
+   否则在今天重建 → 推荐卡的 ⑥ 判断永远是当天的。AI 精选 top 5。
 """
 import os
 import json
 import time
+import threading
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
 import requests
 
 from fetcher.heisenberg import call, results, AGENTS, HeisenbergError
-from fetcher.positions import get_top_political_position_hz
+from fetcher.positions import get_top_political_position_hz, get_top_political_positions_hz
 from fetcher.markets import get_market_holders
 from fetcher.profile import _wallet360
 from briefing.market_context import get_behavior_flags
@@ -74,29 +77,70 @@ def _politics_cat(cats):
 DASH_URL = f"http://localhost:{os.environ.get('PORT', '8000')}/dashboard"   # Render 上 $PORT≠8000，自指本服务
 
 
-def ai_verify(cands, top=3):
+def _verify_one(c, fresh):
+    """单候选 ⑥ 验证（就地改写 c；各线程各拿各的 c，天然线程安全）。"""
+    params = {"wallet": c["wallet"]}
+    if fresh:
+        params["fresh"] = 1
+    try:
+        j = requests.get(DASH_URL, params=params, timeout=240).json()
+    except Exception as e:
+        print(f"  ⑥ 验证 {c['wallet'][:12]}… 失败(后端未在线?)：{e}", flush=True)
+        return
+    rs = (j.get("reasoning") or {}) if isinstance(j, dict) else {}
+    if j.get("error") or not rs.get("confidence"):    # 看板报错 / 裁决缺失 → 不标精选（诚实降级）
+        why = j.get("error") or j.get("reason") or "reasoning 无 confidence"
+        print(f"  ⑥ 验证 {c['wallet'][:12]}… 未获裁决({why})——保持非精选", flush=True)
+        return
+    facts = rs.get("facts") or {}
+    if facts.get("market_question"):          # 与看板同一注（防 max_pages/快照差异错配）
+        c["market_question"] = facts["market_question"]
+        c["outcome"] = facts.get("outcome", c["outcome"])
+    c["ai_pick"] = True
+    c["ai_confidence"] = rs.get("confidence")
+    c["ai_follow_call"] = rs.get("follow_call")
+    c["ai_verdict"] = rs.get("reasoning")
+    c["position_type"] = facts.get("position_type")
+    c["market_lean"] = rs.get("market_lean")        # 市场命题级独立倾向（同盘分歧时显示"我们倾向 X"）
+    c["alignment"] = rs.get("alignment")            # 这一注 顺/逆 edge
+    c["verified_as_of"] = j.get("as_of")            # ⑥ 验证锚的日期（卡片可显示数据新鲜度）
+    # 🌐 顺手带走裁决文本的英文翻译（看板构建时已翻好），EN 模式推荐卡不再中英掺杂
+    i18n = j.get("i18n_en") or {}
+    for zh in (c.get("ai_verdict"), rs.get("pivotal_unknown")):
+        if zh and i18n.get(zh):
+            c.setdefault("i18n_en", {})[zh] = i18n[zh]
+    print(f"  ⑥ {c['wallet'][:12]}… {rs.get('confidence')} · {rs.get('follow_call')} · lean={rs.get('market_lean')}", flush=True)
+
+
+def ai_verify(cands, top=3, fresh=False, max_workers=5):
     """方法 C：对 top N 候选跑完整 ⑥（经本地 /dashboard，按(钱包,as_of)硬缓存→重复零 token）。
-    🔴 烧老师 token（每个未缓存钱包 ~12k）；需后端在线，离线则优雅跳过、ai_pick 留 False。
-    同时用看板 facts 回填 market/outcome，确保卡片显示与点开看板的 ⑥ 判断**针对同一注**（不错配）。"""
-    for c in cands[:top]:
-        try:
-            j = requests.get(DASH_URL, params={"wallet": c["wallet"]}, timeout=240).json()
-        except Exception as e:
-            print(f"  ⑥ 验证 {c['wallet'][:12]}… 失败(后端未在线?)：{e}", flush=True)
-            continue
-        rs = j.get("reasoning") or {}
-        facts = rs.get("facts") or {}
-        if facts.get("market_question"):          # 与看板同一注（防 max_pages/快照差异错配）
-            c["market_question"] = facts["market_question"]
-            c["outcome"] = facts.get("outcome", c["outcome"])
-        c["ai_pick"] = True
-        c["ai_confidence"] = rs.get("confidence")
-        c["ai_follow_call"] = rs.get("follow_call")
-        c["ai_verdict"] = rs.get("reasoning")
-        c["position_type"] = facts.get("position_type")
-        c["market_lean"] = rs.get("market_lean")        # 市场命题级独立倾向（同盘分歧时显示"我们倾向 X"）
-        c["alignment"] = rs.get("alignment")            # 这一注 顺/逆 edge
-        print(f"  ⑥ {c['wallet'][:12]}… {rs.get('confidence')} · {rs.get('follow_call')} · lean={rs.get('market_lean')}", flush=True)
+    🔴 烧 token（每个未缓存钱包一条完整 pipeline）；需后端在线，离线则优雅跳过、ai_pick 留 False。
+    fresh=True（用户点刷新时）：传 fresh=1 → 看板在**今天**验证（今天已有缓存则直接用，不重复烧）。
+    🛡 诚实守卫：只有真拿到 ⑥ 裁决（confidence 非空）才标 ai_pick —— 看板返回错误 JSON/空 reasoning
+    时绝不产出"有 AI 精选徽章但信心/推理全空"的残卡（宁可不标，也不装验证过）。
+    同时用看板 facts 回填 market/outcome，确保卡片显示与点开看板的 ⑥ 判断**针对同一注**（不错配）。
+
+    ⚡ 并行（2026-07-08）：top N 并发验证，总时长 = 最慢一条而非 N 条之和（~12min → ~3min）。
+    🔴 同盘锁：共持发现的钱包常押同一个盘——若并行各建 market_thesis 会重复烧且可能产出
+    两份不同市场观（打破"同盘钱包共享同一份市场观"红线）。同盘候选串行（第二个直接命中
+    第一个建好的 thesis 缓存），不同盘才真并行。"""
+    targets = cands[:top]
+    if not targets:
+        return
+    locks = {}
+    guard = threading.Lock()
+
+    def _market_lock(c):
+        key = c.get("market_question") or c["wallet"]
+        with guard:
+            return locks.setdefault(key, threading.Lock())
+
+    def _run(c):
+        with _market_lock(c):
+            _verify_one(c, fresh)
+
+    with ThreadPoolExecutor(max_workers=min(max_workers, len(targets))) as ex:
+        list(ex.map(_run, targets))
 
 
 def _mark_disagreements(cands):
@@ -129,25 +173,106 @@ def _mark_consensus(cands):
                 c["consensus_count"] = len(group)
 
 
-def scan(per_market=10, gate_pnl=2000.0, enrich_top=14, keep=8, ai_top=3):
+def sync_candidates_with_boards(cands, cache_dir):
+    """serve-time 对齐（2026-07-09，修"卡上一套、点进去另一套"）：推荐卡的 ⑥ 字段是
+    扫榜时刻的冻结副本，而点进去的看板是活的（读最新缓存/当天重建）——日期翻天、
+    用户强刷、近结算守卫换盘 都会让两边分叉（实测同一 as_of 也分叉：扫完后看板被
+    重建过）。单一真相源 = 看板缓存：/recommendations 每次返回前用该钱包最新看板
+    缓存回写卡片字段（纯文件读、零 token）→ 卡片和点进去读的是同一份数据。
+    返回 {中文:英文} 增量翻译（供并入顶层 i18n_en）。"""
+    from core.cachefiles import newest_dated
+    extra = {}
+    for c in cands or []:
+        try:
+            newest = newest_dated(cache_dir, str(c.get("wallet", "")).lower())
+            if not newest:
+                continue                          # 从没建过看板 → 保留扫榜时的值
+            d = json.loads(newest[0].read_text(encoding="utf-8"))
+        except Exception:
+            continue
+        r = d.get("reasoning") or {}
+        if not r.get("confidence"):               # 看板守卫拦截/无裁决 → 不覆盖（诚实语义）
+            continue
+        facts = r.get("facts") or {}
+        if facts.get("market_question"):          # 守卫可能换了盘——卡片必须描述同一注
+            c["market_question"] = facts["market_question"]
+            c["outcome"] = facts.get("outcome", c.get("outcome"))
+        c["ai_pick"] = True                       # 有真实 ⑥ 裁决（扫榜验证或用户点开构建，同一套系统）
+        c["ai_confidence"] = r.get("confidence")
+        c["ai_follow_call"] = r.get("follow_call")
+        c["ai_verdict"] = r.get("reasoning")
+        c["position_type"] = facts.get("position_type")
+        c["market_lean"] = r.get("market_lean")
+        c["alignment"] = r.get("alignment")
+        c["verified_as_of"] = d.get("as_of")
+        i18n = d.get("i18n_en") or {}
+        for zh in (c.get("ai_verdict"), r.get("pivotal_unknown")):
+            if zh and i18n.get(zh):
+                extra[zh] = i18n[zh]
+    # 同盘分歧/共识按对齐后的市场重算（先清旧标——守卫换盘后旧标可能已失效）
+    for c in cands or []:
+        for k in ("disagreement", "disagreement_lean", "disagreement_with_edge", "consensus_count"):
+            c.pop(k, None)
+    _mark_disagreements(cands or [])
+    _mark_consensus(cands or [])
+    return extra
+
+
+def diversify(cands, keep=8, per_market=2):
+    """多样性收榜（纯代码）：打分已降序，每盘最多 per_market 个；池子本身不够多样时
+    放宽补满到 keep（诚实：不造多样性，只在有得选时选得开）。"""
+    out, count = [], {}
+    for c in cands:
+        mq = c.get("market_question")
+        if count.get(mq, 0) < per_market:
+            out.append(c)
+            count[mq] = count.get(mq, 0) + 1
+        if len(out) == keep:
+            return out
+    for c in cands:
+        if c not in out:
+            out.append(c)
+            if len(out) == keep:
+                break
+    return out
+
+
+def verify_targets(cands, top):
+    """AI 精选名额跨盘优先（纯代码）：第一轮每盘取分最高的一个，占不满再按分补——
+    5 个名额尽量给 5 个不同的盘，而不是同一个盘的前 5 名。"""
+    seen, first, rest = set(), [], []
+    for c in cands:
+        mq = c.get("market_question")
+        if mq not in seen:
+            first.append(c)
+            seen.add(mq)
+        else:
+            rest.append(c)
+    return (first + rest)[:top]
+
+
+def scan(per_market=10, gate_pnl=2000.0, enrich_top=14, keep=8, ai_top=5, as_of=None):
+    """as_of=None → BRIEFING_AS_OF（现默认=今天，全实时）。
+    ai_verify 恒 fresh=1：⑥ 验证永远锚当天（当天已有缓存不重复烧）。"""
+    as_of = as_of or AS_OF
     # 0) 579 月榜（交叉信号 bonus 用）
     b579 = _retry(lambda: results(call(AGENTS["leaderboard"][0],
                   {"wallet_address": "ALL", "leaderboard_period": "30d"}))) or []
     addrs579 = {str(r.get("address", "")).lower() for r in b579}
 
-    # 1) 种子 → 热门政治盘 cid（去重）
+    # 1) 种子 → 热门政治盘 cid（去重）。🎨 多样性（2026-07-09）：每个种子取前 3 个
+    #    政治盘（原来只取最大 1 个 → 4 个种子高度重叠、全部候选挤在同 2-3 个盘，榜面单调）
     markets = {}
     for w in SEEDS:
-        pos = _retry(get_top_political_position_hz, w, as_of=AS_OF, max_pages=15)
-        if pos and not pos.get("error") and pos.get("market_id"):
-            markets[pos["market_id"]] = pos["market_question"]
+        for pos in _retry(get_top_political_positions_hz, w, as_of=as_of, n=3, max_pages=15) or []:
+            markets.setdefault(pos["market_id"], pos["market_question"])
         time.sleep(0.5)
     print(f"种子 {len(SEEDS)} → 热门政治盘 {len(markets)} 个", flush=True)
 
     # 2) 每盘 → 共持大户 → 钱包池（去重，记最大净持仓 + 来源盘）
     pool, pool_mkt = {}, {}
     for cid, q in markets.items():
-        for w, v in _retry(get_market_holders, cid, as_of=AS_OF, top_n=per_market) or []:
+        for w, v in _retry(get_market_holders, cid, as_of=as_of, top_n=per_market) or []:
             if v > pool.get(w, 0):
                 pool[w], pool_mkt[w] = v, q
         time.sleep(0.3)
@@ -169,12 +294,15 @@ def scan(per_market=10, gate_pnl=2000.0, enrich_top=14, keep=8, ai_top=3):
     cands = []
     for w, pol, pp in graded[:enrich_top]:
         time.sleep(0.4)
-        pos = _retry(get_top_political_position_hz, w, as_of=AS_OF, max_pages=15)
+        pos = _retry(get_top_political_position_hz, w, as_of=as_of, max_pages=15)
         if not pos or pos.get("error"):
             print(f"  · {w[:12]}… 政治 pnl={pp:.0f} 但无未结算政治顶仓(跳)", flush=True)
             continue
+        if pos.get("near_settled"):               # 🔴 整本仓位全是 ≥95¢ 近结算盘 → 不值得推荐
+            print(f"  · {w[:12]}… 全仓近结算(持有侧 {pos.get('held_price')})——无悬念不推", flush=True)
+            continue
         time.sleep(0.3)
-        bf = _retry(get_behavior_flags, w, pos["market_id"], AS_OF) or {}
+        bf = _retry(get_behavior_flags, w, pos["market_id"], as_of) or {}
         beh = bf.get("flag")
         in579 = w.lower() in addrs579
         # 🔴 打分：被验证的体量+胜率为主，ROI 封顶防小样本高方差盖过真鲸鱼（实测 21 注/306% ROI 曾压过 $1.26M 鲸鱼）。
@@ -202,23 +330,27 @@ def scan(per_market=10, gate_pnl=2000.0, enrich_top=14, keep=8, ai_top=3):
               f"{'∩579 ' if in579 else ''}{beh} · {pos['market_question'][:34]} {pos['outcome']}", flush=True)
 
     cands.sort(key=lambda c: -c["score"])
-    cands = cands[:keep]
+    cands = diversify(cands, keep=keep)           # 🎨 每盘最多 2 个进榜（有得选时）
 
     # 方法 C：对 top ai_top 跑 ⑥ AI 验证（烧 token、需后端在线；ai_top=0 关闭）
     if ai_top:
-        print(f"\n方法 C：对 top {ai_top} 跑 ⑥ AI 验证（~12k/个，命中缓存更省）…", flush=True)
-        ai_verify(cands, top=ai_top)
+        targets = verify_targets(cands, ai_top)   # 🎨 精选名额跨盘优先
+        print(f"\n方法 C：对 {len(targets)} 个候选（跨盘优先）跑 ⑥ AI 验证…", flush=True)
+        ai_verify(targets, top=ai_top, fresh=True)
     _mark_disagreements(cands)        # 同盘分歧检测（纯代码，0 token）
     _mark_consensus(cands)            # 同侧专家共识（弱信号，与分歧对称）
 
     OUT.parent.mkdir(parents=True, exist_ok=True)
     method = "E_market_reverse_ai_verified" if ai_top else "E_market_reverse"
-    OUT.write_text(json.dumps({"as_of": AS_OF, "generated_at": int(time.time()),
-                               "method": method, "candidates": cands},
+    i18n_en = {}                                  # 🌐 汇总各候选的翻译 → 顶层，前端一次注册
+    for c in cands:
+        i18n_en.update(c.pop("i18n_en", {}) or {})
+    OUT.write_text(json.dumps({"as_of": as_of, "generated_at": int(time.time()),
+                               "method": method, "candidates": cands, "i18n_en": i18n_en},
                               ensure_ascii=False, indent=2), encoding="utf-8")
     print(f"\n✓ 市场反向 · 政治专家候选 {len(cands)} 个写入 {OUT}", flush=True)
     return cands
 
 
 if __name__ == "__main__":
-    scan(ai_top=int(os.environ.get("AI_TOP", "3")))   # 轮询设 AI_TOP=0 关 ⑥（纯免费扫层）
+    scan(ai_top=int(os.environ.get("AI_TOP", "5")))   # 轮询设 AI_TOP=0 关 ⑥（纯免费扫层）

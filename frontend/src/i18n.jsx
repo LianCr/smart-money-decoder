@@ -1,13 +1,23 @@
-// 极简 i18n：中文原文即 key。zh = 原样返回；en = 三层查表（UI 词典 → AI 精确词典 → 模式引擎），
-// 全部 miss 才回退中文（绝不炸）。AI 词典由 tools/build_ai_en.py 从缓存离线生成（零 token）；
-// 模式引擎翻代码模板串（带数字，刷新出新数据也能翻）。未来新 AI 产出查不到 → 回退中文 + ZhNote 诚实标注。
+// 极简 i18n：中文原文即 key。zh = 原样返回；en = 四层查表（UI 词典 → 运行时词典 → AI 离线词典 → 模式引擎），
+// 全部 miss 才回退中文（绝不炸）。
+// 运行时词典（2026-07-08 新增，实时世界的正解）：后端构建看板/简报/推荐时把 AI 产出的中文
+// 批量翻好、随 payload 下发 i18n_en 映射，前端 fetch 后 registerAiTranslations() 注册进来——
+// 所有既有 t() 渲染点零改动自动翻译。离线词典 ai_en.js 降级为历史兜底（6-25 冻结世界的内容）；
+// 极端情况（翻译调用失败）才回退中文 + ZhNote 诚实标注。
 import { createContext, useContext, useState } from "react";
 import EN from "./locales/en.js";
 import AI_MAP from "./locales/ai_en.js";
 import { patternTranslate } from "./locales/ai_patterns.js";
 
 const CJK_RE = /[一-鿿]/;
-const toEN = (s) => EN[s] ?? AI_MAP.get(s) ?? patternTranslate(s) ?? s;
+const RUNTIME_AI = new Map();          // 后端随 payload 下发的 {中文: 英文}，会话内累积
+export function registerAiTranslations(map) {
+  if (!map || typeof map !== "object") return;
+  for (const [zh, en] of Object.entries(map)) {
+    if (typeof zh === "string" && typeof en === "string" && en) RUNTIME_AI.set(zh, en);
+  }
+}
+const toEN = (s) => EN[s] ?? RUNTIME_AI.get(s) ?? AI_MAP.get(s) ?? patternTranslate(s) ?? s;
 
 const LangContext = createContext({ lang: "zh", t: (s) => s, setLang: () => {} });
 

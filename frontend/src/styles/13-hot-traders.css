@@ -1,0 +1,13 @@
+/* Polymarket 价格滚动栏（第三方 widget，自带样式，只给外框间距）*/
+/* 入口滚动条：本周政治盘热门交易者 */
+.hot-wrap { display: flex; align-items: center; gap: 14px; margin: -4px 0 18px; padding: 8px 14px; overflow: hidden; border: 1px solid var(--line-1); border-radius: 4px; background: var(--panel, rgba(255,255,255,0.02)); }
+.hot-label { flex-shrink: 0; font-size: 11px; font-weight: 700; color: var(--accent); white-space: nowrap; letter-spacing: 0.02em; }
+.hot-marquee { flex: 1; overflow: hidden; -webkit-mask-image: linear-gradient(90deg, transparent, #000 4%, #000 96%, transparent); mask-image: linear-gradient(90deg, transparent, #000 4%, #000 96%, transparent); }
+.hot-track { display: inline-flex; gap: 26px; white-space: nowrap; animation: hot-scroll 48s linear infinite; }
+.hot-wrap:hover .hot-track { animation-play-state: paused; }
+.hot-item { display: inline-flex; align-items: baseline; gap: 7px; padding: 0; background: none; border: none; cursor: pointer; font-size: 12px; }
+.hot-rank { font-size: 10px; color: var(--fg-3); }
+.hot-addr { color: var(--fg-2); transition: color 0.12s; }
+.hot-pnl { font-weight: 700; color: var(--pos); }
+.hot-item:hover .hot-addr { color: var(--accent); }
+@keyframes hot-scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }

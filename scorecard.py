@@ -13,10 +13,14 @@ scorecard.py — 诚实记分牌（decode / board 判断的自我验证）
 不碰封板模块：record 钩子在 api 层调；结算用注入的 resolver，本模块不直接依赖 heisenberg。
 """
 import json
+import threading
 import time
 from pathlib import Path
 
 ARCHIVE = Path(".data/scorecard.json")
+# 🔒 档案写锁：推荐榜 ai_verify 并行后，多条看板 pipeline 会并发 record_judgment——
+# "读档→改→写档"没有锁会互相覆盖丢记录（判断存档是记分牌的地基，丢一条就是假账）
+_LOCK = threading.Lock()
 ENDORSED = {"ROOM LEFT", "CHASED"}     # 这两个 = AI 背书该方向；NO BASIS = 不背书（单列）
 
 
@@ -44,44 +48,48 @@ def record_judgment(*, wallet, cid, market_question, outcome, market_price,
     if not wallet or not cid or not follow_call:
         return
     try:
-        d = _load()
-        key = f"{wallet.lower()}_{cid}_{source}"
-        prev = d.get(key, {})
-        d[key] = {
-            "wallet": wallet, "cid": cid, "market_question": market_question,
-            "outcome": outcome, "market_price": market_price,
-            "follow_call": follow_call, "confidence": confidence, "source": source,
-            "decided_at": prev.get("decided_at") or int(time.time()),
-            "updated_at": int(time.time()), "settle_date": settle_date,
-            "final_result": prev.get("final_result"),     # 已结算不覆盖（结果是历史事实）
-            "settled_at": prev.get("settled_at"),
-        }
-        _save(d)
+        with _LOCK:
+            d = _load()
+            key = f"{wallet.lower()}_{cid}_{source}"
+            prev = d.get(key, {})
+            d[key] = {
+                "wallet": wallet, "cid": cid, "market_question": market_question,
+                "outcome": outcome, "market_price": market_price,
+                "follow_call": follow_call, "confidence": confidence, "source": source,
+                "decided_at": prev.get("decided_at") or int(time.time()),
+                "updated_at": int(time.time()), "settle_date": settle_date,
+                "final_result": prev.get("final_result"),     # 已结算不覆盖（结果是历史事实）
+                "settled_at": prev.get("settled_at"),
+            }
+            _save(d)
     except Exception:
         pass
 
 
 def fetch_settlements(resolver) -> int:
     """增量抓结算：只遍历 final_result 为空的条，用 resolver(cid)->"Yes"/"No"/None 填。
-    已结算的跳过（不重抓）。resolver 由调用方注入（api 层用 574）。返回新结算条数。"""
-    d = _load()
-    n = 0
-    for r in d.values():
-        if r.get("final_result"):          # 已结算 → 跳过
-            continue
-        cid = r.get("cid")
-        if not cid:
-            continue
-        try:
-            winner = resolver(cid)
-        except Exception:
-            winner = None
-        if winner in ("Yes", "No"):
-            r["final_result"] = winner
-            r["settled_at"] = int(time.time())
-            n += 1
-    if n:
-        _save(d)
+    已结算的跳过（不重抓）。resolver 由调用方注入（api 层用 574）。返回新结算条数。
+    🔒 resolver 打外网可能慢——锁覆盖整个读改写周期是刻意的：结算回填正确性 > 并发度
+    （此函数只被 /scorecard 单点调用，凑巧撞上 record_judgment 时也只是排队几秒）。"""
+    with _LOCK:
+        d = _load()
+        n = 0
+        for r in d.values():
+            if r.get("final_result"):          # 已结算 → 跳过
+                continue
+            cid = r.get("cid")
+            if not cid:
+                continue
+            try:
+                winner = resolver(cid)
+            except Exception:
+                winner = None
+            if winner in ("Yes", "No"):
+                r["final_result"] = winner
+                r["settled_at"] = int(time.time())
+                n += 1
+        if n:
+            _save(d)
     return n
 
 

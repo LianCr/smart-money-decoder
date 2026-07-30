@@ -20,13 +20,15 @@ from core.llm import call_gateway, GatewayError
 load_dotenv()
 
 # ── 启动时检查 key，缺失立即报错，不要等到运行时才崩 ─────────────────────────
-TAVILY_API_KEY    = os.environ.get("TAVILY_API_KEY")
-CLASSROOM_API_KEY = os.environ.get("CLASSROOM_API_KEY")
+TAVILY_API_KEY = os.environ.get("TAVILY_API_KEY")
 
 if not TAVILY_API_KEY:
     raise RuntimeError("缺少 TAVILY_API_KEY，请在 .env 文件里配置")
-if not CLASSROOM_API_KEY:
-    raise RuntimeError("缺少 CLASSROOM_API_KEY，请在 .env 文件里配置")
+# LLM key（ANTHROPIC_API_KEY 或 CLASSROOM_API_KEY 二选一）：不在这里硬校验——
+# 后端选择收口在 core/llm.py，缺 key 时 call_gateway 抛 GatewayError("NO_KEY")，
+# 本模块按既有错误链转 NewsError，语义不变。
+if not (os.environ.get("ANTHROPIC_API_KEY") or os.environ.get("CLASSROOM_API_KEY")):
+    raise RuntimeError("缺少 LLM key：请在 .env 配置 ANTHROPIC_API_KEY（或 CLASSROOM_API_KEY）")
 
 # ── 配置项 ────────────────────────────────────────────────────────────────────
 # True = 跳过真实网关，用占位关键词；等课堂 key approve 后改回 False

@@ -1,0 +1,43 @@
+/* ── 通用加载容器（Track Record 的「LOADING…」复用 .stages/.lead）── */
+.stages { padding: 30px 4px; }
+.stages .lead { color: var(--text-3); font-size: 12.5px; letter-spacing: 0.04em;
+  text-transform: uppercase; margin-bottom: 18px; }
+
+/* ── Decode 流水线：居中容器内左对齐，与首页同一左基准线 ──────── */
+.pipe { margin: 8px 0 0; padding: 16px 0; }
+.pipe-lead {
+  font-family: var(--mono); font-size: 12px; letter-spacing: 0.08em;
+  color: var(--text-3); margin-bottom: 24px;
+}
+.pipe-lead .pipe-sub { color: var(--text-4); }
+
+/* 垂直管道：1px 暗轨 + 青色填充（只点亮已完成/进行中区间，雷达扫描感）*/
+.pipe-list { position: relative; }
+.pipe-rail { position: absolute; left: 9px; top: 14px; bottom: 14px; width: 1px; background: var(--line); }
+.pipe-fill {
+  position: absolute; left: 9px; top: 14px; width: 1px;
+  background: var(--accent); box-shadow: 0 0 6px var(--accent);
+  transition: height 0.5s ease;
+}
+
+/* 节点串在轨道上：步骤名在节点右侧（不再额外叠 ✓，避免堆叠）*/
+.pstep {
+  position: relative; padding: 11px 0 11px 30px;
+  font-family: var(--mono); font-size: 13px; letter-spacing: 0.1em; transition: color 0.4s;
+}
+.pstep-node {
+  position: absolute; left: 4px; top: 50%; transform: translateY(-50%);
+  width: 11px; height: 11px; border-radius: 50%; box-sizing: border-box; z-index: 1;
+  border: 1.5px solid var(--text-4); background: var(--bg);   /* 未到：暗灰空心 */
+}
+.pstep.todo { color: var(--text-4); }
+/* 已完成：节点实心暗青、文字暗青，静止 */
+.pstep.done { color: #3a7d8a; }
+.pstep.done .pstep-node { background: #2f6b78; border-color: #2f6b78; }
+/* 进行中：节点亮青加脉冲，文字亮青加粗 —— 全局唯一呼吸，其余死寂 */
+.pstep.active { color: var(--accent); font-weight: 700; }
+.pstep.active .pstep-node {
+  background: var(--accent); border-color: var(--accent); box-shadow: 0 0 8px var(--accent);
+  animation: pipe-pulse 1.6s ease-in-out infinite;
+}
+@keyframes pipe-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }

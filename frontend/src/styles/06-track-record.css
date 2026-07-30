@@ -1,0 +1,208 @@
+/* ============================================================
+   Track Record 回测页 — 审计报告气质，冷静不营销
+   叙事性视觉仅保留 T-7→T-1 演变线一处
+   ============================================================ */
+.mocktag {
+  font-family: var(--mono); font-size: 11px; letter-spacing: 0.05em;
+  color: var(--amber); background: rgba(243,168,42,0.06);
+  border: 1px solid rgba(243,168,42,0.25); border-radius: 7px;
+  padding: 7px 12px; margin-bottom: 20px;
+}
+
+/* 方法论说明：弱化小字，老实交代测的是什么 */
+.method {
+  font-size: 12.5px; line-height: 1.6; color: var(--text-3);
+  background: var(--panel); border: 1px solid var(--line-soft); border-radius: 10px;
+  padding: 12px 16px; margin-bottom: 20px;
+}
+.method b { color: var(--text-2); font-weight: 650; }
+
+/* ============================================================
+   整体战绩汇总 — 4 层渐进式金字塔（彭博终端冷冽风）
+   深夜黑 + 青(高亮) + 绿(对/盈) + 红(错/亏)，核心数字等宽
+   8px 律动网格；发光极度克制（仅两个核心数字）
+   ============================================================ */
+.lift2 { margin-top: 24px; border-top: 1px solid var(--line); padding-top: 24px; }
+
+/* 第一层 · 一句话定调 */
+.l2-thesis {
+  font-size: 19px; line-height: 1.5; font-weight: 600; letter-spacing: -0.005em;
+  color: var(--text-2); margin: 0 0 24px;
+}
+.l2-thesis .l2-accent { color: var(--accent); white-space: nowrap; }
+
+/* 第二层 · 双格终端窗：1px 细线分隔，数字不裸悬浮 */
+.l2-term {
+  display: flex; align-items: stretch;
+  background: var(--panel); border: 1px solid var(--line); border-radius: 14px;
+  overflow: hidden; margin-bottom: 16px;
+}
+.l2-cell { flex: 1; min-width: 0; padding: 24px; display: flex; flex-direction: column; gap: 16px; }
+.l2-cell + .l2-cell { border-left: 1px solid var(--line); }
+.l2-big {
+  font-size: 60px; font-weight: 800; line-height: 1; letter-spacing: -0.03em;
+  color: var(--accent);
+  text-shadow: 0 0 16px rgba(76, 196, 224, 0.28);   /* 极微弱青晕，宁可不发光也不过 */
+}
+.l2-sub { font-size: 12px; line-height: 1.6; color: var(--text-3); }
+.l2-sub b { color: var(--green); font-weight: 700; font-family: var(--mono); }
+
+/* 第三层 · 诚实说明：承上启下，目光从 +10% 引向 +13% */
+.l2-honest {
+  font-size: 13px; line-height: 1.7; color: var(--text-3);
+  padding: 0 2px; margin: 0 0 24px;
+}
+
+/* 第四层 · 量化审计日志（默认折叠，Monospace 量化日志感）*/
+.l2-audit { border-top: 1px solid var(--line-soft); }
+.l2-audit-bar {
+  display: flex; align-items: center; gap: 8px; cursor: pointer; user-select: none;
+  padding: 12px 0; font-family: var(--mono); font-size: 12px;
+  letter-spacing: 0.03em; color: var(--text-3); transition: color 0.15s;
+}
+.l2-audit-bar:hover { color: var(--text-2); }
+.l2-audit-tag { color: var(--accent); font-weight: 700; }
+.l2-arrow { margin-left: 2px; transition: transform 0.2s; display: inline-block; }
+.l2-arrow.on { transform: rotate(90deg); color: var(--accent); }
+.l2-audit-body { overflow: hidden; height: 0; transition: height 0.3s ease; }
+.l2-audit-inner { padding: 8px 0 4px; }
+
+.audit-block {
+  padding: 16px; background: var(--panel); border: 1px solid var(--line-soft);
+  border-radius: 8px; margin-bottom: 8px;
+}
+.audit-h {
+  font-family: var(--mono); font-size: 12px; font-weight: 700; color: var(--text);
+  letter-spacing: 0.02em; margin-bottom: 8px;
+}
+.audit-tag { color: var(--accent); }
+.audit-text {
+  font-family: var(--mono); font-size: 11.5px; line-height: 1.7;
+  color: var(--text-3); white-space: pre-line;
+}
+.audit-div { height: 1px; background: var(--line-soft); margin: 16px 0; }
+.audit-cav {
+  font-family: var(--mono); font-size: 11px; line-height: 1.6; color: var(--text-4);
+  padding-left: 12px; border-left: 1px solid var(--line-soft); margin-bottom: 8px;
+}
+.audit-cav.snap {
+  color: var(--amber); border-left: 2px solid var(--amber);
+  background: var(--amber-2); border-radius: 0 6px 6px 0; padding: 8px 12px;
+}
+
+/* ── 逐场复盘列表 ─────────────────────────────────────── */
+.bt-list { display: flex; flex-direction: column; gap: 12px; }
+.bt-item { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+.bt-item.open { border-color: var(--line); }
+.bt-row {
+  display: flex; align-items: center; gap: 16px; padding: 15px 18px; cursor: pointer;
+  transition: background 0.15s;
+}
+.bt-row:hover { background: var(--panel-2); }
+
+.bt-left { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 9px; }
+.bt-q { font-size: 14px; font-weight: 550; line-height: 1.35; color: var(--text); }
+.resolved {
+  align-self: flex-start; font-family: var(--mono); font-size: 10px; letter-spacing: 0.06em;
+  color: var(--text-3); background: var(--panel-2); border: 1px solid var(--line);
+  padding: 2px 8px; border-radius: 5px;
+}
+
+/* 瘦身行的标签组：decoder 判断 + 结算真相 + 难度 */
+.bt-tags { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.stance {
+  font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.02em; font-weight: 600;
+  padding: 3px 9px; border-radius: 6px; white-space: nowrap;
+}
+.stance.green { color: var(--green); background: var(--green-2); }
+.stance.amber { color: var(--amber); background: var(--amber-2); }
+.stance.red   { color: var(--red);   background: var(--red-2); }
+.stance.gray  { color: var(--text-3); background: var(--panel-2); }
+.stance b { font-size: 12px; font-weight: 800; }
+/* 结算真相放大权重（"后来真相"要显眼） */
+.resolved.big { font-size: 11px; font-weight: 700; color: var(--text-2); padding: 3px 10px; }
+/* 难度系数三档：迷雾=强调色、倾斜=中性、近明牌=暗调（主动示弱） */
+.difftag {
+  font-family: var(--mono); font-size: 10px; letter-spacing: 0.02em; font-weight: 600;
+  padding: 3px 9px; border-radius: 6px; white-space: nowrap; border: 1px solid transparent;
+}
+.difftag.diff-hard { color: var(--accent); background: var(--accent-dim); border-color: rgba(76,196,224,0.25); }
+.difftag.diff-mid  { color: var(--text-2); background: var(--panel-2); border-color: var(--line); }
+.difftag.diff-easy { color: var(--text-4); background: var(--panel-2); }
+.difftag.diff-na   { color: var(--text-4); background: var(--panel-2); }
+
+/* T-7 → T-1 判断演变（已移入抽屉顶部） */
+.bt-evo { display: flex; align-items: center; justify-content: center; padding: 14px 0 4px; }
+.tp { display: flex; flex-direction: column; align-items: center; gap: 5px; }
+.tp-lab { font-family: var(--mono); font-size: 9.5px; letter-spacing: 0.08em; color: var(--text-4); }
+/* T-7 → T-1 演变线：本页唯一叙事性视觉，渐亮 + 箭头指向 T-1 */
+.evo { position: relative; width: 32px; height: 2px; border-radius: 2px;
+  background: linear-gradient(90deg, var(--line), var(--accent)); margin: 0 12px 14px; }
+.evo::after {
+  content: ""; position: absolute; right: -3px; top: 50%; transform: translateY(-50%);
+  border-left: 6px solid var(--accent);
+  border-top: 4px solid transparent; border-bottom: 4px solid transparent;
+}
+.mini-follow {
+  font-family: var(--mono); font-size: 10px; font-weight: 700; letter-spacing: 0.03em;
+  padding: 4px 8px; border-radius: 6px; display: flex; align-items: center; gap: 6px; white-space: nowrap;
+}
+.mini-follow.green { color: var(--green); background: var(--green-2); }
+.mini-follow.amber { color: var(--amber); background: var(--amber-2); }
+.mini-follow.red   { color: var(--red);   background: var(--red-2); }
+.mini-follow.gray  { color: var(--text-3); background: var(--panel-2); }
+.mini-conf { font-size: 8.5px; opacity: 0.65; letter-spacing: 0.05em; }
+
+/* 右侧：命中/失手，冷静的 ✓/✗，失手不弱化；下方 chevron 提示可展开 */
+.bt-right { flex-shrink: 0; width: 30px; display: flex; flex-direction: column;
+  align-items: center; gap: 6px; }
+.verd { font-size: 22px; font-weight: 700; line-height: 1; }
+.verd.hit { color: var(--green); }
+.verd.miss { color: var(--red); }
+.chev { color: var(--text-4); font-size: 17px; line-height: 1; transition: transform 0.2s, color 0.2s; }
+.bt-row:hover .chev { color: var(--text-3); }
+.chev.up { transform: rotate(90deg); color: var(--accent); }
+
+/* 抽屉：平滑展开（height 0↔scrollHeight + opacity，纯 CSS transition） */
+.bt-drawer {
+  height: 0; overflow: hidden; opacity: 0; background: var(--bg);
+  transition: height 0.32s ease, opacity 0.32s ease;
+}
+.bt-item.open .bt-drawer { opacity: 1; }
+.bt-drawer-inner { padding: 0 14px 16px; border-top: 1px solid var(--line-soft); }
+.tp-toggle { display: flex; gap: 8px; padding: 14px 4px; }
+.tp-toggle button {
+  font-family: var(--mono); font-size: 11px; letter-spacing: 0.02em; cursor: pointer;
+  padding: 6px 12px; border-radius: 7px; border: 1px solid var(--line);
+  background: var(--panel); color: var(--text-3);
+}
+.tp-toggle button.on { color: var(--text); border-color: var(--accent); }
+
+/* ── Track Record：案例故事卡版（5 秒看懂）────────────────────────── */
+.tr-hero {
+  display: flex; align-items: center; gap: 24px;
+  background: var(--panel); border: 1px solid var(--line); border-radius: 14px;
+  padding: 24px; margin-bottom: 24px;
+}
+.tr-hero-num { font-size: 44px; font-weight: 600; line-height: 1; letter-spacing: -0.02em; white-space: nowrap; }
+.tr-hero-num .tr-unit { font-size: 15px; font-weight: 500; color: var(--text-3); }
+.tr-hero-num .tr-slash { color: var(--text-4); font-weight: 400; }
+.tr-hero-txt { display: flex; flex-direction: column; gap: 5px; }
+.tr-hero-h { font-size: 16px; font-weight: 650; color: var(--text); }
+.tr-hero-sub { font-size: 12.5px; line-height: 1.5; color: var(--text-3); }
+
+.bt-item.hero { border-color: var(--amber); box-shadow: inset 0 0 0 1px var(--amber-2); }
+.hero-star { color: var(--amber); }
+
+.case-concl { font-size: 13.5px; font-weight: 650; color: var(--text); padding: 14px 0 5px; }
+.case-take { font-size: 13px; line-height: 1.6; color: var(--text-2); padding-bottom: 12px; border-bottom: 1px solid var(--line-soft); }
+.case-evo { display: flex; align-items: center; gap: 8px; padding: 13px 0 6px; flex-wrap: wrap; }
+.evo-step { display: inline-flex; align-items: center; gap: 8px; }
+.evo-lab { font-family: var(--mono); font-size: 10px; letter-spacing: 0.06em; color: var(--text-4); }
+.evo-arrow { color: var(--text-4); margin: 0 3px; }
+.case-tp { padding: 11px 0; border-top: 1px solid var(--line-soft); }
+.case-tp-h { font-family: var(--mono); font-size: 11px; color: var(--text-3); margin-bottom: 7px; }
+.case-cat { margin: 0 0 9px; padding-left: 16px; }
+.case-cat li { font-size: 12px; line-height: 1.55; color: var(--text-2); margin-bottom: 3px; }
+.case-reason { font-size: 11.5px; line-height: 1.6; color: var(--text-4); }
+.case-reason-lab { font-family: var(--mono); font-size: 9.5px; letter-spacing: 0.05em; color: var(--accent); background: var(--accent-dim); padding: 1px 6px; border-radius: 4px; margin-right: 7px; }

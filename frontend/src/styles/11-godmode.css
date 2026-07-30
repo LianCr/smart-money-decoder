@@ -1,0 +1,85 @@
+/* ══ 上帝视角时间轴（D3 价格×动作×新闻）═══════════════════════════════════════ */
+.gmt { margin: 10px 0 14px; }
+/* 大标题：押侧 + 实时价（随光标变）—— Polymarket 式竖排,干净留白 */
+.gmt-header { margin-bottom: 18px; }
+/* 押注方向：醒目色块（YES 绿 / NO 红），不再是不起眼的灰小字 */
+.gmt-h-side { display: inline-flex; align-items: center; gap: 6px; font-size: 12.5px; font-weight: 800; letter-spacing: 0.04em; padding: 3px 11px 3px 9px; border-radius: 5px; margin-bottom: 10px; }
+.gmt-h-side.yes { color: var(--pos); background: var(--pos-bg, rgba(0,230,118,0.1)); border: 1px solid rgba(0,230,118,0.32); }
+.gmt-h-side.no { color: #ff6b6b; background: rgba(255,107,107,0.1); border: 1px solid rgba(255,107,107,0.32); }
+.gmt-h-side-dot { width: 7px; height: 7px; border-radius: 50%; background: currentColor; box-shadow: 0 0 6px currentColor; }
+/* 滚动数字 odometer */
+.roll { display: inline-flex; }
+.roll-d { display: inline-block; height: 1em; overflow: hidden; vertical-align: top; }
+.roll-col { display: flex; flex-direction: column; transition: transform 0.32s cubic-bezier(0.22, 1, 0.36, 1); will-change: transform; }
+.roll-n { height: 1em; line-height: 1em; text-align: center; }
+.gmt-h-row { display: flex; align-items: baseline; gap: 11px; }
+.gmt-h-pct { font-family: var(--sans); font-size: 42px; font-weight: 800; line-height: 1; letter-spacing: -0.025em; }
+.gmt-h-pct.pos { color: var(--pos); text-shadow: 0 0 24px var(--pos-glow); }
+.gmt-h-pct.neg { color: var(--neg); text-shadow: 0 0 24px var(--neg-glow); }
+.gmt-h-unit { font-size: 13px; color: var(--fg-3); }
+.gmt-h-date { font-family: var(--mono); font-size: 14px; color: var(--fg-2); }
+.gmt-h-delta { font-family: var(--mono); font-size: 14px; font-weight: 700; }
+.gmt-h-delta.pos { color: var(--pos); } .gmt-h-delta.neg { color: var(--neg); }
+.gmt-h-deltalab { font-family: var(--sans); font-size: 11px; font-weight: 400; color: var(--fg-4); }
+.gmt-warn { color: var(--neg); font-style: normal; }
+.gmt-foot { margin-top: 14px; font-size: 10.5px; color: var(--fg-4); display: flex; align-items: center; gap: 7px; line-height: 1.5; }
+.gmt-foot-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--pos); box-shadow: 0 0 5px var(--pos-glow); flex-shrink: 0; }
+.gmt-h-settle { font-family: var(--mono); font-size: 12px; color: var(--fg-4); }
+/* 催化剂读出条：固定在图下方、永不遮挡价格线 */
+.gmt-readout { margin-top: 13px; min-height: 52px; padding: 10px 13px; border: 1px solid var(--line-1); border-left: 3px solid var(--line-2); border-radius: 5px; background: rgba(255,255,255,0.018); transition: border-left-color 0.15s, background 0.15s; }
+.gmt-readout.on { background: rgba(255,255,255,0.035); }
+.gmt-ro-line { display: flex; align-items: center; gap: 9px; flex-wrap: wrap; }
+.gmt-ro-date { font-family: var(--mono); font-size: 11px; color: var(--fg-3); }
+.gmt-ro-title { font-size: 13px; font-weight: 600; color: var(--fg-1); flex: 1; min-width: 200px; }
+.gmt-ro-link { font-size: 11px; color: var(--accent); text-decoration: none; white-space: nowrap; }
+.gmt-ro-link:hover { text-decoration: underline; }
+.gmt-ro-sum { font-size: 11.5px; color: var(--fg-2); line-height: 1.55; margin-top: 6px; }
+.gmt-ro-foot { font-size: 9.5px; color: var(--fg-4); margin-top: 6px; }
+.gmt-ro-hint { font-size: 10.5px; color: var(--fg-4); display: flex; align-items: center; gap: 7px; line-height: 1.6; }
+.rx-c-pos { color: var(--pos); } .rx-c-neg { color: var(--neg); }
+.gmt-node.active { stroke-width: 2.5; filter: drop-shadow(0 0 10px currentColor); }
+.gmt-wrap { position: relative; width: 100%; }
+.gmt-svg { display: block; width: 100%; height: auto; overflow: visible; cursor: crosshair; }
+.gmt-grid { stroke: var(--line-2); stroke-width: 1; stroke-dasharray: 1 5; opacity: 0.6; vector-effect: non-scaling-stroke; }
+.gmt-grid.v { stroke: var(--line-2); stroke-dasharray: none; opacity: 0.3; }
+.gmt-ytick { fill: var(--fg-4); font-size: 9px; font-family: var(--mono); }
+.gmt-ytick.r { text-anchor: start; }
+.gmt-xtick { fill: var(--fg-4); font-size: 9px; font-family: var(--mono); text-anchor: middle; }
+.gmt-area { }  /* fill 由 SVG 渐变(url(#gmt-grad-*))提供——顶部浓→底部透，更高级 */
+.gmt-line { fill: none; stroke-width: 2; vector-effect: non-scaling-stroke; }
+.gmt-line.pos { stroke: var(--pos); filter: drop-shadow(0 0 4px var(--pos-glow)); }
+.gmt-line.neg { stroke: var(--neg); filter: drop-shadow(0 0 4px var(--neg-glow)); }
+.gmt-line.dim { opacity: 0.22; filter: none; }
+.gmt-entry-h { stroke: var(--fg-4); stroke-width: 1; stroke-dasharray: 2 4; vector-effect: non-scaling-stroke; }
+.gmt-entry-v { stroke: var(--fg-3); stroke-width: 1; stroke-dasharray: 3 3; vector-effect: non-scaling-stroke; }
+.gmt-entry-dot { fill: var(--bg-0); stroke: var(--fg-1); stroke-width: 2; }
+.gmt-now-dot { stroke: var(--bg-0); stroke-width: 1.5; }
+.gmt-now-dot.pos { fill: var(--pos); } .gmt-now-dot.neg { fill: var(--neg); }
+.gmt-node { pointer-events: none; stroke: var(--bg-0); stroke-width: 1.5; filter: drop-shadow(0 0 5px currentColor); }
+.gmt-cross-v { stroke: var(--fg-3); stroke-width: 1; vector-effect: non-scaling-stroke; }
+.gmt-cross-dot { stroke: var(--bg-0); stroke-width: 2; }
+.gmt-cross-dot.pos { fill: var(--pos); filter: drop-shadow(0 0 6px var(--pos-glow)); }
+.gmt-cross-dot.neg { fill: var(--neg); filter: drop-shadow(0 0 6px var(--neg-glow)); }
+.gmt-cross-date { position: absolute; top: 0; transform: translate(-50%, -118%); font-family: var(--mono); font-size: 10.5px; color: var(--fg-2); white-space: nowrap; pointer-events: none; }
+.gmt-cross-tip { position: absolute; transform: translate(12px, -50%); font-family: var(--mono); font-size: 12px; font-weight: 700; white-space: nowrap; pointer-events: none;
+  padding: 3px 8px; border-radius: 3px; background: var(--bg-0); border: 1px solid currentColor; z-index: 4; }
+.gmt-cross-tip.l { transform: translate(calc(-100% - 12px), -50%); }
+.gmt-cross-tip.pos { color: var(--pos); } .gmt-cross-tip.neg { color: var(--neg); }
+.gmt-lbl { position: absolute; font-family: var(--mono); font-size: 10px; font-weight: 700; white-space: nowrap; pointer-events: none; padding: 1px 5px; border-radius: 2px; }
+.gmt-lbl.entry { transform: translate(-50%, -185%); color: var(--fg-2); background: var(--bg-2); border: 1px solid var(--line-1); }
+.gmt-tip { position: absolute; width: 260px; max-width: 80vw; z-index: 5; pointer-events: none;
+  background: var(--bg-0); border: 1px solid var(--bf-accent); border-radius: 4px; padding: 10px 12px; box-shadow: 0 6px 24px rgba(0,0,0,0.6); }
+/* 水平锚定：ac 居中 / al 贴左 / ar 贴右；below = 节点靠顶时翻到下方 */
+.gmt-tip.ac { transform: translate(-50%, calc(-100% - 14px)); }
+.gmt-tip.al { transform: translate(-10px, calc(-100% - 14px)); }
+.gmt-tip.ar { transform: translate(calc(-100% + 10px), calc(-100% - 14px)); }
+.gmt-tip.below.ac { transform: translate(-50%, 16px); }
+.gmt-tip.below.al { transform: translate(-10px, 16px); }
+.gmt-tip.below.ar { transform: translate(calc(-100% + 10px), 16px); }
+.gmt-tip-top { display: flex; align-items: center; gap: 7px; flex-wrap: wrap; margin-bottom: 6px; }
+.gmt-tip-date { font-size: 10.5px; color: var(--fg-3); }
+.gmt-tip-title { font-size: 12px; font-weight: 600; color: var(--fg-1); line-height: 1.4; }
+.gmt-tip-sum { font-size: 11px; color: var(--fg-2); line-height: 1.5; margin-top: 4px; }
+.gmt-tip-foot { font-size: 9.5px; color: var(--fg-4); margin-top: 6px; font-style: italic; }
+.gmt-xaxis { display: flex; justify-content: space-between; font-family: var(--mono); font-size: 9.5px; color: var(--fg-4); margin-top: 4px; padding: 0 2px; }
+.gmt-summary { margin-top: 16px; }

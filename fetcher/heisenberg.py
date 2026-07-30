@@ -58,10 +58,16 @@ class HeisenbergError(Exception):
         super().__init__(message)
 
 
+_MAX_429_RETRIES = 3          # 429 退避重试次数（总共最多发 1+3 次）
+_SLEEP = time.sleep           # 可被测试 monkeypatch，避免真睡
+
+
 def call(agent_id: int, params: dict, limit: int = MAX_LIMIT, offset: int = 0) -> dict:
     """
     发一次请求，返回原始 payload（dict）。非 200 / 网络异常 → 抛 HeisenbergError（分类 reason）。
     limit 自动钳到 200（超了服务端会 404）。
+    🛡 429 内建退避重试（2s/4s/6s）：扫榜线程和看板重建**并发**打限流时，之前一个 429 就把
+    整条 dashboard pipeline 炸成 DASHBOARD_PIPELINE_FAILED——数据层自己扛住瞬时限流，重试耗尽才抛。
     """
     if not KEY:
         raise HeisenbergError("NO_KEY", "缺少 HEISENBERG_API_KEY，请在 .env 配置（免费 key）")
@@ -72,17 +78,22 @@ def call(agent_id: int, params: dict, limit: int = MAX_LIMIT, offset: int = 0) -
         "pagination": {"limit": min(limit, MAX_LIMIT), "offset": offset},
         "formatter_config": {"format_type": "raw"},
     }
-    try:
-        resp = requests.post(
-            URL,
-            headers={"Content-Type": "application/json", "Authorization": f"Bearer {KEY}"},
-            json=body,
-            timeout=REQUEST_TIMEOUT,
-        )
-    except requests.exceptions.Timeout:
-        raise HeisenbergError("TIMEOUT", f"Heisenberg agent {agent_id} 超时")
-    except requests.exceptions.RequestException as e:
-        raise HeisenbergError("NETWORK", f"Heisenberg 网络异常：{e}")
+    for attempt in range(_MAX_429_RETRIES + 1):
+        try:
+            resp = requests.post(
+                URL,
+                headers={"Content-Type": "application/json", "Authorization": f"Bearer {KEY}"},
+                json=body,
+                timeout=REQUEST_TIMEOUT,
+            )
+        except requests.exceptions.Timeout:
+            raise HeisenbergError("TIMEOUT", f"Heisenberg agent {agent_id} 超时")
+        except requests.exceptions.RequestException as e:
+            raise HeisenbergError("NETWORK", f"Heisenberg 网络异常：{e}")
+        if resp.status_code == 429 and attempt < _MAX_429_RETRIES:
+            _SLEEP(2 * (attempt + 1))
+            continue
+        break
 
     sc = resp.status_code
     if sc == 401:

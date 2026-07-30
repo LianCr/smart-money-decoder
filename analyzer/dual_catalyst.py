@@ -364,8 +364,8 @@ def analyze(market_title, outcome, entry_time, as_of_anchor=None):
 
 # ── 测试基准：Starmer out by May 31, 2026?（outcome=Yes, entry≈2026-05-18）─────
 if __name__ == "__main__":
-    if not os.environ.get("CLASSROOM_API_KEY"):
-        raise SystemExit("缺 CLASSROOM_API_KEY")
+    if not (os.environ.get("ANTHROPIC_API_KEY") or os.environ.get("CLASSROOM_API_KEY")):
+        raise SystemExit("缺 LLM key（ANTHROPIC_API_KEY 或 CLASSROOM_API_KEY）")
     res = analyze("Starmer out by May 31, 2026?", "Yes", 1779062400)
     a, g = res["_audit"], res["_guards"]
 

@@ -27,6 +27,36 @@ POLITICAL_KW = (
 SPORT_KW = ("fifa", "world-cup", "nba", "nfl", "nhl", "ufc", "mlb", "soccer", "tennis",
             "-cup-", "premier-league", "hockey", "baseball", "home-run", "temperature")
 
+# 🔴 近结算守卫（2026-07-09，实测 0xe8dd…钱包最大仓=Fed 7月降息 NO@99.5¢）：
+# "最大仓"入口启发式只看规模和未结算，从不看悬念——持有侧已推到 ≥95¢ 的盘（对应回测
+# difficulty 的 Near-Settled 档）没有任何解读/跟单价值，跳过找下一个有悬念的仓。
+# 若整本仓位全是近结算（"卖彩票"型 NO 农场钱包），诚实回退最大那个并打 near_settled 标
+# （绝不硬凑、绝不报错隐瞒——他确实重仓在那，只是没悬念）。
+NEAR_SETTLED_PRICE = 0.95
+MAX_PRICE_CHECKS = 12          # 每次查找最多对多少个候选盘打 568 查价（防 NO 农场钱包扫穿全本）
+
+
+def _held_price(m, outcome, as_of):
+    """568 取持有侧 token 最近收盘价（as_of 前 7 天窗取最新）。拿不到 → None（未知不参与近结算判定）。"""
+    side_a = str(m.get("side_a_outcome", "")).lower() == str(outcome).lower()
+    tok = m.get("side_a_token_id") if side_a else m.get("side_b_token_id")
+    if not tok:
+        return None
+    end = int(datetime.strptime(as_of, "%Y-%m-%d").replace(tzinfo=timezone.utc,
+                                                           hour=23, minute=59).timestamp())
+    try:
+        rs = results(call(AGENTS["candles"][0], {"token_id": tok, "interval": "1d",
+                     "start_time": str(end - 7 * 86400), "end_time": str(end)}))
+    except HeisenbergError:
+        return None
+    closes = []
+    for r in sorted(rs or [], key=lambda r: str(r.get("candle_time", ""))):
+        if str(r.get("candle_time", ""))[:10] <= as_of:
+            c = _f(r.get("close"))
+            if c is not None:
+                closes.append(c)
+    return closes[-1] if closes else None
+
 
 def _f(x):
     try:
@@ -80,6 +110,8 @@ def get_top_political_position_hz(wallet, as_of=BRIEFING_AS_OF, min_cost=300.0, 
     # 按当前净持仓降序，取净持仓最大的【未结算政治盘】（live 简报绝不返回已结算盘）
     ranked = sorted(agg.items(), key=lambda kv: -sum(_net_cost(d) for d in kv[1].values()))
     saw_pol_settled = False
+    near_settled_fallback = None
+    price_checks = 0
     for cid, outs in ranked:
         total = sum(_net_cost(d) for d in outs.values())
         if total < min_cost:
@@ -105,12 +137,99 @@ def get_top_political_position_hz(wallet, as_of=BRIEFING_AS_OF, min_cost=300.0, 
             continue
         if any(k in blob for k in POLITICAL_KW):
             outcome = max(outs.items(), key=lambda kv: _net_cost(kv[1]))[0]   # 净持仓更大的一侧
-            return {"market_id": cid, "outcome": outcome, "market_question": q}
+            cand = {"market_id": cid, "outcome": outcome, "market_question": q}
+            if price_checks < MAX_PRICE_CHECKS:
+                price_checks += 1
+                px = _held_price(m, outcome, as_of)
+                if px is not None and px >= NEAR_SETTLED_PRICE:
+                    if near_settled_fallback is None:            # 记最大的近结算仓当回退底
+                        near_settled_fallback = {**cand, "near_settled": True,
+                                                 "held_price": round(px, 4)}
+                    continue                                     # 没悬念 → 找下一个
+            return cand
 
+    if near_settled_fallback:      # 整本都是近结算（卖彩票型钱包）→ 诚实回退最大那个并打标
+        return near_settled_fallback
     # 没有未结算的政治持仓 → 诚实报错（绝不拿已结算盘充数）
     msg = ("该钱包当前没有未结算的政治持仓（持仓可能均已结算），换个有活跃政治持仓的钱包再试"
            if saw_pol_settled else "该钱包近 60 天无达标的未结算政治持仓")
     return {"error": True, "reason": "NO_OPEN_POSITIONS", "message": msg}
+
+
+def get_top_political_positions_hz(wallet, as_of=BRIEFING_AS_OF, n=3, min_cost=300.0, max_pages=15):
+    """列表版：净持仓降序的前 n 个**未结算政治盘** [{market_id, outcome, market_question}]。
+    供扫榜多样性发现（2026-07-09：种子只取最大一盘 → 全部候选挤在同 2-3 个盘，榜面单调）。
+    出错/没有 → 空列表（列表语义，不带 error dict）；单盘入口 get_top_political_position_hz
+    的错误契约（dashboard 404 语义）保持原封不动，这里刻意不复用它。"""
+    wallet = (wallet or "").strip()
+    if not (wallet.startswith("0x") and len(wallet) == 42):
+        return []
+
+    end = datetime.strptime(as_of, "%Y-%m-%d").replace(tzinfo=timezone.utc)
+    start = end - timedelta(days=60)
+    try:
+        trades = paginate(AGENTS["trades"][0],
+                          {"proxy_wallet": wallet, "condition_id": "ALL",
+                           "start_time": str(int(start.timestamp())), "end_time": str(int(end.timestamp()))},
+                          max_pages=max_pages)
+    except HeisenbergError:
+        return []
+    if not trades:
+        return []
+
+    agg, slugs = {}, {}
+    for t in trades:
+        cid, o = t.get("condition_id"), t.get("outcome")
+        if not cid:
+            continue
+        size = _f(t.get("size")) or 0
+        price = _f(t.get("price")) or 0
+        side = str(t.get("side", "")).upper()
+        d = agg.setdefault(cid, {}).setdefault(o, {"buy_shares": 0.0, "buy_cost": 0.0, "sell_shares": 0.0})
+        if side == "BUY":
+            d["buy_shares"] += size
+            d["buy_cost"] += size * price
+        elif side == "SELL":
+            d["sell_shares"] += size
+        slugs[cid] = str(t.get("slug", ""))
+
+    def _net_cost(d):
+        net = max(d["buy_shares"] - d["sell_shares"], 0.0)
+        avg = d["buy_cost"] / d["buy_shares"] if d["buy_shares"] else 0.0
+        return net * avg
+
+    out = []
+    price_checks = 0
+    ranked = sorted(agg.items(), key=lambda kv: -sum(_net_cost(d) for d in kv[1].values()))
+    for cid, outs in ranked:
+        if len(out) >= n:
+            break
+        total = sum(_net_cost(d) for d in outs.values())
+        if total < min_cost:
+            break                                  # 已降序，后面更小，停
+        try:
+            m = results(call(AGENTS["markets"][0], {"condition_id": cid}))
+        except HeisenbergError:
+            continue
+        if not m:                                  # 574 空 = 已结算/不存在
+            continue
+        m = m[0]
+        q = str(m.get("question", ""))
+        blob = (q + " " + slugs.get(cid, "")).lower()
+        if any(k in blob for k in SPORT_KW):
+            continue
+        end_d = str(m.get("end_date", ""))[:10]
+        if bool(m.get("closed")) or (end_d and end_d <= as_of):   # 🔴 未结算 + 未到期
+            continue
+        if any(k in blob for k in POLITICAL_KW):
+            outcome = max(outs.items(), key=lambda kv: _net_cost(kv[1]))[0]
+            if price_checks < MAX_PRICE_CHECKS:
+                price_checks += 1
+                px = _held_price(m, outcome, as_of)
+                if px is not None and px >= NEAR_SETTLED_PRICE:
+                    continue                       # 发现层无回退：99¢ 盘绝不进推荐
+            out.append({"market_id": cid, "outcome": outcome, "market_question": q})
+    return out
 
 
 if __name__ == "__main__":

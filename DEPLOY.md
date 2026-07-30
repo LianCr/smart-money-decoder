@@ -16,6 +16,9 @@ HEISENBERG_API_KEY=...    # Heisenberg 免费 key
 
 🔴 **这三个 key 只填在 Render 控制台，永远不进 git。**
 
+可选但推荐再准备 `REDIS_URL`（Render Key Value 或 Upstash 的 Redis 连接串）。
+它只用于跨实例防重复刷新和共享刷新状态，不保存看板业务数据；没配或临时故障时应用会自动回退，不影响已缓存看板。
+
 ## 第 1 步：注册 Render（2 分钟）
 
 1. 打开 https://render.com → 右上角 **Get Started / Sign In**

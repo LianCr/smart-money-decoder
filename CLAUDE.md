@@ -40,7 +40,7 @@
 | positions API 地址 | `data-api.polymarket.com`（不是 gamma-api） |
 | CLOB 历史价 | `clob.polymarket.com/prices-history?market=<tokenId>&...`；token=记录里的 `asset` 字段；短命市场 T-7 未创建返回 None |
 | **decoder 缓存 key 含 current_price** | 盘中市价漂移会 miss → 单靠它省不了 token。**靠 `/analyze` 外层"(钱包,日期)"缓存兜底** |
-| 课堂网关模型 | **只有 `claude-sonnet-4.5`（点号不是横杠）能用，haiku 返回 502**。maxTokens 上限 2048 |
+| 课堂网关模型（旧后端） | **只有 `claude-sonnet-4.5`（点号不是横杠）能用，haiku 返回 502**。maxTokens 上限 2048。官方 API 后端无此限制（模型 id 是横杠 `claude-sonnet-4-5`） |
 | **[Heisenberg v3] 参数真名因 endpoint 而异** | 官方 context 文档参数名不可靠，**实测真名**：569 PnL=`wallet`（传 proxy_wallet→400）· 556 Trades=`proxy_wallet`（文档写 `wallet_proxy` **被静默忽略→返回全局交易流**，错配比报错危险）· 581 Wallet360=`proxy_wallet` · 579 Leaderboard=`wallet_address`。打之前先核对真名 |
 | **[Heisenberg v3] `pagination.limit` 上限 200** | 传 >200（如 500）直接 404 `'max' tag` 校验失败、静默返空——别把它误判成"无数据" |
 | **[Heisenberg v3] 569 宽窗口只返回前若干天** | 宽时间窗（如 80 天）只回前 10 天左右，**结算日的亏损落在返回范围外→看着像 0**。要看某盘结算盈亏必须把 start/end **窄锚到结算期**附近分段查 |
@@ -51,14 +51,28 @@
 
 ## 🟡 协作纪律（这个项目怎么和 Claude 配合，重要）
 
-这些是这个项目反复验证有效的工作方式，开工默认遵守：
+这些是这个项目反复验证有效的工作方式，开工默认遵守。
+**元原则：这不是 vibe coding。** 按生产级标准要求自己和任何协作 agent——task 的能力/边界/定义/方法要尽量定义干净，**tests 定义边界，roadmap（`KNOWN_ISSUES.md`）定义方向**。
 
-1. **大改先出方案/计划，确认再动手。** 不要看到任务就一口气改一大片。先列"改哪些文件、怎么改"，等拍板。
-2. **探不确定的路 = 先验证再构建，先诊断后修复。** 凡"可能有解可能无解"的（新数据源、新方法），先做最小可行性验证拿数字，再决定投不投入。不在没验证的地基上押注。
-3. **token 额度紧张 = 任何要烧 token 的操作先估算、先确认。** 课堂 key 是老师的、快烧光。烧 token 前报预算，给 demo / 关键验证留余量。
-4. **纯前端改动不准碰** API / 缓存 / 回测数据 / decoder。视觉归视觉，逻辑归逻辑。
-5. **不删内容、不粉饰。** "AI 推理"原文、诚实 caveat 是产品诚实性的体现，只能视觉弱化不能删。
-6. **诚实优于好看，验证优于假设。** 这是贯穿全项目的元原则。
+**工作流铁律（每个垂直 task 开工前 → 完成后）**
+
+1. **测试先行（TDD）：先写测试把契约钉死，再写实现。** 动手实现前，先写测试定义这个 task 的输入/输出/边界/降级。测试 follow `tests/` 惯例——standalone 可跑、`def check(name, got, want)` + `sys.exit(1 if failed else 0)`、in-file fake 不打网络、纳入 `scripts/check.sh`（本项目无 pytest 无 CI，就这一套）。**"完成"的唯一定义 = 该 task 的测试全绿 + 你亲自 review 过测试确实覆盖了契约（而非"碰巧能跑"）。没测试的实现不算完成，不许开下一个 task。** 测试是 mock 零 token——多写不心疼。
+2. **动手前把 task 定义干净。** 一句话写清这个垂直 task 的：能力(capability)、边界(boundary)、完成判据(definition)、方法(method)。定义不清先问、别猜着开工。
+3. **大改先出方案/计划，确认再动手。** 先列"改哪些文件、怎么改、怎么测"，等拍板。不要看到任务就一口气改一大片。
+4. **探不确定的路 = 先验证再构建，先诊断后修复。** 凡"可能有解可能无解"的（新数据源、新方法），先做最小可行性验证拿数字，再决定投不投入。不在没验证的地基上押注。
+
+**预防式协作 / 对抗式 review（怎么和其他 agent、和上游产出配合）**
+
+5. **默认别人都是错的。** multi-agent 最有效的形态是**互相 challenge、预防式合作、预防式管理、预防式 review**——不是 1000 个 agent 包饺子、大团圆、无休止闲聊。接手任何上游产出（别的 agent 的输出、上一个 task、codex 的改动、"看起来能跑"的代码）前：先假设它是错的 → 自己 review 一遍 → 在自己手里写足够多测试验证它真完成了契约 → **验不过就直接拒绝接手，绝不在未验证的地基上继续。**
+6. **token 额度紧张 = 任何要烧 token 的操作先估算、先确认。** 烧 token 前报预算，给 demo / 关键验证留余量。
+
+**代码与产品纪律**
+
+7. **代码守最佳实践：单一职责、模块化，别堆积。** `frontend/src/App.jsx` 已从 2210 行拆成 **`components/`(30 个) + `views/`(5 个) + `utils/`**（App.jsx 现 ~69 行，仅根组件 + tab 路由；commit `b6d4793`，单一职责一文件一组件）。**新增/重构 UI 一律进 `frontend/src/components/`·`views/`·`hooks/`·`utils/`，禁止回堆 App.jsx。** `index.css` 也已按区拆成 `frontend/src/styles/`（16 文件 + `index.css` 作 `@import` 清单，**保序=构建 CSS 字节一致**；commit `7e3d75e`）——改样式进对应区文件、别动 @import 顺序（顺序里含刻意的后置覆盖）。后端同理——每个模块一摊事，跨了职责就拆。
+8. **纯前端（视觉）改动不准碰** API / 缓存 / 回测数据 / decoder 逻辑。视觉归视觉，逻辑归逻辑。（把巨石文件拆成组件属重构、不算逻辑改动；但一旦动了逻辑就按逻辑改动走 TDD。）
+9. **垂直 task 完成即英文 commit。** 见 `AGENTS.md`（该规则的正本）：每个可独立测试的垂直 task 一旦完成并验证，**立即用英文单独 commit**——不攒、不把多个 task 混进一个 commit、不夹带无关改动；完成的活没 commit 不许开下一个 task。
+10. **不删内容、不粉饰。** "AI 推理"原文、诚实 caveat 是产品诚实性的体现，只能视觉弱化不能删。
+11. **诚实优于好看，验证优于假设。** 这是贯穿全项目的元原则。
 
 ---
 
@@ -67,8 +81,9 @@
 ```bash
 source .venv/bin/activate                      # 或直接用 .venv/bin/python 前缀
 
-# 测试（mock，无网络秒出；tests/ 下全部可单跑）
+# 测试（mock，无网络秒出；tests/ 下全部可单跑）—— TDD 门禁，改动前后都要绿
 for t in tests/test_*.py; do .venv/bin/python "$t"; done
+bash scripts/check.sh                            # 一把梭：跑全测试 + 前端构建校验（本地 CI）
 # 覆盖：老地基(position/activity/trades/news/backtest) + 核心新逻辑(scorecard 命中率数学/
 # market_thesis 解析守卫/heisenberg 第七道守卫/v3 矩阵只降不升)
 
@@ -81,26 +96,20 @@ cd frontend && npm install && npm run dev       # 前端 → http://localhost:51
 python -m backtest._market_lift                 # 路 A lift 取样器（~24min，会烧 token，非必要别跑）
 ```
 
-**`.env` 必填**：`TAVILY_API_KEY`（app.tavily.com）· `CLASSROOM_API_KEY`（课堂网关，老师分配，pending 时 403）
+**`.env` 必填**：`TAVILY_API_KEY`（app.tavily.com）· `ANTHROPIC_API_KEY`（官方 API，console.anthropic.com，用户自己的 key）。`CLASSROOM_API_KEY` 为旧课堂网关回落位（**2026-07-08 起该网关域名 NXDOMAIN 已失效**，除非老师重新部署并配 `GATEWAY_URL`）
 **开发开关**：`USE_FAKE_KEYWORDS=true`（跳过 AI 关键词，403 时用）· `USE_DECODER_CACHE=false`（调 prompt 时关）
 
-**部署（Render 免费档）**：`render.yaml` Blueprint 一键部署——FastAPI 同源托管 `frontend/dist`（生产前端 `API=""`，本地 dev 仍打 8000）。`seed/` 是 git 跟踪的缓存快照（~2.2MB），云端磁盘 ephemeral、每次冷启动由 api/main.py 自动恢复 → 已缓存钱包零 token 秒回；`GET /demo-wallets` 给入口页"秒开"列表。**`/dashboard?refresh=1` 强制重建**（删该钱包各层缓存含共享 market_thesis，烧 token，demo 前刷新用；前端看板右上 ↻ 按钮带确认框）。完全开放模式：陌生钱包/刷新都会真烧 token（产品决策 2026-07-07，用户自担额度）。**i18n**：前端 `src/i18n.jsx` 中文原文即 key、`locales/en.js` 查表、缺失回退中文；AI 生成内容不翻、EN 模式 ZhNote 小标诚实标注；右上 中|EN 胶囊。
+**部署（Render 免费档）**：`render.yaml` Blueprint 一键部署——FastAPI 同源托管 `frontend/dist`（生产前端 `API=""`，本地 dev 仍打 8000）。`seed/` 是 git 跟踪的缓存快照（~2.2MB），云端磁盘 ephemeral、每次冷启动由 api/main.py 自动恢复 → 已缓存钱包零 token 秒回；**☁️ GitHub 状态持久层（core/persist.py，2026-07-09）**：扫榜成功后把 推荐榜+精选看板缓存+记分牌 打成 bundle 存 **`app-state` 分支**（非部署分支不触发重部署；保存需 Render 环境变量 `GITHUB_TOKEN`=fine-grained PAT 仅本仓库 Contents 读写），冷启动 seed 恢复后再从 raw 拉 bundle **谁新用谁**（恢复端无需 token）→ 用户刷新的榜跨部署/冷启动持久，不再穿越回 seed 快照；`GET /demo-wallets` 给入口页"秒开"列表。**`/dashboard?refresh=1` = 在今天强制重建**（真·实时；只删"今天"key 的各层缓存含共享 market_thesis，**旧日期快照永不删=失败回退底**，烧 token；前端看板右上 ↻ 按钮带确认框，失败回旧板+refresh_error 横幅）；`fresh=1`（扫榜 ai_verify 用）=要今天的数据但今天已有缓存不重烧。完全开放模式：陌生钱包/刷新都会真烧 token（产品决策 2026-07-07，用户自担额度）。**i18n**：前端 `src/i18n.jsx` 中文原文即 key，EN 四层查表：UI 词典 `locales/en.js` → **运行时词典**（2026-07-08 起的正解：后端构建看板/简报/推荐时 `core/translate.py` 把 AI 中文批量翻好、payload 带 `i18n_en` 映射随缓存持久化，前端 fetch 后 `registerAiTranslations()` 注册，~$0.01-0.03/构建、命中零成本；7-08 后缺翻译的缓存命中时懒自愈回写）→ 离线词典 `ai_en.js`（6-25 冻结世界的历史兜底）→ 模式引擎；全 miss 回退中文+ZhNote 诚实标注（现仅翻译调用失败时出现）；右上 中|EN 胶囊。
 
-**课堂网关调用**（不用 anthropic SDK，直接 requests.post）：
-```python
-resp = requests.post(
-    "https://4dm65e698a.execute-api.us-west-2.amazonaws.com/prod/invoke",
-    headers={"Content-Type": "application/json", "x-api-key": CLASSROOM_API_KEY},
-    json={"model": "claude-sonnet-4.5", "input": prompt, "maxTokens": 2000}, timeout=15)
-output = resp.json()["output"]   # 结果在 output，不是 content[0].text
-```
+**LLM 调用（core/llm.py 双后端，全部走 `call_gateway`，不用 SDK 直接 requests.post）**：
+有 `ANTHROPIC_API_KEY` → 官方 `https://api.anthropic.com/v1/messages`（headers 带 `x-api-key` + `anthropic-version: 2023-06-01`；模型 **`claude-sonnet-5`**（2026-07-08 升级，推广价 $2/$10 至 2026-08-31 比 sonnet-4-5 还便宜、指令遵循更强）；🔴 **thinking 显式 `{"type":"disabled"}`**——Sonnet 5 不传会默认开自适应思考、挤占 max_tokens(最大才2000)截断 JSON 炸解析器；`ANTHROPIC_MODEL`/`ANTHROPIC_THINKING` 环境变量可覆盖（开思考须同时加大调用点 max_tokens）；文本在 `content[]` 的 text 块）；否则回落课堂网关（`CLASSROOM_API_KEY`，**2026-07-08 起默认域名 NXDOMAIN**，坑：模型名 `claude-sonnet-4.5` 点号、maxTokens≤2048、结果在 `["output"]`）。错误分类两后端共用：NO_KEY/TIMEOUT/UNREACHABLE/RATE_LIMITED(含 529)/HTTP_ERROR。
 
 ---
 
 ## 架构
 
 ```
-core/llm.py             →  🔴 课堂网关唯一客户端（URL/model/错误分类一处定义；Bedrock 迁移点就这一处）。全部 AI 调用走 call_gateway，不许再复制 requests.post
+core/llm.py             →  🔴 LLM 唯一客户端·双后端（ANTHROPIC_API_KEY→官方 API / 回落课堂网关；URL/model/错误分类一处定义）。全部 AI 调用走 call_gateway，不许再复制 requests.post
 core/config.py          →  🔴 BRIEFING_AS_OF 单一出口（改它 re-key 全部缓存→重烧，别随手改）
 fetcher/polymarket.py   →  get_top_political_position(address)   # 持仓+政治过滤+$5k
 fetcher/trades.py       →  get_entry_time_v2(addr, cid)          # 建仓时间·首选（按市场查 /trades）
@@ -124,7 +133,7 @@ scorecard.py            →  诚实记分牌：record_judgment(钩子,/analyze=d
 frontend/ (Vite+React)  →  src/App.jsx 单页（统一看板:英雄结论+D3上帝视角时间轴(实时光标)+原生赔率条(替iframe)+新闻×社媒并排 / Decode / 完整简报 / 市场Context / Track Record含记分牌）· src/index.css · 依赖 d3-scale/shape/array
 backtest/               →  独立模块，诊断脚本带 _ 前缀；产物全 git 跟踪、静态、零 token
 ```
-**🔴 简报 AS_OF（里程碑 2026-06-25 已拔钉子）**：常量 `BRIEFING_AS_OF`（**唯一定义在 `core/config.py`**）默认从 `2026-06-20` 快照**推进到 `2026-06-25`（数据世界"现在"，固定）**——解锁当前数据 + 社媒动量并排 + 记分牌从今天积累。**暂用固定 6-25 不用 `date.today()`**：数据世界每天前进、用 today 会缓存天天过期重烧（每钱包整建 ~12k）；真上 Bedrock/有预算再切 `date.today()` 走逐日实时。改它会 re-key 所有 (钱包,as_of) 缓存→全部重烧，别随手改。
+**🔴 简报 AS_OF（2026-07-08 晚起全实时）**：`BRIEFING_AS_OF`（**唯一定义在 `core/config.py`**）**默认 = `date.today()`**——课堂网关死亡后切自有 `ANTHROPIC_API_KEY`，"钉死 6-25 省老师 token"的历史约束解除。经济性由缓存层兜住：/dashboard 默认读该钱包**最新日期**快照（`core/cachefiles.newest_dated`，旧快照零 token 秒回），只有 新钱包/↻刷新/扫榜 ai_verify(fresh=1) 才在今天真烧（自有 key，~$0.05/钱包）。旧日期快照永不被刷新删除→重建失败自动回退（`_stale_dashboard_fallback`）。环境变量 `BRIEFING_AS_OF` 可覆盖回某天（回测/复现用）。已知边界：值在进程启动时求值，长驻进程跨天需重启才换日（Render 免费档常冷启动，实际无感）。AI 精选 = 推荐榜 top 5（`AI_TOP` 可调）。
 **🔴 数据层第七道守卫**：参数名写错→API 返 200 静默返全局流（状态分类抓不到），heisenberg 客户端核对"返回钱包==请求钱包"拦截，加新 endpoint 时别绕过。
 **🔴 诚实记分牌三契约**（`scorecard.py`，改它不许越）：① 顶上是「判断方向命中率」，**永不算跟单收益率**（不碰任何 $ 收益）；② NO BASIS **不进命中率**分子分母，单列（+"事后看其实有清晰方向"自审）；③ 顶上冷数字**纯代码算、不调 AI**。档案从装上往后累积、第一天空=正常（**绝不回填造假**）；命中率要等盘真结算才长出来。574 `winning_outcome` 实测=字面 `"Yes"/"No"`。
 
