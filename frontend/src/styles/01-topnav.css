@@ -1,0 +1,27 @@
+/* ── 顶部导航：极简两 tab ─────────────────────────────── */
+/* 顶栏 = 实时战力状态栏：深色 / 等宽 / 方正 / 青绿三色 / 细线 */
+.topbar {
+  display: flex; align-items: center; gap: 16px;
+  padding: 20px 2px; margin-bottom: 24px;
+  border-bottom: 1px solid var(--line-soft);
+}
+.brand {
+  font-family: var(--mono); font-weight: 700; font-size: 13px; letter-spacing: 0.08em;
+  color: var(--text); display: flex; align-items: center; gap: 9px; cursor: pointer;
+}
+.brand .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent);
+  box-shadow: 0 0 8px var(--accent); }
+
+/* 战力功勋章：方正等宽监控块，点击进回测。绿/红只落在 W/L 两字，配角不抢戏 */
+.medal {
+  margin-left: auto; display: flex; align-items: center; gap: 5px;
+  font-family: var(--mono); font-size: 11.5px; font-weight: 600; letter-spacing: 0.03em;
+  color: var(--text-2); padding: 6px 12px; border: 1px solid var(--line); border-radius: 3px;
+  background: var(--panel); cursor: pointer; white-space: nowrap;
+  transition: border-color 0.15s, background 0.15s;
+}
+.medal:hover, .medal.active { border-color: var(--accent); background: var(--panel-2); }
+.medal .m-w { color: var(--green); font-weight: 700; }
+.medal .m-l { color: var(--red); font-weight: 700; }
+.medal .m-arrow { color: var(--text-4); transition: color 0.15s; }
+.medal:hover .m-arrow, .medal.active .m-arrow { color: var(--accent); }
