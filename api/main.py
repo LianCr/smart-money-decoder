@@ -60,6 +60,7 @@ from core.config import BRIEFING_AS_OF
 from core.cachefiles import newest_dated
 from core.redis_coord import coordinator
 from core.refresh_jobs import RecommendationRefresh
+from core.dashboard_jobs import DashboardSingleFlight, stale_while_building
 from core.translate import attach_i18n_en
 from fetcher.polymarket import get_top_political_position
 from fetcher.activity import get_entry_time, ActivityAPIError
@@ -488,8 +489,7 @@ def _stale_dashboard_fallback(wallet: str, reason: str, message: str):
     return _err(502, reason, message)
 
 
-@app.get("/dashboard")
-def dashboard(wallet: str, refresh: int = 0, fresh: int = 0):
+def _dashboard_impl(wallet: str, refresh: int = 0, fresh: int = 0):
     """v3 统一看板：①身份 ②这一注 ③实时盘面 ④行为流 ⑤世界催化剂 ⑥Edge/Reasoning。
     复用已封板模块输出（briefing + behavioral_flag + reasoner ⑥ + pnl 曲线），整份按(钱包,as_of)硬缓存。
     refresh=1：强制在**今天**重建（烧 token、用户确认过）——实时刷新的正门。
@@ -663,6 +663,34 @@ def dashboard(wallet: str, refresh: int = 0, fresh: int = 0):
             follow_call=reasoning["follow_call"], confidence=reasoning["confidence"],
             source="board", settle_date=(b.get("meta", {}) or {}).get("settle"))
     return response
+
+
+_DASHBOARD_FLIGHT = DashboardSingleFlight(coordinator)
+
+
+@app.get("/dashboard")
+def dashboard(wallet: str, refresh: int = 0, fresh: int = 0):
+    """Coordinate the costly dashboard pipeline across app instances.
+
+    A duplicate request gets the last good board immediately when available.
+    For a first-ever build, 202 tells the frontend to keep polling.
+    """
+    wallet = (wallet or "").strip()
+    as_of = date.today().isoformat() if (refresh or fresh) else BRIEFING_AS_OF
+    lease = _DASHBOARD_FLIGHT.enter(wallet, as_of)
+    if not lease.acquired:
+        stale = stale_while_building(DASHBOARD_CACHE, wallet)
+        if stale:
+            return stale
+        return JSONResponse(status_code=202, content={
+            "error": "DASHBOARD_BUILD_IN_PROGRESS",
+            "message": "同一钱包的看板正在生成，请稍候。",
+            "retry_after": 3,
+        })
+    try:
+        return _dashboard_impl(wallet, refresh=refresh, fresh=fresh)
+    finally:
+        lease.release()
 
 
 RECOMMEND_FILE = Path(".data/recommendations.json")

@@ -81,6 +81,12 @@ backtest/                         offline backtest pipeline (sealed)
 
 **Stack:** Python 3.10+ · FastAPI · React + Vite · `claude-sonnet-4.5` (via a gateway) · Tavily.
 
+**Optional Redis coordination:** set `REDIS_URL` to make recommendation scans and
+per-wallet dashboard builds single-flight across workers/instances. Redis holds
+only expiring locks and job status; dashboard/recommendation results remain in
+the existing file + GitHub persistence layer. If Redis is absent or unavailable,
+the app automatically falls back to process-local coordination.
+
 **External data sources:** `data-api.polymarket.com` (positions / activity / trades), `gamma-api.polymarket.com` (events, resolution), `clob.polymarket.com` (historical prices), `user-pnl-api.polymarket.com` (PnL curve), `lb-api.polymarket.com/volume` (leaderboard), Tavily (news).
 
 ---

@@ -346,6 +346,7 @@ const REASON_EN = {
   NO_POLITICAL_POSITIONS: "This wallet has no political-market positions — we only analyze politics markets.",
   ALL_BELOW_MIN_VALUE: "All positions are below the minimum size threshold — too small to analyze meaningfully.",
   DASHBOARD_PIPELINE_FAILED: "The analysis pipeline failed upstream (data source or AI gateway). Please retry later.",
+  DASHBOARD_BUILD_IN_PROGRESS: "This wallet dashboard is already being built. Waiting for the result…",
   BRIEFING_PIPELINE_FAILED: "The briefing pipeline failed upstream (data source or AI gateway). Please retry later.",
   MARKET_CONTEXT_FAILED: "Market-context synthesis failed upstream. Please retry later.",
   RATE_LIMITED: "Upstream API rate limit hit — please wait a moment and retry.",
@@ -1830,11 +1831,20 @@ function BoardView() {
     if (!w) return;
     setLoading(true); setData(null); setError(null);
     try {
-      const resp = await fetch(`${API}/dashboard?wallet=${encodeURIComponent(w)}${refresh ? "&refresh=1" : ""}`);
-      const j = await resp.json();
-      registerAiTranslations(j.i18n_en);   // EN 运行时词典：后端翻好的 AI 文案，注册后 t() 直接命中
-      if (!resp.ok || j.error) setError({ reason: j.error || `HTTP ${resp.status}`, message: j.message || t("请求失败") });
-      else setData(j);
+      for (let attempt = 0; attempt < 80; attempt += 1) {
+        const resp = await fetch(`${API}/dashboard?wallet=${encodeURIComponent(w)}${refresh ? "&refresh=1" : ""}`);
+        const j = await resp.json();
+        if (resp.status === 202 && j.error === "DASHBOARD_BUILD_IN_PROGRESS") {
+          await new Promise((resolve) => setTimeout(resolve, (j.retry_after || 3) * 1000));
+          refresh = false; // poll the completed cache; never request a second forced rebuild
+          continue;
+        }
+        registerAiTranslations(j.i18n_en);   // EN 运行时词典：后端翻好的 AI 文案，注册后 t() 直接命中
+        if (!resp.ok || j.error) setError({ reason: j.error || `HTTP ${resp.status}`, message: j.message || t("请求失败") });
+        else setData(j);
+        return;
+      }
+      setError({ reason: "DASHBOARD_BUILD_IN_PROGRESS", message: t("看板仍在生成，请稍后重试。") });
     } catch (e) {
       setError({ reason: "NETWORK", message: t("无法连接后端服务，请稍后重试。") });
     } finally { setLoading(false); }
@@ -1924,6 +1934,9 @@ function BoardView() {
         <>
           {data.refresh_error && (
             <div className="db-stale-warn">⚠ {t("刷新失败，已回退到上次成功的看板（数据仍是旧的）")} · <span className="num">{data.refresh_error}</span></div>
+          )}
+          {data.refresh_in_progress && (
+            <div className="db-stale-warn">↻ {t("另一位访客正在刷新这份看板；先展示上次成功结果，避免重复消耗 AI 额度。")}</div>
           )}
           <div className="db-refresh-bar">
             <span className="db-refresh-asof num">as-of {data.as_of}</span>

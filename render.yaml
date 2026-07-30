@@ -20,3 +20,5 @@ services:
         sync: false
       - key: HEISENBERG_API_KEY
         sync: false
+      - key: REDIS_URL
+        sync: false          # 可选：Render Key Value / Upstash 连接串；未配不影响单实例运行
