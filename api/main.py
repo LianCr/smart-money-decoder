@@ -82,7 +82,20 @@ from services.dashboard_build import (
 )
 import scorecard
 
-app = FastAPI(title="smart-money-decoder API", version="1.0")
+from contextlib import asynccontextmanager
+
+
+@asynccontextmanager
+async def _lifespan(_app):
+    """启动时把 anyio 工作线程池的隐式上限（40）显式化（AUDIT T1.4 顺带项）。
+    全部端点都是同步 def、共享这个池；看板构建一条独占 worker 1-3 分钟——
+    上限显式写死后可观测、可调，不再是"藏在 anyio 默认值里的事实"。数值不变=行为不变。"""
+    from anyio import to_thread
+    to_thread.current_default_thread_limiter().total_tokens = 40
+    yield
+
+
+app = FastAPI(title="smart-money-decoder API", version="1.0", lifespan=_lifespan)
 
 # ── CORS：放行本地两个常见前端开发端口 ────────────────────────────────────────
 app.add_middleware(
