@@ -15,7 +15,7 @@ from datetime import date
 
 BRIEFING_AS_OF = os.environ.get("BRIEFING_AS_OF") or date.today().isoformat()
 
-# ── 入站限流阈值（P1-15，core/ratelimit.py 用，api 层对 /dashboard /analyze 上闸）──
+# ── 入站限流阈值（P1-15，core/ratelimit.py 用，api 层对 /dashboard 上闸）──
 # 🔴 闸是防"额度被脚本刷空"，不是关门——「完全开放」的产品决策（2026-07-07）不变。
 # 默认值对人类浏览宽松：缓存命中为主的真实用法一分钟点不了 30 次；每日全局 500 是
 # 最坏情况（全部 miss 重建，~$0.05/次）≈$25/天 的硬顶。环境变量可调，改默认值走这里。

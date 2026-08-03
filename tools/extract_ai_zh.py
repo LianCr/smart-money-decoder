@@ -37,7 +37,6 @@ def main():
     files = (glob.glob(".cache/dashboard/*_2026-06-25.json")
              + glob.glob(".cache/briefing_api/*_2026-06-25.json")
              + glob.glob(".cache/market_context/*.json")
-             + glob.glob(".cache/analyze/*.json")
              + [".data/recommendations.json", "backtest/cases.json", "backtest/lift_result.json"])
     for p in files:
         try:
