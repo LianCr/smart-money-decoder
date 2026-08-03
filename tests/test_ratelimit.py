@@ -1,7 +1,7 @@
 """
 tests/test_ratelimit.py — core/ratelimit 入站闸契约（P1-15，零网络，假时钟）
 
-背景：/dashboard、/analyze 会真烧 token（完全开放的产品决策不变），但"决定开放"和
+背景：/dashboard 会真烧 token（完全开放的产品决策不变），但"决定开放"和
 "没有任何闸"是两件事——一个循环就能把 Anthropic 额度打空。闸 = IP 滑动窗口 +
 每日全局总量硬闸，阈值在 core/config.py（环境变量可调）。覆盖：
   1. 窗口内额度内 → 全放行（None）

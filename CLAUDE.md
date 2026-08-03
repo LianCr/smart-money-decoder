@@ -12,7 +12,7 @@
 ## 项目定位
 
 **smart-money-decoder**：输入 Polymarket 钱包 → 定位其最大政治预测盘仓位 → 生成**统一看板**：①身份+体量 ②这一注+现状(含 What the bet) ③实时盘面(Polymarket 嵌入) ④巨鲸 48h 行为流 ⑤世界催化剂(GDELT+Tavily+gamma 三源:综述+时间线新闻流) ⑥Edge/Reasoning(置信度矩阵+局势判断)。只读 API，不涉及交易或私钥。
-（旧"最大仓解读卡"仍在 Decode tab 存档；统一看板是 v3 收官主形态。）
+（旧"最大仓解读卡"已正式存档——前端 `frontend/archive/`、后端 /analyze 链路 2026-08-03 下架；统一看板是 v3 收官主形态。）
 
 **产品灵魂（一句话）**：不卖确定性，卖对不确定性的清醒。代码算硬数字、AI 只做软解读、守卫防瞎说；没证据就说"没依据"，从不编造。
 
@@ -23,7 +23,7 @@
 1. **绝不为让指标好看而调松 decoder 跟单门槛。** 它的保守是对的——正是"躲过 Starmer 亏损"和 lift 裁决成立的原因。保守反映的是证据的真实缺席，不是可调的阈值。
 2. **绝不篡改数字的真实含义。** "命中"≠"翻倍"，"测判断方向"≠"测能赚多少钱"。视觉/文案可以炫，数字含义一个字都不能为了好看而改。
 3. **凡涉及"胜率"，先问一句：赢家是不是已经赎回消失了？** 公开接口看不到已离场的赢家（96% 赢家赎回后链上记录消失），自算胜率必被幸存者偏差污染。要用胜率类信号，必须用可信第三方质量评分（如新数据 API 的 Falcon Score），不能用公开 positions 硬算。
-4. **信心 = 市场命题级、单一、不锚钱包盈亏。** （2026-06-25 重设计，推翻旧"信心由代码矩阵算"）旧矩阵锚在钱包 pnl → 出现"证据反对这一注、却因 +10% 浮盈给高信心"（实证见 `_market_thesis_probe`：同一 Iran 盘两个反向钱包，老矩阵给 HIGH/MEDIUM 自相矛盾）。**新**：`analyzer/market_thesis.py` 把参照系从钱包换成市场——同一文章池 bull 论证 YES ‖ bear 论证 NO → reasoner 中立裁决，**直出单一最终信心**（按产品决策撤掉代码兜底守卫，靠 prompt 铁律 + 结构去 pnl 锚 + 对抗平衡输入）。按 (cid,as_of) 缓存→两个反向钱包共享同一份市场观、信心一致，差异挪到"顺/逆 edge"。**不加守卫≠不可观测**：每次 confidence/lean/rationale 记进 `.data/confidence_log.jsonl`，待盘真结算由记分牌回验"高信心是否真命中"。社媒只作减分/背离，不许加信心。（旧 decoder v2 矩阵 `/analyze` 仍在用、reasoner_v3 仍供 follow_call+代码 facts；dashboard ⑥ 的**信心**已切到 market_thesis。）
+4. **信心 = 市场命题级、单一、不锚钱包盈亏。** （2026-06-25 重设计，推翻旧"信心由代码矩阵算"）旧矩阵锚在钱包 pnl → 出现"证据反对这一注、却因 +10% 浮盈给高信心"（实证见 `_market_thesis_probe`：同一 Iran 盘两个反向钱包，老矩阵给 HIGH/MEDIUM 自相矛盾）。**新**：`analyzer/market_thesis.py` 把参照系从钱包换成市场——同一文章池 bull 论证 YES ‖ bear 论证 NO → reasoner 中立裁决，**直出单一最终信心**（按产品决策撤掉代码兜底守卫，靠 prompt 铁律 + 结构去 pnl 锚 + 对抗平衡输入）。按 (cid,as_of) 缓存→两个反向钱包共享同一份市场观、信心一致，差异挪到"顺/逆 edge"。**不加守卫≠不可观测**：每次 confidence/lean/rationale 记进 `.data/confidence_log.jsonl`，待盘真结算由记分牌回验"高信心是否真命中"。社媒只作减分/背离，不许加信心。（旧 decoder v2 矩阵现仅回测重放在用、reasoner_v3 仍供 follow_call+代码 facts；dashboard ⑥ 的**信心**已切到 market_thesis。）
 5. **数字/日期数学只能代码做，AI 不准算。** price_delta、空间、时长、日期全由代码预算好喂给 AI。
 6. **最大仓 ≠ 最值得看的仓。** 对冲/做市玩家的最大仓是对冲的一条腿，不代表方向信念（R2 已对此降级、`position_type` 已分类）。定位"最大政治仓"是**入口启发式**，不是"最强信念仓"的保证——看 `position_type` 和行为流，别被仓位金额骗。
 
@@ -42,7 +42,7 @@
 | Tavily `published_date` | RFC 2822 格式，用 `email.utils.parsedate_to_datetime` 转换 |
 | positions API 地址 | `data-api.polymarket.com`（不是 gamma-api） |
 | CLOB 历史价 | `clob.polymarket.com/prices-history?market=<tokenId>&...`；token=记录里的 `asset` 字段；短命市场 T-7 未创建返回 None |
-| **decoder 缓存 key 含 current_price** | 盘中市价漂移会 miss → 单靠它省不了 token。**靠 `/analyze` 外层"(钱包,日期)"缓存兜底** |
+| **decoder 缓存 key 含 current_price** | 盘中市价漂移会 miss → 单靠它省不了 token（现仅回测重放在用；正向流程靠 /dashboard 整份缓存兜底） |
 | 课堂网关模型（旧后端） | **只有 `claude-sonnet-4.5`（点号不是横杠）能用，haiku 返回 502**。maxTokens 上限 2048。官方 API 后端无此限制（模型 id 是横杠 `claude-sonnet-4-5`） |
 | **[Heisenberg v3] 参数真名因 endpoint 而异** | 官方 context 文档参数名不可靠，**实测真名**：569 PnL=`wallet`（传 proxy_wallet→400）· 556 Trades=`proxy_wallet`（文档写 `wallet_proxy` **被静默忽略→返回全局交易流**，错配比报错危险）· 581 Wallet360=`proxy_wallet` · 579 Leaderboard=`wallet_address`。打之前先核对真名 |
 | **[Heisenberg v3] `pagination.limit` 上限 200** | 传 >200（如 500）直接 404 `'max' tag` 校验失败、静默返空——别把它误判成"无数据" |
@@ -91,7 +91,7 @@ source .venv/bin/activate                      # 或直接用 .venv/bin/python �
 for t in tests/test_*.py; do .venv/bin/python "$t"; done
 bash scripts/check.sh                            # 一把梭：跑全测试 + 前端构建校验
 # 🔴 scripts/check.sh 就是 CI 跑的那个脚本（.github/workflows/check.yml），本地绿=CI 绿，不维护两套清单
-# 覆盖：老地基(position/activity/trades/news/backtest) + 核心新逻辑(scorecard 命中率数学/
+# 覆盖：老地基(政治判定/news/backtest) + 核心新逻辑(scorecard 命中率数学/
 # market_thesis 解析守卫/heisenberg 第七道守卫/v3 矩阵只降不升) + 工程地基(jsonstore 原子写与
 # 损坏隔离/无 key 可 import/业务文件读隔离/health 探活)
 
@@ -131,13 +131,12 @@ core/jsonstore.py       →  🔴 全项目落盘唯一原语：atomic_write_jso
 core/health.py          →  /healthz 的纯函数（env/路径注入 → 可单测）。
                            必填 key 缺失/目录不可写 = 不健康(503)
                            ⚠️ 逻辑不能写进 api/main.py：后者 import 时就复制 seed + 打 GitHub 请求，测试碰不得
-fetcher/polymarket.py   →  get_top_political_position(address)   # 持仓+政治过滤+$5k
-fetcher/trades.py       →  get_entry_time_v2(addr, cid)          # 建仓时间·首选（按市场查 /trades）
-fetcher/activity.py     →  get_entry_time(addr, cid)             # 建仓时间·fallback（翻全活动，150 条上限，禁止为回测改它）
-fetcher/news.py         →  get_news_for_market(q, entry_time, as_of=None)  # 关键词+Tavily 时间窗+缓存；as_of 防回测泄漏
-analyzer/decoder.py     →  decode_position(assembled, as_of=None)         # sonnet-4.5 + 6 道守卫；as_of 时间旅行
-renderer/card.py · main.py                                       # 终端卡片 + CLI
-api/main.py             →  GET /analyze（v2 解读卡）· /backtest（静态）· /briefing（v3 完整简报）· /market-context（Context 一虚一实）· /dashboard（v3 统一看板①-⑥，构建在 services/ · 路由只做 reason→HTTP 状态映射）· /recommendations（扫榜推荐流）· /hot-traders（本周政治热门条）· /scorecard（诚实记分牌：增量抓 574 结算+冷数字）
+fetcher/polymarket.py   →  fetch_events_by_ids + _is_political_event（gamma tags 政治判定，回测在用；v2 持仓选仓已随 /analyze 下架）
+fetcher/trades.py       →  get_wallet_profile / get_wallet_pnl_history（① 展示，best-effort；建仓时间查询已随 /analyze 下架）
+fetcher/activity.py     →  仅存 ActivityAPIError（backtest full_activity/resolution 的共享异常契约）
+fetcher/news.py         →  get_news_for_market(q, entry_time, as_of=None)  # 关键词+Tavily 时间窗+缓存；as_of 防回测泄漏（回测重放在用）
+analyzer/decoder.py     →  decode_position(assembled, as_of=None)  # sonnet-4.5 + 6 道守卫；唯一活调用方=backtest 重放；🔴 守卫实现待抽 guards.py 给 ⑥ 复用（T2.1）
+api/main.py             →  GET /backtest（静态）· /briefing（v3 完整简报）· /market-context（Context 一虚一实）· /dashboard（v3 统一看板①-⑥，构建在 services/ · 路由只做 reason→HTTP 状态映射）· /recommendations（扫榜推荐流）· /hot-traders（本周政治热门条）· /scorecard（诚实记分牌：增量抓 574 结算+冷数字）。（v2 /analyze 与 CLI 已于 2026-08-03 下架，代码在 git 历史）
 services/dashboard_build.py →  🔴 看板构建 service 层（P0-3 抽出）：build_dashboard(①-⑥ pipeline,按(钱包,AS_OF)硬缓存;**⑥ 信心由 market_thesis 直出、⑤ 用市场级共享池、reason_v3 瘦身只供 follow_call+facts**)+单飞入口 get_dashboard。**纯数据契约：只返 dict、预期失败不 raise、判别式="error" key**；api 路由和 recommend.ai_verify 进程内共用同一入口同一把锁；绝不 import api.main（后者 import 有副作用）
 fetcher/heisenberg.py   →  Heisenberg 共享客户端（参数真名表/limit≤200/🛡第七道守卫:返回钱包≠请求钱包→拦）
 fetcher/profile.py·actions.py·price.py  →  简报数据层 A画像/B动作/C价格（建在 heisenberg 上，全免费 key）
@@ -150,29 +149,31 @@ briefing/assemble.py·organize.py  →  A段编排(串数据层+催化剂+测谎
 briefing/market_context.py →  Context「一虚一实」：价格异动≤as-of × GDELT 三层洗催化剂 × 巨鲸 48h 行为流(get_behavior_flags)
 briefing/board_feed.py     →  统一看板⑤三源合并(GDELT+Tavily+gamma:综述+时间线流,↑印证/↓不买账)+②what_bet+持有侧 price_series。**新增 build_market_news_stream**：⑤ 改市场级共享池(两个反向钱包同一批新闻、方向标移交 ⑥ 顺/逆 edge)（纯组合层,不改封板）
 fetcher/social.py       →  585 Social Pulse 社媒情绪动量（关键词→acceleration/author_diversity_pct/有机帖；🔴情绪非事实·仅实时·进不了回测；剔通用词+相关性过滤防 OR 误匹配）
-scorecard.py            →  诚实记分牌：record_judgment(钩子,/analyze=decode·/dashboard=board)+fetch_settlements(574注入resolver)+compute_scorecard(纯代码)。档案 .data/scorecard.json(gitignored,装上后累积)
-frontend/ (Vite+React)  →  src/App.jsx 单页（统一看板:英雄结论+D3上帝视角时间轴(实时光标)+原生赔率条(替iframe)+新闻×社媒并排 / Decode / 完整简报 / 市场Context / Track Record含记分牌）· src/index.css · 依赖 d3-scale/shape/array
+scorecard.py            →  诚实记分牌：record_judgment(钩子,现仅 /dashboard=board；旧 decode 历史行保留、照常结算计入)+fetch_settlements(574注入resolver)+compute_scorecard(纯代码)。档案 .data/scorecard.json(gitignored,装上后累积)
+frontend/ (Vite+React)  →  src/App.jsx 单页（统一看板:英雄结论+D3上帝视角时间轴(实时光标)+原生赔率条(替iframe)+新闻×社媒并排 / Track Record含记分牌）· src/index.css · 依赖 d3-scale/shape/array。旧 v2 三视图在 frontend/archive/（正式存档、不进 bundle，见其 README）
 backtest/               →  独立模块，诊断脚本带 _ 前缀；产物全 git 跟踪、静态、零 token
 ```
 **🔴 简报 AS_OF（2026-07-08 晚起全实时）**：`BRIEFING_AS_OF`（**唯一定义在 `core/config.py`**）**默认 = `date.today()`**——课堂网关死亡后切自有 `ANTHROPIC_API_KEY`，"钉死 6-25 省老师 token"的历史约束解除。经济性由缓存层兜住：/dashboard 默认读该钱包**最新日期**快照（`core/cachefiles.newest_dated`，旧快照零 token 秒回），只有 新钱包/↻刷新/扫榜 ai_verify(fresh=1) 才在今天真烧（自有 key，~$0.05/钱包）。旧日期快照永不被刷新删除→重建失败自动回退（`_stale_dashboard_fallback`）。环境变量 `BRIEFING_AS_OF` 可覆盖回某天（回测/复现用）。已知边界：值在进程启动时求值，长驻进程跨天需重启才换日（Render 免费档常冷启动，实际无感）。AI 精选 = 推荐榜 top 5（`AI_TOP` 可调）。
 **🔴 数据层第七道守卫**：参数名写错→API 返 200 静默返全局流（状态分类抓不到），heisenberg 客户端核对"返回钱包==请求钱包"拦截，加新 endpoint 时别绕过。
 **🔴 诚实记分牌三契约**（`scorecard.py`，改它不许越）：① 顶上是「判断方向命中率」，**永不算跟单收益率**（不碰任何 $ 收益）；② NO BASIS **不进命中率**分子分母，单列（+"事后看其实有清晰方向"自审）；③ 顶上冷数字**纯代码算、不调 AI**。档案从装上往后累积、第一天空=正常（**绝不回填造假**）；命中率要等盘真结算才长出来。574 `winning_outcome` 实测=字面 `"Yes"/"No"`。
 
-**实时数据流**：positions（data-api 拿持仓 + gamma 批量拿 tags，本地过滤最大政治仓 >$5k）→ trades v2 拿建仓时间（fallback activity，再 fallback None）→ news（关键词 + Tavily，窗口 entry_time 前7后3，缓存 `.cache/news/`）→ decoder（sonnet-4.5 出卡）。
-**关键缓存**：`/analyze` 顶层按 `(小写钱包, 当天日期)` 缓存整条 pipeline 到 `.cache/analyze/<wallet>_<date>.json` → 同钱包当天重复 = 零 token 秒回。**这是 demo 不烧穿额度的命门。**
+**实时数据流（v3 唯一主链）**：positions_hz（Heisenberg 556 净持仓，最大未结算政治仓）→ briefing 数据层（画像/动作/价格，建仓时间来自 Heisenberg actions）→ 三源催化剂（GDELT+Tavily+gamma）→ market_thesis 直出 ⑥ 信心 → 整份看板按 (钱包,as_of) 硬缓存。**demo 不烧穿额度的命门 = `.cache/dashboard/` 整份缓存 + newest_dated 读最新快照**。（v2 的 data-api positions→entry_time→news→decoder 链已下架；decoder 仍由回测重放调用。）
 
 ---
 
 ## 解码层契约（analyzer/decoder.py）
 
-**输入**：position dict（来自 `get_top_political_position()`）核心字段——
+**（2026-08-03 起）唯一活调用方 = `backtest/pipeline.py` 的历史重放**（v2 /analyze 与 CLI 已下架）。
+**🔴 实现原封未动**：六道守卫是下一场 T2.1 要抽进 `guards.py` 给 ⑥ 复用的正本，在那之前一行不许删改。
+
+**输入**：position dict（历史上来自 v2 选仓器、现由回测重建同构 dict）核心字段——
 `market_question`(str) · `outcome`("Yes"/"No") · `entry_price`(float, 可 None，**与 entry_time 独立**) · `current_price` · `position_value` · `cash_pnl` · `pnl_pct`(**百分比数值非小数**，0.58=0.58%，矩阵阈值直接用 30/60) · `resolution_criteria`(可 None，AI 写 what_bet 必读防胡编) · `resolution_date`(可 None) · `market_id`/`event_id`(内部 ID 不入卡)
 独立返回 `entry_time`(int Unix 秒, **可 None**=翻页未找到，合法降级)
 news dict：`articles`(可空 `[]`) · `search_query` · `time_anchored`(bool，顶层) · 每条 `{title, url, published_at("YYYY-MM-DD"，字段名固定非 date), source, snippet}`
 
 **输出卡片**：`what_bet`(AI 一句话) · `catalyst`(AI 从 articles 选 1-2 条带 title+url+date) · `price_info`(**代码直填防幻觉**) · `follow_advice`(AI：还有空间/太迟了/没依据 + 理由) · `confidence`(AI 按矩阵表达，**不准改**) · `warnings`(代码填降级原因)
 
-**置信度矩阵 v2**（`decoder.py`，`/analyze` 用，代码算，优先级高→低）：articles 空→低(强制) · pnl_pct>60%→低 · pnl_pct<0% 且(无新闻或未锚定)→低 · pnl_pct<0%→中(封顶) · time_anchored=False→中(封顶) · 有新闻+anchored+0≤pnl<30%→高 · 有新闻+anchored+30≤pnl<60%→中
+**置信度矩阵 v2**（`decoder.py`，现仅回测重放在用，代码算，优先级高→低）：articles 空→低(强制) · pnl_pct>60%→低 · pnl_pct<0% 且(无新闻或未锚定)→低 · pnl_pct<0%→中(封顶) · time_anchored=False→中(封顶) · 有新闻+anchored+0≤pnl<30%→高 · 有新闻+anchored+30≤pnl<60%→中
 
 **置信度矩阵 v3**（`reasoner_v3.py`，⑥ 用，与 v2 并存、不替代）：v2 底座**删 rule5**(time_anchored=False→封中,实时场景不再因此降级) → 依次 `R1`(支持侧催化剂被市场反向定价:全背离→低/部分→封中)→`R2`(主仓 shares<另侧×3=对冲/做市→封中)→`R3`(48h 大额退出 clear_exit→封中)→`R4`(支持+威胁证据双空→低)，**逐条只降不升** + 输出**降级原因列表**(喂 ⑥ prompt) + 升级模块预留 no-op(现无升级路径)。`decoder.py` v2 矩阵原封不改。**R1 真实场景罕见**(市场否定钱包多由 R4 兜底,逻辑已零成本证明,不专门猎盘)。
 
@@ -191,7 +192,7 @@ news dict：`articles`(可空 `[]`) · `search_query` · `time_anchored`(bool，
 
 **v2 结论（钉死，详见 KNOWN_ISSUES.md 顶部）**：lift N=94，全集 +10% / edge-band +13%。三层裁决：① decoder「诚实保守不瞎跟」**已验证**（94 盘只 GO 17）；② 「硬盘能否发现可盈利 edge」**测不出但非证伪**（口径喂不饱，非 decoder 没 edge）；③ 救它 = 换「离场盈亏」口径（路 B）= **v3 首要任务**。lift 是一次抽样、会波动（前端已标）。
 
-**回测模块约束**：`backtest/` 独立模块，**禁止为回测改 `fetcher/activity.py`**（正向流程的 150 条降级语义是契约，共用会失去含义）；历史翻页用 `backtest/full_activity.py`。
+**回测模块约束**：`backtest/` 独立模块；历史翻页用 `backtest/full_activity.py`。（旧"禁止为回测改 activity.py 的 150 条降级语义"约束已随 get_entry_time 下架而消灭——activity.py 现只剩共享异常类。）
 
 ---
 
@@ -200,7 +201,7 @@ news dict：`articles`(可空 `[]`) · `search_query` · `time_anchored`(bool，
 **v3 已收官（现全部在 `master`）**：统一看板 ①-⑥ 跑通——身份/这一注(含 what_bet)/实时盘面/巨鲸 48h 行为流/三源催化剂(综述+时间线·带方向标)/⑥ Edge。数据地基(Heisenberg)、完整简报、Context 一虚一实、⑥ v3 置信度矩阵、**诚实记分牌(decode/board 判断自我验证)** 均落地。详见 `DEV_LOG.md`(2026-06-23) + `KNOWN_ISSUES.md` 第八类各愿景 ✅。
 
 **下一程 roadmap**：
-1. **Decode → 存档/记分牌**：✅ 记分牌机制已落地(`scorecard.py` + Track Record 顶部)；待办 = 把旧"最大仓解读卡"(Decode tab)正式转成存档形态、不再是主入口。
+1. **Decode → 存档/记分牌**：✅ 全部完成——记分牌机制已落地(`scorecard.py` + Track Record 顶部)；旧"最大仓解读卡"已正式存档（前端 `frontend/archive/`，后端 /analyze 链路 2026-08-03 下架，decode 历史判断保留在记分牌照常结算）。
 2. **扫榜推荐主页**：从"用户输钱包"→"系统扫政治盈利榜、主动推荐值得看的钱包/仓位"，主页即推荐流（接愿景 A 看动作 + B 哨兵）。
 3. **路 B 离场盈亏 ROI 回测（v3 第一仗，仍开放）**：performance 从"测判断方向"升级为"AI 判 GO 跟入 $1000 平均收益率 vs 无脑全抄基线"。数据已绿灯(569 PnL 实测含全损)、口径已定，**尚未跑全量验收**。
 
