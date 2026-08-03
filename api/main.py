@@ -26,7 +26,7 @@ from datetime import date
 from pathlib import Path
 
 from dotenv import load_dotenv
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from fastapi.staticfiles import StaticFiles
@@ -56,8 +56,10 @@ try:
 except Exception as _e:
     print(f"⚠ GitHub 状态恢复失败（不阻塞）：{_e}", flush=True)
 
-from core.config import BRIEFING_AS_OF
+from core.config import (BRIEFING_AS_OF, RATE_LIMIT_DAILY_GLOBAL, RATE_LIMIT_PER_IP,
+                         RATE_LIMIT_WINDOW_SECONDS)
 from core.cachefiles import newest_dated
+from core.ratelimit import RateLimiter
 from core.health import health_report
 from core.jsonstore import CORRUPT, OK, atomic_write_json, atomic_write_text, load_json
 from core.redis_coord import coordinator
@@ -122,6 +124,30 @@ def _err(status: int, reason: str, message: str) -> JSONResponse:
     """统一错误出口，body 形如 {"error": reason, "message": ...}。"""
     _log(f"   ✗ [{status}] {reason} — {message}")
     return JSONResponse(status_code=status, content={"error": reason, "message": message})
+
+
+# ── 入站限流（P1-15）：只闸真烧 token 的 /dashboard /analyze；阈值在 core/config.py。
+# 🔴 闸防"额度被刷空"，不是关门——「完全开放」的产品决策不变。进程内 ai_verify 不经
+# 路由、天然不受闸（扫榜是用户主动批准的批量烧）。
+_RATE_LIMITER = RateLimiter(RATE_LIMIT_PER_IP, RATE_LIMIT_WINDOW_SECONDS, RATE_LIMIT_DAILY_GLOBAL)
+
+
+def _client_ip(request: Request) -> str:
+    """Render 代理层设 X-Forwarded-For（首项=真实客户端）；本地直连退回 socket 对端。
+    直连时该头可伪造——所以每日全局硬闸不认 IP，是刷不开的兜底。"""
+    fwd = request.headers.get("x-forwarded-for")
+    if fwd:
+        return fwd.split(",")[0].strip()
+    return request.client.host if request.client else "unknown"
+
+
+def _rate_limited(request: Request) -> JSONResponse | None:
+    """过闸：放行返回 None；超限返回 429（人话 message + retry_after 已在闸里备好）。"""
+    denied = _RATE_LIMITER.check(_client_ip(request))
+    if denied is None:
+        return None
+    _log(f"   ✗ [429] {denied['error']} ip={_client_ip(request)[:24]}")
+    return JSONResponse(status_code=429, content=denied)
 
 
 def _resolve_entry_time(wallet: str, condition_id: str) -> int | None:
@@ -209,8 +235,11 @@ def backtest():
 
 
 @app.get("/analyze")
-def analyze(wallet: str):
+def analyze(wallet: str, request: Request):
     """跑完整 pipeline，返回解读卡片 JSON 或分层错误。"""
+    denied = _rate_limited(request)
+    if denied is not None:
+        return denied
     t0 = time.time()
     wallet = (wallet or "").strip()
     _log(f"\n=== /analyze wallet={wallet[:14]}… ===")
@@ -389,10 +418,13 @@ def _dashboard_status(reason: str) -> int:
 
 
 @app.get("/dashboard")
-def dashboard(wallet: str, refresh: int = 0, fresh: int = 0):
+def dashboard(wallet: str, request: Request, refresh: int = 0, fresh: int = 0):
     """v3 统一看板：构建/单飞/缓存/旧板回退全在 services/dashboard_build.get_dashboard
     （纯数据契约，recommend.ai_verify 进程内走同一入口）；这里只把错误 dict 映射成 HTTP 状态码。
     refresh=1=强制今天重建（烧 token）；fresh=1=要今天的数据但已有今天缓存不重烧。"""
+    denied = _rate_limited(request)
+    if denied is not None:
+        return denied
     out = get_dashboard(wallet, refresh=refresh, fresh=fresh)
     if isinstance(out, dict) and out.get("error"):
         return JSONResponse(status_code=_dashboard_status(out["error"]), content=out)
