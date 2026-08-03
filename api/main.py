@@ -59,6 +59,7 @@ except Exception as _e:
 from core.config import BRIEFING_AS_OF
 from core.cachefiles import newest_dated
 from core.health import health_report
+from core.jsonstore import CORRUPT, OK, atomic_write_json, atomic_write_text, load_json
 from core.redis_coord import coordinator
 from core.refresh_jobs import RecommendationRefresh
 from core.dashboard_jobs import DashboardSingleFlight, stale_while_building, resolve_contention
@@ -297,7 +298,7 @@ def analyze(wallet: str):
     # 写外层缓存（只缓存成功卡片；错误路径在上方已 return，到不了这里）
     try:
         ANALYZE_CACHE.mkdir(parents=True, exist_ok=True)
-        cache_path.write_text(json.dumps(response, ensure_ascii=False, indent=2), encoding="utf-8")
+        atomic_write_json(cache_path, response)
         _log(f"   💾 已缓存 {cache_key}（同钱包当天再点零 token、秒回）")
     except Exception:
         pass
@@ -403,7 +404,7 @@ def _reasoner_cached(briefing: dict, behavior: dict, wallet: str, as_of: str = B
         r = {"follow_call": None, "confidence": None, "reasoning": None,
              "guard_tripped": "FACTS_BUILD_FAILED", "guard_message": f"{type(e).__name__}: {e}"}
     try:
-        p.write_text(json.dumps(r, ensure_ascii=False, indent=2), encoding="utf-8")
+        atomic_write_json(p, r)
     except Exception:
         pass
     return r
@@ -427,8 +428,7 @@ def _board_ai_cached(wallet, market_q, outcome, behavior, gdelt_events, tavily_c
     world_summary = board_feed.merged_summary(market_q, outcome, behavior, gdelt_facts, tavily_facts, gamma_ctx)
     what_bet = board_feed.what_the_bet(market_q, outcome, resolution)
     try:
-        p.write_text(json.dumps({"world_summary": world_summary, "what_bet": what_bet},
-                                ensure_ascii=False, indent=2), encoding="utf-8")
+        atomic_write_json(p, {"world_summary": world_summary, "what_bet": what_bet})
     except Exception:
         pass
     return world_summary, what_bet
@@ -527,8 +527,7 @@ def _dashboard_impl(wallet: str, refresh: int = 0, fresh: int = 0):
                     if attach_i18n_en(cached):
                         _log("   🌐 i18n_en 懒自愈：补翻译并回写缓存")
                         try:
-                            newest[0].write_text(json.dumps(cached, ensure_ascii=False, indent=2),
-                                                 encoding="utf-8")
+                            atomic_write_json(newest[0], cached)
                         except Exception:
                             pass
                 return cached
@@ -663,7 +662,7 @@ def _dashboard_impl(wallet: str, refresh: int = 0, fresh: int = 0):
 
     try:
         DASHBOARD_CACHE.mkdir(parents=True, exist_ok=True)
-        cache_path.write_text(json.dumps(response, ensure_ascii=False, indent=2), encoding="utf-8")
+        atomic_write_json(cache_path, response)
         _log(f"   💾 已缓存 {cache_key}（同钱包零 token 秒回）")
     except Exception:
         pass
@@ -752,14 +751,14 @@ def _run_rec_scan():
         cands = recommend.scan(ai_top=int(os.environ.get("AI_TOP", "5")),
                                as_of=date.today().isoformat())
         if not cands and backup and json.loads(backup).get("candidates"):
-            RECOMMEND_FILE.write_text(backup, encoding="utf-8")
+            atomic_write_text(RECOMMEND_FILE, backup)
             raise RuntimeError("扫榜返回空（上游数据源失败？）——已保留旧榜")
         else:
             _persist_app_state()          # ☁️ 刷新成功 → 存回 GitHub，跨部署/冷启动持久
     except Exception:
         if backup:
             try:
-                RECOMMEND_FILE.write_text(backup, encoding="utf-8")
+                atomic_write_text(RECOMMEND_FILE, backup)
             except Exception:
                 pass
         raise
@@ -773,11 +772,14 @@ def recommendations(refresh: int = 0):
         if _REC_REFRESH.start(_run_rec_scan):
             _log("\n=== /recommendations REFRESH：后台扫榜启动 ===")
     out = {"as_of": BRIEFING_AS_OF, "candidates": []}
-    if RECOMMEND_FILE.exists():
-        try:
-            out = json.loads(RECOMMEND_FILE.read_text(encoding="utf-8"))
-        except Exception:
-            pass
+    # 🔴 用 load_json 而不是裸 json.loads：榜文件损坏时原件被隔离成 .corrupt-* 备份
+    # （证据留着，可人工抢救），而不是被后续写入无声盖掉。用户仍看到空榜（与旧行为一致），
+    # 但日志里会明说"损坏已隔离"，不再是一个查不出原因的空白首页。
+    status, data = load_json(RECOMMEND_FILE, default=None)
+    if status == OK and isinstance(data, dict):
+        out = data
+    elif status == CORRUPT:
+        _log("   ⚠ 推荐榜文件损坏，已隔离为 .corrupt-* 备份；本次返回空榜（下次扫榜会重建）")
     # 🔴 serve-time 对齐：卡片 ⑥ 以该钱包最新看板缓存为准（单一真相源，纯文件读零 token）——
     # 否则扫榜后的重建/翻天/守卫换盘会造成"卡上一套、点进去另一套"
     try:
@@ -800,11 +802,11 @@ HOT_TRADERS_FILE = Path(".data/hot_traders.json")
 @app.get("/hot-traders")
 def hot_traders():
     """入口页滚动条：本周政治盘热门交易者（hot_traders.py 定期写）。空=还没扫过。"""
-    if HOT_TRADERS_FILE.exists():
-        try:
-            return json.loads(HOT_TRADERS_FILE.read_text(encoding="utf-8"))
-        except Exception:
-            pass
+    status, data = load_json(HOT_TRADERS_FILE, default=None)
+    if status == OK and isinstance(data, dict):
+        return data
+    if status == CORRUPT:
+        _log("   ⚠ 热门条文件损坏，已隔离为 .corrupt-* 备份；本次返回空条")
     return {"as_of": BRIEFING_AS_OF, "period": "7d", "traders": []}
 
 
@@ -876,7 +878,7 @@ def briefing(wallet: str):
 
     try:
         BRIEFING_CACHE.mkdir(parents=True, exist_ok=True)
-        cache_path.write_text(json.dumps(response, ensure_ascii=False, indent=2), encoding="utf-8")
+        atomic_write_json(cache_path, response)
         _log(f"   💾 已缓存 {cache_key}（同钱包零 token 秒回）")
     except Exception:
         pass

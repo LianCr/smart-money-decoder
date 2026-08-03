@@ -18,6 +18,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 from core.llm import call_gateway, GatewayError
+from core.jsonstore import atomic_write_json
 
 # ── 配置项 ────────────────────────────────────────────────────────────────────
 MAX_TOKENS        = 2000
@@ -394,10 +395,7 @@ def decode_position(assembled: dict, as_of: str | None = None) -> dict:
     # 第八步：写缓存（开启时）
     if USE_CACHE and cache_path is not None:
         try:
-            cache_path.write_text(
-                json.dumps(card, ensure_ascii=False, indent=2),
-                encoding="utf-8",
-            )
+            atomic_write_json(cache_path, card)
         except Exception:
             pass
 

@@ -16,6 +16,7 @@ from dotenv import load_dotenv
 from tavily import TavilyClient
 
 from core.llm import call_gateway, GatewayError
+from core.jsonstore import atomic_write_json
 
 load_dotenv()
 
@@ -280,10 +281,7 @@ def get_news_for_market(
         "time_anchored": time_anchored,
     }
     try:
-        cache_path.write_text(
-            json.dumps(result, ensure_ascii=False, indent=2),
-            encoding="utf-8",
-        )
+        atomic_write_json(cache_path, result)
     except Exception:
         pass  # 写缓存失败不影响主流程，静默跳过
 
