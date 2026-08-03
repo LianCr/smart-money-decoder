@@ -21,3 +21,15 @@ __pycache__/
 *.pyc
 
 
+# 开发过程截图（不入库）
+截屏*.png
+*.png
+
+# 面试复习手册（私人文件，不入库）
+INTERVIEW_PREP*.md
+
+# 前端构建产物（Render 每次 npm run build 重生成，不入库；本地看前端需先 build）
+frontend/dist/
+
+# 简历等私人文档，防误入库
+*.docx
