@@ -14,7 +14,10 @@ services:
     branch: master             # 唯一真相 = 唯一部署源（见文件头）
     buildCommand: pip install -r requirements.txt && cd frontend && npm ci && npm run build
     startCommand: uvicorn api.main:app --host 0.0.0.0 --port $PORT
-    healthCheckPath: /backtest
+    # 真探活（必填 key + 缓存目录可写）。原来指向 /backtest —— 那个端点只读两个静态
+    # JSON、读失败还吞掉照样 200，等于没有健康检查。缺 key 时这里返回 503，部署当场失败，
+    # 而不是起来之后一点陌生钱包就 502。判定口径见 core/health.py。
+    healthCheckPath: /healthz
     envVars:
       - key: PYTHON_VERSION
         value: 3.13.1
