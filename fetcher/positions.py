@@ -1,9 +1,9 @@
 """
-fetcher/positions.py — Heisenberg 版"钱包最大政治仓"查找器（v3 简报入口）
+fetcher/positions.py — "钱包最大政治仓"的唯一实现（Heisenberg 版，v3 全链路入口）
 
-为什么不用 fetcher/polymarket.py 的 get_top_political_position：
-它打真实 data-api/gamma-api.polymarket.com，那两个公开 API 会挂（实测 HTTP 000 挂 18s）→ API_TIMEOUT。
-而整个简报数据层跑的是 Heisenberg（可达、2026 数据世界）。让入口也走 Heisenberg = 数据世界一致 + 不依赖会挂的外部 API。
+（曾有 fetcher/polymarket.py 的 data-api 版孪生实现服务 v2 /analyze——那两个公开 API 会挂
+（实测 HTTP 000 挂 18s）→ API_TIMEOUT；2026-08-03 随 /analyze 链路下架，AUDIT P1-9 归一至此。）
+整个数据层跑的是 Heisenberg（可达、2026 数据世界）：入口走 Heisenberg = 数据世界一致 + 不依赖会挂的外部 API。
 
 口径：拉钱包近 60 天成交(556)，按 (市场,outcome) 算**当前净持仓**(买入份额−卖出份额，×均买价)，
 取净持仓最大的**未结算**政治盘（live 简报问"现在还要不要跟"，已结算盘没意义、绝不返回）。

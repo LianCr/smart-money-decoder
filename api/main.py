@@ -151,28 +151,6 @@ CASES_PATH      = Path("backtest/cases.json")          # 6 个案例故事卡（
 # 🔴 BRIEFING_AS_OF 已收口到 core/config.py（单一出口，改那边）。
 
 
-def _difficulty(entry_price):
-    """
-    判断难度系数（距 0.5 越近越难）：1 - |entry_price - 0.5| * 2，∈ [0,1]。
-    用**建仓价** entry_price（不是 current_price）：押在 0.5 附近=迷雾博弈，押在 0.97=近明牌。
-    entry_price 缺失 → None（前端显示"难度不可得"，不崩）。
-    """
-    if not isinstance(entry_price, (int, float)):
-        return None
-    return round(1 - abs(entry_price - 0.5) * 2, 4)
-
-
-def _enrich_difficulty(data):
-    """读取时为每个回测样本注入 difficulty（不改 result.json / pipeline）。"""
-    for s in data.get("samples", []):
-        try:
-            entry = s["t7_card"]["price_info"]["entry_price"]
-        except (KeyError, TypeError):
-            entry = None
-        s["difficulty"] = _difficulty(entry)
-    return data
-
-
 @app.get("/healthz")
 def healthz():
     """真探活：必填 key 齐不齐 + 缓存目录写不写得动。判定口径见 core/health.py。
@@ -248,21 +226,6 @@ def market_context(wallet: str, cid: str = "", outcome: str = ""):
     except Exception:
         pass
     return obj
-
-
-def _relation_to_entry(cat_date: str, entry_time) -> str:
-    """催化剂日期 vs 建仓日 → BEFORE/AFTER ENTRY（纯代码日期比较，不经 AI）。"""
-    if not entry_time or not cat_date:
-        return "UNANCHORED"
-    entry_day = str(entry_time)[:10]
-    return "BEFORE_ENTRY" if cat_date[:10] < entry_day else "AFTER_ENTRY"
-
-
-def _tag_catalyst_relations(cats: dict, entry_time):
-    for side in ("positive", "negative"):
-        for c in cats.get(side, []) or []:
-            c.setdefault("relation", _relation_to_entry(c.get("date"), entry_time))
-    return cats
 
 
 def _dashboard_status(reason: str) -> int:
