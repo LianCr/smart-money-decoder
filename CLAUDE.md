@@ -108,7 +108,7 @@ python -m backtest._market_lift                 # 路 A lift 取样器（~24min�
 `ANTHROPIC_API_KEY`（官方 API，console.anthropic.com，自己的 key）· `TAVILY_API_KEY`（app.tavily.com）· `HEISENBERG_API_KEY`（免费，整个数据层靠它）。
 **可选**：`GITHUB_TOKEN`（状态持久层，不填则刷新的榜冷启动后退回 seed）· `REDIS_URL`（跨实例协调，不填自动回退进程内单飞）。
 `CLASSROOM_API_KEY` 为旧课堂网关回落位（**2026-07-08 起域名 NXDOMAIN 已失效**，有 ANTHROPIC_API_KEY 就无需填）。
-**自检**：`GET /healthz` —— 必填 key 齐不齐 + 缓存目录写不写得动，缺必填项返回 **503**（判定口径在 `core/health.py`，改口径记得同步 render.yaml 注释）。⏳ 该端点在 `feat/healthz` 分支，**合并后才可用**。
+**自检**：`GET /healthz` —— 必填 key 齐不齐 + 缓存目录写不写得动，缺必填项返回 **503**（判定口径在 `core/health.py`，改口径记得同步 render.yaml 注释；render.yaml 的 `healthCheckPath` 已指向它）。
 **开发开关**：`USE_FAKE_KEYWORDS=true`（跳过 AI 关键词，403 时用）· `USE_DECODER_CACHE=false`（调 prompt 时关）
 
 **部署（Render 免费档）**：`render.yaml` Blueprint 一键部署——FastAPI 同源托管 `frontend/dist`（生产前端 `API=""`，本地 dev 仍打 8000）。
@@ -128,7 +128,7 @@ core/config.py          →  🔴 BRIEFING_AS_OF 单一出口（改它 re-key �
 core/jsonstore.py       →  🔴 全项目落盘唯一原语：atomic_write_json/atomic_write_text（tmp+os.replace，无中间态）
                            + load_json→(status,data)，status∈ok|missing|corrupt。**损坏隔离不销毁**（改名 .corrupt-<ts>，
                            原始字节留着可人工抢救）。🔴 新增落盘点一律用它，禁止再写裸 write_text
-core/health.py          →  ⏳(feat/healthz 分支,待合并) /healthz 的纯函数（env/路径注入 → 可单测）。
+core/health.py          →  /healthz 的纯函数（env/路径注入 → 可单测）。
                            必填 key 缺失/目录不可写 = 不健康(503)
                            ⚠️ 逻辑不能写进 api/main.py：后者 import 时就复制 seed + 打 GitHub 请求，测试碰不得
 fetcher/polymarket.py   →  get_top_political_position(address)   # 持仓+政治过滤+$5k
@@ -214,33 +214,14 @@ news dict：`articles`(可空 `[]`) · `search_query` · `time_anchored`(bool，
 起因：2026-08-01 做了一次全量健康检查（产出 `AUDIT.md`，24 条问题分 P0/P1/P2 + 三阶段路线图）。
 结论是**判断力已验证、诚实性设计是真护城河，缺的是一层"敢让人动手的地基"**。此后两条线并行：产品线看 `KNOWN_ISSUES.md`，地基线看 `AUDIT.md` 的进度看板。
 
-**已完成并验证（8 个 PR，全部 TDD + `scripts/check.sh` 绿；7 个已合入 master，`feat/healthz` 待开 PR）**
+**现状一句话**：Phase 1「止血」只剩 P0-3「服务用 HTTP 调用自己」；已落地的（原子写/CI/healthz/部署收口等）全部在看板里对着 PR 号。
+**🔴 进度唯一账本 = `AUDIT.md`「零、进度看板」**——每条问题的状态、PR 号、下一步优先级只记在那里，本节**永不再记进度明细**（曾在这里维护过一张 PR 大表，和看板两头对不上，2026-08-03 收口）。
 
-| 模块 / 改动 | 职责 | 关联 |
-|---|---|---|
-| `core/jsonstore.py` + `tests/test_jsonstore.py` | 全项目落盘唯一原语：原子写 + 损坏隔离 | P0-1 |
-| `scorecard.py` `_load`/`_save` | 接入 jsonstore。**三条记分牌红线的数学一字未动** | P0-1 |
-| 其余 19 处落盘点（`api/main.py`·`core/persist.py`·`analyzer/*`·`briefing/*`·`recommend.py`·`hot_traders.py`） | 全部换原子写 | P0-1 |
-| `.data/` 业务文件读路径 + `tests/test_business_file_reads.py` | 推荐榜/热门条损坏时隔离并留证据，不再静默变空榜 | P0-1 |
-| `core/health.py` + `/healthz` + `tests/test_health.py` ⏳**待合并** | 真探活（必填 key + 目录可写），缺必填项 503。已 TDD 验过 + 真机跑过两态，但**还在 `feat/healthz` 分支，未进 master** | P1-12 |
-| `fetcher/news.py` + `tests/test_news_no_key.py` | 去掉 import 时硬失败，惰性 Tavily client | P1-24 |
-| `.github/workflows/check.yml` + `scripts/check.sh` 入库 + `.claude/settings.json` 放行 | CI 上线，跑与本地同一个脚本、**不注入任何 key** | P1-13 |
-| `render.yaml` / `.env.example` / `frontend/dist` 退出版本控制 / 部署分支收口 master | 部署契约与分支拓扑 | P0-2·P0-4·P2-20 |
-| `AUDIT.md` 入库 + 进度看板 | 让"我做到哪了"随时可查 | — |
-
-**🔴 下一步（明确单一）：清掉最后一个 P0 —— P0-3「服务用 HTTP 调用自己」**
-`recommend.ai_verify` 起 5 个线程用 `requests.get` 打**本进程自己**的 `/dashboard`（timeout 240s），而 `api/main.py` 全部端点是同步 `def`、跑在 anyio 默认 40 线程池里 → 扫榜期间自己把自己的线程池占满。
-做法：把 `_dashboard_impl` 连同单飞锁抽进 `services/`，`recommend` 改进程内直接调用。
-**先决**：`_dashboard_impl` 有 8 个 `_err`/`_stale_dashboard_fallback` 出口（返回 `JSONResponse`），抽 service 前**必须先定好错误契约**（service 返纯数据、HTTP 映射留在 api 层）。约 2 小时，**值得单独一场、别和别的任务混**。做完 Phase 1「止血」即收工。
-
-**🟡 待解决 / 待验证（地基线）**
+**有价值的备注（非进度，留在这）**
 
 1. **`/healthz` 缺 key 返 503 是个可推翻的取舍**。缺 key 的实例其实仍能靠缓存服务已有钱包，判 503 会让 Render 认定部署失败。选择失败得响一点，是因为"起来了、首页能开、一点陌生钱包就 502、哪儿都不说为什么"正是 P0-2 那次事故的形态。要改成"警告但放行"很容易，口径集中在 `core/health.py`。
-2. **CI 尚未观察到真实运行**。workflow 已入库、干净检出零 key 本地验过（24 个测试文件全绿），但**GitHub Actions 上的首次真实运行还没看过**（尤其 `npm ci` 与 Python 3.13 在 ubuntu-latest 上的表现）。下次开工先扫一眼 Actions 页。
-3. **本地分支卫生**：`master` 曾长期落后 91 个 commit，收尾时误切过去导致工作区退回旧状态（已快进修复）。`slim-dashboard-track-record`、`v3-briefing` 均已过时，**建议删掉**，只留 master + 在做的功能分支。
-4. **`AUDIT.md` 的行号会漂**。所有证据行号基于首次审计时的 `36d6412`，重构后会失效 —— **认问题编号，别认行号**（编号永不复用）。
-
-**地基线剩余大头（都在 `AUDIT.md`，按价值排）**：P1-5 六道守卫覆盖 0 个用户可见路径（审计最重要的发现）→ P1-8 核心判断逻辑零测试 → P1-11/P1-10 拆 `api/main.py` 902 行 god module + 缓存失效注册表 → P1-6 回验闭环（`confidence_log.jsonl` 至今只写不读）。
+2. **分支卫生教训**：`master` 曾长期落后 91 个 commit，收尾时误切过去导致工作区退回旧状态。规矩：**每场开工先 `git fetch` 对齐 master**，本地只留 master + 在做的功能分支，合完的分支随手删。
+3. **`AUDIT.md` 的行号会漂**。所有证据行号基于首次审计时的 `36d6412`，重构后会失效 —— **认问题编号，别认行号**（编号永不复用）。
 
 ---
 

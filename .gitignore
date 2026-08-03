@@ -4,11 +4,13 @@
 # macOS 系统文件
 .DS_Store
 
-# Claude Code 本地配置（含项目记忆，不上传）——但 settings.json 例外：
-# 它是 commit gate（英文 commit + 测试必绿）的配置，是纪律的"牙齿"，
-# 不入库就等于换台机器/换个人纪律就消失了。已确认其中无任何密钥。
+# Claude Code 本地配置（含项目记忆，不上传）——但两处例外：
+# settings.json 是 commit gate（英文 commit + 测试必绿）的配置，是纪律的"牙齿"；
+# commands/ 是 /checkpoint 等协作流程的定义。不入库就等于换台机器/换个人纪律就消失了。
+# 已确认其中无任何密钥。
 .claude/*
 !.claude/settings.json
+!.claude/commands/
 
 # 虚拟环境
 .venv/

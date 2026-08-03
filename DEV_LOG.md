@@ -6,6 +6,18 @@
 
 ---
 
+## 2026-08-03 · 对账收口：进度唯一账本定为 AUDIT.md 看板
+
+只对账和记账、零业务代码改动的一场。背景：进度曾同时记在 CLAUDE.md 的 PR 大表和 AUDIT.md 看板两处，两头对不上（看板还标着 P0-1"部分完成"、P1-13/24"未开始"，实际都已合入 master）。
+
+- **唯一账本原则落地**：CLAUDE.md「工程地基硬化轨」的 8 行 PR 表格压缩成三行指针（起因 + 现状一句话 + "进度看 AUDIT.md 看板"），healthz 503 取舍、分支卫生教训、行号会漂三条备注保留；看板逐条填上真 PR 号（P0-1 → #10+#14、P1-13/P1-24 → #13、P1-12 健康检查部分 → #15）。
+- **CI 销账**：在 Actions 页确认入库以来 9 次真实运行全绿（含 npm ci 与 Python on ubuntu-latest），"CI 尚未观察到真实运行"这条待验证清掉。
+- **裸写复查**：全仓 grep 剩 5 处直写，4 处判定合理（healthz 探针刻意直写、confidence_log 是 append、tools/ 离线工具），唯一漏网 `backtest/pipeline.py:245` 记为新编号 **P2-25**。
+- **分支卫生**：本地 master 快进对齐 origin（又落后了 5 个 commit，PR #15/#16 已在远端合入）；删掉过时的 `slim-dashboard-track-record`、`v3-briefing`。
+- **/checkpoint 重定义**（`.claude/commands/checkpoint.md`，随本次入库）：更新 AUDIT.md 看板 + DEV_LOG.md 追加人话小结；CLAUDE.md 只在契约/红线真变时才动、不记进度。
+
+---
+
 ## 2026-06-26 · 扫榜推荐"正解源" + 市场命题级信心重设计（拔掉 pnl 锚定）
 
 **扫榜推荐主页（接 roadmap 第 2 项）**

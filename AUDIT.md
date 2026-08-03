@@ -20,7 +20,7 @@
 
 | 编号 | 问题 | 状态 | 落在哪 |
 |:--:|---|:--:|---|
-| P0-1 | 记分牌档案可被静默清零 + 全仓非原子写 | 🟡 **部分完成** | PR #10 已修 `scorecard.py` 并建好 `core/jsonstore`；**其余 17 处落盘点待接** |
+| P0-1 | 记分牌档案可被静默清零 + 全仓非原子写 | ✅ 已修 | PR #10（scorecard + jsonstore 原语）+ PR #14（其余 19 处落盘点全接 + `.data/` 业务读隔离）。尾巴见 P2-25 |
 | P0-2 | 生产部署没有可用的 LLM key | ✅ 已修 | PR #9 |
 | P0-3 | 服务用 HTTP 调用自己，可耗尽线程池 | ⬜ **未开始 · 最后一个 P0** | 需抽 `services/`，约 2 小时，值得单独一场 |
 | P0-4 | `frontend/dist` 跟踪状态自相矛盾 | ✅ 已修 | PR #8 |
@@ -36,11 +36,11 @@
 | P1-9 | "最大政治仓"两套并行实现 | ⬜ 未开始 | |
 | P1-10 | 缓存失效是手写清单 | ⬜ 未开始 | Phase 2 T2.3 一并解决 |
 | P1-11 | `api/main.py` 902 行 god module | ⬜ 未开始 | Phase 2 T2.3 |
-| P1-12 | 零日志零监控，健康检查探不到真实健康 | ⬜ 未开始 | 健康检查部分见 P1-24 |
-| P1-13 | 无 CI，纪律靠未入库的本地 hook | ⬜ 未开始 | |
+| P1-12 | 零日志零监控，健康检查探不到真实健康 | 🟡 **部分完成** | 健康检查 ✅ PR #15（`/healthz` 真探活 + render.yaml 已指向）；日志/监控未动 |
+| P1-13 | 无 CI，纪律靠未入库的本地 hook | ✅ 已修 | PR #13（CI 跑与本地同一个 `scripts/check.sh`、不注入 key；Actions 已观察 9 次运行全绿） |
 | P1-14 | 前端依赖漏洞（postcss/vite/esbuild） | ⬜ 未开始 | postcss 一条命令可修 |
 | P1-15 | 烧 token 的端点无入站限流 | ⬜ 未开始 | |
-| P1-24 | **测试在无 key 环境下 import 就崩** | ⬜ 未开始 | 2026-08-03 新发现，卡死 CI，见下 |
+| P1-24 | **测试在无 key 环境下 import 就崩** | ✅ 已修 | PR #13（`fetcher/news.py` 惰性 client，干净检出零 key 全绿） |
 
 ### P2 — 技术债
 
@@ -49,12 +49,13 @@
 | P2-16 前端死代码进构建 · P2-17 异常吞噬 · P2-18 魔数散落 · P2-19 Bedrock 半成品 | | ⬜ 未开始 |
 | P2-20 默认分支不是真相 | | 🟡 已反转，见下 |
 | P2-21 seed 入库 · P2-22 轮询状态机 · P2-23 记分牌读路径打外网 | | ⬜ 未开始 |
+| P2-25 `backtest/pipeline.py` 结果落盘仍是裸 `write_text`（P0-1 唯一漏网） | | ⬜ 未开始 |
 
 ### 阶段进度
 
 | 阶段 | 完成判据 | 状态 |
 |---|---|:--:|
-| Phase 1 止血 | P0 全清 | 🟡 4 条里清了 2.5 条，卡在 P0-3 |
+| Phase 1 止血 | P0 全清 | 🟡 4 条里清了 3 条，只剩 P0-3 |
 | Phase 2 结构 | 敢重构（评分层收口 + 核心测试覆盖） | ⬜ 未开始 |
 | Phase 3 增值 | 见第三节 F1–F4 | ⬜ 未开始 |
 
@@ -88,9 +89,8 @@
 
 #### P0-1 · 记分牌档案可被静默清零，且全仓 JSON 写入非原子
 
-> **状态：🟡 部分完成（PR #10）** —— `core/jsonstore.py` 已建好并测过（原子写 + 损坏隔离），`scorecard.py` 已接。
-> **剩余**：其余 17 处非原子 `write_text`（`api/main.py` 6 · `core/persist.py` 3 · `analyzer/market_thesis.py` 2 · 另 6 个文件各 1）。
-> 当时刻意只接 scorecard：它丢的是不可回填的历史判断，其余丢的是可重建的缓存。
+> **状态：✅ 已修（PR #10 + PR #14）** —— PR #10 建好 `core/jsonstore.py`（原子写 + 损坏隔离）并接入 `scorecard.py`；PR #14 把其余 19 处落盘点全部换成原子写，并给 `.data/` 业务文件读路径加了损坏隔离（不再静默变空榜）。
+> **2026-08-03 复查全仓裸写**：仅剩 5 处直写，逐条判定过——`core/health.py:53`（可写性探针，写失败本身就是探测信号，刻意直写）· `analyzer/market_thesis.py:216`（`confidence_log.jsonl` **append** 模式，原子替换语义不适用，丢一行可接受）· `tools/build_ai_en.py`×2 与 `tools/extract_ai_zh.py`（离线一次性工具，产物 git 跟踪、人工跑失败立刻可见）→ 均不需接。唯一漏网：`backtest/pipeline.py:245`，已记 **P2-25**。
 
 **问题**：`_load()` 在 JSON 解析失败时吞掉异常返回空字典，紧接着 `record_judgment()` 就在这个空字典上写入并 `_save()` 覆盖整个档案；而所有写入都用 `write_text` 直写，没有 tmp+rename。
 
@@ -285,6 +285,8 @@
 
 #### P1-12 · 零日志、零监控，健康检查探不到真实健康
 
+> **状态：🟡 部分完成（PR #15）** —— 健康检查部分已修：`core/health.py` + `GET /healthz` 真探活（必填 key + 目录真写探针），缺必填项返 503，`render.yaml` 的 `healthCheckPath` 已从 `/backtest` 指向 `/healthz`。日志/监控部分未动。
+
 **证据**：
 - 全仓 grep `import logging` → **零命中**
 - `print()` 计数：`analyzer/dual_catalyst.py` 18 · `briefing/assemble.py` 23 · `analyzer/price_reaction.py` 12 · `fetcher/profile.py` 12 · `recommend.py` 11 · `fetcher/heisenberg.py` 10 · `fetcher/price.py` 8 · `fetcher/actions.py` 7 · `briefing/organize.py` 7 · `api/main.py` 5 · 其余若干，合计 109 处
@@ -298,6 +300,8 @@
 ---
 
 #### P1-13 · 无 CI；协作纪律靠一个未入库的本地 hook
+
+> **状态：✅ 已修（PR #13）** —— `.github/workflows/check.yml` + `scripts/check.sh` 入库，CI 跑与本地同一个脚本、刻意不注入任何 key。2026-08-03 已在 Actions 页确认：入库以来 9 次真实运行全绿（含 `npm ci` 与 Python on ubuntu-latest）。
 
 **问题**：`CLAUDE.md` 里写得非常严的 TDD 门禁，在一个新克隆的仓库里**不存在**。
 
@@ -347,6 +351,8 @@
 ---
 
 #### P1-24 · 测试在没有 API key 的环境下连 import 都过不去（2026-08-03 补充）
+
+> **状态：✅ 已修（PR #13）** —— `fetcher/news.py` 改惰性 Tavily client（照搬 `dual_catalyst` 的既有写法），缺 key 的失败发生在调用时刻并走该模块既有错误契约；`tests/test_news_no_key.py` 钉死"零 key 可 import"。干净检出（`git archive` + 无 `.env`）零 key 下全部测试绿。
 
 **发现方式**：用 `git archive origin/master | tar -x -C <临时目录>` 做了一次真正的干净检出（无 `.env`、无 `.venv`），清空全部 key 后跑测试套件 —— 因为 `load_dotenv()` 会读本地 `.env`，只靠 `env -u` 清环境变量测不出这个问题。
 
@@ -441,6 +447,12 @@
 - 无并发、无缓存、无"这条最近查过就跳过"
 - `scorecard.py:74` — 且整个循环持有 `_LOCK`，会阻塞并发的 `record_judgment`
 - 影响：档案里 pending 行只增不减（永不清理），`/scorecard` 的响应时间随判断累积**线性变慢**，且慢的部分全在外网 IO 上。
+
+#### P2-25 · `backtest/pipeline.py` 结果落盘仍是裸 `write_text`（2026-08-03 补充，P0-1 收尾复查发现）
+- `backtest/pipeline.py:245` — `RESULT_PATH.write_text(json.dumps(result, ...))`，全量覆盖写 JSON，未走 `core/jsonstore`
+- 是 PR #14「全部 JSON 写原子化」的唯一漏网（当时按运行时业务文件圈的范围，backtest 模块没进 grep 视野）
+- 降级理由（所以只记 P2 不记 P0）：产物 git 跟踪、可 `git checkout` 恢复；但重跑一次 ~24min 且烧 token，中途被杀留半截 JSON 仍然疼
+- 修法一行：换 `atomic_write_json`。修复成本 **S**
 
 ---
 
