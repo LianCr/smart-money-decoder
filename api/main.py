@@ -58,6 +58,7 @@ except Exception as _e:
 
 from core.config import BRIEFING_AS_OF
 from core.cachefiles import newest_dated
+from core.health import health_report
 from core.redis_coord import coordinator
 from core.refresh_jobs import RecommendationRefresh
 from core.dashboard_jobs import DashboardSingleFlight, stale_while_building, resolve_contention
@@ -160,6 +161,17 @@ def _enrich_difficulty(data):
             entry = None
         s["difficulty"] = _difficulty(entry)
     return data
+
+
+@app.get("/healthz")
+def healthz():
+    """真探活：必填 key 齐不齐 + 缓存目录写不写得动。判定口径见 core/health.py。
+
+    不健康返回 **503**，让部署/负载均衡当场知道 —— 这正是 P0-2 那次事故缺的东西：
+    实例起来了、首页能开、一点陌生钱包就 502，而没有任何地方会告诉你。
+    本端点只做转发，逻辑全在 core/health（纯函数、可单测，不受本模块 import 副作用拖累）。"""
+    r = health_report()
+    return JSONResponse(status_code=200 if r["ok"] else 503, content=r)
 
 
 @app.get("/backtest")
