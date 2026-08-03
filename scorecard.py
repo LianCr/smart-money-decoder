@@ -12,10 +12,11 @@ scorecard.py — 诚实记分牌（decode / board 判断的自我验证）
 存档=代码、抓结算由调用方注入 resolver(cid)（api 层用 574，免费）→ ~0 token。
 不碰封板模块：record 钩子在 api 层调；结算用注入的 resolver，本模块不直接依赖 heisenberg。
 """
-import json
 import threading
 import time
 from pathlib import Path
+
+from core.jsonstore import CORRUPT, OK, atomic_write_json, load_json, quarantine
 
 ARCHIVE = Path(".data/scorecard.json")
 # 🔒 档案写锁：推荐榜 ai_verify 并行后，多条看板 pipeline 会并发 record_judgment——
@@ -25,20 +26,33 @@ ENDORSED = {"ROOM LEFT", "CHASED"}     # 这两个 = AI 背书该方向；NO BAS
 
 
 def _load() -> dict:
-    if ARCHIVE.exists():
-        try:
-            return json.loads(ARCHIVE.read_text(encoding="utf-8"))
-        except Exception:
-            return {}
-    return {}
+    """读档案。**绝不把"读不出来"当成"本来就是空的"** —— 那正是老实现的病：
+    解析失败返回 {}，紧接着 _save 就把整本历史覆盖成一条。
+
+    现在损坏文件由 core.jsonstore 隔离到 `.corrupt-*` 备份（原始字节一字不动地留着，
+    可人工抢救），原路径空出，这里返回空档案让服务继续跑 —— 关键是**没有任何一条
+    真实记录被覆盖掉**。"""
+    status, d = load_json(ARCHIVE, default={})
+    if status == CORRUPT:
+        print("⚠ 记分牌档案损坏：原件已隔离为 .corrupt-* 备份，本次以空档案继续"
+              "（历史判断在备份里，未丢失；红线=绝不造假回填，所以只隔离不重建）", flush=True)
+    elif status == OK and not isinstance(d, dict):
+        # JSON 合法但结构不对（档案该是 dict）。同样不许直接覆盖，走同一条隔离路径。
+        quarantine(ARCHIVE)
+        print("⚠ 记分牌档案结构异常（顶层不是对象）：已隔离为 .corrupt-* 备份", flush=True)
+        return {}
+    return d
 
 
 def _save(d: dict) -> None:
+    """原子落盘：要么整份生效、要么完全没发生。进程被冷启动/OOM 打断也不会留下
+    半截 JSON —— 半截 JSON 会在下次 _load 时被判损坏，那条路已经不通向数据丢失了，
+    但从源头上不产生它更好。"""
     try:
-        ARCHIVE.parent.mkdir(parents=True, exist_ok=True)
-        ARCHIVE.write_text(json.dumps(d, ensure_ascii=False, indent=2), encoding="utf-8")
-    except Exception:
-        pass
+        atomic_write_json(ARCHIVE, d)
+    except Exception as e:
+        print(f"⚠ 记分牌存档写入失败（档案保持原样未被破坏）：{type(e).__name__}: {e}",
+              flush=True)
 
 
 def record_judgment(*, wallet, cid, market_question, outcome, market_price,

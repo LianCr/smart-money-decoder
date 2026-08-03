@@ -106,5 +106,49 @@ scorecard.record_judgment(wallet="0xE", cid="c9", market_question="q9", outcome=
                           market_price=0.5, follow_call=None, confidence="med", source="board")
 check("空钱包/空 follow_call 不记", scorecard.compute_scorecard()["tested"], before)
 
+
+# ── 7. 🔴 P0 回归：档案被写坏后，历史判断绝不能被静默清零 ──────────────────────
+# 老实现的病：_load() 把解析失败当成"空档案"返回 {}，紧接着 record_judgment 一写，
+# 整本历史就被覆盖成一条。档案是产品唯一"我判断得准不准"的证据，且红线是
+# 「绝不造假回填」—— 丢了就永远补不回。现在损坏文件必须被隔离保全。
+_tmp2 = tempfile.mkdtemp()
+scorecard.ARCHIVE = Path(_tmp2) / "scorecard.json"
+
+# 先攒 3 条真实判断（模拟线上累积的历史）
+for i, (w, cid) in enumerate([("0xH1", "h1"), ("0xH2", "h2"), ("0xH3", "h3")]):
+    scorecard.record_judgment(wallet=w, cid=cid, market_question=f"hist{i}", outcome="Yes",
+                              market_price=0.5, follow_call="ROOM LEFT", confidence="high",
+                              source="board")
+check("历史累积 3 条", scorecard.compute_scorecard()["tested"], 3)
+history_bytes = scorecard.ARCHIVE.read_text(encoding="utf-8")
+
+# 模拟进程被冷启动/OOM 打断：档案只写了一半
+truncated = history_bytes[: len(history_bytes) // 2]
+scorecard.ARCHIVE.write_text(truncated, encoding="utf-8")
+
+# 半截档案存在时又来了一条新判断 —— 老实现在这一步会把 3 条历史全冲掉
+scorecard.record_judgment(wallet="0xNEW", cid="new1", market_question="after-crash",
+                          outcome="No", market_price=0.4, follow_call="CHASED",
+                          confidence="low", source="board")
+
+backups = list(Path(_tmp2).glob("scorecard.json.corrupt-*"))
+check("🔴 损坏档案被隔离成备份（不是被覆盖）", len(backups), 1)
+check("🔴 备份里是崩溃瞬间的原始字节，一字不差",
+      backups[0].read_text(encoding="utf-8"), truncated)
+check("三条历史的记录 key 仍能在备份里找到（证据未销毁）",
+      all(k in backups[0].read_text(encoding="utf-8") for k in ["0xh1_h1_board", "0xh2_h2_board"]),
+      True)
+check("服务继续可用：新判断正常落档", scorecard.compute_scorecard()["tested"], 1)
+check("新档案是合法 JSON、可正常读回",
+      scorecard._load()["0xnew_new1_board"]["follow_call"], "CHASED")
+
+# 顶层结构不对（合法 JSON 但不是对象）同样隔离、不覆盖
+scorecard.ARCHIVE.write_text('["not", "an", "archive"]', encoding="utf-8")
+scorecard.record_judgment(wallet="0xZ", cid="z1", market_question="q", outcome="Yes",
+                          market_price=0.5, follow_call="ROOM LEFT", confidence="med",
+                          source="board")
+check("结构异常档案也走隔离（备份增至 2 份）",
+      len(list(Path(_tmp2).glob("scorecard.json.corrupt-*"))), 2)
+
 print(f"\n{passed} passed, {failed} failed")
 sys.exit(1 if failed else 0)
