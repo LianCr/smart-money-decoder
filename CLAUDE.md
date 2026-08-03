@@ -2,6 +2,9 @@
 
 给 Claude Code 的操作手册。**只放"开工前必须知道、且读代码看不出来"的东西**：红线、API 坑、协作纪律、关键契约。
 项目编年史见 `DEV_LOG.md`；产品演进与 v3 蓝图见 `KNOWN_ISSUES.md`。这三个文件不重复，各管一摊。
+**🔴 工程健康度与"我做到哪了"看 `AUDIT.md`**（2026-08-01 全量审计产出，**活文档**）：顶部「零、进度看板」列全部 24 条问题 + 状态 + 落在哪个 PR。
+**开工第一件事 = 看那张看板挑一条；收工最后一件事 = 回去把状态改掉。** 不改状态，下次就又不知道站在哪了（这是实践中真栽过的坑）。
+分工：`KNOWN_ISSUES.md` 管**产品该往哪走**，`AUDIT.md` 管**工程地基还缺什么**，两者不重复。
 测试钱包速查见 `test_wallets.md`（验规则按特征精准挑、别随机拿月榜）；字段留空先按 `empty_field_guide.md` 诊断（先分清"数据真相该留空" vs "bug 该修"，**诚实留空是产品灵魂，别默认把空当 bug 填**）。
 
 ---
@@ -56,7 +59,10 @@
 
 **工作流铁律（每个垂直 task 开工前 → 完成后）**
 
-1. **测试先行（TDD）：先写测试把契约钉死，再写实现。** 动手实现前，先写测试定义这个 task 的输入/输出/边界/降级。测试 follow `tests/` 惯例——standalone 可跑、`def check(name, got, want)` + `sys.exit(1 if failed else 0)`、in-file fake 不打网络、纳入 `scripts/check.sh`（本项目无 pytest 无 CI，就这一套）。**"完成"的唯一定义 = 该 task 的测试全绿 + 你亲自 review 过测试确实覆盖了契约（而非"碰巧能跑"）。没测试的实现不算完成，不许开下一个 task。** 测试是 mock 零 token——多写不心疼。
+1. **测试先行（TDD）：先写测试把契约钉死，再写实现。** 动手实现前，先写测试定义这个 task 的输入/输出/边界/降级。测试 follow `tests/` 惯例——standalone 可跑、`def check(name, got, want)` + `sys.exit(1 if failed else 0)`、in-file fake 不打网络、纳入 `scripts/check.sh`（无 pytest，就这一套）。
+   **🔴 测试必须能在"零 API key + 没有 .env"的机器上跑通**——CI 就是这么跑的（`.github/workflows/check.yml` 刻意不注入任何 key），这把"测试是 mock、零网络、零 token、谁 clone 都能跑"从口号变成机器可验证的事实。
+   推论：**任何模块都不许在 import 时因缺 key 抛错**（真栽过：`fetcher/news.py` 曾在模块顶层 `raise RuntimeError`，导致 2 个测试连 import 都过不去）。缺 key 该让**用到它的那次调用**失败，走该模块既有的错误契约。惰性 client 写法参考 `fetcher/news.py` / `analyzer/dual_catalyst.py`。
+   自测干净环境：`git archive HEAD | tar -x -C <临时目录>` 后清空 key 再跑——**只清环境变量测不出来**，`load_dotenv()` 会把 `.env` 读回来。**"完成"的唯一定义 = 该 task 的测试全绿 + 你亲自 review 过测试确实覆盖了契约（而非"碰巧能跑"）。没测试的实现不算完成，不许开下一个 task。** 测试是 mock 零 token——多写不心疼。
 2. **动手前把 task 定义干净。** 一句话写清这个垂直 task 的：能力(capability)、边界(boundary)、完成判据(definition)、方法(method)。定义不清先问、别猜着开工。
 3. **大改先出方案/计划，确认再动手。** 先列"改哪些文件、怎么改、怎么测"，等拍板。不要看到任务就一口气改一大片。
 4. **探不确定的路 = 先验证再构建，先诊断后修复。** 凡"可能有解可能无解"的（新数据源、新方法），先做最小可行性验证拿数字，再决定投不投入。不在没验证的地基上押注。
@@ -83,9 +89,11 @@ source .venv/bin/activate                      # 或直接用 .venv/bin/python �
 
 # 测试（mock，无网络秒出；tests/ 下全部可单跑）—— TDD 门禁，改动前后都要绿
 for t in tests/test_*.py; do .venv/bin/python "$t"; done
-bash scripts/check.sh                            # 一把梭：跑全测试 + 前端构建校验（本地 CI）
+bash scripts/check.sh                            # 一把梭：跑全测试 + 前端构建校验
+# 🔴 scripts/check.sh 就是 CI 跑的那个脚本（.github/workflows/check.yml），本地绿=CI 绿，不维护两套清单
 # 覆盖：老地基(position/activity/trades/news/backtest) + 核心新逻辑(scorecard 命中率数学/
-# market_thesis 解析守卫/heisenberg 第七道守卫/v3 矩阵只降不升)
+# market_thesis 解析守卫/heisenberg 第七道守卫/v3 矩阵只降不升) + 工程地基(jsonstore 原子写与
+# 损坏隔离/无 key 可 import/业务文件读隔离/health 探活)
 
 # Web 全栈
 .venv/bin/uvicorn api.main:app --port 8000     # 后端
@@ -96,10 +104,16 @@ cd frontend && npm install && npm run dev       # 前端 → http://localhost:51
 python -m backtest._market_lift                 # 路 A lift 取样器（~24min，会烧 token，非必要别跑）
 ```
 
-**`.env` 必填**：`TAVILY_API_KEY`（app.tavily.com）· `ANTHROPIC_API_KEY`（官方 API，console.anthropic.com，用户自己的 key）。`CLASSROOM_API_KEY` 为旧课堂网关回落位（**2026-07-08 起该网关域名 NXDOMAIN 已失效**，除非老师重新部署并配 `GATEWAY_URL`）
+**`.env` 必填三项**（与 `render.yaml`、`.env.example`、`core/health.py` 三处严格一致，**契约只有一份，改一处要改四处**）：
+`ANTHROPIC_API_KEY`（官方 API，console.anthropic.com，自己的 key）· `TAVILY_API_KEY`（app.tavily.com）· `HEISENBERG_API_KEY`（免费，整个数据层靠它）。
+**可选**：`GITHUB_TOKEN`（状态持久层，不填则刷新的榜冷启动后退回 seed）· `REDIS_URL`（跨实例协调，不填自动回退进程内单飞）。
+`CLASSROOM_API_KEY` 为旧课堂网关回落位（**2026-07-08 起域名 NXDOMAIN 已失效**，有 ANTHROPIC_API_KEY 就无需填）。
+**自检**：`GET /healthz` —— 必填 key 齐不齐 + 缓存目录写不写得动，缺必填项返回 **503**（判定口径在 `core/health.py`，改口径记得同步 render.yaml 注释）。⏳ 该端点在 `feat/healthz` 分支，**合并后才可用**。
 **开发开关**：`USE_FAKE_KEYWORDS=true`（跳过 AI 关键词，403 时用）· `USE_DECODER_CACHE=false`（调 prompt 时关）
 
-**部署（Render 免费档）**：`render.yaml` Blueprint 一键部署——FastAPI 同源托管 `frontend/dist`（生产前端 `API=""`，本地 dev 仍打 8000）。`seed/` 是 git 跟踪的缓存快照（~2.2MB），云端磁盘 ephemeral、每次冷启动由 api/main.py 自动恢复 → 已缓存钱包零 token 秒回；**☁️ GitHub 状态持久层（core/persist.py，2026-07-09）**：扫榜成功后把 推荐榜+精选看板缓存+记分牌 打成 bundle 存 **`app-state` 分支**（非部署分支不触发重部署；保存需 Render 环境变量 `GITHUB_TOKEN`=fine-grained PAT 仅本仓库 Contents 读写），冷启动 seed 恢复后再从 raw 拉 bundle **谁新用谁**（恢复端无需 token）→ 用户刷新的榜跨部署/冷启动持久，不再穿越回 seed 快照；`GET /demo-wallets` 给入口页"秒开"列表。**`/dashboard?refresh=1` = 在今天强制重建**（真·实时；只删"今天"key 的各层缓存含共享 market_thesis，**旧日期快照永不删=失败回退底**，烧 token；前端看板右上 ↻ 按钮带确认框，失败回旧板+refresh_error 横幅）；`fresh=1`（扫榜 ai_verify 用）=要今天的数据但今天已有缓存不重烧。完全开放模式：陌生钱包/刷新都会真烧 token（产品决策 2026-07-07，用户自担额度）。**i18n**：前端 `src/i18n.jsx` 中文原文即 key，EN 四层查表：UI 词典 `locales/en.js` → **运行时词典**（2026-07-08 起的正解：后端构建看板/简报/推荐时 `core/translate.py` 把 AI 中文批量翻好、payload 带 `i18n_en` 映射随缓存持久化，前端 fetch 后 `registerAiTranslations()` 注册，~$0.01-0.03/构建、命中零成本；7-08 后缺翻译的缓存命中时懒自愈回写）→ 离线词典 `ai_en.js`（6-25 冻结世界的历史兜底）→ 模式引擎；全 miss 回退中文+ZhNote 诚实标注（现仅翻译调用失败时出现）；右上 中|EN 胶囊。
+**部署（Render 免费档）**：`render.yaml` Blueprint 一键部署——FastAPI 同源托管 `frontend/dist`（生产前端 `API=""`，本地 dev 仍打 8000）。
+🔴 **部署分支 = `master`，合了 PR 就是上线**（2026-08-03 收口）。`v3-briefing` 已合进 master 并退役，**别再新增长期分支当"真相"**——曾出现"PR 合进 master 但线上仍跑 v3-briefing、三个 P0 修复一个没上线"且毫无提示。健康检查已从 `/backtest`（读静态文件，全挂也返 200）改成 `/healthz`。
+`frontend/dist` **不再入库**（每次部署 `npm run build` 重生成）；本地要看前端先 build。`seed/` 是 git 跟踪的缓存快照（~2.2MB），云端磁盘 ephemeral、每次冷启动由 api/main.py 自动恢复 → 已缓存钱包零 token 秒回；**☁️ GitHub 状态持久层（core/persist.py，2026-07-09）**：扫榜成功后把 推荐榜+精选看板缓存+记分牌 打成 bundle 存 **`app-state` 分支**（非部署分支不触发重部署；保存需 Render 环境变量 `GITHUB_TOKEN`=fine-grained PAT 仅本仓库 Contents 读写），冷启动 seed 恢复后再从 raw 拉 bundle **谁新用谁**（恢复端无需 token）→ 用户刷新的榜跨部署/冷启动持久，不再穿越回 seed 快照；`GET /demo-wallets` 给入口页"秒开"列表。**`/dashboard?refresh=1` = 在今天强制重建**（真·实时；只删"今天"key 的各层缓存含共享 market_thesis，**旧日期快照永不删=失败回退底**，烧 token；前端看板右上 ↻ 按钮带确认框，失败回旧板+refresh_error 横幅）；`fresh=1`（扫榜 ai_verify 用）=要今天的数据但今天已有缓存不重烧。完全开放模式：陌生钱包/刷新都会真烧 token（产品决策 2026-07-07，用户自担额度）。**i18n**：前端 `src/i18n.jsx` 中文原文即 key，EN 四层查表：UI 词典 `locales/en.js` → **运行时词典**（2026-07-08 起的正解：后端构建看板/简报/推荐时 `core/translate.py` 把 AI 中文批量翻好、payload 带 `i18n_en` 映射随缓存持久化，前端 fetch 后 `registerAiTranslations()` 注册，~$0.01-0.03/构建、命中零成本；7-08 后缺翻译的缓存命中时懒自愈回写）→ 离线词典 `ai_en.js`（6-25 冻结世界的历史兜底）→ 模式引擎；全 miss 回退中文+ZhNote 诚实标注（现仅翻译调用失败时出现）；右上 中|EN 胶囊。
 
 **LLM 调用（core/llm.py 双后端，全部走 `call_gateway`，不用 SDK 直接 requests.post）**：
 有 `ANTHROPIC_API_KEY` → 官方 `https://api.anthropic.com/v1/messages`（headers 带 `x-api-key` + `anthropic-version: 2023-06-01`；模型 **`claude-sonnet-5`**（2026-07-08 升级，推广价 $2/$10 至 2026-08-31 比 sonnet-4-5 还便宜、指令遵循更强）；🔴 **thinking 显式 `{"type":"disabled"}`**——Sonnet 5 不传会默认开自适应思考、挤占 max_tokens(最大才2000)截断 JSON 炸解析器；`ANTHROPIC_MODEL`/`ANTHROPIC_THINKING` 环境变量可覆盖（开思考须同时加大调用点 max_tokens）；文本在 `content[]` 的 text 块）；否则回落课堂网关（`CLASSROOM_API_KEY`，**2026-07-08 起默认域名 NXDOMAIN**，坑：模型名 `claude-sonnet-4.5` 点号、maxTokens≤2048、结果在 `["output"]`）。错误分类两后端共用：NO_KEY/TIMEOUT/UNREACHABLE/RATE_LIMITED(含 529)/HTTP_ERROR。
@@ -111,6 +125,12 @@ python -m backtest._market_lift                 # 路 A lift 取样器（~24min�
 ```
 core/llm.py             →  🔴 LLM 唯一客户端·双后端（ANTHROPIC_API_KEY→官方 API / 回落课堂网关；URL/model/错误分类一处定义）。全部 AI 调用走 call_gateway，不许再复制 requests.post
 core/config.py          →  🔴 BRIEFING_AS_OF 单一出口（改它 re-key 全部缓存→重烧，别随手改）
+core/jsonstore.py       →  🔴 全项目落盘唯一原语：atomic_write_json/atomic_write_text（tmp+os.replace，无中间态）
+                           + load_json→(status,data)，status∈ok|missing|corrupt。**损坏隔离不销毁**（改名 .corrupt-<ts>，
+                           原始字节留着可人工抢救）。🔴 新增落盘点一律用它，禁止再写裸 write_text
+core/health.py          →  ⏳(feat/healthz 分支,待合并) /healthz 的纯函数（env/路径注入 → 可单测）。
+                           必填 key 缺失/目录不可写 = 不健康(503)
+                           ⚠️ 逻辑不能写进 api/main.py：后者 import 时就复制 seed + 打 GitHub 请求，测试碰不得
 fetcher/polymarket.py   →  get_top_political_position(address)   # 持仓+政治过滤+$5k
 fetcher/trades.py       →  get_entry_time_v2(addr, cid)          # 建仓时间·首选（按市场查 /trades）
 fetcher/activity.py     →  get_entry_time(addr, cid)             # 建仓时间·fallback（翻全活动，150 条上限，禁止为回测改它）
@@ -176,7 +196,7 @@ news dict：`articles`(可空 `[]`) · `search_query` · `time_anchored`(bool，
 
 ## 🟢 v3 现状 + 下一程 roadmap
 
-**v3 已收官（`v3-briefing` 分支，已 push origin）**：统一看板 ①-⑥ 跑通——身份/这一注(含 what_bet)/实时盘面/巨鲸 48h 行为流/三源催化剂(综述+时间线·带方向标)/⑥ Edge。数据地基(Heisenberg)、完整简报、Context 一虚一实、⑥ v3 置信度矩阵、**诚实记分牌(decode/board 判断自我验证)** 均落地。详见 `DEV_LOG.md`(2026-06-23) + `KNOWN_ISSUES.md` 第八类各愿景 ✅。
+**v3 已收官（现全部在 `master`）**：统一看板 ①-⑥ 跑通——身份/这一注(含 what_bet)/实时盘面/巨鲸 48h 行为流/三源催化剂(综述+时间线·带方向标)/⑥ Edge。数据地基(Heisenberg)、完整简报、Context 一虚一实、⑥ v3 置信度矩阵、**诚实记分牌(decode/board 判断自我验证)** 均落地。详见 `DEV_LOG.md`(2026-06-23) + `KNOWN_ISSUES.md` 第八类各愿景 ✅。
 
 **下一程 roadmap**：
 1. **Decode → 存档/记分牌**：✅ 记分牌机制已落地(`scorecard.py` + Track Record 顶部)；待办 = 把旧"最大仓解读卡"(Decode tab)正式转成存档形态、不再是主入口。
@@ -189,6 +209,41 @@ news dict：`articles`(可空 `[]`) · `search_query` · `time_anchored`(bool，
 
 ---
 
+## 🔧 工程地基硬化轨（2026-08-01 起，与产品 roadmap 并行的另一条线）
+
+起因：2026-08-01 做了一次全量健康检查（产出 `AUDIT.md`，24 条问题分 P0/P1/P2 + 三阶段路线图）。
+结论是**判断力已验证、诚实性设计是真护城河，缺的是一层"敢让人动手的地基"**。此后两条线并行：产品线看 `KNOWN_ISSUES.md`，地基线看 `AUDIT.md` 的进度看板。
+
+**已完成并验证（8 个 PR，全部 TDD + `scripts/check.sh` 绿；7 个已合入 master，`feat/healthz` 待开 PR）**
+
+| 模块 / 改动 | 职责 | 关联 |
+|---|---|---|
+| `core/jsonstore.py` + `tests/test_jsonstore.py` | 全项目落盘唯一原语：原子写 + 损坏隔离 | P0-1 |
+| `scorecard.py` `_load`/`_save` | 接入 jsonstore。**三条记分牌红线的数学一字未动** | P0-1 |
+| 其余 19 处落盘点（`api/main.py`·`core/persist.py`·`analyzer/*`·`briefing/*`·`recommend.py`·`hot_traders.py`） | 全部换原子写 | P0-1 |
+| `.data/` 业务文件读路径 + `tests/test_business_file_reads.py` | 推荐榜/热门条损坏时隔离并留证据，不再静默变空榜 | P0-1 |
+| `core/health.py` + `/healthz` + `tests/test_health.py` ⏳**待合并** | 真探活（必填 key + 目录可写），缺必填项 503。已 TDD 验过 + 真机跑过两态，但**还在 `feat/healthz` 分支，未进 master** | P1-12 |
+| `fetcher/news.py` + `tests/test_news_no_key.py` | 去掉 import 时硬失败，惰性 Tavily client | P1-24 |
+| `.github/workflows/check.yml` + `scripts/check.sh` 入库 + `.claude/settings.json` 放行 | CI 上线，跑与本地同一个脚本、**不注入任何 key** | P1-13 |
+| `render.yaml` / `.env.example` / `frontend/dist` 退出版本控制 / 部署分支收口 master | 部署契约与分支拓扑 | P0-2·P0-4·P2-20 |
+| `AUDIT.md` 入库 + 进度看板 | 让"我做到哪了"随时可查 | — |
+
+**🔴 下一步（明确单一）：清掉最后一个 P0 —— P0-3「服务用 HTTP 调用自己」**
+`recommend.ai_verify` 起 5 个线程用 `requests.get` 打**本进程自己**的 `/dashboard`（timeout 240s），而 `api/main.py` 全部端点是同步 `def`、跑在 anyio 默认 40 线程池里 → 扫榜期间自己把自己的线程池占满。
+做法：把 `_dashboard_impl` 连同单飞锁抽进 `services/`，`recommend` 改进程内直接调用。
+**先决**：`_dashboard_impl` 有 8 个 `_err`/`_stale_dashboard_fallback` 出口（返回 `JSONResponse`），抽 service 前**必须先定好错误契约**（service 返纯数据、HTTP 映射留在 api 层）。约 2 小时，**值得单独一场、别和别的任务混**。做完 Phase 1「止血」即收工。
+
+**🟡 待解决 / 待验证（地基线）**
+
+1. **`/healthz` 缺 key 返 503 是个可推翻的取舍**。缺 key 的实例其实仍能靠缓存服务已有钱包，判 503 会让 Render 认定部署失败。选择失败得响一点，是因为"起来了、首页能开、一点陌生钱包就 502、哪儿都不说为什么"正是 P0-2 那次事故的形态。要改成"警告但放行"很容易，口径集中在 `core/health.py`。
+2. **CI 尚未观察到真实运行**。workflow 已入库、干净检出零 key 本地验过（24 个测试文件全绿），但**GitHub Actions 上的首次真实运行还没看过**（尤其 `npm ci` 与 Python 3.13 在 ubuntu-latest 上的表现）。下次开工先扫一眼 Actions 页。
+3. **本地分支卫生**：`master` 曾长期落后 91 个 commit，收尾时误切过去导致工作区退回旧状态（已快进修复）。`slim-dashboard-track-record`、`v3-briefing` 均已过时，**建议删掉**，只留 master + 在做的功能分支。
+4. **`AUDIT.md` 的行号会漂**。所有证据行号基于首次审计时的 `36d6412`，重构后会失效 —— **认问题编号，别认行号**（编号永不复用）。
+
+**地基线剩余大头（都在 `AUDIT.md`，按价值排）**：P1-5 六道守卫覆盖 0 个用户可见路径（审计最重要的发现）→ P1-8 核心判断逻辑零测试 → P1-11/P1-10 拆 `api/main.py` 902 行 god module + 缓存失效注册表 → P1-6 回验闭环（`confidence_log.jsonl` 至今只写不读）。
+
+---
+
 *本项目可用命令：`/checkpoint` —— 整理进度并存档。*
-*历史编年史在 `DEV_LOG.md`；产品蓝图在 `KNOWN_ISSUES.md`。改这三个文件时保持各管一摊、不重复。*
+*历史编年史在 `DEV_LOG.md`；产品蓝图在 `KNOWN_ISSUES.md`；**工程地基进度在 `AUDIT.md` 的进度看板**。改这四个文件时保持各管一摊、不重复。*
 *测试钱包速查 `test_wallets.md`（验规则按特征精准挑）；字段留空诊断 `empty_field_guide.md`（先分清真相 vs bug，诚实留空是产品灵魂）。*
