@@ -1,14 +1,18 @@
 """
-tests/test_recommend_verify.py — recommend.ai_verify 诚实守卫测试（monkeypatch requests，无网络）
+tests/test_recommend_verify.py — recommend.ai_verify 诚实守卫测试（monkeypatch get_dashboard，无网络）
 
 背景（对应 bug 实拍）：刷新推荐榜后出现"有 AI 精选徽章但信心/推理全空"的残卡——
-旧 ai_verify 只要 HTTP 没抛异常就无条件 ai_pick=True，看板返回错误 JSON 也照标。覆盖：
+旧 ai_verify 只要调用没抛异常就无条件 ai_pick=True，看板返回错误也照标。
+P0-3 起 ⑥ 验证走进程内 services.dashboard_build.get_dashboard（不再 HTTP 打自己）；
+契约=纯数据 dict，错误判别式是 "error" key —— 测试缝从 recommend.requests 换成
+monkeypatch recommend.get_dashboard（模块属性，手法同旧 requests 替身）。覆盖：
   1. 看板返回完整 reasoning → 标精选 + 字段齐全 + verified_as_of
-  2. 看板返回错误 JSON（error 字段）→ 绝不标精选、不留半截字段
+  2. 看板返回错误 dict（error 字段，含单飞 BUILD_IN_PROGRESS）→ 绝不标精选、不留半截字段
   3. reasoning 存在但 confidence 空 → 不标精选（残卡的直接根因）
-  4. 请求抛异常（后端不在线）→ 跳过不崩、不标精选
-  5. fresh=True → 请求带 fresh=1；fresh=False → 不带（保鲜语义）
+  4. 构建意外 raise（契约外）→ 跳过不崩、不标精选
+  5. fresh=True → 调用带 fresh=1；fresh=False → fresh=0（保鲜语义）
   6. facts 回填 market_question/outcome（防卡片与看板判断错配）
+  7. 并发契约：不同盘真并发（峰值≥2）、同盘串行（峰值==1，防 thesis 重复建/市场观分裂）
 """
 
 import sys
@@ -30,26 +34,18 @@ def check(name, got, want):
         print(f"  ✗ {name}: got={got!r} want={want!r}")
 
 
-class _FakeResp:
-    def __init__(self, payload):
-        self._p = payload
-
-    def json(self):
-        return self._p
-
-
-class _FakeRequests:
-    """替身 requests：记录每次调用参数，按脚本依次吐响应（可混入异常）。"""
+class _FakeDash:
+    """替身 get_dashboard：记录每次调用参数，按脚本依次吐返回值（可混入异常）。"""
     def __init__(self, script):
         self.script = list(script)
         self.calls = []
 
-    def get(self, url, params=None, timeout=None):
-        self.calls.append({"url": url, "params": dict(params or {})})
+    def __call__(self, wallet, refresh=0, fresh=0):
+        self.calls.append({"wallet": wallet, "refresh": refresh, "fresh": fresh})
         item = self.script.pop(0)
         if isinstance(item, Exception):
             raise item
-        return _FakeResp(item)
+        return item
 
 
 def _cand(w="0x" + "a" * 40):
@@ -64,13 +60,14 @@ FULL = {
         "facts": {"market_question": "看板盘名?", "outcome": "No", "position_type": "single_side_conviction"},
     },
 }
-ERROR_JSON = {"error": "DASHBOARD_PIPELINE_FAILED", "reason": "DASHBOARD_PIPELINE_FAILED", "message": "上游挂了"}
+ERROR_JSON = {"error": "DASHBOARD_PIPELINE_FAILED", "message": "上游挂了"}
+IN_PROGRESS = {"error": "DASHBOARD_BUILD_IN_PROGRESS", "message": "同一钱包的看板正在生成，请稍候。", "retry_after": 3}
 EMPTY_CONF = {"as_of": "2026-07-08", "reasoning": {"confidence": None, "follow_call": None, "facts": {}}}
 
-_real = recommend.requests
+_real = recommend.get_dashboard
 try:
     # 1. 完整裁决 → 标精选、字段齐全
-    fake = _FakeRequests([FULL]); recommend.requests = fake
+    fake = _FakeDash([FULL]); recommend.get_dashboard = fake
     c = _cand(); recommend.ai_verify([c], top=1)
     check("完整裁决 → ai_pick=True", c["ai_pick"], True)
     check("完整裁决 → confidence=med", c.get("ai_confidence"), "med")
@@ -81,36 +78,42 @@ try:
     check("facts 回填 market_question", c["market_question"], "看板盘名?")
     check("facts 回填 outcome", c["outcome"], "No")
 
-    # 2. 错误 JSON → 绝不标精选、不留半截字段
-    fake = _FakeRequests([ERROR_JSON]); recommend.requests = fake
+    # 2. 错误 dict → 绝不标精选、不留半截字段
+    fake = _FakeDash([ERROR_JSON]); recommend.get_dashboard = fake
     c = _cand(); recommend.ai_verify([c], top=1)
-    check("错误 JSON → ai_pick 保持 False", c["ai_pick"], False)
-    check("错误 JSON → 不留 ai_confidence 残字段", "ai_confidence" in c, False)
-    check("错误 JSON → 不留 ai_verdict 残字段", "ai_verdict" in c, False)
+    check("错误 dict → ai_pick 保持 False", c["ai_pick"], False)
+    check("错误 dict → 不留 ai_confidence 残字段", "ai_confidence" in c, False)
+    check("错误 dict → 不留 ai_verdict 残字段", "ai_verdict" in c, False)
+
+    # 2b. 单飞占用（旧 202 body 的进程内等价物）→ 同样诚实降级
+    fake = _FakeDash([IN_PROGRESS]); recommend.get_dashboard = fake
+    c = _cand(); recommend.ai_verify([c], top=1)
+    check("BUILD_IN_PROGRESS → ai_pick 保持 False", c["ai_pick"], False)
 
     # 3. reasoning 有但 confidence 空 → 不标精选（残卡直接根因）
-    fake = _FakeRequests([EMPTY_CONF]); recommend.requests = fake
+    fake = _FakeDash([EMPTY_CONF]); recommend.get_dashboard = fake
     c = _cand(); recommend.ai_verify([c], top=1)
     check("confidence 空 → ai_pick 保持 False", c["ai_pick"], False)
 
-    # 4. 请求抛异常 → 跳过不崩
-    fake = _FakeRequests([ConnectionError("refused")]); recommend.requests = fake
+    # 4. 构建意外 raise（契约外）→ 跳过不崩
+    fake = _FakeDash([RuntimeError("契约外意外")]); recommend.get_dashboard = fake
     c = _cand(); recommend.ai_verify([c], top=1)
-    check("请求异常 → 不崩且不标精选", c["ai_pick"], False)
+    check("构建异常 → 不崩且不标精选", c["ai_pick"], False)
 
-    # 5. fresh 语义：True 带 fresh=1，False 不带
-    fake = _FakeRequests([FULL]); recommend.requests = fake
+    # 5. fresh 语义：True 带 fresh=1，False 传 fresh=0
+    fake = _FakeDash([FULL]); recommend.get_dashboard = fake
     recommend.ai_verify([_cand()], top=1, fresh=True)
-    check("fresh=True → 请求带 fresh=1", fake.calls[0]["params"].get("fresh"), 1)
-    fake = _FakeRequests([FULL]); recommend.requests = fake
+    check("fresh=True → 调用带 fresh=1", fake.calls[0]["fresh"], 1)
+    fake = _FakeDash([FULL]); recommend.get_dashboard = fake
     recommend.ai_verify([_cand()], top=1, fresh=False)
-    check("fresh=False → 请求不带 fresh", "fresh" in fake.calls[0]["params"], False)
+    check("fresh=False → 调用 fresh=0", fake.calls[0]["fresh"], 0)
+    check("ai_verify 从不传 refresh（保鲜≠强刷）", fake.calls[0]["refresh"], 0)
 
-    # 附：top 截断——只验证前 N 个（第 2 个候选不该发请求）
-    fake = _FakeRequests([FULL]); recommend.requests = fake
+    # 附：top 截断——只验证前 N 个（第 2 个候选不该发起构建）
+    fake = _FakeDash([FULL]); recommend.get_dashboard = fake
     c1, c2 = _cand(), _cand("0x" + "b" * 40)
     recommend.ai_verify([c1, c2], top=1)
-    check("top=1 只发 1 次请求", len(fake.calls), 1)
+    check("top=1 只发起 1 次构建", len(fake.calls), 1)
     check("top 之外的候选不动", c2["ai_pick"], False)
 
     # ── 并行验证（2026-07-08）：不同盘真并发、同盘串行（防 thesis 重复建/市场观分裂）──
@@ -118,15 +121,15 @@ try:
     import time as _tm
     import copy as _cp
 
-    class _SlowFake:
-        """线程安全假 requests：每次 get 睡 0.15s，记录并发峰值。"""
+    class _SlowDash:
+        """线程安全假 get_dashboard：每次调用睡 0.15s，记录并发峰值。"""
         def __init__(self):
             self.lock = _th.Lock()
             self.inflight = 0
             self.peak = 0
             self.calls = 0
 
-        def get(self, url, params=None, timeout=None):
+        def __call__(self, wallet, refresh=0, fresh=0):
             with self.lock:
                 self.inflight += 1
                 self.peak = max(self.peak, self.inflight)
@@ -134,13 +137,10 @@ try:
             _tm.sleep(0.15)
             with self.lock:
                 self.inflight -= 1
-            class _R:
-                def json(_s):
-                    return _cp.deepcopy(FULL)
-            return _R()
+            return _cp.deepcopy(FULL)
 
     # 3 个不同盘的候选 → 并发峰值应 ≥2（真并行）
-    slow = _SlowFake(); recommend.requests = slow
+    slow = _SlowDash(); recommend.get_dashboard = slow
     cs = [dict(_cand("0x" + ch * 40), market_question=f"盘{ch}?") for ch in "abc"]
     t0 = _tm.time()
     recommend.ai_verify(cs, top=3)
@@ -149,7 +149,7 @@ try:
     check("并行总耗时 < 串行(0.45s)", _tm.time() - t0 < 0.4, True)
 
     # 2 个同盘候选 → 串行（峰值==1），防止并行各建 market_thesis 分裂市场观
-    slow = _SlowFake(); recommend.requests = slow
+    slow = _SlowDash(); recommend.get_dashboard = slow
     cs = [dict(_cand("0x" + ch * 40), market_question="同一个盘?") for ch in "de"]
     recommend.ai_verify(cs, top=2)
     check("同盘候选照常验证", all(c["ai_pick"] for c in cs), True)
@@ -188,7 +188,7 @@ try:
     check("verify_targets 前 4 个跨 4 盘", mqs[:4], ["A", "B", "C", "D"])
     check("verify_targets 第 5 个按分补（A 第二名）", got[4]["wallet"], "0x2")
 finally:
-    recommend.requests = _real
+    recommend.get_dashboard = _real
 
 print(f"\n{passed} passed, {failed} failed")
 sys.exit(1 if failed else 0)

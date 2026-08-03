@@ -25,8 +25,6 @@ import threading
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
-import requests
-
 from fetcher.heisenberg import call, results, AGENTS, HeisenbergError
 from fetcher.positions import get_top_political_position_hz, get_top_political_positions_hz
 from fetcher.markets import get_market_holders
@@ -35,6 +33,8 @@ from briefing.market_context import get_behavior_flags
 
 from core.config import BRIEFING_AS_OF as AS_OF
 from core.jsonstore import atomic_write_json
+# ⑥ 验证走进程内 service（P0-3：不再 HTTP 打自己耗尽线程池）；模块属性引用=测试 monkeypatch 缝
+from services.dashboard_build import get_dashboard
 OUT = Path(".data/recommendations.json")
 
 # 种子 = 已知活跃政治钱包（演示钱包 + 方法 C 验证过的政治专家）。它们的热门顶仓盘 = 发现入口。
@@ -75,18 +75,14 @@ def _politics_cat(cats):
     return None
 
 
-DASH_URL = f"http://localhost:{os.environ.get('PORT', '8000')}/dashboard"   # Render 上 $PORT≠8000，自指本服务
-
-
 def _verify_one(c, fresh):
-    """单候选 ⑥ 验证（就地改写 c；各线程各拿各的 c，天然线程安全）。"""
-    params = {"wallet": c["wallet"]}
-    if fresh:
-        params["fresh"] = 1
+    """单候选 ⑥ 验证（就地改写 c；各线程各拿各的 c，天然线程安全）。
+    进程内直调 service 层 get_dashboard（与 /dashboard 路由同一入口、同一把单飞锁）——
+    契约上预期失败返回 {"error",...} dict、不 raise；raise 只剩契约外意外，跳过该候选不炸扫描。"""
     try:
-        j = requests.get(DASH_URL, params=params, timeout=240).json()
+        j = get_dashboard(c["wallet"], fresh=1 if fresh else 0)
     except Exception as e:
-        print(f"  ⑥ 验证 {c['wallet'][:12]}… 失败(后端未在线?)：{e}", flush=True)
+        print(f"  ⑥ 验证 {c['wallet'][:12]}… 失败(看板构建异常)：{e}", flush=True)
         return
     rs = (j.get("reasoning") or {}) if isinstance(j, dict) else {}
     if j.get("error") or not rs.get("confidence"):    # 看板报错 / 裁决缺失 → 不标精选（诚实降级）
@@ -114,8 +110,9 @@ def _verify_one(c, fresh):
 
 
 def ai_verify(cands, top=3, fresh=False, max_workers=5):
-    """方法 C：对 top N 候选跑完整 ⑥（经本地 /dashboard，按(钱包,as_of)硬缓存→重复零 token）。
-    🔴 烧 token（每个未缓存钱包一条完整 pipeline）；需后端在线，离线则优雅跳过、ai_pick 留 False。
+    """方法 C：对 top N 候选跑完整 ⑥（进程内 get_dashboard，按(钱包,as_of)硬缓存→重复零 token；
+    P0-3 后不再 HTTP 打自己——验证线程自己就是构建线程，不占双份 worker）。
+    🔴 烧 token（每个未缓存钱包一条完整 pipeline）；构建失败/被单飞占用则优雅跳过、ai_pick 留 False。
     fresh=True（用户点刷新时）：传 fresh=1 → 看板在**今天**验证（今天已有缓存则直接用，不重复烧）。
     🛡 诚实守卫：只有真拿到 ⑥ 裁决（confidence 非空）才标 ai_pick —— 看板返回错误 JSON/空 reasoning
     时绝不产出"有 AI 精选徽章但信心/推理全空"的残卡（宁可不标，也不装验证过）。

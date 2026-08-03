@@ -22,7 +22,7 @@
 |:--:|---|:--:|---|
 | P0-1 | 记分牌档案可被静默清零 + 全仓非原子写 | ✅ 已修 | PR #10（scorecard + jsonstore 原语）+ PR #14（其余 19 处落盘点全接 + `.data/` 业务读隔离）。尾巴见 P2-25 |
 | P0-2 | 生产部署没有可用的 LLM key | ✅ 已修 | PR #9 |
-| P0-3 | 服务用 HTTP 调用自己，可耗尽线程池 | ⬜ **未开始 · 最后一个 P0** | 需抽 `services/`，约 2 小时，值得单独一场 |
+| P0-3 | 服务用 HTTP 调用自己，可耗尽线程池 | ✅ 已修 | PR #18（`services/dashboard_build.py` 纯数据契约 + `recommend.ai_verify` 进程内直调 + anyio 上限显式化；`tests/test_dashboard_build.py` 钉死 8 出口） |
 | P0-4 | `frontend/dist` 跟踪状态自相矛盾 | ✅ 已修 | PR #8 |
 
 ### P1 — 阻碍迭代
@@ -55,7 +55,7 @@
 
 | 阶段 | 完成判据 | 状态 |
 |---|---|:--:|
-| Phase 1 止血 | P0 全清 | 🟡 4 条里清了 3 条，只剩 P0-3 |
+| Phase 1 止血 | P0 全清 | ✅ **P0 全清**（PR #18 收掉最后的 P0-3；T1.5 日志/T1.6 npm audit 两个非 P0 尾巴仍在 P1/P2 表里） |
 | Phase 2 结构 | 敢重构（评分层收口 + 核心测试覆盖） | ⬜ 未开始 |
 | Phase 3 增值 | 见第三节 F1–F4 | ⬜ 未开始 |
 
@@ -128,8 +128,11 @@
 
 #### P0-3 · 服务用 HTTP 调用自己，可耗尽自身线程池
 
-> **状态：⬜ 未开始 —— 这是最后一个 P0。** 需要把 `_dashboard_impl` 连同单飞锁抽进 `services/`，让 `recommend` 直接在进程内调用而不是发 HTTP 给自己。
-> 有 8 个 `_err`/`_stale_dashboard_fallback` 出口要先定好错误契约，约 2 小时，值得单独一场、不与别的任务混。
+> **状态：✅ 已修（PR #18）。** `_dashboard_impl` 连同单飞锁抽进 `services/dashboard_build.py`（`build_dashboard` + 单飞入口 `get_dashboard`）；
+> 8 个出口收口成**纯数据错误契约**：service 只返 dict、预期失败永不 raise，判别式 = `"error"` key；reason→HTTP 状态码映射是 api 层仅存的 HTTP 知识（`_dashboard_status`），对外行为逐字节不变。
+> `recommend.ai_verify` 改进程内直调同一入口（同一把单飞锁，验证线程自己就是构建线程——不再是 5 等待 + 5 构建占 10 个 worker）；anyio 线程池上限顺带显式化（40，数值不变）。
+> 契约由 `tests/test_dashboard_build.py` 钉死（8 出口 + 单飞包装 + 成功板无 error key，零网络零 key）；`tests/test_recommend_verify.py` 测试缝从 `recommend.requests` 换成 `recommend.get_dashboard`，语义检查一条没丢。
+> 未尽事项：api 层 `_dashboard_status`（6 行查表）暂无法直测——测试禁 import `api.main`（import 副作用），端点层测试仍挂 T2.4 #4，等 T2.3 拆路由后补。
 
 **问题**：扫榜的 AI 验证阶段起 5 个线程，每个用 `requests.get` 打**本进程自己**的 `/dashboard`（timeout 240s）；而 FastAPI 端点全是同步 `def`，跑在 anyio 默认 40 线程的线程池里，每条构建独占一个线程 1–3 分钟。
 

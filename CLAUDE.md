@@ -137,7 +137,8 @@ fetcher/activity.py     →  get_entry_time(addr, cid)             # 建仓时�
 fetcher/news.py         →  get_news_for_market(q, entry_time, as_of=None)  # 关键词+Tavily 时间窗+缓存；as_of 防回测泄漏
 analyzer/decoder.py     →  decode_position(assembled, as_of=None)         # sonnet-4.5 + 6 道守卫；as_of 时间旅行
 renderer/card.py · main.py                                       # 终端卡片 + CLI
-api/main.py             →  GET /analyze（v2 解读卡）· /backtest（静态）· /briefing（v3 完整简报）· /market-context（Context 一虚一实）· /dashboard（v3 统一看板①-⑥，整份按(钱包,AS_OF)硬缓存零 token；**⑥ 信心由 market_thesis 直出、⑤ 用市场级共享池、reason_v3 瘦身只供 follow_call+facts**）· /recommendations（扫榜推荐流）· /hot-traders（本周政治热门条）· /scorecard（诚实记分牌：增量抓 574 结算+冷数字）
+api/main.py             →  GET /analyze（v2 解读卡）· /backtest（静态）· /briefing（v3 完整简报）· /market-context（Context 一虚一实）· /dashboard（v3 统一看板①-⑥，构建在 services/ · 路由只做 reason→HTTP 状态映射）· /recommendations（扫榜推荐流）· /hot-traders（本周政治热门条）· /scorecard（诚实记分牌：增量抓 574 结算+冷数字）
+services/dashboard_build.py →  🔴 看板构建 service 层（P0-3 抽出）：build_dashboard(①-⑥ pipeline,按(钱包,AS_OF)硬缓存;**⑥ 信心由 market_thesis 直出、⑤ 用市场级共享池、reason_v3 瘦身只供 follow_call+facts**)+单飞入口 get_dashboard。**纯数据契约：只返 dict、预期失败不 raise、判别式="error" key**；api 路由和 recommend.ai_verify 进程内共用同一入口同一把锁；绝不 import api.main（后者 import 有副作用）
 fetcher/heisenberg.py   →  Heisenberg 共享客户端（参数真名表/limit≤200/🛡第七道守卫:返回钱包≠请求钱包→拦）
 fetcher/profile.py·actions.py·price.py  →  简报数据层 A画像/B动作/C价格（建在 heisenberg 上，全免费 key）
 analyzer/dual_catalyst.py  →  双向催化剂辩证（材质标签+守卫；as_of_anchor=锚现在(live)/锚建仓(replay)）
@@ -214,7 +215,7 @@ news dict：`articles`(可空 `[]`) · `search_query` · `time_anchored`(bool，
 起因：2026-08-01 做了一次全量健康检查（产出 `AUDIT.md`，24 条问题分 P0/P1/P2 + 三阶段路线图）。
 结论是**判断力已验证、诚实性设计是真护城河，缺的是一层"敢让人动手的地基"**。此后两条线并行：产品线看 `KNOWN_ISSUES.md`，地基线看 `AUDIT.md` 的进度看板。
 
-**现状一句话**：Phase 1「止血」只剩 P0-3「服务用 HTTP 调用自己」；已落地的（原子写/CI/healthz/部署收口等）全部在看板里对着 PR 号。
+**现状一句话**：Phase 1「止血」P0 已全清（最后的 P0-3 收口于 `services/` 抽层）；每条的状态与 PR 号只看看板。
 **🔴 进度唯一账本 = `AUDIT.md`「零、进度看板」**——每条问题的状态、PR 号、下一步优先级只记在那里，本节**永不再记进度明细**（曾在这里维护过一张 PR 大表，和看板两头对不上，2026-08-03 收口）。
 
 **有价值的备注（非进度，留在这）**
