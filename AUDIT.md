@@ -38,8 +38,8 @@
 | P1-11 | `api/main.py` 902 行 god module | ⬜ 未开始 | Phase 2 T2.3 |
 | P1-12 | 零日志零监控，健康检查探不到真实健康 | 🟡 **部分完成** | 健康检查 ✅ PR #15（`/healthz` 真探活 + render.yaml 已指向）；日志/监控未动 |
 | P1-13 | 无 CI，纪律靠未入库的本地 hook | ✅ 已修 | PR #13（CI 跑与本地同一个 `scripts/check.sh`、不注入 key；Actions 已观察 9 次运行全绿） |
-| P1-14 | 前端依赖漏洞（postcss/vite/esbuild） | ⬜ 未开始 | postcss 一条命令可修 |
-| P1-15 | 烧 token 的端点无入站限流 | ⬜ 未开始 | |
+| P1-14 | 前端依赖漏洞（postcss/vite/esbuild） | 🟡 **部分完成** | postcss 两条 high ✅ PR #19（`npm audit fix`，构建产物字节不变）；剩 vite high + esbuild moderate 需 vite@8 主版本 → **T2.7 做，不另开** |
+| P1-15 | 烧 token 的端点无入站限流 | ✅ 已修 | PR #19（`core/ratelimit.py` IP 滑动窗口 + 每日 UTC 全局硬闸 → `/dashboard` `/analyze` 429；阈值 `core/config.py` 环境变量可调；「完全开放」产品决策不变） |
 | P1-24 | **测试在无 key 环境下 import 就崩** | ✅ 已修 | PR #13（`fetcher/news.py` 惰性 client，干净检出零 key 全绿） |
 
 ### P2 — 技术债
@@ -49,7 +49,7 @@
 | P2-16 前端死代码进构建 · P2-17 异常吞噬 · P2-18 魔数散落 · P2-19 Bedrock 半成品 | | ⬜ 未开始 |
 | P2-20 默认分支不是真相 | | 🟡 已反转，见下 |
 | P2-21 seed 入库 · P2-22 轮询状态机 · P2-23 记分牌读路径打外网 | | ⬜ 未开始 |
-| P2-25 `backtest/pipeline.py` 结果落盘仍是裸 `write_text`（P0-1 唯一漏网） | | ⬜ 未开始 |
+| P2-25 `backtest/pipeline.py` 结果落盘仍是裸 `write_text`（P0-1 唯一漏网） | | ✅ 已修 PR #19（接 `atomic_write_json`，格式字节不变，`tests/test_backtest_finalize.py` 钉死） |
 
 ### 阶段进度
 
@@ -323,6 +323,9 @@
 
 #### P1-14 · 前端依赖漏洞（`npm audit` 实测）
 
+> **状态：🟡 部分完成（PR #19）。** postcss 两条 high 已由 `npm audit fix` 清掉（semver 内 lockfile bump，构建产物字节不变）。
+> 剩 vite high + esbuild moderate 需要 vite@8 主版本升级——**留到 T2.7**（依赖更新节奏一并建立），不在小修里冒破坏性升级的险。
+
 **证据**（本次实跑 `npm audit`）：
 
 | 包 | 严重度 | 问题 | 影响范围 |
@@ -340,6 +343,12 @@
 ---
 
 #### P1-15 · 烧 token 的端点无任何入站限流
+
+> **状态：✅ 已修（PR #19）。** `core/ratelimit.py`：每 IP 滑动窗口（默认 30 次/60s）+ 每日 UTC 全局总量硬闸（默认 500，被拒不计数），
+> `/dashboard` `/analyze` 超限返 429 + 人话 message + retry_after；阈值收口 `core/config.py`、环境变量可调。
+> 「完全开放」产品决策不变——闸拦的是脚本循环，正常浏览（缓存命中为主）够不到；进程内 ai_verify 不经路由、天然不受闸。
+> 实现是进程内存（单实例够用；多实例各算各的=闸宽 N 倍，仍是硬顶）。`tests/test_ratelimit.py` 假时钟钉死窗口滑动/IP 隔离/全局闸/翻天。
+> 未尽事项：异常流量**告警**仍没有（属 P1-12 日志/监控范畴）；api 层 429 wiring 不可直测同 T2.4 老问题。
 
 **证据**：
 - `api/main.py:85-93` — 唯一的 middleware 是 CORS，`allow_headers=["*"]`
@@ -452,6 +461,10 @@
 - 影响：档案里 pending 行只增不减（永不清理），`/scorecard` 的响应时间随判断累积**线性变慢**，且慢的部分全在外网 IO 上。
 
 #### P2-25 · `backtest/pipeline.py` 结果落盘仍是裸 `write_text`（2026-08-03 补充，P0-1 收尾复查发现）
+
+> **状态：✅ 已修（PR #19）。** `_finalize` 接 `atomic_write_json`（indent=2 + ensure_ascii=False 与旧格式字节一致，父目录改由原语自动建）；
+> `tests/test_backtest_finalize.py` 钉死格式与空样本边界。全仓裸写清零（除 2026-08-03 复查里逐条判定过"刻意直写"的 5 处）。
+
 - `backtest/pipeline.py:245` — `RESULT_PATH.write_text(json.dumps(result, ...))`，全量覆盖写 JSON，未走 `core/jsonstore`
 - 是 PR #14「全部 JSON 写原子化」的唯一漏网（当时按运行时业务文件圈的范围，backtest 模块没进 grep 视野）
 - 降级理由（所以只记 P2 不记 P0）：产物 git 跟踪、可 `git checkout` 恢复；但重跑一次 ~24min 且烧 token，中途被杀留半截 JSON 仍然疼
