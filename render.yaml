@@ -1,5 +1,7 @@
 # Render 一键部署蓝图（Blueprint）。
-# 用法：render.com → New → Blueprint → 选本仓库 → 按提示填 3 个 API key → Apply。
+# 用法：render.com → New → Blueprint → 选本仓库 → 按提示填 API key → Apply。
+# 🔴 必填三项：ANTHROPIC_API_KEY / TAVILY_API_KEY / HEISENBERG_API_KEY。缺 ANTHROPIC_API_KEY
+#    则任何未缓存钱包都会 NO_KEY → 502（回落的课堂网关域名已 NXDOMAIN，见下）。
 # 免费档注意：闲置 15 分钟休眠（冷启动约 1 分钟，demo 前先打开热身）；磁盘 ephemeral，
 # 冷启动时由 api/main.py 从 git 跟踪的 seed/ 恢复缓存 → 已缓存钱包零 token 秒回。
 services:
@@ -14,11 +16,19 @@ services:
     envVars:
       - key: PYTHON_VERSION
         value: 3.13.1
-      - key: CLASSROOM_API_KEY
-        sync: false          # 在 Render 控制台填（老师的课堂网关 key，绝不入库）
+      # 🔴 必填：全部 AI 调用的后端（core/llm.py 首选）。都在 Render 控制台填，绝不入库。
+      - key: ANTHROPIC_API_KEY
+        sync: false
       - key: TAVILY_API_KEY
         sync: false
       - key: HEISENBERG_API_KEY
         sync: false
+      # 可选：GitHub 状态持久层（core/persist.py）。fine-grained PAT，仅本仓库 Contents
+      # 读写；不填则刷新出的推荐榜/记分牌每次冷启动都退回 seed 快照。
+      - key: GITHUB_TOKEN
+        sync: false
       - key: REDIS_URL
         sync: false          # 可选：Render Key Value / Upstash 连接串；未配不影响单实例运行
+      # 旧课堂网关回落位：默认域名 2026-07-08 起 NXDOMAIN，有 ANTHROPIC_API_KEY 就无需填。
+      - key: CLASSROOM_API_KEY
+        sync: false
