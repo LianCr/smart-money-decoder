@@ -50,6 +50,7 @@
 | P2-20 默认分支不是真相 | | 🟡 已反转，见下 |
 | P2-21 seed 入库 · P2-22 轮询状态机 · P2-23 记分牌读路径打外网 | | ⬜ 未开始 |
 | P2-25 `backtest/pipeline.py` 结果落盘仍是裸 `write_text`（P0-1 唯一漏网） | | ✅ 已修 PR #19（接 `atomic_write_json`，格式字节不变，`tests/test_backtest_finalize.py` 钉死） |
+| P2-26 `/briefing`、`/market-context` 路由已无前端消费者（2026-08-03 归档后新增） | | ⬜ 待产品决定（删路由 or 留作 API），见详情 |
 
 ### 阶段进度
 
@@ -486,6 +487,16 @@
 - 是 PR #14「全部 JSON 写原子化」的唯一漏网（当时按运行时业务文件圈的范围，backtest 模块没进 grep 视野）
 - 降级理由（所以只记 P2 不记 P0）：产物 git 跟踪、可 `git checkout` 恢复；但重跑一次 ~24min 且烧 token，中途被杀留半截 JSON 仍然疼
 - 修法一行：换 `atomic_write_json`。修复成本 **S**
+
+---
+
+#### P2-26 · `/briefing`、`/market-context` 路由已无前端消费者（2026-08-03 补充，PR #20 归档三视图后发现）
+
+- 唯一前端消费者是 BriefingView / ContextView，已随 PR #20 移入 `frontend/archive/`；两条路由现为**零消费者的公开端点**
+- 🔴 与 /analyze 不同，**不能顺手删**：`briefing/assemble.py`（load_or_build_briefing）和 `briefing/market_context.py`（build_market_context/get_behavior_flags）是统一看板 ②④⑤ 的**活数据层**——死的只是 HTTP 路由这层皮
+- 两条路由不烧额外 token 时才安全？否——它们各有整份缓存但**未接限流闸**（P1-15 只闸了 /dashboard），陌生钱包打 /briefing 仍真烧 token。零消费者 + 不设闸 = 纯攻击面
+- 处置选项：(a) 删两条路由（模块留下，T2.3 拆路由时顺手）；(b) 留作公开 API 并补限流。倾向 (a)，但这是产品决定不是工程决定
+- 修复成本 **S**
 
 ---
 

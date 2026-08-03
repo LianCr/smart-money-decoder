@@ -6,6 +6,18 @@
 
 ---
 
+## 2026-08-03（第二场）· 地基三连：P0 全清 + 限流双闸 + v2 链路正式下架
+
+一天三个 PR（#18/#19/#20），全在工程地基轨，净删 ~13k 行。
+
+- **PR #18 · P0-3 收口 = Phase 1「止血」P0 全清**：`_dashboard_impl` 连同单飞锁抽进 `services/dashboard_build.py`，先给 8 个错误出口定死**纯数据契约**（service 只返 dict、判别式="error" key，HTTP 映射留 api 层，对外逐字节不变）；`recommend.ai_verify` 改进程内直调同一入口同一把锁——扫榜不再 HTTP 打自己耗线程池（旧模式 5 等待+5 构建=10 worker）。`test_dashboard_build.py` 33 项钉死契约；`test_recommend_verify.py` 换缝重写语义一条不丢。
+- **PR #19 · 三件独立小事**：①P1-15 入站双闸（`core/ratelimit.py`：每 IP 滑动窗口 30/60s + 每日 UTC 全局 500 硬闸、被拒不计数，429+人话+retry_after，阈值 `core/config.py` 环境变量可调；「完全开放」不变，闸拦脚本不拦人）；②P1-14 前半 `npm audit fix` 清 postcss 两条 high（构建产物字节不变，vite@8 留 T2.7）；③P2-25 `pipeline._finalize` 接原子写，全仓裸写清零。
+- **PR #20 · 瘦身场（下架 v2 解读卡链路）**：`/analyze` 路由、CLI（main.py+renderer/）、fetcher 三文件的专属函数、seed 19 个解读卡快照全下架；四个 grep 验证死透的 api helper 一并清（**纠正了此前口头结论**：`_relation_to_entry` 在 /analyze 内并无调用点，它本来就死）。前端三视图+6 个独占组件正式归档进 `frontend/archive/`（**前提修正**：JS 从 `36d6412` 起就不在 bundle，AUDIT P2-16 标题对 JS 不成立；归档前后两个 asset hash 逐字节一致）。**P1-9 顺手了结**（最大政治仓唯一实现=positions.py Heisenberg 版）。scorecard 的 decode 钩子随路由消亡但**历史行一条不删**（record/settle/compute 全 source 盲，实测验证，照常结算计入命中率）。
+- **验证纪律**：每场 check.sh 全绿 + `git archive` 零 key 干净环境全量绿 + 零 token 真服务冒烟（/analyze 404、缓存钱包 /dashboard 200）。
+- **留下的坑**：①新记 **P2-26**——`/briefing`、`/market-context` 归档后零前端消费者、且没接限流闸（纯攻击面），删或留是产品决定；②守卫唯一活调用方只剩 backtest 重放，T2.1（抽 guards.py 给 ⑥）动机更强、该前移；③CSS 死规则与 en.js 死 key 明确留给 T2.6（实测 Vite 不剥 CSS 注释，任何规则改动都动字节、要视觉回归）。
+
+---
+
 ## 2026-08-03 · 对账收口：进度唯一账本定为 AUDIT.md 看板
 
 只对账和记账、零业务代码改动的一场。背景：进度曾同时记在 CLAUDE.md 的 PR 大表和 AUDIT.md 看板两处，两头对不上（看板还标着 P0-1"部分完成"、P1-13/24"未开始"，实际都已合入 master）。
