@@ -19,16 +19,17 @@ from core.llm import call_gateway, GatewayError
 
 load_dotenv()
 
-# ── 启动时检查 key，缺失立即报错，不要等到运行时才崩 ─────────────────────────
+# ── key 缺失不在 import 时炸，留到真要用它的那一刻 ───────────────────────────
+# 🔴 原来这里对 TAVILY / LLM 两个 key 各有一道 import 时 `raise RuntimeError`。
+# 后果：没配 key 的机器上**连 import 都过不去** → tests/test_news.py 与
+# tests/test_market_thesis.py（经 analyzer/dual_catalyst 间接 import）直接跑不起来，
+# 也就卡死了"CI 不注入任何 key"这条想要的纪律（测试是 mock、零网络、零 token）。
+# 模块被 import ≠ 它要开始干活；缺 key 该让**用到它的那次调用**失败，
+# 并走本模块既有的 NewsError → {"error": True, ...} 错误链，语义不变。
+# 惰性 client 写法与 analyzer/dual_catalyst.py 保持一致。
 TAVILY_API_KEY = os.environ.get("TAVILY_API_KEY")
-
-if not TAVILY_API_KEY:
-    raise RuntimeError("缺少 TAVILY_API_KEY，请在 .env 文件里配置")
-# LLM key（ANTHROPIC_API_KEY 或 CLASSROOM_API_KEY 二选一）：不在这里硬校验——
-# 后端选择收口在 core/llm.py，缺 key 时 call_gateway 抛 GatewayError("NO_KEY")，
-# 本模块按既有错误链转 NewsError，语义不变。
-if not (os.environ.get("ANTHROPIC_API_KEY") or os.environ.get("CLASSROOM_API_KEY")):
-    raise RuntimeError("缺少 LLM key：请在 .env 配置 ANTHROPIC_API_KEY（或 CLASSROOM_API_KEY）")
+# LLM key 本来就不需要在这里校验：后端选择收口在 core/llm.py，缺 key 时 call_gateway
+# 抛 GatewayError("NO_KEY")，_extract_keywords_via_ai 已转成 NewsError（见下）。
 
 # ── 配置项 ────────────────────────────────────────────────────────────────────
 # True = 跳过真实网关，用占位关键词；等课堂 key approve 后改回 False
@@ -38,7 +39,7 @@ MAX_RESULTS       = 5
 MAX_DAYS_BACK     = 180   # Tavily 实测支持的最大天数
 REQUEST_TIMEOUT   = 15    # 秒
 
-_tavily = TavilyClient(api_key=TAVILY_API_KEY)
+_tavily = TavilyClient(api_key=TAVILY_API_KEY) if TAVILY_API_KEY else None
 
 
 # ── 自定义异常 ────────────────────────────────────────────────────────────────
@@ -169,6 +170,13 @@ def _fetch_from_tavily(
     用 Tavily 搜索新闻，返回清洗后的文章列表。
     没有 published_at 的文章直接丢弃，保证 AI 解码层拿到的每条都有日期。
     """
+    # 🔴 必须在这里显式判，不能靠下面那个宽泛的 except 兜：None.search 会抛
+    # AttributeError，被吞成 TAVILY_API_ERROR「Tavily 搜索失败」——那是在指错方向。
+    # "你没配 key"（改配置就好）和 "Tavily 挂了"（等它恢复）是两种完全不同的运维动作。
+    if _tavily is None:
+        raise NewsError("NO_TAVILY_KEY",
+                        "缺少 TAVILY_API_KEY，无法检索新闻——请在 .env 或部署环境变量里配置")
+
     if start_date is not None:
         today     = datetime.now(tz=timezone.utc).date()
         start     = datetime.strptime(start_date, "%Y-%m-%d").date()

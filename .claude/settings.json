@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"$(git rev-parse --show-toplevel)/scripts/precommit_gate.py\"",
+            "if": "Bash(git *)",
+            "timeout": 180,
+            "statusMessage": "Commit gate: English message + tests green"
+          }
+        ]
+      }
+    ]
+  }
+}

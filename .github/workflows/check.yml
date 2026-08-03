@@ -1,0 +1,35 @@
+# 本地门禁 = CI 门禁：两边跑的是**同一个** scripts/check.sh，不维护第二套清单。
+#
+# 🔴 刻意不注入任何 API key。这不是疏忽，是把 CLAUDE.md 协作纪律 #1 钉死成机器可验证的事实：
+#    测试全部是 mock、不打网络、零 token、任何人 clone 下来立刻能跑。
+#    哪天有人写了个"要真 key 才过"的测试，CI 会在这里红掉 —— 那正是我们要的信号。
+name: check
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"          # 与 render.yaml 的 PYTHON_VERSION 对齐
+          cache: pip
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - run: pip install -r requirements.txt
+      - run: npm ci
+        working-directory: frontend
+
+      # 全部测试 + 前端构建校验（和本地 `bash scripts/check.sh` 完全一致）
+      - run: bash scripts/check.sh
