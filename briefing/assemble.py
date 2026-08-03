@@ -17,6 +17,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 from core.config import BRIEFING_AS_OF
+from core.jsonstore import atomic_write_json
 from fetcher.heisenberg import AGENTS, call, results
 from fetcher.profile import get_trader_profile
 from fetcher.actions import get_position_actions
@@ -125,7 +126,7 @@ def load_or_build_briefing(wallet, outcome, slug=None, cid=None, as_of=BRIEFING_
     b = assemble_briefing(wallet, outcome, slug=slug, cid=cid, as_of=as_of, mode=mode)
     if "error" not in b:
         try:
-            path.write_text(json.dumps(b, ensure_ascii=False, indent=2), encoding="utf-8")
+            atomic_write_json(path, b)
         except Exception:
             pass
     return b

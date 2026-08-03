@@ -24,6 +24,8 @@ from pathlib import Path
 
 import requests
 
+from core.jsonstore import atomic_write_json, atomic_write_text
+
 STATE_BRANCH = os.environ.get("STATE_BRANCH", "app-state")
 GITHUB_REPO = os.environ.get("GITHUB_REPO", "LianCr/smart-money-decoder")
 BUNDLE_PATH = "state/bundle.json"
@@ -174,17 +176,17 @@ def restore_bundle(bundle, root="."):
             if name == "scorecard.json":                        # 档案：merge，绝不整体覆盖
                 local = dst.read_text(encoding="utf-8") if dst.exists() else ""
                 merged = _merge_scorecard(local, content)
-                dst.write_text(json.dumps(merged, ensure_ascii=False, indent=2), encoding="utf-8")
+                atomic_write_json(dst, merged)
                 n += 1
             elif name in ("recommendations.json", "hot_traders.json"):
                 local_gen = _gen_at(dst.read_text(encoding="utf-8")) if dst.exists() else 0
                 remote_gen = _gen_at(content) or saved_at
                 if remote_gen > local_gen:                      # 远端新才覆盖（seed 6-25 必输给新刷新）
-                    dst.write_text(content, encoding="utf-8")
+                    atomic_write_text(dst, content)
                     n += 1
             else:                                               # 看板缓存等日期分 key 文件：缺才补
                 if not dst.exists():
-                    dst.write_text(content, encoding="utf-8")
+                    atomic_write_text(dst, content)
                     n += 1
         except Exception:
             continue
