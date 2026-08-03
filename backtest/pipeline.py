@@ -23,6 +23,7 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 
+from core.jsonstore import atomic_write_json
 from fetcher.news import get_news_for_market
 from fetcher.polymarket import fetch_events_by_ids, _is_political_event
 from analyzer.decoder import decode_position, DecoderError
@@ -241,8 +242,8 @@ def _collect_samples(wallet: str, max_samples: int, min_cost: float = 1000.0,
 
 def _finalize(samples: list[dict], label: str) -> dict:
     result = {"_mock": False, "wallet": label, "overview": _overview(samples), "samples": samples}
-    RESULT_PATH.parent.mkdir(parents=True, exist_ok=True)
-    RESULT_PATH.write_text(json.dumps(result, ensure_ascii=False, indent=2), encoding="utf-8")
+    # 原子写（P2-25，全仓最后一处裸 write_text）：采样烧过 token，产物不许因写一半损坏
+    atomic_write_json(RESULT_PATH, result)
     _log(f"\n完成：{len(samples)} 个样本，写入 {RESULT_PATH}")
     _log(f"overview: {json.dumps(result['overview'], ensure_ascii=False)}")
     return result
