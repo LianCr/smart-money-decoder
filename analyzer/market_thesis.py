@@ -23,6 +23,7 @@ from pathlib import Path
 from analyzer.dual_catalyst import _call_gateway, _tavily_search, NEGATIVE_BOOST
 from fetcher.heisenberg import call, results
 from briefing.board_feed import held_token
+from core.jsonstore import atomic_write_json
 
 CACHE = Path(".cache/market_thesis")
 LOG = Path(".data/confidence_log.jsonl")
@@ -161,7 +162,7 @@ def _event_map():
         data = {"counts": dict(counts), "cid2ev": cid2ev}
         try:
             EVENT_CACHE.parent.mkdir(parents=True, exist_ok=True)
-            EVENT_CACHE.write_text(json.dumps(data, ensure_ascii=False), encoding="utf-8")
+            atomic_write_json(EVENT_CACHE, data, indent=None)   # 全量扫描结果，体积优先
         except Exception:
             pass
     _EVENT_MAP.update(data)
@@ -282,7 +283,7 @@ def build_market_thesis(market_title, cid, as_of, implied_prob_yes,
     _log_confidence(cid, market_title, as_of, rj)
     if use_cache:
         cp.parent.mkdir(parents=True, exist_ok=True)
-        cp.write_text(json.dumps(result, ensure_ascii=False, indent=2), encoding="utf-8")
+        atomic_write_json(cp, result)
     return result
 
 

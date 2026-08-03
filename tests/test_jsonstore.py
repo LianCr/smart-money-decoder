@@ -23,7 +23,7 @@ from pathlib import Path
 
 sys.path.insert(0, ".")
 
-from core.jsonstore import atomic_write_json, load_json
+from core.jsonstore import atomic_write_json, atomic_write_text, load_json
 
 passed = 0
 failed = 0
@@ -126,6 +126,36 @@ with tempfile.TemporaryDirectory() as td:
     p = Path(td) / "list.json"
     atomic_write_json(p, [1, "两", {"三": 3}])
     check("顶层 list 往返一致", load_json(p), ("ok", [1, "两", {"三": 3}]))
+
+
+
+# ── 8. atomic_write_text：JSON 之外的原始文本也要原子 ─────────────────────────
+# 用途：恢复备份时写的是原始文本。一次写到一半的"恢复"比不恢复更糟 ——
+# 本来还有个完整的旧文件，半截恢复后两头空。
+with tempfile.TemporaryDirectory() as td:
+    p = Path(td) / "sub" / "backup.json"
+    atomic_write_text(p, '{"restored": true}')
+    check("atomic_write_text 父目录自动创建", p.exists(), True)
+    check("atomic_write_text 内容一致", p.read_text(encoding="utf-8"), '{"restored": true}')
+    check("写文本后可被 load_json 正常读", load_json(p), ("ok", {"restored": True}))
+
+    # 非法 JSON 的文本也照写不误（它只管原子，不管内容是什么）
+    atomic_write_text(p, "not json at all")
+    check("atomic_write_text 不关心内容合法性", p.read_text(encoding="utf-8"), "not json at all")
+    check("不留 .tmp 残骸", sorted(x.name for x in p.parent.iterdir()), ["backup.json"])
+
+
+# ── 9. indent=None 走紧凑格式（大缓存用，体积优先）────────────────────────────
+with tempfile.TemporaryDirectory() as td:
+    p = Path(td) / "compact.json"
+    atomic_write_json(p, {"a": 1, "b": [1, 2]}, indent=None)
+    raw = p.read_text(encoding="utf-8")
+    check("indent=None → 单行紧凑", "\n" not in raw.strip(), True)
+    check("紧凑格式仍可正常读回", load_json(p), ("ok", {"a": 1, "b": [1, 2]}))
+
+    p2 = Path(td) / "pretty.json"
+    atomic_write_json(p2, {"a": 1})
+    check("默认仍是 indent=2（不改既有落盘格式）", "\n" in p2.read_text(encoding="utf-8"), True)
 
 
 print(f"\n{passed} passed, {failed} failed")

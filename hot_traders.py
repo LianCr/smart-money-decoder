@@ -18,6 +18,7 @@ from fetcher.markets import get_market_holders
 from recommend import SEEDS
 
 from core.config import BRIEFING_AS_OF as AS_OF
+from core.jsonstore import atomic_write_json
 OUT = Path(".data/hot_traders.json")
 
 
@@ -108,9 +109,9 @@ def scan(keep=10, floor=100.0):
     hot.sort(key=lambda h: -h["weekly_politics_pnl"])
     hot = hot[:keep]
     OUT.parent.mkdir(parents=True, exist_ok=True)
-    OUT.write_text(json.dumps({"as_of": AS_OF, "generated_at": int(time.time()),
-                               "period": "7d", "source": "579_7d_universe + 581_window7_politics",
-                               "traders": hot}, ensure_ascii=False, indent=2), encoding="utf-8")
+    atomic_write_json(OUT, {"as_of": AS_OF, "generated_at": int(time.time()),
+                            "period": "7d", "source": "579_7d_universe + 581_window7_politics",
+                            "traders": hot})
     print(f"\n✓ 本周政治盘热门交易者 {len(hot)} 个写入 {OUT}", flush=True)
     for h in hot:
         print(f"  {h['wallet'][:12]}… 本周政治 +${h['weekly_politics_pnl']:,.0f} · {h['trades']} 注", flush=True)

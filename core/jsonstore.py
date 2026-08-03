@@ -39,24 +39,35 @@ MISSING = "missing"
 CORRUPT = "corrupt"
 
 
-def atomic_write_json(path, data) -> None:
+def atomic_write_json(path, data, indent: int | None = 2) -> None:
     """把 data 以 JSON 写到 path，要么完整生效、要么完全没发生（无中间态）。
 
     父目录不存在会自动创建。序列化失败原样抛出（TypeError 等），
     此时目标文件**一字未动** —— 因为序列化发生在碰文件之前。
+
+    `indent`：默认 2（人可读，与既有落盘格式一致）。传 None 写紧凑格式 ——
+    给那种"体积比可读性重要"的大缓存用（如 event_structure 全量扫描结果）。
     """
-    path = Path(path)
     # 🔴 顺序关键：先序列化再碰文件。反过来（边写边序列化）就会在写到一半时抛错，
     #    留下半截文件 —— 那正是本模块要根治的病。
-    blob = json.dumps(data, ensure_ascii=False, indent=2)
+    blob = json.dumps(data, ensure_ascii=False, indent=indent)
+    atomic_write_text(path, blob)
 
+
+def atomic_write_text(path, text: str) -> None:
+    """把纯文本原子写到 path：要么完整生效、要么完全没发生。
+
+    JSON 之外也需要它 —— 例如恢复备份时写的是原始文本，而一次写到一半的
+    "恢复"比不恢复更糟（本来还有个完整的旧文件，现在两头空）。
+    """
+    path = Path(path)
     path.parent.mkdir(parents=True, exist_ok=True)
     # 临时文件必须和目标**同目录**：os.replace 只在同一文件系统内保证原子性，
     # 放 /tmp 再 move 跨设备就退化成"复制+删除"，原子性没了。
     tmp = path.with_name(f"{path.name}.tmp-{os.getpid()}")
     try:
         with open(tmp, "w", encoding="utf-8") as f:
-            f.write(blob)
+            f.write(text)
             f.flush()
             os.fsync(f.fileno())        # 落到磁盘，不只是进 page cache
         os.replace(tmp, path)           # 原子替换：读者要么看到旧的、要么看到新的

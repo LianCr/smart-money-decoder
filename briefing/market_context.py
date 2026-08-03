@@ -28,6 +28,7 @@ from pathlib import Path
 import requests
 from dotenv import load_dotenv
 
+from core.jsonstore import atomic_write_json
 from core.llm import call_gateway
 from fetcher.heisenberg import AGENTS, call, paginate, results
 
@@ -289,7 +290,7 @@ def load_or_build(cid, as_of, entity_terms, outcome="Yes", wallet=None):
     if p.exists():
         return json.loads(p.read_text(encoding="utf-8"))
     obj = synthesize(cid, as_of, entity_terms, outcome, wallet=wallet)
-    p.write_text(json.dumps(obj, ensure_ascii=False, indent=2), encoding="utf-8")
+    atomic_write_json(p, obj)
     return obj
 
 

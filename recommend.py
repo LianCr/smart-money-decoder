@@ -34,6 +34,7 @@ from fetcher.profile import _wallet360
 from briefing.market_context import get_behavior_flags
 
 from core.config import BRIEFING_AS_OF as AS_OF
+from core.jsonstore import atomic_write_json
 OUT = Path(".data/recommendations.json")
 
 # 种子 = 已知活跃政治钱包（演示钱包 + 方法 C 验证过的政治专家）。它们的热门顶仓盘 = 发现入口。
@@ -345,9 +346,8 @@ def scan(per_market=10, gate_pnl=2000.0, enrich_top=14, keep=8, ai_top=5, as_of=
     i18n_en = {}                                  # 🌐 汇总各候选的翻译 → 顶层，前端一次注册
     for c in cands:
         i18n_en.update(c.pop("i18n_en", {}) or {})
-    OUT.write_text(json.dumps({"as_of": as_of, "generated_at": int(time.time()),
-                               "method": method, "candidates": cands, "i18n_en": i18n_en},
-                              ensure_ascii=False, indent=2), encoding="utf-8")
+    atomic_write_json(OUT, {"as_of": as_of, "generated_at": int(time.time()),
+                            "method": method, "candidates": cands, "i18n_en": i18n_en})
     print(f"\n✓ 市场反向 · 政治专家候选 {len(cands)} 个写入 {OUT}", flush=True)
     return cands
 
