@@ -29,11 +29,11 @@
 
 | 编号 | 问题 | 状态 | 备注 |
 |:--:|---|:--:|---|
-| P1-5 | 六道守卫覆盖 0 个用户可见路径 | ⬜ 未开始 | 审计最重要的发现；属 Phase 2 T2.1 |
+| P1-5 | 六道守卫覆盖 0 个用户可见路径 | ⬜ 未开始 | 审计最重要的发现；属 Phase 2 T2.1。2026-08-03 /analyze 下架后守卫唯一活调用方=backtest 重放（实现原封保留），T2.1 动机更强 |
 | P1-6 | 声称的"回验闭环"没有实现 | ⬜ 未开始 | `confidence_log.jsonl` 只写不读 |
 | P1-7 | 评分引擎不可复现 | ⬜ 未开始 | Phase 2 T2.2 |
 | P1-8 | 核心判断逻辑零测试 | ⬜ 未开始 | Phase 2 T2.4，见「10 个测试点」 |
-| P1-9 | "最大政治仓"两套并行实现 | ⬜ 未开始 | |
+| P1-9 | "最大政治仓"两套并行实现 | ✅ 已修 | PR #20（随 /analyze 链路下架自然归一：data-api 版删除，唯一实现 = `fetcher/positions.py` Heisenberg 版，near_settled 守卫全覆盖） |
 | P1-10 | 缓存失效是手写清单 | ⬜ 未开始 | Phase 2 T2.3 一并解决 |
 | P1-11 | `api/main.py` 902 行 god module | ⬜ 未开始 | Phase 2 T2.3 |
 | P1-12 | 零日志零监控，健康检查探不到真实健康 | 🟡 **部分完成** | 健康检查 ✅ PR #15（`/healthz` 真探活 + render.yaml 已指向）；日志/监控未动 |
@@ -46,7 +46,7 @@
 
 | 编号 | 问题 | 状态 |
 |:--:|---|:--:|
-| P2-16 前端死代码进构建 · P2-17 异常吞噬 · P2-18 魔数散落 · P2-19 Bedrock 半成品 | | ⬜ 未开始 |
+| P2-16 前端死代码进构建 · P2-17 异常吞噬 · P2-18 魔数散落 · P2-19 Bedrock 半成品 | | P2-16 ✅ PR #20（详情节有前提修正：JS 早已不进 bundle，本场=正式归档进 `frontend/archive/`；CSS 死规则/en.js 死 key 留 T2.6）· 其余 ⬜ |
 | P2-20 默认分支不是真相 | | 🟡 已反转，见下 |
 | P2-21 seed 入库 · P2-22 轮询状态机 · P2-23 记分牌读路径打外网 | | ⬜ 未开始 |
 | P2-25 `backtest/pipeline.py` 结果落盘仍是裸 `write_text`（P0-1 唯一漏网） | | ✅ 已修 PR #19（接 `atomic_write_json`，格式字节不变，`tests/test_backtest_finalize.py` 钉死） |
@@ -172,6 +172,10 @@
 
 #### P1-5 · 六道守卫当前覆盖 0 个用户可见路径 ← 本次审计最重要的发现
 
+> **2026-08-03 更新（PR #20）**：/analyze 链路已正式下架，`decode_position` 的唯一活调用方变为 `backtest/pipeline.py:126` 的历史重放
+> （下面"全仓唯一调用点在 /analyze 内"的证据行在首次审计时就漏了 backtest 这个调用方，特此修正）。
+> 六道守卫**实现原封保留在 `analyzer/decoder.py`**——它们现在离用户可见路径更远了，T2.1（抽 `guards.py` 给 ⑥ 复用）的动机因此更强、优先级应前移。
+
 **问题**：项目对外宣称的"6 个输出 guard"全部位于 `analyzer/decoder.py`，只有 `/analyze` 端点会触发；而主界面（统一看板 ⑥）走的是 `market_thesis`，信心由 LLM 直出且代码不做任何校验。最近一次前端重构又把 Decode tab 移出了导航——于是这六道守卫现在一个用户可见路径都覆盖不到。
 
 **证据**：
@@ -238,6 +242,11 @@
 ---
 
 #### P1-9 · "最大政治仓"存在两套并行实现
+
+> **状态：✅ 已修（PR #20）。** 按本条自己的结论"该删一个而不是该同步两个"：data-api 版
+> （`fetcher/polymarket.py` 的 get_top_political_position 及专属集）随 /analyze 链路下架删除，
+> **唯一实现 = `fetcher/positions.py`（Heisenberg 版，带 near_settled 守卫 + 测试）**。
+> polymarket.py 只保留 backtest 依赖的 `fetch_events_by_ids` + `_is_political_event`。
 
 **问题**：同一个核心概念有两份独立实现，走不同数据源、有不同的守卫。
 
@@ -386,6 +395,14 @@
 ### P2 — 技术债
 
 #### P2-16 · 前端死代码仍进构建产物
+
+> **状态：✅ 已修（PR #20），且标题的前提要修正**：实测 dist 产物 grep 三视图名/独占组件名**全零命中**——
+> Vite 的静态 import 图从 `36d6412` 起就不含它们，**JS 从未进过构建产物**（真进产物的是 CSS 16 个无条件
+> @import 和 en.js 死 key）。本次做的是「正式存档形态」：三视图 + **6 个**独占组件（下面清单漏了
+> CatColumn/Timeline/WalletHeader）移入 `frontend/archive/`（src 之外、天然不可达）+ README 说明；
+> `STAGES_BRIEFING/STAGES_CONTEXT` 删除。**另一处更正：`STAGES` 不是孤儿**——LoadingStages.jsx:3 拿它做
+> 默认参且被 BoardView 用。CSS 死规则与存活规则混排共享 `--bf-*` 变量（07-briefing 被 7 个分区消费），
+> 拆分需视觉回归 → 与 en.js 死 key 一并留给 T2.6。构建验证：归档前后两个 asset hash 逐字节一致。
 - `frontend/src/views/DecodeView.jsx`(101 行) · `BriefingView.jsx`(67) · `ContextView.jsx`(68) —— grep 确认**只被自己引用**，`App.jsx:47` 已不再路由到它们
 - 连带只被孤儿 view 引用的组件：`Card.jsx`(122) ← 仅 DecodeView · `BriefingBody.jsx`(74) ← 仅 BriefingView · `ContextBody.jsx`(48) ← 仅 ContextView
 - `frontend/src/utils/config.js:7-9` — `STAGES` / `STAGES_BRIEFING` / `STAGES_CONTEXT` 三个常量同样只服务孤儿 view
@@ -504,7 +521,7 @@
 | # | 任务 | 依赖 | 量 |
 |:--:|---|:--:|:--:|
 | **T2.1** | **守卫覆盖到主界面**。新建 `analyzer/guards.py`，把六道守卫抽成纯函数（输入：文本 + 契约 → 输出：violations 列表），`decoder` 与 ⑥ 共用。给 ⑥ 至少补三道：`DURATION_COMPUTED`（复用 `decoder.py:335-339` 的正则）· `FABRICATED_CITATION`（rationale 里引用的标题必须在 `shared_pool` 内）· `FEAR_WORDS`（复用 `dual_catalyst.py:61`）。**明确不加"改信心"守卫——红线 4 保持不变** | T1.1 | M 2d |
-| **T2.2** | **确定性层收口**。新建 `scoring/` 包：`decoder` v2 矩阵 + `reasoner_v3` + `_code_follow_call`(`api/main.py:364-373`) + `_difficulty`(`api/main.py:143-151`) 全部搬入，成为唯一确定性评分层；P2-18 的全部阈值收进 `scoring/constants.py`（带来源注释）。LLM 裁决保持独立模块，并在 payload 里显式标注 `deterministic: false` | T2.1 | M 2d |
+| **T2.2** | **确定性层收口**。新建 `scoring/` 包：`decoder` v2 矩阵 + `reasoner_v3` + `_code_follow_call`（已在 `services/dashboard_build.py`，PR #18 搬过去的）搬入，成为唯一确定性评分层；P2-18 的全部阈值收进 `scoring/constants.py`（带来源注释）。LLM 裁决保持独立模块，并在 payload 里显式标注 `deterministic: false`。（原计划还要搬 `_difficulty`——它已在 PR #20 作为验证过的死代码删除，不再搬） | T2.1 | M 2d |
 | **T2.3** | **拆 `api/main.py`**。→ `api/routes/{dashboard,recommend,scorecard,archive}.py` + `services/` + `core/cachepolicy.py`。缓存失效改为**注册表**：每层缓存注册自己的 key 模板，`purge` 遍历注册表而非手写清单（根治 P1-10）。启动副作用（seed/GitHub 恢复）移出模块顶层，改为 lifespan | T1.4 | L 3d |
 | **T2.4** | **补齐 10 个测试点**（明细见下） | T2.2 | L 3d |
 | **T2.5** | **回验闭环接上**。`confidence_log.jsonl` 增加读取方；`/scorecard` 输出 high/med/low 分档命中率。**严守 `scorecard.py:6-9` 三条红线**：只算方向不算收益、NO BASIS 单列、纯代码不调 AI | T2.4 | M 2d |

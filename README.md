@@ -60,17 +60,17 @@ Each sample carries a **difficulty score** (`1 − |entry_price − 0.5| × 2`):
 
 ```
 fetcher/                          data layer (read-only HTTP)
-  polymarket.py   →  get_top_political_position(address)        positions + politics filter + $5k
-  trades.py       →  get_entry_time_v2 / get_wallet_profile / get_wallet_pnl_history
-  activity.py     →  get_entry_time(address, condition_id)      legacy fallback
-  news.py         →  get_news_for_market(question, entry_time)  keywords + Tavily + cache
+  positions.py    →  get_top_political_position_hz(address)     largest unsettled political position (Heisenberg)
+  heisenberg.py · profile.py · actions.py · price.py            briefing data layer (who / actions / price)
+  polymarket.py   →  fetch_events_by_ids / _is_political_event  gamma tags politics check (backtest)
+  trades.py       →  get_wallet_profile / get_wallet_pnl_history  display-only, best-effort
+  news.py         →  get_news_for_market(question, entry_time)  keywords + Tavily + cache (backtest replay)
                               ↓
-analyzer/decoder.py →  decode_position(assembled, as_of=None)   sonnet-4.5 + guards
-renderer/card.py    →  terminal card (price_info filled by code, not AI)
-                              ↓
-main.py             →  CLI entry
-api/main.py         →  FastAPI: GET /analyze, GET /backtest
-frontend/           →  Vite + React single page (Decode / Track Record tabs)
+analyzer/decoder.py →  decode_position(assembled, as_of=None)   sonnet + guards (backtest replay only)
+services/dashboard_build.py →  the v3 dashboard pipeline (pure-data contract, single-flight)
+api/main.py         →  FastAPI: /dashboard /recommendations /scorecard /backtest /briefing …
+frontend/           →  Vite + React single page (Unified Board / Track Record;
+                       retired v2 views archived in frontend/archive/)
 
 backtest/                         offline backtest pipeline (sealed)
   full_activity.py →  fetch_full_activity(wallet, start, end)   independent pagination
@@ -114,9 +114,6 @@ cp .env.example .env        # then fill in your keys
 ## Run
 
 ```bash
-# CLI — one wallet, full pipeline → terminal card
-python main.py 0x7c3db723f1d4d8cb9c550095203b686cb11e5c6b
-
 # Web — backend + frontend
 uvicorn api.main:app --port 8000          # http://localhost:8000
 cd frontend && npm install && npm run dev # http://localhost:5173
@@ -125,10 +122,8 @@ cd frontend && npm install && npm run dev # http://localhost:5173
 python -m backtest.pipeline <wallet> <n>                          # single wallet
 python -m backtest.pipeline multi <per_wallet> <total_cap> <w1> <w2> ...   # aggregate
 
-# Unit tests (no network)
-python tests/test_position.py      # positions / political filter
-python tests/test_activity.py      # entry-time pagination
-python tests/test_trades.py        # trades-based entry time
+# Unit tests (no network; the full gate is `bash scripts/check.sh`)
+python tests/test_position.py      # gamma-tags political filter
 python tests/test_full_activity.py # backtest pagination
 python tests/test_resolution.py    # conditionId → outcome parsing
 ```
