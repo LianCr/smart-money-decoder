@@ -30,7 +30,7 @@
 | 编号 | 问题 | 状态 | 备注 |
 |:--:|---|:--:|---|
 | P1-5 | 六道守卫覆盖 0 个用户可见路径 | ✅ 已修 | PR #21（T2.1：`analyzer/guards.py` 唯一正本，decoder 换调用行为等价；⑥ 接三道——DURATION(中英双正则,拦截换占位) · FABRICATED_CITATION(新写,查 bull/bear 引用 vs shared_pool) · 词表(仅标记)；`guard_flags` 进 payload 留痕。CONFIDENCE_TAMPERED 依红线 4 不移植；②what_bet 仍无守卫=已知边界） |
-| P1-6 | 声称的"回验闭环"没有实现 | ⬜ 未开始 | `confidence_log.jsonl` 只写不读。PR #21 起日志补齐 rationale+guard_flags（此前 docstring 声称记 rationale 实际没记），回验数据面已备好 |
+| P1-6 | 声称的"回验闭环"没有实现 | ✅ 已修 | PR #24（`confidence_replay.py` 读取方 + `/confidence-replay` 端点 + 前端信心校准面板；高/中/低分档命中率 + guard_flags 交叉；绝不回填由测试钉死——含输入 log 字节哈希不变。回验**输入**的易失性另记 P2-27） |
 | P1-7 | 评分引擎不可复现 | 🟡 **部分完成** | PR #21：⑥ payload 标注 `deterministic:false`（LLM 直出路径）/`true`（v2 矩阵 fallback）——影响段唯一硬要求已落。🔴 API 事实：temperature=0 在 `claude-sonnet-5` 上返 400（新代模型移除采样参数），"固定 temperature"这条路已不存在。剩余部分见 T2.2 |
 | P1-8 | 核心判断逻辑零测试 | ⬜ 未开始 | Phase 2 T2.4，见「10 个测试点」 |
 | P1-9 | "最大政治仓"两套并行实现 | ✅ 已修 | PR #20（随 /analyze 链路下架自然归一：data-api 版删除，唯一实现 = `fetcher/positions.py` Heisenberg 版，near_settled 守卫全覆盖） |
@@ -51,6 +51,8 @@
 | P2-21 seed 入库 · P2-23 记分牌读路径打外网 | | ⬜ 未开始 |
 | P2-22 前端轮询状态机脆弱 | | ✅ 已修 PR #22（`hooks/useDashboard.js` 显式状态机：预算=墙钟 10 分钟对齐单飞 TTL、刷新期旧板保留+刷新中徽章、202/429 按 retry_after 退避、构建中/超时永不显示"失败"、卸载作废在飞循环） |
 | P2-25 `backtest/pipeline.py` 结果落盘仍是裸 `write_text`（P0-1 唯一漏网） | | ✅ 已修 PR #19（接 `atomic_write_json`，格式字节不变，`tests/test_backtest_finalize.py` 钉死） |
+| P2-26 `/briefing`、`/market-context` 路由已无前端消费者（2026-08-03 归档后新增） | | ⬜ 待产品决定（删路由 or 留作 API），见详情。⚠ 本条曾在 2026-08-03 checkpoint 记入但 commit 推到已合并分支上丢失，2026-08-05 找回补录 |
+| P2-27 `confidence_log.jsonl` 无持久层：Render 冷启动被 seed 重置（2026-08-05 T2.5 时发现） | | ⬜ 未开始，见详情 |
 
 ### 阶段进度
 
@@ -201,6 +203,16 @@
 ---
 
 #### P1-6 · 声称的"回验闭环"没有实现
+
+> **状态：✅ 已修（PR #24）。** `confidence_replay.py`（scorecard.py 姊妹件，同款红线头）：读 log（严格只读，
+> settle/compute 前后字节哈希不变由测试钉死；坏行跳过绝不隔离改名）→ 同 (cid,as_of) 重建折叠取最新 ts
+> （n_builds/confidence_variants 留痕=P1-7 非确定性可观测）→ 注入 resolver(574) 增量结算 → 按方向对答案。
+> `GET /confidence-replay` 裸 GET 纯读喂前端、`?settle=1` 显式触发结算（读写分离）；分档 high/med/low/other
+> ×命中率 + guard_flags 交叉（F4 数据面），样本<`REPLAY_MIN_BUCKET_N`(config,默认5) 如实标"样本不足"；
+> lean 未定=NO BASIS 单列不进分子分母；已结算条冻结、任何改写路径 raise `ReplayIntegrityError`。
+> 档案 `.data/confidence_replay.json` 进 app-state bundle（restore 走专属 merge 分支：已结算不被 pending 盖）。
+> ⚠ 遗留：回验**输入**（log 本体）在 Render 冷启动仍被 seed 重置 → **P2-27**。
+> （下方证据行号为首次审计时的快照，现 `LOG` 在 `market_thesis.py:30`、`_log_confidence` 在 `:224-237`——认编号别认行号。）
 
 **问题**：`confidence_log.jsonl` 只有写入方，全仓没有任何读取方。
 
@@ -533,6 +545,30 @@
 
 ---
 
+#### P2-26 · `/briefing`、`/market-context` 路由已无前端消费者（2026-08-03 补充，PR #20 归档三视图后发现）
+
+> ⚠ 本条 2026-08-03 checkpoint 时已写好，但那次 docs commit 推到了**已合并的** `chore/retire-analyze-chain`
+> 分支上、从未进 master，看板上凭空消失。2026-08-05 从 `9e1a6e3` 找回原文补录（编号 P2-26 从未复用，无冲突）。
+> 这本身就是 CLAUDE.md「分支卫生」教训的新实例：**合完的分支随手删，别再往上推**。
+
+- 唯一前端消费者是 BriefingView / ContextView，已随 PR #20 移入 `frontend/archive/`；两条路由现为**零消费者的公开端点**
+- 🔴 与 /analyze 不同，**不能顺手删**：`briefing/assemble.py`（load_or_build_briefing）和 `briefing/market_context.py`（build_market_context/get_behavior_flags）是统一看板 ②④⑤ 的**活数据层**——死的只是 HTTP 路由这层皮
+- 两条路由不烧额外 token 时才安全？否——它们各有整份缓存但**未接限流闸**（P1-15 只闸了 /dashboard），陌生钱包打 /briefing 仍真烧 token。零消费者 + 不设闸 = 纯攻击面
+- 处置选项：(a) 删两条路由（模块留下）；(b) 留作公开 API 并补限流。倾向 (a)，但这是产品决定不是工程决定
+- 修复成本 **S**
+
+---
+
+#### P2-27 · `confidence_log.jsonl` 无持久层：Render 冷启动被 seed 重置（2026-08-05 补充，T2.5 探路时发现）
+
+- 冷启动恢复是**目录级全有或全无**（`api/main.py` lifespan：`.data/` 不存在才整目录 copytree seed）——实例活着期间 log 正常追加，但下一次冷启动/重部署磁盘清空后退回 **seed 的 11 行快照**，期间追加的判断全部丢失
+- log 也**不在** `_persist_app_state` 的 bundle 清单里（scorecard/recommendations/hot_traders/confidence_replay 在），所以 GitHub 状态层也救不了它
+- 影响：回验闭环（P1-6，已修）的**输出**档案 `.data/confidence_replay.json` 已进 bundle 跨部署持久，但**输入**易失——冷启动窗口期间产生、尚未被 settle 收进档案的判断会消失，回验样本只会偏少不会造假（丢的是 pending，不是已结算事实）
+- 修法方向：把 log 纳入 bundle 需要**行并集 merge**（JSONL 追加语义，与现有三种 merge 都不同）且要防 `MAX_FILE_BYTES=400KB` 静默截断（log 无轮转无上限，见 P1-6 证据）；或改为"settle 足够频繁、pending 窗口足够短"的运营答案。属 P2-21（seed 语义）邻域，一起定
+- 修复成本 **S-M**
+
+---
+
 ## 三、路线图
 
 ### Phase 1 · 止血
@@ -568,7 +604,7 @@
 | **T2.2** | **确定性层收口**。新建 `scoring/` 包：`decoder` v2 矩阵 + `reasoner_v3` + `_code_follow_call`（已在 `services/dashboard_build.py`，PR #18 搬过去的）搬入，成为唯一确定性评分层；P2-18 的全部阈值收进 `scoring/constants.py`（带来源注释）。LLM 裁决保持独立模块，并在 payload 里显式标注 `deterministic: false`。（原计划还要搬 `_difficulty`——它已在 PR #20 作为验证过的死代码删除，不再搬） | T2.1 | M 2d |
 | **T2.3** | ✅ **已完成（PR #23，见 P1-10/P1-11 详情）**。副作用进 lifespan → 拆 `api/routes/{dashboard,recommend,scorecard,briefing,meta}`（原计划的 archive 按内容改名 meta，另补了计划没点名的 briefing）+ `api/shared.py` → `core/cachepolicy.py` 注册表根治 P1-10 | T1.4 | L 3d |
 | **T2.4** | **补齐 10 个测试点**（明细见下） | T2.2 | L 3d |
-| **T2.5** | **回验闭环接上**。`confidence_log.jsonl` 增加读取方；`/scorecard` 输出 high/med/low 分档命中率。**严守 `scorecard.py:6-9` 三条红线**：只算方向不算收益、NO BASIS 单列、纯代码不调 AI | T2.4 | M 2d |
+| **T2.5** | ✅ **已完成（PR #24，见 P1-6 详情）**。读取方=`confidence_replay.py`；分档命中率走**独立端点** `/confidence-replay` 而非并进 /scorecard（按 2026-08-05 session brief 的读写分离要求：裸 GET 纯读、`?settle=1` 显式结算）。三条红线全守，另加"绝不回填/已结算冻结"由 `ReplayIntegrityError` + 字节哈希测试机器强制。依赖 T2.4 实际未卡（端点测试地基 T2.4 #4 已先行） | T2.4 | M 2d |
 | **T2.6** | **前端死代码 + 状态机**。3 个孤儿 view 及其独占组件明确归档（不进 bundle）；新建 `hooks/useDashboard.js`，把轮询重写为显式状态机（`idle`/`loading`/`polling`/`stale`/`error`），轮询上限对齐单飞锁 TTL，刷新期间保留旧板 | — | M 1.5d |
 | **T2.7** | vite 8 升级 + 建立依赖更新节奏（每季度一次 `npm outdated` 复查） | T1.7 | M 1d |
 
@@ -609,7 +645,7 @@
 #### F2 · 信心校准曲线（M，≈2 人天）
 - **为什么**：T2.5 一旦让 `confidence_log` 有了读取方，就能画出 high/med/low 三档的**实际命中率**。这个图表回答的是"我说高信心的时候，我到底有多准"。
 - **为什么值钱**：绝大多数 AI 产品拿不出这张图——因为它们不敢存档、或存了不敢公布。这个项目的红线体系（存档不回填、命中率只算方向、NO BASIS 单列）恰好让它**有资格**画这张图。对雇主而言这是最直观的"这人懂什么叫诚实的 AI 产品"的证据。
-- **前置**：T2.5
+- **前置**：T2.5 ✅（PR #24）——数据面与最小面板已在：`/confidence-replay` 出分档冷数字、前端 `ConfidenceCalibration` 一行式展示、guard_flags 交叉（F4 要的那份）已随档。F2 剩下的是把它画成**曲线/图表**并等真结算样本长到 `REPLAY_MIN_BUCKET_N` 以上——当前全 pending（且见 P2-27 输入易失、以及 Heisenberg key 2026-08-05 实测 402 INSUFFICIENT_CREDIT，settle 一条都查不动）
 
 #### F3 · 同盘分歧独立面板（M，≈2 人天）
 - **为什么**：`recommend.py:146-161` 的 `_mark_disagreements` 和 `:163-174` 的 `_mark_consensus` **已经在算了**，但产出只做成了推荐卡上的一个角标。而 `recommend.py:148` 的注释自己写着"这本身是高价值诚实信号——'聪明钱不是共识'"。
