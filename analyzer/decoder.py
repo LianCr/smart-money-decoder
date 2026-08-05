@@ -19,6 +19,8 @@ from pathlib import Path
 
 from core.llm import call_gateway, GatewayError
 from core.jsonstore import atomic_write_json
+from analyzer import guards
+from analyzer.guards import FOLLOW_CALL_ENUM  # noqa: F401  正本已收口 guards.py，re-export 兼容旧引用
 
 # ── 配置项 ────────────────────────────────────────────────────────────────────
 MAX_TOKENS        = 2000
@@ -27,7 +29,7 @@ USE_CACHE         = os.environ.get("USE_DECODER_CACHE", "false").lower() == "tru
 CACHE_DIR         = Path(".cache/decoder")
 
 # 模型必须从这两个枚举里选
-FOLLOW_CALL_ENUM = {"ROOM LEFT", "CHASED", "NO BASIS"}
+# FOLLOW_CALL_ENUM 现从 analyzer/guards.py 导入（顶部），此处不再定义第二份
 CONFIDENCE_ENUM  = {"high", "medium", "low"}
 
 # 只把契约里定义的字段送进模型，杜绝 market_id / event_id 这类内部 ID 干扰
@@ -284,110 +286,27 @@ def decode_position(assembled: dict, as_of: str | None = None) -> dict:
             f"模型返回的不是合法 JSON：{e}。原文前 400 字：{raw_output[:400]}",
         )
 
-    # 第六步：代码层校验三条硬约束
-
-    # 6.1 follow_call 必须是三枚举之一
-    follow_call = card.get("follow_call")
-    if follow_call not in FOLLOW_CALL_ENUM:
-        raise DecoderError(
-            "INVALID_FOLLOW_CALL",
-            f"follow_call 必须是 ROOM LEFT/CHASED/NO BASIS 之一，实际：{follow_call!r}",
-        )
-
-    # 6.2 confidence 必须等于 computed_confidence
-    if card.get("confidence") != computed_confidence:
-        raise DecoderError(
-            "CONFIDENCE_TAMPERED",
-            f"模型擅自改判置信度：computed={computed_confidence}，模型返回 {card.get('confidence')!r}",
-        )
-
-    # 6.3 articles 为空时 catalyst 必须是空数组（禁止编故事）
-    articles_empty = not (assembled.get("articles") or [])
-    if articles_empty and card.get("catalyst") != []:
-        raise DecoderError(
-            "FABRICATED_CATALYST",
-            f"articles 为空时 catalyst 必须是 []，模型返回：{card.get('catalyst')!r}",
-        )
-
-    # 6.3b catalyst 自我否定检测：模型明知不相关还塞进数组的兜底
-    # 软门槛被反复绕过，所以代码端直接抓自供
-    self_negating_phrases = (
-        "does not touch",
-        "does not relate",
-        "unrelated to the resolution",
-    )
-    for idx, item in enumerate(card.get("catalyst") or []):
-        why = (item.get("why_relevant") or "").lower()
-        for phrase in self_negating_phrases:
-            if phrase in why:
-                raise DecoderError(
-                    "IRRELEVANT_CATALYST",
-                    f"catalyst[{idx}] 自己承认与结算无关（含 {phrase!r}），"
-                    f"按 prompt 规则不应放入数组。原文：{item.get('why_relevant')!r}",
-                )
-
-    # 6.3c duration 检测：HARD RULE 2 反复被破，加代码兜底
-    # 不追句式（"within"/"for"/... 这类引导词模型会变着花样绕）
-    # 改为直接匹配"数字+时间单位"的组合本身——契约里没有任何时长字段，
-    # 叙述里出现"数字+日/周/月/年"必然是模型自算的。
-    # 豁免 published_at(YYYY-MM-DD) 和 resolution_date_human("December 31, 2026")
-    # 的字段原文：它们没有 day/week/month/year 这种英文单位词跟在数字后面，
-    # 天然不会触发，无需显式排除。
-    duration_re = re.compile(
-        r"\b(one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|"
-        r"\d+(?:\.\d+)?)[\s-]+(more\s+)?(day|week|month|year)s?\b",
-        re.IGNORECASE,
-    )
-    text_fields = []
+    # 第六步：代码层守卫（🔴 实现正本在 analyzer/guards.py，decoder 保持 raise 语义：
+    # 首个 violation 原样转 DecoderError——reason/message 与抽取前逐字一致）
+    duration_fields = []
     for k in ("what_bet", "edge_analysis", "reasoning"):
         if isinstance(card.get(k), str):
-            text_fields.append((k, card[k]))
+            duration_fields.append((k, card[k]))
     for idx, item in enumerate(card.get("catalyst") or []):
         if isinstance(item, dict) and isinstance(item.get("why_relevant"), str):
-            text_fields.append((f"catalyst[{idx}].why_relevant", item["why_relevant"]))
-    for field_name, text in text_fields:
-        m = duration_re.search(text)
-        if m:
-            raise DecoderError(
-                "DURATION_COMPUTED",
-                f"{field_name} 含时长推算 {m.group(0)!r}，违反 HARD RULE 2。原文：{text!r}",
-            )
+            duration_fields.append((f"catalyst[{idx}].why_relevant", item["why_relevant"]))
 
-    # 6.4 entry_price 存在时，模型不得把它当未知
-    # 防止模型把 entry_time=None 误读成 entry_price=None（多次回归出现的失误）。
-    #
-    # 旧实现用子串匹配 "entry price is unknown" 会误伤良性措辞：模型写
-    # "Entry price is unknown by date but the wallet paid 79.83¢" 时，它其实
-    # 正确用了价、只是说建仓「日期」未知，却被子串误判成否认价格。
-    #
-    # 新判据：只要 edge_analysis 里出现了 entry_price 的数值本身（价格单位
-    # 0.7983 或美分写法 79.83），就证明模型确实在用这个价，不触发；
-    # 仅当数值「不在场」又出现 unknown 类表述时，才判定为真的把价当未知。
-    entry_price = assembled.get("entry_price")
-    if entry_price is not None:
-        edge_text = (card.get("edge_analysis") or "").lower()
-        # 价格本身 + 美分写法两种字面，任一出现即视为「已使用」
-        price_unit_str = f"{entry_price:g}".lower()        # 0.7983
-        cents_str      = f"{round(entry_price * 100, 2):g}"  # 79.83
-        price_used = (price_unit_str in edge_text) or (cents_str in edge_text)
-
-        denial_phrases = (
-            "entry price is unknown",
-            "entry price unknown",
-            "entry_price is unknown",
-            "entry_price is null",
-            "wallet's entry price is unknown",
-            "cost basis is unknown",
-        )
-        denies = any(p in edge_text for p in denial_phrases)
-
-        # 只有「数值不在场」且「出现否认表述」才算真违约
-        if denies and not price_used:
-            raise DecoderError(
-                "ENTRY_PRICE_DENIED",
-                f"输入 entry_price={entry_price} 是已知数值，但模型在 edge_analysis "
-                f"里既未引用该数值、又声称其未知。原文：{card.get('edge_analysis')!r}",
-            )
+    violations = (
+        guards.check_follow_call(card.get("follow_call"))                                   # 6.1
+        + guards.check_confidence_tampered(card.get("confidence"), computed_confidence)     # 6.2
+        + guards.check_fabricated_catalyst(assembled.get("articles"), card.get("catalyst")) # 6.3
+        + guards.check_irrelevant_catalyst(card.get("catalyst"))                            # 6.3b
+        + guards.check_duration(duration_fields)                                            # 6.3c
+        + guards.check_entry_price_denied(assembled.get("entry_price"),                     # 6.4
+                                          card.get("edge_analysis"))
+    )
+    if violations:
+        raise DecoderError(violations[0]["code"], violations[0]["message"])
 
     # 第七步：代码生成 warnings 拼进最终卡片
     card["warnings"] = _build_warnings(assembled)
