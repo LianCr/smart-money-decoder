@@ -20,6 +20,7 @@ import time
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
+from analyzer import guards
 from analyzer.dual_catalyst import _call_gateway, _tavily_search, NEGATIVE_BOOST
 from fetcher.heisenberg import call, results
 from briefing.board_feed import held_token
@@ -28,6 +29,11 @@ from core.jsonstore import atomic_write_json
 CACHE = Path(".cache/market_thesis")
 LOG = Path(".data/confidence_log.jsonl")
 CONF_VALUES = {"high", "med", "medium", "low"}
+
+# 🛡 T2.1 守卫占位符（拦截降级用；只拦叙事、绝不碰 confidence/lean——红线 4）
+_PLACEHOLDER_DURATION = "（叙述含日期推算，被守卫拦下）"
+_PLACEHOLDER_CITATION = "（该侧论证引用了文章池外的来源，被守卫拦下）"
+_PLACEHOLDER_CITATION_RATIONALE = "（叙述引用了文章池外的来源，被守卫拦下）"
 
 
 # ── prompts ───────────────────────────────────────────────────────────────────
@@ -209,8 +215,9 @@ def _cache_path(cid, as_of):
     return CACHE / f"{cid}_{as_of}.json"
 
 
-def _log_confidence(cid, market_title, as_of, rj):
-    """可观测：记一行供记分牌回验高信心是否真命中（不改输出）。"""
+def _log_confidence(cid, market_title, as_of, rj, guard_flags=None):
+    """可观测：记一行供记分牌回验高信心是否真命中（不改输出）。
+    （rationale 此前只在 docstring 里声称被记、实际没记——T2.1 补上，连同 guard_flags 供回验。）"""
     try:
         LOG.parent.mkdir(parents=True, exist_ok=True)
         with LOG.open("a", encoding="utf-8") as f:
@@ -218,6 +225,7 @@ def _log_confidence(cid, market_title, as_of, rj):
                 "ts": int(time.time()), "cid": cid, "market": market_title, "as_of": as_of,
                 "market_lean": rj.get("market_lean"), "lean_strength": rj.get("lean_strength_0_100"),
                 "confidence": rj.get("confidence"), "pivotal_unknown": rj.get("pivotal_unknown"),
+                "rationale": rj.get("rationale"), "guard_flags": guard_flags or [],
             }, ensure_ascii=False) + "\n")
     except Exception:
         pass
@@ -267,6 +275,30 @@ def build_market_thesis(market_title, cid, as_of, implied_prob_yes,
     if conf == "medium":
         rj["confidence"] = "med"
 
+    # 🛡 T2.1 三道守卫（正本 analyzer/guards.py；只拦截/降级/标记，绝不修复/抬升；
+    # confidence/lean 一概不碰——红线 4：⑥ 的信心由 reasoner 直出，代码不兜底）。
+    # 检查全部跑在原文上，降级动作最后一次性应用。
+    allowed = set()
+    if pc and pc.get("days_to_resolution") is not None:
+        allowed.add((str(pc["days_to_resolution"]), "天"))   # 代码喂过的时长，如实引用不算自算
+    dur_v = guards.check_duration([("rationale", rj.get("rationale")),
+                                   ("pivotal_unknown", rj.get("pivotal_unknown"))], allowed)
+    cit_v = guards.check_fabricated_citation(
+        {"bull": bull, "bear": bear, "rationale": rj.get("rationale")}, pool)
+    lex_v = (guards.scan_lexicon(rj.get("rationale"), guards.FEAR_WORDS, "FEAR_WORDS", "rationale")
+             + guards.scan_lexicon(rj.get("rationale"), guards.DIRECTIVE_WORDS, "DIRECTIVE_WORDS", "rationale"))
+    guard_flags = dur_v + cit_v + lex_v                     # 词表命中=仅标记（rationale 本就是判断性文本）
+    if any(v["field"] == "rationale" for v in dur_v):
+        rj["rationale"] = _PLACEHOLDER_DURATION
+    elif any(v["field"] == "rationale" for v in cit_v):
+        rj["rationale"] = _PLACEHOLDER_CITATION_RATIONALE
+    if any(v["field"] == "pivotal_unknown" for v in dur_v):
+        rj["pivotal_unknown"] = None
+    if any(v["field"] == "bull" for v in cit_v):
+        bull = _PLACEHOLDER_CITATION
+    if any(v["field"] == "bear" for v in cit_v):
+        bear = _PLACEHOLDER_CITATION
+
     result = {
         "market_lean": rj.get("market_lean"),
         "lean_strength": rj.get("lean_strength_0_100"),
@@ -277,10 +309,11 @@ def build_market_thesis(market_title, cid, as_of, implied_prob_yes,
         "shared_pool": pool,                          # ⑤ 市场级共享新闻池（两个反向钱包共用同一批）
         "input_trust": {"price": pc, "vol": rv, "lines": cred_lines},   # Phase 1 可信度修正信号
         "event_structure": es,                                          # Phase 2 多结局结构
+        "guard_flags": guard_flags,                   # 🛡 T2.1 留痕（干净=[]；旧缓存无此 key，消费方容忍缺失）
         "_audit": {"bull": bull, "bear": bear, "n_articles": len(pool), "as_of": as_of,
                    "raw_reasoner": raw[:1200]},
     }
-    _log_confidence(cid, market_title, as_of, rj)
+    _log_confidence(cid, market_title, as_of, rj, guard_flags)
     if use_cache:
         cp.parent.mkdir(parents=True, exist_ok=True)
         atomic_write_json(cp, result)

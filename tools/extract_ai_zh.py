@@ -14,7 +14,7 @@ CJK = re.compile(r"[一-鿿]")
 SKIP_KEYS = {"wallet", "cid", "condition_id", "market_id", "url", "slug", "date", "as_of",
              "confidence", "follow_call", "market_lean", "alignment", "flag", "source",
              "confidence_reasons",   # 前端 reasonCN 已按模式翻
-             "guards", "organize_guards"}
+             "guards", "organize_guards", "guard_flags"}
 
 
 def walk(node, out, key=None):
