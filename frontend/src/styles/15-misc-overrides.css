@@ -121,9 +121,6 @@
 
 @media (max-width: 680px) {
   .bf-grid { grid-template-columns: 1fr; }
-  .bf-dialectic { grid-template-columns: 1fr; column-gap: 0; }
-  .bf-col + .bf-col { border-left: none; border-top: 1px solid var(--line-1); padding-left: 0; padding-top: 16px; margin-top: 16px; }
-  .ctx-split { grid-template-columns: 1fr; }
   .db-grid { grid-template-columns: 1fr; }
   .db-dual { grid-template-columns: 1fr; }
 }

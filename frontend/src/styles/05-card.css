@@ -5,23 +5,12 @@
 }
 @keyframes fadein { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
 
-.snapbanner {
-  background: var(--panel-2); border-bottom: 1px solid var(--line);
-  padding: 8px 24px; font-family: var(--mono); font-size: 11.5px;
-  color: var(--text-3); letter-spacing: 0.02em;
-}
-
-/* 钱包头部：头像 + 昵称 + 完整地址 */
-.wallet-head { display: flex; align-items: center; gap: 12px; padding: 16px 24px 8px; }
 .avatar {
   width: 40px; height: 40px; border-radius: 50%; flex-shrink: 0; object-fit: cover;
   display: flex; align-items: center; justify-content: center;
   font-family: var(--mono); font-size: 13px; font-weight: 700; color: #fff;
   border: 1px solid var(--line);
 }
-.wmeta { min-width: 0; }
-.wnick { font-size: 15px; font-weight: 650; color: var(--text); line-height: 1.2; }
-.waddr { font-size: 11px; color: var(--text-4); margin-top: 3px; }
 
 /* PnL 迷你图表（可读化）：标题 + 端点圆点 + 峰值标注 + 时间轴 */
 .pnlchart { padding: 0 24px 16px; }
@@ -58,79 +47,7 @@
   border: 1px solid var(--line); color: var(--text-2); background: var(--panel-2);
 }
 
-/* ── 多巴胺①：价格对比区，大号等宽 ───────────────────── */
-.pricezone {
-  display: flex; align-items: center; gap: 24px; padding: 8px 24px 24px;
-  flex-wrap: wrap;
-}
-.pblock { display: flex; flex-direction: column; gap: 5px; }
-.pblock .lab { font-size: 10.5px; letter-spacing: 0.09em; text-transform: uppercase; color: var(--text-4); }
-.pblock .val { font-size: 47px; font-weight: 600; line-height: 1; letter-spacing: -0.03em; }
-.arrow { font-size: 30px; line-height: 1; color: var(--text-4); margin-top: 20px; }
-.pnl { margin-left: auto; text-align: right; display: flex; flex-direction: column; gap: 5px; }
-.pnl .lab { font-size: 10.5px; letter-spacing: 0.09em; text-transform: uppercase; color: var(--text-4); }
-.pnl .val { font-size: 35px; font-weight: 600; line-height: 1; letter-spacing: -0.03em; }
-.pnl .pct { font-size: 14px; margin-top: 2px; }
 .up { color: var(--green); }   /* 美国习惯：涨绿 */
 .down { color: var(--red); }    /* 跌红 */
-
-/* ── 区块通用 ─────────────────────────────────────────── */
-.sec { padding: 16px 24px; border-top: 1px solid var(--line-soft); }
-.sec h4 {
-  margin: 0 0 9px; font-size: 10.5px; letter-spacing: 0.1em; text-transform: uppercase;
-  color: var(--text-3); font-weight: 600;
-}
-.sec p { margin: 0; font-size: 14.5px; color: var(--text); line-height: 1.55; }
-.sec.dim p { color: var(--text-2); font-size: 13.5px; }
-.sec.dim p + p { margin-top: 9px; }
-
-/* catalyst */
-.cat { padding: 11px 0; border-top: 1px solid var(--line-soft); }
-.cat:first-of-type { border-top: none; padding-top: 2px; }
-.cat .row1 { display: flex; align-items: center; gap: 10px; margin-bottom: 5px; }
-.rtag {
-  font-family: var(--mono); font-size: 10px; letter-spacing: 0.06em; font-weight: 700;
-  padding: 2px 8px; border-radius: 5px; flex-shrink: 0;
-}
-.rtag.before { color: var(--accent); background: var(--accent-dim); }       /* 强调色：建仓前证据 */
-.rtag.after  { color: var(--text-2); background: var(--panel-2); border: 1px solid var(--line); }
-.rtag.unanchored { color: var(--text-4); background: var(--panel-2); }
-.cat .date { font-family: var(--mono); font-size: 11px; color: var(--text-4); margin-left: auto; }
-.cat a { color: var(--text); text-decoration: none; font-size: 14px; font-weight: 550; }
-.cat a:hover { color: var(--accent); }
-.cat .why { color: var(--text-3); font-size: 12.5px; margin-top: 4px; line-height: 1.45; }
-.empty-cat { color: var(--text-4); font-size: 13.5px; font-style: italic; }
-
-/* ── 多巴胺②：follow_call 大徽章（全卡唯一高饱和）─────── */
-.verdict {
-  padding: 24px; border-top: 1px solid var(--line);
-  display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
-}
-.followbadge {
-  font-family: var(--mono); font-weight: 800; font-size: 24px; letter-spacing: 0.04em;
-  padding: 15px 28px; border-radius: 12px; line-height: 1;
-}
-.followbadge.green {
-  color: #051b10; background: var(--green);
-  box-shadow: 0 0 0 1px rgba(41,208,122,0.5), 0 0 42px -2px rgba(41,208,122,0.85);
-}
-.followbadge.amber {
-  color: #1f1502; background: var(--amber);
-  box-shadow: 0 0 0 1px rgba(243,168,42,0.5), 0 0 42px -2px rgba(243,168,42,0.8);
-}
-.followbadge.red {
-  color: #200708; background: var(--red);
-  box-shadow: 0 0 0 1px rgba(239,77,82,0.5), 0 0 42px -2px rgba(239,77,82,0.78);
-}
-.followbadge.gray { color: var(--text-2); background: var(--panel-2); border: 1px solid var(--line); }
-.confbox { display: flex; flex-direction: column; gap: 3px; }
-.confbox .lab { font-size: 10.5px; letter-spacing: 0.09em; text-transform: uppercase; color: var(--text-4); }
-.confbox .val { font-family: var(--mono); font-size: 16px; font-weight: 700; }
-
-/* ── warnings：置底黄细条，存在感低但可见 ─────────────── */
-.warns { padding: 12px 24px; border-top: 1px solid var(--line-soft); background: rgba(243,168,42,0.04); }
-.warns .wline { display: flex; gap: 9px; font-size: 12px; color: var(--amber); line-height: 1.45; }
-.warns .wline + .wline { margin-top: 5px; }
-.warns .wmark { flex-shrink: 0; opacity: 0.8; }
 
 .foot { text-align: center; color: var(--text-4); font-size: 11px; margin-top: 16px; letter-spacing: 0.02em; }

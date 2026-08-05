@@ -12,7 +12,6 @@
 @keyframes pulse-dot { 0%,100%{opacity:1;box-shadow:0 0 4px currentColor} 50%{opacity:0.4;box-shadow:0 0 8px currentColor} }
 @keyframes bf-pulse { 0%,100%{opacity:1} 50%{opacity:0.5} }
 .animate-blink { animation: blink 1s step-end infinite; }
-.pulse-dot { animation: pulse-dot 1.6s ease-in-out infinite; }
 
 /* 顶栏 Briefing tab（强调色 --bf-accent，不碰 track 勋章）*/
 .topnav { margin-left: auto; display: flex; align-items: center; gap: 10px; }
@@ -47,40 +46,15 @@
 .bf-note { margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--line-2); font-family: var(--sans); font-size: 11px; line-height: 1.45; color: var(--fg-3); }
 .bf-sub { font-family: var(--mono); font-size: 9.5px; color: var(--fg-3); margin-top: 8px; overflow-wrap: anywhere; }
 
-/* ② 双向证据天平 → 对称解剖台：左右两栏 gap-x-24，右栏顶天立地竖线 */
-.bf-dialectic { display: grid; grid-template-columns: 1fr 1fr; column-gap: 24px; margin: 28px 0; }
-.bf-col + .bf-col { border-left: 1px solid var(--line-1); padding-left: 24px; }
-.bf-col-h { position: relative; font-family: var(--sans); font-size: 12px; font-weight: 600; color: var(--fg-1); padding-bottom: 10px; margin-bottom: 6px; display: flex; align-items: center; gap: 8px; }
-.bf-col-h::after { content: ""; position: absolute; left: 0; bottom: 0; width: 100%; height: 1px; }
-.bf-col.pos .bf-col-h::after { background: var(--pos); }
-.bf-col.neg .bf-col-h::after { background: var(--neg); }
-.bf-col-n { font-family: var(--mono); font-size: 10px; color: var(--fg-3); }
-.bf-pulse { width: 6px; height: 6px; border-radius: 50%; margin-left: auto; }
-.bf-col.pos .bf-pulse { background: var(--pos); color: var(--pos); }
-.bf-col.neg .bf-pulse { background: var(--neg); color: var(--neg); }
 .bf-empty { font-size: 11px; color: var(--fg-3); font-style: italic; padding: 14px 0; }
-.bf-cat { padding: 12px 0; border-bottom: 1px solid var(--line-2); }
-.bf-cat-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; gap: 8px; }
-.bf-cat-date { font-family: var(--mono); font-size: 11px; color: var(--fg-3); }
-.bf-cat-t { display: block; font-family: var(--sans); font-size: 13px; font-weight: 700; line-height: 1.4; color: #fff; text-decoration: none; margin-bottom: 4px; }
-a.bf-cat-t:hover { color: var(--bf-accent); }
-.bf-cat-why { font-family: var(--sans); font-size: 12px; line-height: 1.55; color: var(--fg-2); margin-bottom: 8px; }
-
-/* ③ 材质芯片 → 赛博发光徽章：硬材质 inset 发光，软材质暗不抢戏 */
-.mat { font-family: var(--mono); font-size: 10px; letter-spacing: 0.08em; padding: 2px 8px; border-radius: 2px; background: var(--bg-2); border: 1px solid rgba(0,229,255,0.30); color: var(--bf-accent); }
-.mat.hard { box-shadow: inset 0 0 4px var(--accent-glow); }
-.mat.soft { border-color: var(--line-1); color: var(--fg-3); box-shadow: none; }
 
 /* ④ 测谎旗标 → 高对比状态仓；不一致用红 + 脉冲 */
 .rx { display: inline-block; font-family: var(--mono); font-size: 10.5px; padding: 2px 7px; border-radius: 2px; }
 .rx-good { color: var(--pos); background: var(--pos-bg); border: 1px solid rgba(0,230,118,0.30); text-shadow: 0 0 4px var(--pos-glow); }
 .rx-bad { color: var(--neg); background: var(--neg-bg); border: 1px solid rgba(255,61,0,0.40); font-weight: 700; animation: bf-pulse 1.4s ease-in-out infinite; }
 .rx-weak, .rx-na { color: var(--fg-3); background: transparent; }
-.bf-samewin { font-family: var(--sans); font-size: 9.5px; color: var(--fg-3); margin-top: 6px; }
 
 /* ⑤ 结构化简报正文 → AWS 技术白皮书：H2 左侧青粗边，强调词锐青 */
-.bf-narr-wrap { margin-top: 40px; }
-.bf-narr-wrap > h4 { font-family: var(--mono); font-size: 10px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--fg-3); margin: 0 0 18px; text-align: center; }
 .bf-narr { font-family: var(--sans); font-size: 13px; line-height: 1.8; letter-spacing: 0.01em; color: var(--fg-2); max-width: 640px; margin: 0 auto; }
 .bf-narr .bf-h { font-family: var(--sans); font-size: 14px; font-weight: 700; letter-spacing: 0.02em; color: #fff; border-left: 4px solid var(--bf-accent); padding-left: 12px; margin: 28px 0 14px; }
 .bf-narr .bf-l { margin-bottom: 16px; }
