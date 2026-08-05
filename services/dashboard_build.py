@@ -8,8 +8,8 @@ services/dashboard_build.py — 统一看板构建的 service 层（P0-3：从 a
     失败                   → {"error": <reason>, "message": <中文人读>}（单飞占用另带 retry_after）
   HTTP 状态码由 api 层从 reason 推导（api/main.py 的 _dashboard_status）——HTTP 知识不进本模块。
 
-🔴 本模块绝不 import api.main —— 后者 import 时就复制 seed 目录、打 GitHub 网络请求
-  （api/main.py 顶部），先例见 tests/test_health.py。这也是能被测试/recommend 直接 import 的前提。
+🔴 本模块绝不 import api.main —— 分层纪律：service 不许知道 HTTP 装配层的存在（防环）。
+  这也是能被测试/recommend 直接 import 的前提。（T2.3 起 import api.main 已零副作用，纪律照旧。）
 
 进程内共用：api 路由和 recommend.ai_verify 都走 get_dashboard() → 共享同一把单飞锁
 （模块级 _FLIGHT，coordinator 是 core/redis_coord 的进程单例）——"同钱包不重复烧 AI"

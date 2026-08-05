@@ -14,8 +14,8 @@ git 跟踪的静态 JSON，读失败还被 except 吞掉照样返回 200 —— 
     只影响持久化与跨实例协调，不该让实例被判死。
   · **目录不可写 = 不健康**。缓存写不下去 → 每次请求都重烧 token。
 
-🔴 本测试只测 core/health 的纯函数，绝不 import api.main —— 后者在 import 时就会
-复制 seed 目录、打 GitHub 网络请求（api/main.py 顶部），测试碰不得。这也是 health
+🔴 本测试只测 core/health 的纯函数、不 import api.main —— 分层纪律：探活口径独立可测，
+不与 api 装配耦合。（T2.3 起 import api.main 已零副作用，历史上的"碰不得"已治好。）这也是 health
 逻辑要单独成模块、依赖靠参数注入的原因。
 """
 
