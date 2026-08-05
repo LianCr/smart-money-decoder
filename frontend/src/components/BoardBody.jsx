@@ -2,6 +2,7 @@ import { useLang, ZhNote } from "../i18n.jsx";
 import { price, money } from "../utils/format.jsx";
 import { flagsCN } from "../utils/labels.js";
 import { BehaviorFlag } from "./BehaviorFlag.jsx";
+import { CredibilityCard } from "./CredibilityCard.jsx";
 import { Fold } from "./Fold.jsx";
 import { GodModeTimeline } from "./GodModeTimeline.jsx";
 import { Narrative } from "./Narrative.jsx";
@@ -83,6 +84,9 @@ export function BoardBody({ d }) {
       {/* ③ 当前赔率 · 原生条（替 iframe）*/}
       <div className="db-sec-tag">{t("③ 当前赔率 · 市场怎么定价")}</div>
       <OddsBar held={pc.current_price} side={(m.analyzed_side || "").toUpperCase()} slug={d.market?.slug} />
+
+      {/* ③b F4 可信度卡：赔率旁边回答"这个价格值不值得信"（旧缓存无此 key → 安静缺席）*/}
+      <CredibilityCard c={d.credibility} />
 
       {/* 降级：钱包历史体量（资格审查，不再霸占首屏）*/}
       <Fold title={t("钱包历史体量 · 身份背书")} sub={t("累计盈亏曲线 + 风险标记（背景调查，非本注结论）")}>
