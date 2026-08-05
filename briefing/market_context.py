@@ -278,6 +278,13 @@ def synthesize(cid, as_of, entity_terms, outcome="Yes", wallet=None):
     }
 
 
+# 🛡 P1-10：本缓存自注册进失效注册表
+from core import cachepolicy
+
+cachepolicy.register("market_context",
+                     lambda ctx: cache_file(ctx["cid"], ctx["as_of"], ctx["outcome"], ctx["wallet"]))
+
+
 def cache_file(cid, as_of, outcome="Yes", wallet=None):
     """该 (盘,as_of,侧,钱包) 的缓存文件路径（refresh 强制重建时由 api 层删除）。"""
     key = hashlib.md5(f"{cid}|{as_of}|{outcome}|{(wallet or '').lower()}".encode()).hexdigest()

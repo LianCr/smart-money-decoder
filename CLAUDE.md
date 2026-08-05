@@ -130,15 +130,17 @@ core/jsonstore.py       →  🔴 全项目落盘唯一原语：atomic_write_jso
                            原始字节留着可人工抢救）。🔴 新增落盘点一律用它，禁止再写裸 write_text
 core/health.py          →  /healthz 的纯函数（env/路径注入 → 可单测）。
                            必填 key 缺失/目录不可写 = 不健康(503)
-                           ⚠️ 逻辑不能写进 api/main.py：后者 import 时就复制 seed + 打 GitHub 请求，测试碰不得
+                           ⚠️ 逻辑独立成模块=分层纪律（T2.3 起 import api.main 已零副作用、端点可直测，但业务逻辑仍不进装配层）
 fetcher/polymarket.py   →  fetch_events_by_ids + _is_political_event（gamma tags 政治判定，回测在用；v2 持仓选仓已随 /analyze 下架）
 fetcher/trades.py       →  get_wallet_profile / get_wallet_pnl_history（① 展示，best-effort；建仓时间查询已随 /analyze 下架）
 fetcher/activity.py     →  仅存 ActivityAPIError（backtest full_activity/resolution 的共享异常契约）
 fetcher/news.py         →  get_news_for_market(q, entry_time, as_of=None)  # 关键词+Tavily 时间窗+缓存；as_of 防回测泄漏（回测重放在用）
 analyzer/guards.py      →  🔴 防幻觉守卫唯一正本（T2.1）：纯函数零 IO 零 LLM，返回 violations 列表、动作归调用方（decoder=raise / ⑥=占位降级或仅标记）。词表 FEAR/DIRECTIVE 正本也在这（dual_catalyst re-export）。🔴 守卫只拦截/降级/标记，永不回填/修复/抬升
 analyzer/decoder.py     →  decode_position(assembled, as_of=None)  # sonnet + 6 道守卫（实现在 guards.py，此处 raise 语义不变）；唯一活调用方=backtest 重放
-api/main.py             →  GET /backtest（静态）· /briefing（v3 完整简报）· /market-context（Context 一虚一实）· /dashboard（v3 统一看板①-⑥，构建在 services/ · 路由只做 reason→HTTP 状态映射）· /recommendations（扫榜推荐流）· /hot-traders（本周政治热门条）· /scorecard（诚实记分牌：增量抓 574 结算+冷数字）。（v2 /analyze 与 CLI 已于 2026-08-03 下架，代码在 git 历史）
-services/dashboard_build.py →  🔴 看板构建 service 层（P0-3 抽出）：build_dashboard(①-⑥ pipeline,按(钱包,AS_OF)硬缓存;**⑥ 信心由 market_thesis 直出、⑤ 用市场级共享池、reason_v3 瘦身只供 follow_call+facts**)+单飞入口 get_dashboard。**纯数据契约：只返 dict、预期失败不 raise、判别式="error" key**；api 路由和 recommend.ai_verify 进程内共用同一入口同一把锁；绝不 import api.main（后者 import 有副作用）
+api/main.py             →  🔴 只剩装配（T2.3）：lifespan(seed/GitHub 恢复+线程池上限+uvicorn 日志)、中间件、include_router、静态挂载。**import 零副作用**（端点测试 TestClient 直测）；`api.main:app` 点路径=render.yaml 部署契约
+api/routes/·api/shared.py →  路由按摊拆分：dashboard(/dashboard /demo-wallets+状态映射)·recommend(/recommendations /hot-traders+扫榜线程)·scorecard·briefing(/briefing /market-context)·meta(/healthz /backtest)；shared=_err+限流单例（🔴 全仓一份）
+core/cachepolicy.py     →  🔴 缓存失效注册表（P1-10）：各缓存拥有者 import 时自注册 resolver，purge 遍历注册表（只删当天 as_of、旧快照=回退底不碰）。**新增缓存必须注册或进 test_cachepolicy 豁免表，否则测试红**
+services/dashboard_build.py →  🔴 看板构建 service 层（P0-3 抽出）：build_dashboard(①-⑥ pipeline,按(钱包,AS_OF)硬缓存;**⑥ 信心由 market_thesis 直出、⑤ 用市场级共享池、reason_v3 瘦身只供 follow_call+facts**)+单飞入口 get_dashboard。**纯数据契约：只返 dict、预期失败不 raise、判别式="error" key**；api 路由和 recommend.ai_verify 进程内共用同一入口同一把锁；绝不 import api.main（分层防环；T2.3 起其 import 已零副作用，纪律不变）
 fetcher/heisenberg.py   →  Heisenberg 共享客户端（参数真名表/limit≤200/🛡第七道守卫:返回钱包≠请求钱包→拦）
 fetcher/profile.py·actions.py·price.py  →  简报数据层 A画像/B动作/C价格（建在 heisenberg 上，全免费 key）
 analyzer/dual_catalyst.py  →  双向催化剂辩证（材质标签+守卫；as_of_anchor=锚现在(live)/锚建仓(replay)）

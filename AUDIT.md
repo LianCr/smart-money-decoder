@@ -34,8 +34,8 @@
 | P1-7 | 评分引擎不可复现 | 🟡 **部分完成** | PR #21：⑥ payload 标注 `deterministic:false`（LLM 直出路径）/`true`（v2 矩阵 fallback）——影响段唯一硬要求已落。🔴 API 事实：temperature=0 在 `claude-sonnet-5` 上返 400（新代模型移除采样参数），"固定 temperature"这条路已不存在。剩余部分见 T2.2 |
 | P1-8 | 核心判断逻辑零测试 | ⬜ 未开始 | Phase 2 T2.4，见「10 个测试点」 |
 | P1-9 | "最大政治仓"两套并行实现 | ✅ 已修 | PR #20（随 /analyze 链路下架自然归一：data-api 版删除，唯一实现 = `fetcher/positions.py` Heisenberg 版，near_settled 守卫全覆盖） |
-| P1-10 | 缓存失效是手写清单 | ⬜ 未开始 | Phase 2 T2.3 一并解决 |
-| P1-11 | `api/main.py` 902 行 god module | ⬜ 未开始 | Phase 2 T2.3 |
+| P1-10 | 缓存失效是手写清单 | ✅ 已修 | PR #23（`core/cachepolicy.py` 注册表：各缓存拥有者自注册 resolver、purge 遍历注册表；跨模块私有 `_cache_path` import 消灭；`tests/test_cachepolicy.py` 的忘登记 lint=新缓存不注册不豁免直接红 + T2.4 #5 旧快照幸存红线首次有测试） |
+| P1-11 | `api/main.py` 902 行 god module | ✅ 已修 | PR #23（T2.3：import 副作用进 lifespan + 拆 `api/routes/{dashboard,recommend,scorecard,briefing,meta}` + `api/shared.py`，main.py 487→117 行只剩装配。实况修正：902 行是首审数字，P0-3/#18 与 /analyze 下架/#20 已拆走大半） |
 | P1-12 | 零日志零监控，健康检查探不到真实健康 | ✅ 已修 | 健康检查 PR #15；日志 PR #22（`core/log.py` 唯一出口：消息原文不动、外壳 `HH:MM:SS L [rid] msg`、stdout、LOG_LEVEL 可调；中间件每请求 rid + 响应头回传，anyio 线程池继承 contextvar → Render 上按 rid 串整条 pipeline；后台任务自设 scan-/verify- job id；uvicorn 同格式）。**监控/告警仍无**——降格为 T3 增值项，不再挡在本条 |
 | P1-13 | 无 CI，纪律靠未入库的本地 hook | ✅ 已修 | PR #13（CI 跑与本地同一个 `scripts/check.sh`、不注入 key；Actions 已观察 9 次运行全绿） |
 | P1-14 | 前端依赖漏洞（postcss/vite/esbuild） | 🟡 **部分完成** | postcss 两条 high ✅ PR #19（`npm audit fix`，构建产物字节不变）；剩 vite high + esbuild moderate 需 vite@8 主版本 → **T2.7 做，不另开** |
@@ -133,7 +133,7 @@
 > 8 个出口收口成**纯数据错误契约**：service 只返 dict、预期失败永不 raise，判别式 = `"error"` key；reason→HTTP 状态码映射是 api 层仅存的 HTTP 知识（`_dashboard_status`），对外行为逐字节不变。
 > `recommend.ai_verify` 改进程内直调同一入口（同一把单飞锁，验证线程自己就是构建线程——不再是 5 等待 + 5 构建占 10 个 worker）；anyio 线程池上限顺带显式化（40，数值不变）。
 > 契约由 `tests/test_dashboard_build.py` 钉死（8 出口 + 单飞包装 + 成功板无 error key，零网络零 key）；`tests/test_recommend_verify.py` 测试缝从 `recommend.requests` 换成 `recommend.get_dashboard`，语义检查一条没丢。
-> 未尽事项：api 层 `_dashboard_status`（6 行查表）暂无法直测——测试禁 import `api.main`（import 副作用），端点层测试仍挂 T2.4 #4，等 T2.3 拆路由后补。
+> （原未尽事项已于 PR #23 销账：import api.main 零副作用后，`_dashboard_status` 与端点三态在 `tests/test_api_endpoints.py` 直测。）
 
 **问题**：扫榜的 AI 验证阶段起 5 个线程，每个用 `requests.get` 打**本进程自己**的 `/dashboard`（timeout 240s）；而 FastAPI 端点全是同步 `def`，跑在 anyio 默认 40 线程的线程池里，每条构建独占一个线程 1–3 分钟。
 
@@ -280,6 +280,12 @@
 
 #### P1-10 · 缓存失效是手写清单 + 跨模块私有函数 import
 
+> **状态：✅ 已修（PR #23）。** `core/cachepolicy.py` 注册表：拥有者模块 import 时自注册 resolver
+> （四种 key 形各自认字段，非统一模板），`_purge_wallet_caches` 委托注册表、purge 语义逐字不变
+> （只删当天 as_of、best-effort）。跨模块私有 `_cache_path` import 消灭。防复发=测试里的忘登记 lint：
+> 源码任何 `.cache/<dir>` 字面量必须 在册∪显式豁免（news/decoder/backtest/event_structure.json 各带理由），
+> 否则红。下面证据里的 api/main.py 行号是搬进 services 前的旧址（PR #18），认逻辑别认行号。
+
 **问题**：强制刷新要清哪些缓存，是一个硬编码的 7 元素列表，并且需要从三个模块 import 私有函数（下划线开头）。
 
 **证据**：
@@ -294,6 +300,12 @@
 ---
 
 #### P1-11 · `api/main.py` 是 902 行的 god module
+
+> **状态：✅ 已修（PR #23，即 T2.3）。** 两步：①seed 复制 + GitHub 恢复从 import 顶层搬进 lifespan——
+> "端点测试三年做不了"的病根，import api.main 从此零副作用（实测 0.4s 无网络）；②纯搬运拆
+> `api/routes/{dashboard,recommend,scorecard,briefing,meta}` + `api/shared.py`（限流单例只此一份），
+> main.py 487→117 行只剩装配，路由集合与拆前逐字节一致（diff=空）。实况修正：证据里的 902 行是
+> 首审快照——P0-3（PR #18）与 /analyze 下架（PR #20）已拆走大半，本场从 487 行收口。
 
 **问题**：HTTP 路由 + 缓存策略 + pipeline 编排 + i18n 挂载 + 记分牌钩子 + 种子恢复 + GitHub 状态恢复 + 静态托管，全在一个文件。
 
@@ -381,7 +393,7 @@
 > `/dashboard` `/analyze` 超限返 429 + 人话 message + retry_after；阈值收口 `core/config.py`、环境变量可调。
 > 「完全开放」产品决策不变——闸拦的是脚本循环，正常浏览（缓存命中为主）够不到；进程内 ai_verify 不经路由、天然不受闸。
 > 实现是进程内存（单实例够用；多实例各算各的=闸宽 N 倍，仍是硬顶）。`tests/test_ratelimit.py` 假时钟钉死窗口滑动/IP 隔离/全局闸/翻天。
-> 未尽事项：异常流量**告警**仍没有（属 P1-12 日志/监控范畴）；api 层 429 wiring 不可直测同 T2.4 老问题。
+> 未尽事项：异常流量**告警**仍没有（已归 Phase 3）。（429 wiring 不可直测的欠条已于 PR #23 销账——端点层可测了。）
 
 **证据**：
 - `api/main.py:85-93` — 唯一的 middleware 是 CORS，`allow_headers=["*"]`
@@ -554,7 +566,7 @@
 |:--:|---|:--:|:--:|
 | **T2.1** | ✅ **已完成（PR #21，见 P1-5 详情）**。守卫覆盖到主界面：`analyzer/guards.py` 唯一正本，decoder 与 ⑥ 共用；⑥ 补齐 DURATION_COMPUTED（英文正则照搬+新增中文版）· FABRICATED_CITATION（点名时全仓不存在，从零写：检查面实为 bull/bear 引用列表）· FEAR_WORDS（仅标记）。"改信心"守卫未加——红线 4 保持不变 | T1.1 | M 2d |
 | **T2.2** | **确定性层收口**。新建 `scoring/` 包：`decoder` v2 矩阵 + `reasoner_v3` + `_code_follow_call`（已在 `services/dashboard_build.py`，PR #18 搬过去的）搬入，成为唯一确定性评分层；P2-18 的全部阈值收进 `scoring/constants.py`（带来源注释）。LLM 裁决保持独立模块，并在 payload 里显式标注 `deterministic: false`。（原计划还要搬 `_difficulty`——它已在 PR #20 作为验证过的死代码删除，不再搬） | T2.1 | M 2d |
-| **T2.3** | **拆 `api/main.py`**。→ `api/routes/{dashboard,recommend,scorecard,archive}.py` + `services/` + `core/cachepolicy.py`。缓存失效改为**注册表**：每层缓存注册自己的 key 模板，`purge` 遍历注册表而非手写清单（根治 P1-10）。启动副作用（seed/GitHub 恢复）移出模块顶层，改为 lifespan | T1.4 | L 3d |
+| **T2.3** | ✅ **已完成（PR #23，见 P1-10/P1-11 详情）**。副作用进 lifespan → 拆 `api/routes/{dashboard,recommend,scorecard,briefing,meta}`（原计划的 archive 按内容改名 meta，另补了计划没点名的 briefing）+ `api/shared.py` → `core/cachepolicy.py` 注册表根治 P1-10 | T1.4 | L 3d |
 | **T2.4** | **补齐 10 个测试点**（明细见下） | T2.2 | L 3d |
 | **T2.5** | **回验闭环接上**。`confidence_log.jsonl` 增加读取方；`/scorecard` 输出 high/med/low 分档命中率。**严守 `scorecard.py:6-9` 三条红线**：只算方向不算收益、NO BASIS 单列、纯代码不调 AI | T2.4 | M 2d |
 | **T2.6** | **前端死代码 + 状态机**。3 个孤儿 view 及其独占组件明确归档（不进 bundle）；新建 `hooks/useDashboard.js`，把轮询重写为显式状态机（`idle`/`loading`/`polling`/`stale`/`error`），轮询上限对齐单飞锁 TTL，刷新期间保留旧板 | — | M 1.5d |
@@ -567,8 +579,8 @@
 1. ✅（PR #21）**decoder 六守卫各自的正/负样本** —— `tests/test_guards.py`（58 对，含 DURATION 豁免边界："2026-06-15"/"December 31, 2026" 放行实测）+ `tests/test_decoder_guards.py`（违规卡矩阵→reason 等价）落账
 2. **scorecard 数据完整性** —— 损坏 JSON 不得清零（P0-1）· 并发 `record_judgment` 不丢记录（`scorecard.py:23` 的 `_LOCK` 只防线程不防进程）· 已结算条的 `final_result` 不被覆盖（`scorecard.py:61`）
 3. **原子写** —— 写入中途抛异常，原文件必须保持完整可读
-4. **`/dashboard` 三态路由** —— 缓存命中 / 202 单飞 / 刷新失败回退 stale 且带 `refresh_error`。用 fake 依赖注入，零网络（`tests/test_dashboard_singleflight.py` 已测协调层，缺端点层）
-5. **`_purge_wallet_caches` 只删当天** —— `api/main.py:452` 的注释把"旧日期快照永不删 = 失败回退底"标为红线，但这条红线**零测试**。旧快照必须在刷新后幸存
+4. ✅（PR #23）**`/dashboard` 三态路由** —— `tests/test_api_endpoints.py`：TestClient 零 key 直测 200 缓存命中 / 202 单飞 / 刷新失败回退 stale 带 refresh_error / 400 垃圾地址 / `_dashboard_status` 查表矩阵 / x-request-id 回传
+5. ✅（PR #23）**`_purge_wallet_caches` 只删当天** —— `tests/test_cachepolicy.py`：7 层缓存各造 今天+旧日期 两份，purge 后旧快照全数幸存（红线首次有测试）
 6. **`market_thesis._parse_json` 脏输出矩阵** —— 现有测试覆盖了部分场景，需补**截断 JSON**（`core/llm.py:43-46` 注释说的正是 thinking 挤占 max_tokens 导致截断，这是真实发生过的故障模式）
 7. 🟡（部分，PR #21）**dual_catalyst 四道守卫** —— FEAR_WORDS/DIRECTIVE_WORDS 词表已收口 guards.py 且有测试；相关性门(`:189-199`) · 类型校验(`:207-219`) 仍零测试
 8. **`translate` 分批不错位** —— `MAX_TOTAL_CHARS` 截断后中英必须仍一一对应；`core/translate.py` 里"长度不齐整批丢弃"是一行判断，一旦失效就是**中英文错配**（比缺翻译危险一个量级）

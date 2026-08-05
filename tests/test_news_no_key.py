@@ -10,7 +10,7 @@ tests/test_news_no_key.py — 缺 API key 时必须"调用才失败"，而不是
   1. 它卡死 CI。而"CI 不注入任何 key"正是我们要的 —— 只有这样才能钉死
      `CLAUDE.md` 协作纪律 #1「测试是 mock、不打网络、零 token、谁都能跑」。
   2. 新协作者 clone 下来、key 还没申请到时，应该能立刻跑通全部测试。
-  3. 它和 api/main.py 在 import 时复制 seed 目录、打 GitHub 请求是同一类
+  3. 它和 api/main.py 曾在 import 时复制 seed、打 GitHub 是同一类（后者已于 T2.3 治好）
      **import 时副作用**问题 —— 模块被 import 不等于它要开始干活。
 
 契约（本文件钉死）：

@@ -12,9 +12,8 @@ HTTP 自调用时被 .json() 糊平；抽成 service 层进程内直调后必须
   单飞：锁被占 + 普通访客有旧板 → 旧板+refresh_in_progress；否则 BUILD_IN_PROGRESS+retry_after
   成功路径：无 "error" key + 落盘缓存；缓存命中返回 dict
 
-已知取舍：api 层 _dashboard_status（reason→HTTP 状态码的 6 行查表）暂无法直测——
-测试禁 import api.main（import 时复制 seed + 打 GitHub，见 tests/test_health.py），
-端点层三态测试仍挂 AUDIT T2.4 backlog #4，等 T2.3 路由拆分后补。
+（原"api 层 _dashboard_status 暂无法直测"的欠条已于 T2.3 撕掉：import api.main 零副作用后，
+端点层三态 + 查表矩阵在 tests/test_api_endpoints.py 直测。本文件继续钉 service 层纯数据契约。）
 """
 
 import json

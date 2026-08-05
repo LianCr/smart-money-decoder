@@ -13,7 +13,8 @@ tests/test_business_file_reads.py — `.data/` 业务文件损坏时必须"隔�
   3. 文件损坏   → 返回空壳**且原件被隔离成 `.corrupt-*` 备份**（字节一字不差）
   4. 顶层结构不对（合法 JSON 但不是对象）→ 同样不当数据用，不炸
 
-🔴 本测试不 import `api.main`：它在 import 时就会复制 seed 目录、打 GitHub 网络请求
+🔴 本测试不 import `api.main`：分层纪律——只测业务文件读隔离，不该拖上 api 装配层
+（T2.3 起 import api.main 已零副作用；端点层另有 tests/test_api_endpoints.py）
 （见 api/main.py 顶部），测试碰不得。这里直接测两个读路径共用的底层语义
 （`core.jsonstore.load_json` + 调用方的 status 分支），与 api 层写法保持一致。
 """

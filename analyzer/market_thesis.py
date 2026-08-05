@@ -211,6 +211,12 @@ def fetch_shared_pool(market_title, as_of, window_days=10, max_each=8):
     return pool[:max_each * 2]
 
 
+# 🛡 P1-10：本缓存自注册（(cid,as_of) 市场级——purge 会连带同盘其他钱包下次重烧，语义正确：刷新=要最新）
+from core import cachepolicy
+
+cachepolicy.register("market_thesis", lambda ctx: _cache_path(ctx["cid"], ctx["as_of"]))
+
+
 def _cache_path(cid, as_of):
     return CACHE / f"{cid}_{as_of}.json"
 
