@@ -37,28 +37,30 @@ from core.log import get_logger, new_request_id, unify_uvicorn_logging, REQUEST_
 
 LOG = get_logger("api")
 
-# ── 种子缓存（部署用）：云端磁盘 ephemeral，每次冷启动从 git 跟踪的 seed/ 恢复 ──
-# 本地 .cache/.data 已存在 → 不覆盖；只有全新环境（如 Render 冷启动）才复制。
-for _src, _dst in [(Path("seed/cache"), Path(".cache")), (Path("seed/data"), Path(".data"))]:
-    if _src.exists() and not _dst.exists():
-        try:
-            shutil.copytree(_src, _dst)
-            LOG.info(f"🌱 种子缓存恢复：{_src} → {_dst}")
-        except Exception as e:
-            LOG.warning(f"⚠ 种子缓存恢复失败：{e}")
+def _restore_state_on_startup() -> None:
+    """启动期状态恢复（T2.3：从 import 顶层搬进 lifespan——import api.main 从此零副作用，
+    端点测试三年做不了的病根就是这段在 import 时复制 seed + 打 GitHub）。
 
-# ── GitHub 状态恢复（跨部署持久）：seed 之后再叠加远端 bundle，谁新用谁 ──────
-# Render 免费档磁盘 ephemeral：重部署/冷启动清盘只剩 seed(6-25 快照)。刷新过的
-# 推荐榜/看板缓存/记分牌存在 app-state 分支，这里拉回来 → 用户重进网站看到的
-# 永远是"上一次刷新"的结果（公开仓库 raw 拉取，恢复端无需 token）。
-try:
-    from core.persist import fetch_bundle, restore_bundle
-    _bundle = fetch_bundle()
-    if _bundle:
-        _n = restore_bundle(_bundle)
-        LOG.info(f"☁️ GitHub 状态恢复：{_n} 个文件（app-state 分支）")
-except Exception as _e:
-    LOG.warning(f"⚠ GitHub 状态恢复失败（不阻塞）：{_e}")
+    种子缓存（部署用）：云端磁盘 ephemeral，每次冷启动从 git 跟踪的 seed/ 恢复；
+    本地 .cache/.data 已存在 → 不覆盖；只有全新环境（如 Render 冷启动）才复制。
+    GitHub 状态恢复（跨部署持久）：seed 之后再叠加远端 bundle，谁新用谁——刷新过的
+    推荐榜/看板缓存/记分牌存在 app-state 分支（公开仓库 raw 拉取，恢复端无需 token）。"""
+    for _src, _dst in [(Path("seed/cache"), Path(".cache")), (Path("seed/data"), Path(".data"))]:
+        if _src.exists() and not _dst.exists():
+            try:
+                shutil.copytree(_src, _dst)
+                LOG.info(f"🌱 种子缓存恢复：{_src} → {_dst}")
+            except Exception as e:
+                LOG.warning(f"⚠ 种子缓存恢复失败：{e}")
+    try:
+        from core.persist import fetch_bundle, restore_bundle
+        _bundle = fetch_bundle()
+        if _bundle:
+            _n = restore_bundle(_bundle)
+            LOG.info(f"☁️ GitHub 状态恢复：{_n} 个文件（app-state 分支）")
+    except Exception as _e:
+        LOG.warning(f"⚠ GitHub 状态恢复失败（不阻塞）：{_e}")
+
 
 from core.config import (BRIEFING_AS_OF, RATE_LIMIT_DAILY_GLOBAL, RATE_LIMIT_PER_IP,
                          RATE_LIMIT_WINDOW_SECONDS)
@@ -91,10 +93,12 @@ async def _lifespan(_app):
     """启动时把 anyio 工作线程池的隐式上限（40）显式化（AUDIT T1.4 顺带项）。
     全部端点都是同步 def、共享这个池；看板构建一条独占 worker 1-3 分钟——
     上限显式写死后可观测、可调，不再是"藏在 anyio 默认值里的事实"。数值不变=行为不变。
-    另：uvicorn 自带 logger 此刻已配置完毕，套上统一日志格式（P1-12）。"""
+    另：uvicorn 自带 logger 此刻已配置完毕，套上统一日志格式（P1-12）；
+    seed/GitHub 状态恢复也在这（T2.3 起不再是 import 副作用）。"""
     from anyio import to_thread
     to_thread.current_default_thread_limiter().total_tokens = 40
     unify_uvicorn_logging()
+    _restore_state_on_startup()
     yield
 
 
