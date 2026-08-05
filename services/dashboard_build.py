@@ -38,6 +38,8 @@ from briefing.market_context import get_behavior_flags
 from briefing import board_feed
 from analyzer.reasoner_v3 import build_facts
 from analyzer.market_thesis import build_market_thesis, map_wallet
+from analyzer.credibility import build_credibility
+import confidence_replay
 import scorecard
 
 # ── 失败 reason 分类（api 层据此映射 400/404/502；本模块据此决定要不要走旧板回退）──
@@ -276,6 +278,7 @@ def build_dashboard(wallet: str, refresh: int = 0, fresh: int = 0) -> dict:
         # 🔴 信心改由「市场命题级对抗推理」直出（market_thesis，按 cid,as_of 缓存→两个反向钱包共享同一份市场观，
         #    信心一致、差异挪到 顺/逆 edge），替代旧 pnl 锚定矩阵。gateway/Tavily 挂则优雅退回旧矩阵。
         reasoning = _reasoner_cached(b, behavior, wallet, as_of=as_of)
+        thesis = None                                # F4：留给可信度分——thesis 挂了也要能诚实出 null 卡
         try:
             pc = b.get("price_context", {}) or {}
             cp = pc.get("current_price")
@@ -309,6 +312,26 @@ def build_dashboard(wallet: str, refresh: int = 0, fresh: int = 0) -> dict:
             # （v2 矩阵是纯代码 → deterministic 如实标 True）
             reasoning = {**reasoning, "confidence_source": "fallback_v2_matrix", "deterministic": True}
 
+        # F4 可信度分（顶层一等公民，纯代码 deterministic:true）：评价的是这个盘的
+        # 价格质量、不依赖 LLM 裁决是否成功——thesis 降级时只是拿不到 575/568 结构化
+        # 数据，那就诚实出 score:null 卡。guard_cross 来自回验档案（纯读零网络）。
+        # 🔴 红线：只喂硬指标（input_trust.raw / vol），判断字段进不了 build_credibility 的门。
+        try:
+            it = (thesis or {}).get("input_trust") or {}
+            pc_t, rv_t = it.get("price") or {}, it.get("vol") or {}
+            try:
+                guard_cross = confidence_replay.compute().get("guard_cross")
+            except Exception:
+                guard_cross = None
+            credibility = build_credibility(
+                pc_t.get("raw"), rv_t.get("vol"),
+                guard_flags=(thesis or {}).get("guard_flags") or [],
+                guard_cross=guard_cross,
+                days_to_resolution=pc_t.get("days_to_resolution"))
+        except Exception as e:
+            _log(f"   ⚠ 可信度分构建失败（不阻塞看板）：{type(e).__name__}: {e}")
+            credibility = None
+
         # ① 画像 + PnL 曲线（best-effort，不阻塞）
         profile = get_wallet_profile(wallet)
         pnl_history = get_wallet_pnl_history(wallet)
@@ -341,6 +364,7 @@ def build_dashboard(wallet: str, refresh: int = 0, fresh: int = 0) -> dict:
         "social": social,                            # ⑤ 社媒情绪动量（585·情绪非事实·仅实时）
         "world_summary": world_summary,              # ⑤ 三源合并综述（巨鲸动态/事态进展）
         "reasoning": reasoning,                      # ⑥
+        "credibility": credibility,                  # F4 可信度分（纯代码,评价盘的价格质量,不碰⑥判断）
     }
     # 🌐 EN 运行时词典：把 payload 里全部中文显示串翻成英文挂 i18n_en（随缓存持久化，
     # 失败不阻塞——前端回退中文+ZhNote 即旧行为）

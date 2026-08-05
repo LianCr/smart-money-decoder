@@ -107,11 +107,25 @@ def _success_patches(tmp, **extra):
                                              "lean_strength": "strong", "pivotal_unknown": None,
                                              "rationale": "理由", "shared_pool": None,
                                              "guard_flags": [{"code": "FEAR_WORDS", "field": "rationale",
-                                                              "message": "命中"}]},
+                                                              "message": "命中"}],
+                                             # F4：575/568 结构化数据（可信度分的唯一原料）
+                                             "input_trust": {
+                                                 "price": {"raw": {"liquidity_percentile": 99.0,
+                                                                   "top1_wallet_pct": 10.0,
+                                                                   "top10_wallet_pct": 40.0,
+                                                                   "unique_traders_7d": 1000,
+                                                                   "volume_trend": "Stable", "flags": []},
+                                                           "days_to_resolution": 42},
+                                                 "vol": {"vol": 0.03},
+                                                 "lines": []}},
         map_wallet=lambda thesis, outcome: {"alignment": "顺 edge"},
         get_wallet_profile=lambda w: {"name": "tester"},
         get_wallet_pnl_history=lambda w: [],
         scorecard=SimpleNamespace(record_judgment=lambda **k: None),
+        # F4：回验档案替身（真 compute 会读 .data/ 业务文件，测试不许碰）
+        confidence_replay=SimpleNamespace(compute=lambda: {"guard_cross": {
+            "flagged": {"n": 0, "hits": 0, "insufficient": True, "hit_rate_pct": None},
+            "clean": {"n": 0, "hits": 0, "insufficient": True, "hit_rate_pct": None}}}),
     )
     kw.update(extra)
     return kw
@@ -205,6 +219,13 @@ with tempfile.TemporaryDirectory() as tmp:
         check("成功板 confidence_source 标注", out["reasoning"]["confidence_source"], "market_thesis")
         check("🛡 guard_flags 从 thesis 透传进 ⑥", out["reasoning"]["guard_flags"][0]["code"], "FEAR_WORDS")
         check("P1-7：LLM 裁决标 deterministic:false", out["reasoning"]["deterministic"], False)
+        # F4：可信度分是顶层一等公民、纯代码 deterministic:true、不碰 ⑥ 判断
+        check("F4：payload 出顶层 credibility", out["credibility"]["deterministic"], True)
+        check("F4：硬指标全好 → 100/A", (out["credibility"]["score"], out["credibility"]["tier"]), (100, "A"))
+        check("F4：days_to_resolution 透传", out["credibility"]["days_to_resolution"], 42)
+        check("F4：self_check 样本不足如实标注",
+              next(s for s in out["credibility"]["subs"] if s["key"] == "self_check")["raw"]["insufficient"], True)
+        check("F4：credibility 不写回 ⑥（confidence 原样）", out["reasoning"]["confidence"], "高")
         cache_file = Path(tmp) / "dashboard" / f"{w}_{db.BRIEFING_AS_OF}.json"
         check("成功板落盘缓存", cache_file.exists(), True)
         out2 = db.build_dashboard(w)                                 # 第二次 → 缓存命中
@@ -218,6 +239,9 @@ with tempfile.TemporaryDirectory() as tmp:
         out = db.build_dashboard("0x" + "f" * 40)
         check("thesis 挂 → fallback_v2_matrix", out["reasoning"]["confidence_source"], "fallback_v2_matrix")
         check("fallback 路径 deterministic:true（v2 矩阵纯代码）", out["reasoning"]["deterministic"], True)
+        # F4：LLM 降级时 credibility 照常在场——只是原料缺 → score:null 诚实卡（绝不装数）
+        check("F4：fallback 路径 credibility 仍在", out["credibility"]["deterministic"], True)
+        check("F4：原料缺 → score null 非 0 非 100", out["credibility"]["score"], None)
 
 # ── 单飞包装层 get_dashboard ─────────────────────────────────────────────────
 print("单飞包装层")

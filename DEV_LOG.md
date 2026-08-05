@@ -6,6 +6,23 @@
 
 ---
 
+## 2026-08-05（第二场）· F4 可信度面板 MVP：硬指标终于不再算完就扔（PR #25）
+
+- **做了什么**：`analyzer/credibility.py`——575/568 硬指标（流动性/集中度/参与/量能/犹豫度）扣分制合成 0-100+A-F 可信度分，纯代码零 LLM 零 IO、每子指标带 delta 审计尾迹；payload 顶层 `credibility` key（deterministic:true，刻意与 reasoning 平级——LLM 降级时它照常在场，原料缺就诚实 score:null）；前端 CredibilityCard 挂 ③ 赔率旁（零新 CSS、文案全走 en.js 前端词典→旧缓存/数据层挂掉时 EN 照常）。guard×命中率交叉按场 6 落档的数据接成 self_check 子维度，样本全 pending → info-only 如实"样本不足"。零新数据源、零新网络调用、零新缓存目录（原料全在已缓存 thesis 里；`price_credibility.raw` 补齐了只活在文本里的 top10/liquidity_tier）。
+- **验证了什么**：57 项契约测试（含红线三连：入参防火墙 raise / 源码零判断字段访问 / 同输入逐字节一致）；**7 份真缓存盘摊出 A(100/95/95)/B(85×3,75)——旧二元 trust 对全部七盘都给 HIGH**，top10=73%+日波动 0.226 的矛盾盘如实扣到 75/B，合成分的区分度立住了。每 commit check.sh 全绿 + 零 key 干净环境全量绿。
+- **留下的坑**：①F4 余项：scoring/ 迁移（随 T2.2）、阈值二版标定、self_check 升计分项（等回验样本 ≥ 阈值）；②F4.1 清单挂看板（开盘时间/盘口深度/真实持仓分布/大户身份/UMA 争议史/跨平台比价——全要新数据源）；③Heisenberg key 402 期间无法重建看板，新 key 只出现在充值后重建的板上（旧缓存板卡片安静缺席=设计行为）。
+
+---
+
+## 2026-08-04→05 · T2.5/P1-6 回验闭环：红线 4 那张支票终于兑现（PR #24）
+
+- **做了什么**：`confidence_replay.py`（scorecard 姊妹件）——confidence_log 六周来第一个读取方：严格只读解析（坏行只跳过绝不隔离）→ 同 (cid,as_of) 重建折叠取最新 ts（n_builds/variants 留痕=P1-7 非确定性可观测，实测一盘重建过 6 次）→ 注入 574 resolver 增量结算 → 按方向对答案 → high/med/low/other 分档命中率 + guard×命中率交叉（F4 数据面）。`GET /confidence-replay` 读写分离（裸 GET 纯读、`?settle=1` 显式结算）；档案进 app-state bundle 配专属 merge 分支；前端 ConfidenceCalibration 面板挂 Track Record。
+- **验证了什么**：52 项契约测试，"绝不回填"三重钉死——settle/compute 前后输入 log **字节哈希不变**、已结算条冻结改写即 raise ReplayIntegrityError、log 出现更晚重建也不改已定案历史。样本<REPLAY_MIN_BUCKET_N 如实"样本不足"不给百分比。真档案已装上：7 条市场级判断全部诚实 pending。
+- **两个计划外发现**：①**找回丢失的 P2-26**——2026-08-03 checkpoint 的 docs commit 被推到已合并分支从未进 master，看板行/详情/DEV_LOG 整段凭空消失，从 `9e1a6e3` 找回补录（分支卫生教训的新实例：合完的分支随手删、别再往上推）；②**Heisenberg key 余额耗尽（402 INSUFFICIENT_CREDIT）**——settle 按设计优雅降级（0 结算不炸），但整个数据层对未缓存请求都是坏的、且被缓存掩盖毫无提示，已记进 CLAUDE.md API 坑表。
+- **留下的坑**：新记 **P2-27**——回验**输入**（confidence_log 本体）在 Render 冷启动被 seed 重置且不在 bundle 里，丢的只会是 pending 不会是已结算事实；修法（行并集 merge + 防 400KB 静默截断）与 P2-21 一起定。
+
+---
+
 ## 2026-08-03（第二场）· 地基三连：P0 全清 + 限流双闸 + v2 链路正式下架
 
 > ⚠ 本段 2026-08-03 checkpoint 时已写好，但 docs commit 被推到**已合并的** `chore/retire-analyze-chain` 分支、从未进 master；2026-08-05 从 `9e1a6e3` 找回补录。教训（CLAUDE.md 分支卫生条的新实例）：合完的分支随手删，别再往上推。
