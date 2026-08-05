@@ -38,8 +38,13 @@ def _token():
     return os.environ.get("GITHUB_TOKEN")
 
 
+from core.log import get_logger
+
+LOG = get_logger("persist")
+
+
 def _log(msg):
-    print(f"   [persist] {msg}", flush=True)
+    LOG.info(f"   [persist] {msg}")
 
 
 # ── 保存端（需 GITHUB_TOKEN）──────────────────────────────────────────────────

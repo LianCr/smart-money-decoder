@@ -3,6 +3,10 @@
 // 生产构建走同源（后端托管 dist），本地开发默认打 localhost:8000
 export const API = import.meta.env.VITE_API_BASE ?? (import.meta.env.DEV ? "http://localhost:8000" : "");
 
+// 看板轮询预算（P2-22）：🔴 对齐后端单飞锁 TTL（core/dashboard_jobs.py = 10 分钟）——
+// 预算内 202/限流都不算失败；改后端 TTL 记得同步这里（两处契约）。
+export const POLL_BUDGET_MS = 10 * 60 * 1000;
+
 // 流水线阶段文案（喂给 LoadingStages；STAGES 是其默认参，别删——归档视图的
 // STAGES_BRIEFING/STAGES_CONTEXT 已随视图归档，见 frontend/archive/）
 export const STAGES = ["定位最大政治仓位", "追溯链上建仓时间", "检索时间窗新闻", "AI 解读 / 置信度矩阵"];

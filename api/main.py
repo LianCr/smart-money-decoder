@@ -11,7 +11,7 @@ api/main.py — smart-money-decoder 的 FastAPI 后端（HTTP 层：路由 + 状
   - 上游 API 失败（Heisenberg / Tavily / 网关）  → 502
   - 限流（P1-15 双闸）                           → 429
 
-pipeline 全程 print 到 stdout 方便观察进度。
+pipeline 全程走 core/log 统一日志（stdout，带 request id——P1-12），方便观察进度与按 rid 串请求。
 
 启动：
     .venv/bin/uvicorn api.main:app --reload --port 8000
@@ -20,7 +20,6 @@ pipeline 全程 print 到 stdout 方便观察进度。
 import json
 import os
 import shutil
-import sys
 import time
 from datetime import date
 from pathlib import Path
@@ -33,15 +32,20 @@ from fastapi.staticfiles import StaticFiles
 
 load_dotenv()
 
+# 日志外壳先就位（P1-12）：import 期的 seed/GitHub 恢复也走统一格式（此时 rid="-"，启动期无请求）
+from core.log import get_logger, new_request_id, unify_uvicorn_logging, REQUEST_ID
+
+LOG = get_logger("api")
+
 # ── 种子缓存（部署用）：云端磁盘 ephemeral，每次冷启动从 git 跟踪的 seed/ 恢复 ──
 # 本地 .cache/.data 已存在 → 不覆盖；只有全新环境（如 Render 冷启动）才复制。
 for _src, _dst in [(Path("seed/cache"), Path(".cache")), (Path("seed/data"), Path(".data"))]:
     if _src.exists() and not _dst.exists():
         try:
             shutil.copytree(_src, _dst)
-            print(f"🌱 种子缓存恢复：{_src} → {_dst}", flush=True)
+            LOG.info(f"🌱 种子缓存恢复：{_src} → {_dst}")
         except Exception as e:
-            print(f"⚠ 种子缓存恢复失败：{e}", flush=True)
+            LOG.warning(f"⚠ 种子缓存恢复失败：{e}")
 
 # ── GitHub 状态恢复（跨部署持久）：seed 之后再叠加远端 bundle，谁新用谁 ──────
 # Render 免费档磁盘 ephemeral：重部署/冷启动清盘只剩 seed(6-25 快照)。刷新过的
@@ -52,9 +56,9 @@ try:
     _bundle = fetch_bundle()
     if _bundle:
         _n = restore_bundle(_bundle)
-        print(f"☁️ GitHub 状态恢复：{_n} 个文件（app-state 分支）", flush=True)
+        LOG.info(f"☁️ GitHub 状态恢复：{_n} 个文件（app-state 分支）")
 except Exception as _e:
-    print(f"⚠ GitHub 状态恢复失败（不阻塞）：{_e}", flush=True)
+    LOG.warning(f"⚠ GitHub 状态恢复失败（不阻塞）：{_e}")
 
 from core.config import (BRIEFING_AS_OF, RATE_LIMIT_DAILY_GLOBAL, RATE_LIMIT_PER_IP,
                          RATE_LIMIT_WINDOW_SECONDS)
@@ -86,9 +90,11 @@ from contextlib import asynccontextmanager
 async def _lifespan(_app):
     """启动时把 anyio 工作线程池的隐式上限（40）显式化（AUDIT T1.4 顺带项）。
     全部端点都是同步 def、共享这个池；看板构建一条独占 worker 1-3 分钟——
-    上限显式写死后可观测、可调，不再是"藏在 anyio 默认值里的事实"。数值不变=行为不变。"""
+    上限显式写死后可观测、可调，不再是"藏在 anyio 默认值里的事实"。数值不变=行为不变。
+    另：uvicorn 自带 logger 此刻已配置完毕，套上统一日志格式（P1-12）。"""
     from anyio import to_thread
     to_thread.current_default_thread_limiter().total_tokens = 40
+    unify_uvicorn_logging()
     yield
 
 
@@ -110,14 +116,29 @@ app.add_middleware(
 # TAVILY_*）一律视为上游失败 → 502
 
 
+# ── 每请求 request id（P1-12）：中间件 set contextvar → 同步端点跑在 anyio 线程池、
+# contextvars 随任务拷贝进 worker → 整条 pipeline 的日志自动带同一 rid。
+# 响应头回传 x-request-id，报障时用户可直接报这个号。
+@app.middleware("http")
+async def _request_id_middleware(request: Request, call_next):
+    rid = request.headers.get("x-request-id") or new_request_id()
+    token = REQUEST_ID.set(rid)
+    try:
+        response = await call_next(request)
+        response.headers["x-request-id"] = rid
+        return response
+    finally:
+        REQUEST_ID.reset(token)
+
+
 def _log(msg: str) -> None:
-    """pipeline 进度打到 stdout（uvicorn 控制台可见）。"""
-    print(msg, file=sys.stdout, flush=True)
+    """pipeline 进度日志（P1-12 起走 logging：消息原文不变，外壳带 时间/级别/rid）。"""
+    LOG.info(msg)
 
 
 def _err(status: int, reason: str, message: str) -> JSONResponse:
     """统一错误出口，body 形如 {"error": reason, "message": ...}。"""
-    _log(f"   ✗ [{status}] {reason} — {message}")
+    LOG.warning(f"   ✗ [{status}] {reason} — {message}")
     return JSONResponse(status_code=status, content={"error": reason, "message": message})
 
 
@@ -141,7 +162,7 @@ def _rate_limited(request: Request) -> JSONResponse | None:
     denied = _RATE_LIMITER.check(_client_ip(request))
     if denied is None:
         return None
-    _log(f"   ✗ [429] {denied['error']} ip={_client_ip(request)[:24]}")
+    LOG.warning(f"   ✗ [429] {denied['error']} ip={_client_ip(request)[:24]}")
     return JSONResponse(status_code=429, content=denied)
 
 
@@ -289,6 +310,9 @@ def _persist_app_state():
 def _run_rec_scan():
     """后台线程：真跑 recommend.scan（几分钟、ai_top>0 烧 token——用户已批准）。
     🛡 空榜保护：上游失败返回空候选时恢复旧榜，绝不用空覆盖好数据。"""
+    # 后台线程无 HTTP 请求上下文（Thread 不继承 contextvars）→ 自设扫描 job id，
+    # Render 上按 scan-xxxx 即可串起整场扫榜的日志（P1-12）
+    REQUEST_ID.set(f"scan-{new_request_id()[:4]}")
     backup = None
     try:
         if RECOMMEND_FILE.exists():

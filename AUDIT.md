@@ -36,7 +36,7 @@
 | P1-9 | "最大政治仓"两套并行实现 | ✅ 已修 | PR #20（随 /analyze 链路下架自然归一：data-api 版删除，唯一实现 = `fetcher/positions.py` Heisenberg 版，near_settled 守卫全覆盖） |
 | P1-10 | 缓存失效是手写清单 | ⬜ 未开始 | Phase 2 T2.3 一并解决 |
 | P1-11 | `api/main.py` 902 行 god module | ⬜ 未开始 | Phase 2 T2.3 |
-| P1-12 | 零日志零监控，健康检查探不到真实健康 | 🟡 **部分完成** | 健康检查 ✅ PR #15（`/healthz` 真探活 + render.yaml 已指向）；日志/监控未动 |
+| P1-12 | 零日志零监控，健康检查探不到真实健康 | ✅ 已修 | 健康检查 PR #15；日志 PR #22（`core/log.py` 唯一出口：消息原文不动、外壳 `HH:MM:SS L [rid] msg`、stdout、LOG_LEVEL 可调；中间件每请求 rid + 响应头回传，anyio 线程池继承 contextvar → Render 上按 rid 串整条 pipeline；后台任务自设 scan-/verify- job id；uvicorn 同格式）。**监控/告警仍无**——降格为 T3 增值项，不再挡在本条 |
 | P1-13 | 无 CI，纪律靠未入库的本地 hook | ✅ 已修 | PR #13（CI 跑与本地同一个 `scripts/check.sh`、不注入 key；Actions 已观察 9 次运行全绿） |
 | P1-14 | 前端依赖漏洞（postcss/vite/esbuild） | 🟡 **部分完成** | postcss 两条 high ✅ PR #19（`npm audit fix`，构建产物字节不变）；剩 vite high + esbuild moderate 需 vite@8 主版本 → **T2.7 做，不另开** |
 | P1-15 | 烧 token 的端点无入站限流 | ✅ 已修 | PR #19（`core/ratelimit.py` IP 滑动窗口 + 每日 UTC 全局硬闸 → `/dashboard` `/analyze` 429；阈值 `core/config.py` 环境变量可调；「完全开放」产品决策不变） |
@@ -46,9 +46,10 @@
 
 | 编号 | 问题 | 状态 |
 |:--:|---|:--:|
-| P2-16 前端死代码进构建 · P2-17 异常吞噬 · P2-18 魔数散落 · P2-19 Bedrock 半成品 | | P2-16 ✅ PR #20（详情节有前提修正：JS 早已不进 bundle，本场=正式归档进 `frontend/archive/`；CSS 死规则/en.js 死 key 留 T2.6）· 其余 ⬜ |
+| P2-16 前端死代码进构建 · P2-17 异常吞噬 · P2-18 魔数散落 · P2-19 Bedrock 半成品 | | P2-16 ✅ 全清：PR #20 归档 + PR #22 尾巴销账（CSS 归档专属规则 -142 行、构建 CSS 66.5→58.1kB；en.js 删 54 个归档专属 key——翻后端 payload 的 key 与 build_ai_en 依赖的 7 个 key 保留；"措辞已换"的陈旧 key 属活代码债、另场处理）· 其余 ⬜ |
 | P2-20 默认分支不是真相 | | 🟡 已反转，见下 |
-| P2-21 seed 入库 · P2-22 轮询状态机 · P2-23 记分牌读路径打外网 | | ⬜ 未开始 |
+| P2-21 seed 入库 · P2-23 记分牌读路径打外网 | | ⬜ 未开始 |
+| P2-22 前端轮询状态机脆弱 | | ✅ 已修 PR #22（`hooks/useDashboard.js` 显式状态机：预算=墙钟 10 分钟对齐单飞 TTL、刷新期旧板保留+刷新中徽章、202/429 按 retry_after 退避、构建中/超时永不显示"失败"、卸载作废在飞循环） |
 | P2-25 `backtest/pipeline.py` 结果落盘仍是裸 `write_text`（P0-1 唯一漏网） | | ✅ 已修 PR #19（接 `atomic_write_json`，格式字节不变，`tests/test_backtest_finalize.py` 钉死） |
 
 ### 阶段进度
@@ -311,6 +312,15 @@
 
 #### P1-12 · 零日志、零监控，健康检查探不到真实健康
 
+> **状态：✅ 已修（健康检查 PR #15 + 日志 PR #22，即 T1.5）。** `core/log.py` 唯一出口：消息原文（emoji/中文/缩进）逐字保留，
+> 外壳 `HH:MM:SS L [rid] msg`；显式 stdout（旧 _log 语义，Render 采集面不变）；`LOG_LEVEL` 环境变量（render.yaml 已配）。
+> **request id**：http 中间件 set contextvar（尊重入站 x-request-id、响应头回传）；同步端点跑在 anyio 线程池、contextvars
+> 随任务拷贝 → 整条构建 pipeline 的日志同 rid（真实请求实测验证）。后台任务自设 job id（扫榜线程 `scan-xxxx`、
+> ai_verify worker `verify-<钱包>`——Thread/Executor 不继承 contextvars）。uvicorn 自带 logger 在 lifespan 套同一 formatter。
+> 转换范围=运行时服务路径（3 个 _log wrapper + jsonstore/scorecard/recommend 的裸 print）；离线 CLI/tools/backtest/`__main__`
+> 演示块**按设计保留 print**（终端 UX 非服务日志）；scripts/precommit_gate 的 stdout 是 hook JSON 协议，不许动。
+> 异常吞噬行为零改动（P2-17 另场）。**监控/告警仍无**——不再算本条未尽，归 Phase 3 增值。审计里 109 处的计数已过时（实测运行时路径 59 个发射点）。
+
 > **状态：🟡 部分完成（PR #15）** —— 健康检查部分已修：`core/health.py` + `GET /healthz` 真探活（必填 key + 目录真写探针），缺必填项返 503，`render.yaml` 的 `healthCheckPath` 已从 `/backtest` 指向 `/healthz`。日志/监控部分未动。
 
 **证据**：
@@ -476,6 +486,14 @@
 - 这是刻意设计（`api/main.py:36-44` 冷启动恢复），但随时间只增不减，且 `core/persist.py` 的 GitHub 状态层上线后，seed 的作用已被削弱为"首次冷启动兜底"。
 
 #### P2-22 · 前端轮询状态机脆弱
+
+> **状态：✅ 已修（PR #22，即 T2.6 的状态机半边）。** `frontend/src/hooks/useDashboard.js` 显式六态机
+> （idle/loading/polling/ready/refreshing/error，头注释=状态×用户所见×转移规则）。逐条对症：
+> 预算改**墙钟 10 分钟**对齐单飞 TTL（旧 80×3s=240s，240-600s 区间会把成功显示成失败）；刷新期 `setData(null)` 消灭——
+> 旧板保留+「刷新中」徽章，任何带 refresh_in_progress 的板（自己或他人重建）都留板后台等真板；202/429 按 retry_after 退避
+> （旧实现 429 直接永久错误框）；真错误/预算耗尽时有板留板+横幅、超时措辞是"等待超时"绝非"失败"；卸载/重提交经序号 ref 作废在飞循环
+> （旧循环导航后还在跑）。改写入参+影子变量的双变量模式随重写消失。前端无 JS 测试设施（check.sh 只 build）——逻辑收口在
+> 单一 hook + 状态表文档化是本场能给的最强兜底，端到端行为靠构建+冒烟验证。
 - `frontend/src/views/BoardView.jsx:24-54` — `run()` 内部**改写自己的入参** `refresh`（:35, :42），同时用 `wantFresh`（:27）影子记录原始意图。两个变量表达同一件事的不同时相，可读性差且易在后续修改时出错
 - `BoardView.jsx:30` — `attempt < 80`，配合 `:34` 的 `retry_after || 3` → 轮询上限 **240 秒**
 - `core/dashboard_jobs.py:15` — 单飞锁 TTL = **600 秒**

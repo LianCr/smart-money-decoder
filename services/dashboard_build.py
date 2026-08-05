@@ -17,11 +17,11 @@ services/dashboard_build.py — 统一看板构建的 service 层（P0-3：从 a
 """
 
 import json
-import sys
 import time
 from datetime import date
 from pathlib import Path
 
+from core.log import get_logger
 from core.config import BRIEFING_AS_OF
 from core.cachefiles import newest_dated
 from core.jsonstore import atomic_write_json
@@ -46,6 +46,8 @@ BAD_REQUEST_REASONS = {"INVALID_ADDRESS"}
 # 其余 fetcher 层 reason（API_TIMEOUT / RATE_LIMITED / API_ERROR / …）一律视为上游失败
 BUILD_IN_PROGRESS = "DASHBOARD_BUILD_IN_PROGRESS"
 
+LOG = get_logger("dashboard")
+
 BRIEFING_CACHE  = Path(".cache/briefing_api")   # 完整简报响应缓存（/briefing 与刷新清缓存共用）
 DASHBOARD_CACHE = Path(".cache/dashboard")      # 统一看板整份响应缓存（①-⑥），命中=零 token 秒回
 REASONER_CACHE  = Path(".cache/reasoner_v3")     # ⑥ reasoner 独立缓存：改 ⑤/② 重建看板不重烧 ⑥
@@ -53,13 +55,13 @@ BOARD_AI_CACHE  = Path(".cache/board_ai")        # ⑤综述+②what_bet 独立�
 
 
 def _log(msg: str) -> None:
-    """pipeline 进度打到 stdout（uvicorn 控制台可见）。"""
-    print(msg, file=sys.stdout, flush=True)
+    """pipeline 进度日志（P1-12：走 core/log，消息原文不变，rid 由请求上下文注入）。"""
+    LOG.info(msg)
 
 
 def _fail(reason: str, message: str) -> dict:
     """统一错误出口（纯数据）：{"error": reason, "message": ...}，不带 HTTP 状态。"""
-    _log(f"   ✗ {reason} — {message}")
+    LOG.warning(f"   ✗ {reason} — {message}")
     return {"error": reason, "message": message}
 
 
