@@ -19,6 +19,7 @@ from core.log import get_logger, new_request_id, REQUEST_ID
 from core.redis_coord import coordinator
 from core.refresh_jobs import RecommendationRefresh
 from services.dashboard_build import DASHBOARD_CACHE
+import confidence_replay
 import scorecard
 
 router = APIRouter()
@@ -46,6 +47,7 @@ def _persist_app_state():
             ".data/recommendations.json": RECOMMEND_FILE,
             ".data/hot_traders.json": HOT_TRADERS_FILE,
             ".data/scorecard.json": scorecard.ARCHIVE,
+            ".data/confidence_replay.json": confidence_replay.ARCHIVE,
         }
         cache_files = {}
         try:

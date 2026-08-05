@@ -23,7 +23,7 @@
 1. **绝不为让指标好看而调松 decoder 跟单门槛。** 它的保守是对的——正是"躲过 Starmer 亏损"和 lift 裁决成立的原因。保守反映的是证据的真实缺席，不是可调的阈值。
 2. **绝不篡改数字的真实含义。** "命中"≠"翻倍"，"测判断方向"≠"测能赚多少钱"。视觉/文案可以炫，数字含义一个字都不能为了好看而改。
 3. **凡涉及"胜率"，先问一句：赢家是不是已经赎回消失了？** 公开接口看不到已离场的赢家（96% 赢家赎回后链上记录消失），自算胜率必被幸存者偏差污染。要用胜率类信号，必须用可信第三方质量评分（如新数据 API 的 Falcon Score），不能用公开 positions 硬算。
-4. **信心 = 市场命题级、单一、不锚钱包盈亏。** （2026-06-25 重设计，推翻旧"信心由代码矩阵算"）旧矩阵锚在钱包 pnl → 出现"证据反对这一注、却因 +10% 浮盈给高信心"（实证见 `_market_thesis_probe`：同一 Iran 盘两个反向钱包，老矩阵给 HIGH/MEDIUM 自相矛盾）。**新**：`analyzer/market_thesis.py` 把参照系从钱包换成市场——同一文章池 bull 论证 YES ‖ bear 论证 NO → reasoner 中立裁决，**直出单一最终信心**（按产品决策撤掉代码兜底守卫，靠 prompt 铁律 + 结构去 pnl 锚 + 对抗平衡输入）。按 (cid,as_of) 缓存→两个反向钱包共享同一份市场观、信心一致，差异挪到"顺/逆 edge"。**不加守卫≠不可观测**：每次 confidence/lean/rationale/guard_flags 记进 `.data/confidence_log.jsonl`，待盘真结算由记分牌回验"高信心是否真命中"。（"撤守卫"仅指**信心兜底**；T2.1 起叙事层有 DURATION/假引用/词表守卫——只拦叙事，信心/倾向仍不碰。）社媒只作减分/背离，不许加信心。（旧 decoder v2 矩阵现仅回测重放在用、reasoner_v3 仍供 follow_call+代码 facts；dashboard ⑥ 的**信心**已切到 market_thesis。）
+4. **信心 = 市场命题级、单一、不锚钱包盈亏。** （2026-06-25 重设计，推翻旧"信心由代码矩阵算"）旧矩阵锚在钱包 pnl → 出现"证据反对这一注、却因 +10% 浮盈给高信心"（实证见 `_market_thesis_probe`：同一 Iran 盘两个反向钱包，老矩阵给 HIGH/MEDIUM 自相矛盾）。**新**：`analyzer/market_thesis.py` 把参照系从钱包换成市场——同一文章池 bull 论证 YES ‖ bear 论证 NO → reasoner 中立裁决，**直出单一最终信心**（按产品决策撤掉代码兜底守卫，靠 prompt 铁律 + 结构去 pnl 锚 + 对抗平衡输入）。按 (cid,as_of) 缓存→两个反向钱包共享同一份市场观、信心一致，差异挪到"顺/逆 edge"。**不加守卫≠不可观测**：每次 confidence/lean/rationale/guard_flags 记进 `.data/confidence_log.jsonl`，**回验闭环已接上（T2.5/PR #24）**：`confidence_replay.py` 读 log→查结算→按方向对答案，`/confidence-replay` 出 high/med/low 分档命中率（原判断绝不回填、已结算冻结、样本不足如实标注——契约见该模块红线头）。（"撤守卫"仅指**信心兜底**；T2.1 起叙事层有 DURATION/假引用/词表守卫——只拦叙事，信心/倾向仍不碰。）社媒只作减分/背离，不许加信心。（旧 decoder v2 矩阵现仅回测重放在用、reasoner_v3 仍供 follow_call+代码 facts；dashboard ⑥ 的**信心**已切到 market_thesis。）
 5. **数字/日期数学只能代码做，AI 不准算。** price_delta、空间、时长、日期全由代码预算好喂给 AI。
 6. **最大仓 ≠ 最值得看的仓。** 对冲/做市玩家的最大仓是对冲的一条腿，不代表方向信念（R2 已对此降级、`position_type` 已分类）。定位"最大政治仓"是**入口启发式**，不是"最强信念仓"的保证——看 `position_type` 和行为流，别被仓位金额骗。
 
@@ -146,13 +146,14 @@ fetcher/profile.py·actions.py·price.py  →  简报数据层 A画像/B动作/C
 analyzer/dual_catalyst.py  →  双向催化剂辩证（材质标签+守卫；as_of_anchor=锚现在(live)/锚建仓(replay)）
 analyzer/price_reaction.py →  新闻↔价格反应=份量刻度+市场测谎仪（复用 price.price_at；归因只说"前后变动非导致"）
 analyzer/reasoner_v3.py    →  ⑥ 的代码层：v3 置信度矩阵(底座删 rule5+R1-R4 只降不升)+build_facts 数据契约。纯代码零网关（旧 B 段 reasoner prose 已删：follow_call 由 api 代码判、信心由 market_thesis 直出）
-analyzer/market_thesis.py  →  🔴 市场命题级对抗推理(取代钱包方向归因的信心)：共享池→bull(YES)‖bear(NO)→reasoner 直出单一信心+市场倾向+胜负手，按(cid,as_of)缓存(两反向钱包共享)，记 confidence_log.jsonl(含 rationale+guard_flags)待回验。map_wallet→顺/逆 edge。**T2.1 起接 guards**：DURATION(中英)/假引用→占位降级、词表→仅标记，flags 进 payload；⑥ 另标 deterministic:false(fallback v2 矩阵=true)——信心/倾向守卫一概不碰(红线4)
+analyzer/market_thesis.py  →  🔴 市场命题级对抗推理(取代钱包方向归因的信心)：共享池→bull(YES)‖bear(NO)→reasoner 直出单一信心+市场倾向+胜负手，按(cid,as_of)缓存(两反向钱包共享)，记 confidence_log.jsonl(含 rationale+guard_flags)供回验。map_wallet→顺/逆 edge。**T2.1 起接 guards**：DURATION(中英)/假引用→占位降级、词表→仅标记，flags 进 payload；⑥ 另标 deterministic:false(fallback v2 矩阵=true)——信心/倾向守卫一概不碰(红线4)
 recommend.py·hot_traders.py·fetcher/markets.py  →  扫榜推荐(方法 E 市场反向找大户:种子→热门政治盘→共持大户→质量门→打分→⑥验证+同盘分歧检测) · 本周政治热门滚动条(579 7d∪政治共持池→581 7d政治盈亏) · get_market_holders 反向原语。产物 .data/recommendations.json·hot_traders.json(gitignored)
 briefing/assemble.py·organize.py  →  A段编排(串数据层+催化剂+测谎)·B段第三个AI诚实整理(只整理不判断)
 briefing/market_context.py →  Context「一虚一实」：价格异动≤as-of × GDELT 三层洗催化剂 × 巨鲸 48h 行为流(get_behavior_flags)
 briefing/board_feed.py     →  统一看板⑤三源合并(GDELT+Tavily+gamma:综述+时间线流,↑印证/↓不买账)+②what_bet+持有侧 price_series。**新增 build_market_news_stream**：⑤ 改市场级共享池(两个反向钱包同一批新闻、方向标移交 ⑥ 顺/逆 edge)（纯组合层,不改封板）
 fetcher/social.py       →  585 Social Pulse 社媒情绪动量（关键词→acceleration/author_diversity_pct/有机帖；🔴情绪非事实·仅实时·进不了回测；剔通用词+相关性过滤防 OR 误匹配）
 scorecard.py            →  诚实记分牌：record_judgment(钩子,现仅 /dashboard=board；旧 decode 历史行保留、照常结算计入)+fetch_settlements(574注入resolver)+compute_scorecard(纯代码)。档案 .data/scorecard.json(gitignored,装上后累积)
+confidence_replay.py    →  信心回验闭环(T2.5/P1-6,scorecard 姊妹件同款红线)：读 confidence_log(🔴严格只读,坏行只跳过)→同(cid,as_of)重建折叠取最新 ts(n_builds/variants 留痕)→注入 resolver 结算→分档命中率+guard 交叉。已结算冻结,改写即 raise ReplayIntegrityError。档案 .data/confidence_replay.json(进 app-state bundle,merge 分支已配)。端点 GET /confidence-replay(裸=纯读喂前端,?settle=1 显式结算)
 frontend/ (Vite+React)  →  src/App.jsx 单页（统一看板:英雄结论+D3上帝视角时间轴(实时光标)+原生赔率条(替iframe)+新闻×社媒并排 / Track Record含记分牌）· src/index.css · 依赖 d3-scale/shape/array。旧 v2 三视图在 frontend/archive/（正式存档、不进 bundle，见其 README）
 backtest/               →  独立模块，诊断脚本带 _ 前缀；产物全 git 跟踪、静态、零 token
 ```

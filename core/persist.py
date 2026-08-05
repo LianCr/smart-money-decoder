@@ -13,6 +13,7 @@ seed/（git 里的 6-25 快照）恢复 → 用户每次重进网站推荐榜都
     · recommendations/hot_traders：比 generated_at/saved_at，远端新才覆盖
     · 看板缓存：按日期分 key 文件，本地没有才写（绝不覆盖更新的本地构建）
     · scorecard：按条 merge（updated_at 新者胜、final_result 永不被 None 覆盖——诚实档案不丢也不篡改）
+    · confidence_replay：按条 merge（已结算条冻结不被 pending 覆盖；双 pending 时 logged_ts 新者胜）
 
 🔴 全程 best-effort：任何失败只打日志，绝不阻塞启动/扫榜。
 """
@@ -164,6 +165,31 @@ def _merge_scorecard(local_text, remote_text):
     return out
 
 
+def _merge_replay(local_text, remote_text):
+    """回验档案按条 merge（T2.5）：已结算条（final_result 非空）=冻结历史，
+    永不被 pending 覆盖；双方都 pending 时 logged_ts 新者胜（更新的判断折叠结果）。"""
+    try:
+        loc = json.loads(local_text) if local_text else {}
+    except Exception:
+        loc = {}
+    try:
+        rem = json.loads(remote_text) if remote_text else {}
+    except Exception:
+        rem = {}
+    out = dict(loc)
+    for k, rv in rem.items():
+        lv = out.get(k)
+        if lv is None:
+            out[k] = rv
+        elif lv.get("final_result"):
+            continue                                            # 本地已结算 → 冻结
+        elif rv.get("final_result"):
+            out[k] = rv                                         # 远端已结算 → 事实补进来
+        elif (rv.get("logged_ts") or 0) > (lv.get("logged_ts") or 0):
+            out[k] = rv
+    return out
+
+
 def restore_bundle(bundle, root="."):
     """按"谁新用谁"落盘。返回恢复的文件数。root 供测试注入临时目录。"""
     if not bundle or not isinstance(bundle.get("files"), dict):
@@ -182,6 +208,10 @@ def restore_bundle(bundle, root="."):
                 local = dst.read_text(encoding="utf-8") if dst.exists() else ""
                 merged = _merge_scorecard(local, content)
                 atomic_write_json(dst, merged)
+                n += 1
+            elif name == "confidence_replay.json":              # 回验档案：同理 merge（T2.5）
+                local = dst.read_text(encoding="utf-8") if dst.exists() else ""
+                atomic_write_json(dst, _merge_replay(local, content))
                 n += 1
             elif name in ("recommendations.json", "hot_traders.json"):
                 local_gen = _gen_at(dst.read_text(encoding="utf-8")) if dst.exists() else 0
