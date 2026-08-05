@@ -4,16 +4,19 @@ import { API } from "../utils/config.js";
 import { CaseRow } from "../components/CaseRow.jsx";
 import { LiftSummary } from "../components/LiftSummary.jsx";
 import { LiveScorecard } from "../components/LiveScorecard.jsx";
+import { ConfidenceCalibration } from "../components/ConfidenceCalibration.jsx";
 
 export function TrackRecordView() {
   const { t } = useLang();
   const [data, setData] = useState(null);
   const [sc, setSc] = useState(null);
+  const [crp, setCrp] = useState(null);
   const [error, setError] = useState(null);
   useEffect(() => {
     fetch(`${API}/backtest`).then((r) => r.json()).then(setData)
       .catch(() => setError(t("无法连接后端 /backtest")));
     fetch(`${API}/scorecard`).then((r) => r.json()).then(setSc).catch(() => {});
+    fetch(`${API}/confidence-replay`).then((r) => r.json()).then(setCrp).catch(() => {});
   }, []);
 
   const s = (data && data.summary) || {};
@@ -21,6 +24,8 @@ export function TrackRecordView() {
   return (
     <>
       <LiveScorecard sc={sc} />
+
+      <ConfidenceCalibration cr={crp} />
 
       <div className="sc-divider">{t("↓ 历史回测（v2 已封板·静态零 token，与上方实时记分牌相互独立）")}</div>
 
