@@ -12,6 +12,7 @@ lifespan），TestClient 不进 `with` 就不触发 lifespan → 零 key 零网�
   4. 刷新失败回退 stale 带 refresh_error（200 + 旧板 + 错误横幅字段）
   5. _dashboard_status 查表矩阵（欠账三年的 6 行映射，从 api.routes.dashboard 直测）
   6. 响应头 x-request-id（P1-12 中间件 wiring 的端点级验证）
+  7. /confidence-replay 读写分离（T2.5）：裸 GET 纯读绝不 settle；?settle=1 注入 _resolve_574
 """
 
 import json
@@ -112,6 +113,25 @@ with tempfile.TemporaryDirectory() as tmp:
         check("刷新失败 + 有旧板 → 200", r.status_code, 200)
         check("回退的是旧板", r.json().get("wallet"), w4)
         check("带 refresh_error 横幅字段", r.json().get("refresh_error"), "API_TIMEOUT: 上游超时")
+
+    print("/confidence-replay 读写分离（T2.5）")
+    import confidence_replay as _cr
+    import api.routes.scorecard as _sc_route
+    _saved_cr = {"settle": _cr.settle, "compute": _cr.compute}
+    _settle_resolvers = []
+    try:
+        _cr.settle = lambda resolver: (_ for _ in ()).throw(AssertionError("裸 GET 不许 settle"))
+        _cr.compute = lambda: {"total": 0, "marker": "pure-read"}
+        r = client.get("/confidence-replay")
+        check("裸 GET → 200 纯读（settle 未被调）", r.status_code, 200)
+        check("返回 compute 的 payload", r.json().get("marker"), "pure-read")
+
+        _cr.settle = lambda resolver: _settle_resolvers.append(resolver) or 0
+        r = client.get("/confidence-replay?settle=1")
+        check("?settle=1 → 200 且 settle 被调", (r.status_code, len(_settle_resolvers)), (200, 1))
+        check("settle 注入的是 574 resolver", _settle_resolvers[0] is _sc_route._resolve_574, True)
+    finally:
+        _cr.settle, _cr.compute = _saved_cr["settle"], _saved_cr["compute"]
 
     print("_dashboard_status 查表矩阵（欠账销掉）")
     check("INVALID_ADDRESS → 400", _dashboard_status("INVALID_ADDRESS"), 400)

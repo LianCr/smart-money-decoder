@@ -7,6 +7,7 @@ tests/test_persist.py — GitHub 状态持久层（monkeypatch requests / tempdi
   2. restore：本地更新 → 不被远端旧版覆盖（谁新用谁的另一半）
   3. restore：看板缓存（日期分 key）本地缺才补、已有不动
   4. restore：scorecard 按条 merge——updated_at 新者胜、final_result 不被 None 覆盖
+  4b. restore：confidence_replay 按条 merge——已结算条冻结、双 pending 时 logged_ts 新者胜（T2.5）
   5. restore：路径穿越（../）拒绝
   6. build_bundle：跳过不存在/超大文件
   7. save_bundle：未配 token → False 不炸；有 token → 走 分支确认→取sha→PUT 三步
@@ -49,6 +50,11 @@ with tempfile.TemporaryDirectory() as td:
         "k1": {"follow_call": "CHASED", "updated_at": 50, "final_result": "Yes", "settled_at": 60},
         "k2": {"follow_call": "ROOM LEFT", "updated_at": 10, "final_result": None},
     }), encoding="utf-8")
+    (root / ".data/confidence_replay.json").write_text(json.dumps({
+        "r1": {"market_lean": "YES", "logged_ts": 100, "final_result": "Yes"},   # 本地已结算=冻结
+        "r2": {"market_lean": "NO", "logged_ts": 100, "final_result": None},     # 本地 pending
+        "r3": {"market_lean": "YES", "logged_ts": 200, "final_result": None},    # 本地 pending 且更新
+    }), encoding="utf-8")
 
     bundle = {"saved_at": 999, "files": {
         ".data/recommendations.json": json.dumps({"generated_at": 200, "candidates": [{"wallet": "0xnew"}]}),
@@ -57,6 +63,12 @@ with tempfile.TemporaryDirectory() as td:
         ".data/scorecard.json": json.dumps({
             "k1": {"follow_call": "CHASED", "updated_at": 80, "final_result": None},   # 新但结果空
             "k3": {"follow_call": "NO BASIS", "updated_at": 70, "final_result": None}, # 远端独有
+        }),
+        ".data/confidence_replay.json": json.dumps({
+            "r1": {"market_lean": "NO", "logged_ts": 999, "final_result": None},       # 试图盖已结算条
+            "r2": {"market_lean": "NO", "logged_ts": 100, "final_result": "No"},       # 远端已结算
+            "r3": {"market_lean": "NO", "logged_ts": 150, "final_result": None},       # 远端 pending 但更旧
+            "r4": {"market_lean": "YES", "logged_ts": 300, "final_result": None},      # 远端独有
         }),
         "../evil.txt": "pwn",                                             # 路径穿越 → 拒绝
     }}
@@ -75,6 +87,13 @@ with tempfile.TemporaryDirectory() as td:
     check("final_result 不被 None 覆盖", sc["k1"]["final_result"], "Yes")
     check("远端独有条目并入", sc["k3"]["follow_call"], "NO BASIS")
     check("本地独有条目保留", sc["k2"]["follow_call"], "ROOM LEFT")
+    # 4b. confidence_replay merge（T2.5）
+    cr = json.loads((root / ".data/confidence_replay.json").read_text())
+    check("回验已结算条冻结（pending 盖不动）", cr["r1"]["final_result"], "Yes")
+    check("回验已结算条判断也冻结", cr["r1"]["market_lean"], "YES")
+    check("远端已结算事实补进来", cr["r2"]["final_result"], "No")
+    check("双 pending 时 logged_ts 新者胜（本地 200 > 远端 150）", cr["r3"]["logged_ts"], 200)
+    check("远端独有条目并入", cr["r4"]["logged_ts"], 300)
     # 5. 路径穿越
     check("路径穿越被拒绝", (root.parent / "evil.txt").exists(), False)
 
