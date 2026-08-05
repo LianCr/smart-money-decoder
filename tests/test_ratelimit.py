@@ -12,8 +12,8 @@ tests/test_ratelimit.py — core/ratelimit 入站闸契约（P1-15，零网络�
   6. 每日全局硬闸：跨 IP 总量打满 → 新 IP 也 DAILY_LIMIT_REACHED
   7. 跨天翻转：全局计数归零、恢复放行
   8. 阈值常量在 core/config.py、正整数
-已知取舍：api 层 429 wiring（_client_ip + JSONResponse 映射）无法直测——测试禁
-import api.main（import 副作用），端点层测试挂 AUDIT T2.4，等 T2.3 拆路由后补。
+（原"api 层 429 wiring 无法直测"的欠条已于 T2.3 撕掉：import api.main 零副作用后端点
+可直测，见 tests/test_api_endpoints.py。本文件继续钉 core/ratelimit 纯逻辑契约。）
 """
 
 import sys
