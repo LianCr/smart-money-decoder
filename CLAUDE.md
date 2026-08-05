@@ -48,6 +48,7 @@
 | **[Heisenberg v3] `pagination.limit` 上限 200** | 传 >200（如 500）直接 404 `'max' tag` 校验失败、静默返空——别把它误判成"无数据" |
 | **[Heisenberg v3] 569 宽窗口只返回前若干天** | 宽时间窗（如 80 天）只回前 10 天左右，**结算日的亏损落在返回范围外→看着像 0**。要看某盘结算盈亏必须把 start/end **窄锚到结算期**附近分段查 |
 | **[Heisenberg v3] 584 H-Score 无按地址 lookup** | 是纯筛选榜，给不了"某钱包排名"。要定位具体钱包官方排名走 **579**（有 `wallet_address`） |
+| **[Heisenberg v3] key 余额耗尽返回 402 INSUFFICIENT_CREDIT** | 免费 key 有额度池（2026-08-05 实测耗尽）。`heisenberg.call` 无 402 专门分类 → 走 UNEXPECTED raise、上层 best-effort 全部静默降级——**整个数据层对未缓存请求都是坏的但看板不报错**（缓存钱包照常秒回，掩盖故障）。疑心数据层挂了先手打一条 575/574 看是不是 402 |
 | **[Heisenberg v3] 569 含『持到归零』全损，但 per-cid 归因对超高频 bot 会丢尘埃仓** | 实测 569 完整记录输方归零亏损（23/24 干净单边输方精确到分，`size`=份额，输方=`−Σ(size×price)`、赢方=`Σ(size×(1−price))`，记在结算日）。**唯一边界**：单日结算上千仓的 bot，个别尘埃仓（实测 $0.10）cid-scoped 返 0、但钱包级仍可见。**路 B 算收益率用 `556 Trades + 574 结算结果` 自重建（确定性 payout−cost），569 只交叉校验** |
 
 ---
@@ -147,6 +148,7 @@ analyzer/dual_catalyst.py  →  双向催化剂辩证（材质标签+守卫；as
 analyzer/price_reaction.py →  新闻↔价格反应=份量刻度+市场测谎仪（复用 price.price_at；归因只说"前后变动非导致"）
 analyzer/reasoner_v3.py    →  ⑥ 的代码层：v3 置信度矩阵(底座删 rule5+R1-R4 只降不升)+build_facts 数据契约。纯代码零网关（旧 B 段 reasoner prose 已删：follow_call 由 api 代码判、信心由 market_thesis 直出）
 analyzer/market_thesis.py  →  🔴 市场命题级对抗推理(取代钱包方向归因的信心)：共享池→bull(YES)‖bear(NO)→reasoner 直出单一信心+市场倾向+胜负手，按(cid,as_of)缓存(两反向钱包共享)，记 confidence_log.jsonl(含 rationale+guard_flags)供回验。map_wallet→顺/逆 edge。**T2.1 起接 guards**：DURATION(中英)/假引用→占位降级、词表→仅标记，flags 进 payload；⑥ 另标 deterministic:false(fallback v2 矩阵=true)——信心/倾向守卫一概不碰(红线4)
+analyzer/credibility.py    →  F4 可信度分(纯代码零 LLM 零 IO)：575/568 硬指标(流动性/集中度/参与/量能/犹豫度)扣分制合成 0-100+A-F,每子指标带 delta 审计尾迹,缺数据 score:null 诚实态。🔴评价信号永不修理判断：入参含 market_lean/confidence/rationale 即 raise,源码零判断字段访问由测试钉死。payload 顶层 credibility key(deterministic:true,LLM 降级照常在场);guard×命中率交叉=self_check 子维度(样本不足 info-only 不计分)。T2.2 时随常量迁 scoring/
 recommend.py·hot_traders.py·fetcher/markets.py  →  扫榜推荐(方法 E 市场反向找大户:种子→热门政治盘→共持大户→质量门→打分→⑥验证+同盘分歧检测) · 本周政治热门滚动条(579 7d∪政治共持池→581 7d政治盈亏) · get_market_holders 反向原语。产物 .data/recommendations.json·hot_traders.json(gitignored)
 briefing/assemble.py·organize.py  →  A段编排(串数据层+催化剂+测谎)·B段第三个AI诚实整理(只整理不判断)
 briefing/market_context.py →  Context「一虚一实」：价格异动≤as-of × GDELT 三层洗催化剂 × 巨鲸 48h 行为流(get_behavior_flags)
