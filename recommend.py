@@ -31,11 +31,13 @@ from fetcher.markets import get_market_holders
 from fetcher.profile import _wallet360
 from briefing.market_context import get_behavior_flags
 
+from core.log import get_logger, REQUEST_ID
 from core.config import BRIEFING_AS_OF as AS_OF
 from core.jsonstore import atomic_write_json
 # ⑥ 验证走进程内 service（P0-3：不再 HTTP 打自己耗尽线程池）；模块属性引用=测试 monkeypatch 缝
 from services.dashboard_build import get_dashboard
 OUT = Path(".data/recommendations.json")
+LOG = get_logger("recommend")
 
 # 种子 = 已知活跃政治钱包（演示钱包 + 方法 C 验证过的政治专家）。它们的热门顶仓盘 = 发现入口。
 # 🔴 种子只决定"扫哪些盘"，不直接进推荐；真正推谁由"盘里共持大户 + 质量门"决定（种子自己也可能被选中）。
@@ -79,15 +81,17 @@ def _verify_one(c, fresh):
     """单候选 ⑥ 验证（就地改写 c；各线程各拿各的 c，天然线程安全）。
     进程内直调 service 层 get_dashboard（与 /dashboard 路由同一入口、同一把单飞锁）——
     契约上预期失败返回 {"error",...} dict、不 raise；raise 只剩契约外意外，跳过该候选不炸扫描。"""
+    # executor worker 不继承 contextvars → 自设 verify-<钱包前8> job id（P1-12 可观测）
+    REQUEST_ID.set(f"verify-{c['wallet'][2:10]}")
     try:
         j = get_dashboard(c["wallet"], fresh=1 if fresh else 0)
     except Exception as e:
-        print(f"  ⑥ 验证 {c['wallet'][:12]}… 失败(看板构建异常)：{e}", flush=True)
+        LOG.info(f"  ⑥ 验证 {c['wallet'][:12]}… 失败(看板构建异常)：{e}")
         return
     rs = (j.get("reasoning") or {}) if isinstance(j, dict) else {}
     if j.get("error") or not rs.get("confidence"):    # 看板报错 / 裁决缺失 → 不标精选（诚实降级）
         why = j.get("error") or j.get("reason") or "reasoning 无 confidence"
-        print(f"  ⑥ 验证 {c['wallet'][:12]}… 未获裁决({why})——保持非精选", flush=True)
+        LOG.info(f"  ⑥ 验证 {c['wallet'][:12]}… 未获裁决({why})——保持非精选")
         return
     facts = rs.get("facts") or {}
     if facts.get("market_question"):          # 与看板同一注（防 max_pages/快照差异错配）
@@ -106,7 +110,7 @@ def _verify_one(c, fresh):
     for zh in (c.get("ai_verdict"), rs.get("pivotal_unknown")):
         if zh and i18n.get(zh):
             c.setdefault("i18n_en", {})[zh] = i18n[zh]
-    print(f"  ⑥ {c['wallet'][:12]}… {rs.get('confidence')} · {rs.get('follow_call')} · lean={rs.get('market_lean')}", flush=True)
+    LOG.info(f"  ⑥ {c['wallet'][:12]}… {rs.get('confidence')} · {rs.get('follow_call')} · lean={rs.get('market_lean')}")
 
 
 def ai_verify(cands, top=3, fresh=False, max_workers=5):
@@ -265,7 +269,7 @@ def scan(per_market=10, gate_pnl=2000.0, enrich_top=14, keep=8, ai_top=5, as_of=
         for pos in _retry(get_top_political_positions_hz, w, as_of=as_of, n=3, max_pages=15) or []:
             markets.setdefault(pos["market_id"], pos["market_question"])
         time.sleep(0.5)
-    print(f"种子 {len(SEEDS)} → 热门政治盘 {len(markets)} 个", flush=True)
+    LOG.info(f"种子 {len(SEEDS)} → 热门政治盘 {len(markets)} 个")
 
     # 2) 每盘 → 共持大户 → 钱包池（去重，记最大净持仓 + 来源盘）
     pool, pool_mkt = {}, {}
@@ -274,7 +278,7 @@ def scan(per_market=10, gate_pnl=2000.0, enrich_top=14, keep=8, ai_top=5, as_of=
             if v > pool.get(w, 0):
                 pool[w], pool_mkt[w] = v, q
         time.sleep(0.3)
-    print(f"共持大户池(去重) {len(pool)} 个钱包", flush=True)
+    LOG.info(f"共持大户池(去重) {len(pool)} 个钱包")
 
     # 3) 质量门：581 政治专长，政治盘真赚过钱且 pnl≥门槛 → 富集名单（按政治 pnl 降序）
     graded = []
@@ -286,7 +290,7 @@ def scan(per_market=10, gate_pnl=2000.0, enrich_top=14, keep=8, ai_top=5, as_of=
             graded.append((w, pol, pp))
         time.sleep(0.22)
     graded.sort(key=lambda x: -(x[2] or 0))
-    print(f"政治专家(pnl≥{gate_pnl:.0f}) {len(graded)} 个 → 富集顶仓+行为 top {enrich_top}", flush=True)
+    LOG.info(f"政治专家(pnl≥{gate_pnl:.0f}) {len(graded)} 个 → 富集顶仓+行为 top {enrich_top}")
 
     # 4) 只对 top enrich_top 跑昂贵的 顶仓(15页)+48h 行为，组装候选
     cands = []
@@ -294,10 +298,10 @@ def scan(per_market=10, gate_pnl=2000.0, enrich_top=14, keep=8, ai_top=5, as_of=
         time.sleep(0.4)
         pos = _retry(get_top_political_position_hz, w, as_of=as_of, max_pages=15)
         if not pos or pos.get("error"):
-            print(f"  · {w[:12]}… 政治 pnl={pp:.0f} 但无未结算政治顶仓(跳)", flush=True)
+            LOG.info(f"  · {w[:12]}… 政治 pnl={pp:.0f} 但无未结算政治顶仓(跳)")
             continue
         if pos.get("near_settled"):               # 🔴 整本仓位全是 ≥95¢ 近结算盘 → 不值得推荐
-            print(f"  · {w[:12]}… 全仓近结算(持有侧 {pos.get('held_price')})——无悬念不推", flush=True)
+            LOG.info(f"  · {w[:12]}… 全仓近结算(持有侧 {pos.get('held_price')})——无悬念不推")
             continue
         time.sleep(0.3)
         bf = _retry(get_behavior_flags, w, pos["market_id"], as_of) or {}
@@ -324,8 +328,8 @@ def scan(per_market=10, gate_pnl=2000.0, enrich_top=14, keep=8, ai_top=5, as_of=
             "behavior": beh, "behavior_fact": bf.get("fact"),
             "score": round(score, 1), "ai_pick": False,
         })
-        print(f"  ★ {w[:12]}… 政治 pnl={pp:.0f} win={pol.get('win_rate')} "
-              f"{'∩579 ' if in579 else ''}{beh} · {pos['market_question'][:34]} {pos['outcome']}", flush=True)
+        LOG.info(f"  ★ {w[:12]}… 政治 pnl={pp:.0f} win={pol.get('win_rate')} "
+              f"{'∩579 ' if in579 else ''}{beh} · {pos['market_question'][:34]} {pos['outcome']}")
 
     cands.sort(key=lambda c: -c["score"])
     cands = diversify(cands, keep=keep)           # 🎨 每盘最多 2 个进榜（有得选时）
@@ -333,7 +337,7 @@ def scan(per_market=10, gate_pnl=2000.0, enrich_top=14, keep=8, ai_top=5, as_of=
     # 方法 C：对 top ai_top 跑 ⑥ AI 验证（烧 token、需后端在线；ai_top=0 关闭）
     if ai_top:
         targets = verify_targets(cands, ai_top)   # 🎨 精选名额跨盘优先
-        print(f"\n方法 C：对 {len(targets)} 个候选（跨盘优先）跑 ⑥ AI 验证…", flush=True)
+        LOG.info(f"\n方法 C：对 {len(targets)} 个候选（跨盘优先）跑 ⑥ AI 验证…")
         ai_verify(targets, top=ai_top, fresh=True)
     _mark_disagreements(cands)        # 同盘分歧检测（纯代码，0 token）
     _mark_consensus(cands)            # 同侧专家共识（弱信号，与分歧对称）
@@ -345,7 +349,7 @@ def scan(per_market=10, gate_pnl=2000.0, enrich_top=14, keep=8, ai_top=5, as_of=
         i18n_en.update(c.pop("i18n_en", {}) or {})
     atomic_write_json(OUT, {"as_of": as_of, "generated_at": int(time.time()),
                             "method": method, "candidates": cands, "i18n_en": i18n_en})
-    print(f"\n✓ 市场反向 · 政治专家候选 {len(cands)} 个写入 {OUT}", flush=True)
+    LOG.info(f"\n✓ 市场反向 · 政治专家候选 {len(cands)} 个写入 {OUT}")
     return cands
 
 

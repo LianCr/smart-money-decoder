@@ -31,6 +31,10 @@ core/jsonstore.py — 崩不坏的 JSON 落盘（原子写 + 损坏隔离）
 import json
 import os
 import time
+
+from core.log import get_logger
+
+_LOG = get_logger("jsonstore")
 from pathlib import Path
 
 # status 枚举（调用方按它决定要不要报警）
@@ -124,6 +128,5 @@ def load_json(path, default=None):
     except (json.JSONDecodeError, UnicodeDecodeError, ValueError):
         backup = quarantine(path)
         if backup is not None:
-            print(f"⚠ JSON 档案损坏，已隔离原件到 {backup}（内容未销毁，可人工抢救）",
-                  flush=True)
+            _LOG.warning(f"⚠ JSON 档案损坏，已隔离原件到 {backup}（内容未销毁，可人工抢救）")
         return CORRUPT, default

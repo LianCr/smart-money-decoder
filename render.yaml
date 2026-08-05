@@ -21,6 +21,9 @@ services:
     envVars:
       - key: PYTHON_VERSION
         value: 3.13.1
+      # P1-12 统一日志级别（core/log.py 读取；非密钥，直接给值）
+      - key: LOG_LEVEL
+        value: INFO
       # 🔴 必填：全部 AI 调用的后端（core/llm.py 首选）。都在 Render 控制台填，绝不入库。
       - key: ANTHROPIC_API_KEY
         sync: false

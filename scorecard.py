@@ -16,7 +16,10 @@ import threading
 import time
 from pathlib import Path
 
+from core.log import get_logger
 from core.jsonstore import CORRUPT, OK, atomic_write_json, load_json, quarantine
+
+LOG = get_logger("scorecard")
 
 ARCHIVE = Path(".data/scorecard.json")
 # 🔒 档案写锁：推荐榜 ai_verify 并行后，多条看板 pipeline 会并发 record_judgment——
@@ -34,12 +37,12 @@ def _load() -> dict:
     真实记录被覆盖掉**。"""
     status, d = load_json(ARCHIVE, default={})
     if status == CORRUPT:
-        print("⚠ 记分牌档案损坏：原件已隔离为 .corrupt-* 备份，本次以空档案继续"
-              "（历史判断在备份里，未丢失；红线=绝不造假回填，所以只隔离不重建）", flush=True)
+        LOG.warning("⚠ 记分牌档案损坏：原件已隔离为 .corrupt-* 备份，本次以空档案继续"
+                    "（历史判断在备份里，未丢失；红线=绝不造假回填，所以只隔离不重建）")
     elif status == OK and not isinstance(d, dict):
         # JSON 合法但结构不对（档案该是 dict）。同样不许直接覆盖，走同一条隔离路径。
         quarantine(ARCHIVE)
-        print("⚠ 记分牌档案结构异常（顶层不是对象）：已隔离为 .corrupt-* 备份", flush=True)
+        LOG.warning("⚠ 记分牌档案结构异常（顶层不是对象）：已隔离为 .corrupt-* 备份")
         return {}
     return d
 
@@ -51,8 +54,7 @@ def _save(d: dict) -> None:
     try:
         atomic_write_json(ARCHIVE, d)
     except Exception as e:
-        print(f"⚠ 记分牌存档写入失败（档案保持原样未被破坏）：{type(e).__name__}: {e}",
-              flush=True)
+        LOG.warning(f"⚠ 记分牌存档写入失败（档案保持原样未被破坏）：{type(e).__name__}: {e}")
 
 
 def record_judgment(*, wallet, cid, market_question, outcome, market_price,
