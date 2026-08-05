@@ -14,6 +14,7 @@ const REASON_EN = {
   MARKET_CONTEXT_FAILED: "Market-context synthesis failed upstream. Please retry later.",
   RATE_LIMITED: "Upstream API rate limit hit — please wait a moment and retry.",
   NETWORK: "Cannot reach the backend — please retry later.",
+  BUILD_TIMEOUT: "Waited past the backend's build ceiling (10 min) — it may still be building; retrying later usually hits the fresh cache instantly.",
 };
 
 export function ErrorBox({ error }) {

@@ -114,6 +114,12 @@ export default {
   // ── 完整简报 ──
   "输入聪明钱钱包,生成完整简报:画像 + 动作 + 价格 + 双向催化剂(市场测谎) + AI 诚实整理": "Enter a smart-money wallet for a full briefing: profile + actions + price + two-sided catalysts (market lie detector) + AI honest digest",
   "生成中": "Building",
+  // P2-22 状态机新增（轮询/刷新中/超时横幅）
+  "同一钱包正在构建中——复用进行中的构建、不重复消耗额度，完成后自动展示。": "This wallet is already being built — reusing the in-flight build (no duplicate spend); it will appear automatically when done.",
+  "刷新中——正在后台重建这份看板；先展示当前结果，完成后自动更新。": "Refreshing — rebuilding this board in the background; showing the current result until the new one lands.",
+  "刷新中…": "Refreshing…",
+  "刷新等待超时（>10 分钟）；仍显示当前看板，稍后重试通常会直接命中新缓存。": "Refresh wait timed out (>10 min); still showing the current board — retrying later usually hits the fresh cache instantly.",
+  "网络中断；仍显示当前看板，稍后重试。": "Network interrupted; still showing the current board — please retry later.",
   "生成简报": "Build briefing",
   "试试这几个大户 · 点击生成完整简报": "Try these whales · click for a full briefing",
   "催化剂锚": "catalyst anchor",

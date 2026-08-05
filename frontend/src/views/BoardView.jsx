@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
-import { useLang, registerAiTranslations } from "../i18n.jsx";
+import { useLang } from "../i18n.jsx";
 import { API, EXAMPLES, TRADERS_URL, LEADERBOARD_URL, STAGES_BOARD } from "../utils/config.js";
 import { abbrev } from "../utils/format.jsx";
+import { useDashboard } from "../hooks/useDashboard.js";
 import { BoardBody } from "../components/BoardBody.jsx";
 import { ErrorBox } from "../components/ErrorBox.jsx";
 import { Fold } from "../components/Fold.jsx";
@@ -12,68 +13,42 @@ import { Recommendations } from "../components/Recommendations.jsx";
 export function BoardView() {
   const { t } = useLang();
   const [wallet, setWallet] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [data, setData] = useState(null);
-  const [error, setError] = useState(null);
   const [demoWallets, setDemoWallets] = useState([]);
+  // P2-22：轮询状态机收口进 hooks/useDashboard（状态/转移/预算见其头注释）
+  const { status, board, error, notice, busy, load, refresh } = useDashboard();
   useEffect(() => {
     fetch(`${API}/demo-wallets`).then((r) => r.json())
       .then((j) => setDemoWallets(j.wallets || [])).catch(() => {});
   }, []);
 
-  async function run(addrArg, refresh = false) {
+  function run(addrArg) {
     const w = (typeof addrArg === "string" ? addrArg : wallet).trim();
-    if (!w) return;
-    const wantFresh = refresh;   // remember the ↻ intent across polls
-    setLoading(true); setData(null); setError(null);
-    try {
-      for (let attempt = 0; attempt < 80; attempt += 1) {
-        const resp = await fetch(`${API}/dashboard?wallet=${encodeURIComponent(w)}${refresh ? "&refresh=1" : ""}`);
-        const j = await resp.json();
-        if (resp.status === 202 && j.error === "DASHBOARD_BUILD_IN_PROGRESS") {
-          await new Promise((resolve) => setTimeout(resolve, (j.retry_after || 3) * 1000));
-          refresh = false; // poll the completed cache; never request a second forced rebuild
-          continue;
-        }
-        // On a user refresh, a stale board means a build is still running —
-        // keep polling for the fresh result instead of settling for the old one.
-        if (wantFresh && j && j.refresh_in_progress) {
-          await new Promise((resolve) => setTimeout(resolve, 3000));
-          refresh = false;
-          continue;
-        }
-        registerAiTranslations(j.i18n_en);   // EN 运行时词典：后端翻好的 AI 文案，注册后 t() 直接命中
-        if (!resp.ok || j.error) setError({ reason: j.error || `HTTP ${resp.status}`, message: j.message || t("请求失败") });
-        else setData(j);
-        return;
-      }
-      setError({ reason: "DASHBOARD_BUILD_IN_PROGRESS", message: t("看板仍在生成，请稍后重试。") });
-    } catch (e) {
-      setError({ reason: "NETWORK", message: t("无法连接后端服务，请稍后重试。") });
-    } finally { setLoading(false); }
+    if (!w || busy) return;
+    load(w);
   }
 
   function refreshCurrent() {
-    const w = (data && data.wallet) || wallet.trim();
-    if (!w || loading) return;
+    const w = (board && board.wallet) || wallet.trim();
+    if (!w || busy) return;
     if (!window.confirm(t("强制刷新会绕过缓存、重新调用数据源与 AI（耗时 1-3 分钟、消耗 token 额度）。确定重建吗？"))) return;
-    run(w, true);
+    refresh(w);
   }
 
-  const showHome = !data && !loading && !error;
+  const showHome = status === "idle";
+  const showStages = (status === "loading" || status === "polling") && !board;
   return (
     <>
       <HotTraders onPick={(w) => { setWallet(w); run(w); }} />
-      {!data && !error && (
+      {(showHome || showStages) && (
         <div className="console-sub">{t("输入聪明钱钱包,生成 v3 统一看板:身份体量 → 这一注 → 实时盘面 → 行为×催化剂 → Edge 判断,一屏看全")}</div>
       )}
-      <div className={`cmdbar ${loading ? "busy" : ""}`}>
+      <div className={`cmdbar ${busy ? "busy" : ""}`}>
         <span className="cmd-prompt">&gt;</span>
         {showHome && !wallet && <span className="cmd-caret" />}
         <input className="cmd-input num" value={wallet} onChange={(e) => setWallet(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && run()} placeholder={t("输入 Polymarket 钱包地址")} spellCheck={false} />
-        <button className="cmd-trigger" onClick={() => run()} disabled={loading || !wallet.trim()}>
-          {loading ? t("生成中") : t("生成看板")}
+        <button className="cmd-trigger" onClick={() => run()} disabled={busy || !wallet.trim()}>
+          {busy ? t("生成中") : t("生成看板")}
         </button>
       </div>
 
@@ -131,24 +106,33 @@ export function BoardView() {
         </div>
       )}
 
-      {loading && <LoadingStages stages={STAGES_BOARD} sub="身份 → 这一注 → 盘面 → 行为×催化剂 → Edge" note={t("未缓存的钱包要真跑全链（数据层 → 双向催化剂 → 多空对抗三连调），约 1-3 分钟；已缓存钱包会秒回。")} />}
-      {error && <ErrorBox error={error} />}
-      {data && (
+      {showStages && (
+        <LoadingStages stages={STAGES_BOARD} sub="身份 → 这一注 → 盘面 → 行为×催化剂 → Edge"
+          note={status === "polling"
+            ? t("同一钱包正在构建中——复用进行中的构建、不重复消耗额度，完成后自动展示。")
+            : t("未缓存的钱包要真跑全链（数据层 → 双向催化剂 → 多空对抗三连调），约 1-3 分钟；已缓存钱包会秒回。")} />
+      )}
+      {status === "error" && <ErrorBox error={error} />}
+      {board && (
         <>
-          {data.refresh_error && (
-            <div className="db-stale-warn">⚠ {t("刷新失败，已回退到上次成功的看板（数据仍是旧的）")} · <span className="num">{data.refresh_error}</span></div>
+          {notice && (
+            <div className="db-stale-warn">
+              {notice.kind === "refresh_error"
+                ? <>⚠ {t("刷新失败，已回退到上次成功的看板（数据仍是旧的）")} · <span className="num">{notice.message}</span></>
+                : <>⚠ {t(notice.message)}</>}
+            </div>
           )}
-          {data.refresh_in_progress && (
-            <div className="db-stale-warn">↻ {t("另一位访客正在刷新这份看板；先展示上次成功结果，避免重复消耗 AI 额度。")}</div>
+          {status === "refreshing" && (
+            <div className="db-stale-warn">↻ {t("刷新中——正在后台重建这份看板；先展示当前结果，完成后自动更新。")}</div>
           )}
           <div className="db-refresh-bar">
-            <span className="db-refresh-asof num">as-of {data.as_of}</span>
-            <button className="db-refresh" onClick={refreshCurrent} disabled={loading}
+            <span className="db-refresh-asof num">as-of {board.as_of}</span>
+            <button className="db-refresh" onClick={refreshCurrent} disabled={busy}
               title={t("绕过缓存重建这份看板（重新拉数据 + 重跑 AI，耗时且消耗 token）")}>
-              ↻ {t("强制刷新")}
+              {status === "refreshing" ? <>↻ {t("刷新中…")}</> : <>↻ {t("强制刷新")}</>}
             </button>
           </div>
-          <BoardBody d={data} />
+          <BoardBody d={board} />
         </>
       )}
     </>
