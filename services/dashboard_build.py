@@ -53,6 +53,15 @@ DASHBOARD_CACHE = Path(".cache/dashboard")      # 统一看板整份响应缓存
 REASONER_CACHE  = Path(".cache/reasoner_v3")     # ⑥ reasoner 独立缓存：改 ⑤/② 重建看板不重烧 ⑥
 BOARD_AI_CACHE  = Path(".cache/board_ai")        # ⑤综述+②what_bet 独立缓存：改新闻流结构/前端不重烧 AI
 
+# 🛡 P1-10 缓存失效注册表：四层「钱包×日期」缓存在此自注册（resolver 运行时读模块常量，
+# 测试 monkeypatch 目录常量后依然生效）。新增缓存不注册会被 tests/test_cachepolicy.py 抓红。
+from core import cachepolicy
+
+cachepolicy.register("dashboard",    lambda ctx: DASHBOARD_CACHE / f"{ctx['wallet'].lower()}_{ctx['as_of']}.json")
+cachepolicy.register("briefing_api", lambda ctx: BRIEFING_CACHE / f"{ctx['wallet'].lower()}_{ctx['as_of']}.json")
+cachepolicy.register("reasoner_v3",  lambda ctx: REASONER_CACHE / f"{ctx['wallet'].lower()}_{ctx['as_of']}.json")
+cachepolicy.register("board_ai",     lambda ctx: BOARD_AI_CACHE / f"{ctx['wallet'].lower()}_{ctx['as_of']}.json")
+
 
 def _log(msg: str) -> None:
     """pipeline 进度日志（P1-12：走 core/log，消息原文不变，rid 由请求上下文注入）。"""
@@ -158,29 +167,10 @@ def _market_slug(cid: str) -> str | None:
 def _purge_wallet_caches(wallet: str, cid: str, outcome: str, as_of: str = BRIEFING_AS_OF) -> int:
     """强制刷新：删掉该 (钱包,as_of) 及其所在盘的各层缓存文件 → 后续正常流程全部重建并重新落盘。
     只删文件、不动缓存 key 格式；market_thesis 按 (cid,as_of) 共享，删了会连带其他共持钱包下次重烧（语义正确：刷新=要最新）。
-    🔴 只删传入 as_of（=今天）这一天的 key —— 旧日期快照不碰，重建失败时它天然是回退底。"""
-    from briefing.assemble import _cache_path as briefing_cache_path
-    from briefing.market_context import cache_file as mc_cache_file
-    from analyzer.market_thesis import _cache_path as thesis_cache_path
-    w = wallet.lower()
-    targets = [
-        DASHBOARD_CACHE / f"{w}_{as_of}.json",
-        BRIEFING_CACHE / f"{w}_{as_of}.json",
-        REASONER_CACHE / f"{w}_{as_of}.json",
-        BOARD_AI_CACHE / f"{w}_{as_of}.json",
-        briefing_cache_path(wallet, cid, as_of, "live"),
-        mc_cache_file(cid, as_of, outcome, wallet),
-        thesis_cache_path(cid, as_of),
-    ]
-    n = 0
-    for p in targets:
-        try:
-            if p.exists():
-                p.unlink()
-                n += 1
-        except Exception:
-            pass
-    return n
+    🔴 只删传入 as_of（=今天）这一天的 key —— 旧日期快照不碰，重建失败时它天然是回退底。
+    P1-10 起走 core/cachepolicy 注册表（各缓存拥有者自注册；本模块 import 了全部拥有者
+    → purge 时注册必然完成），不再手写清单、不再跨模块 import 私有 _cache_path。"""
+    return cachepolicy.purge(wallet, cid, outcome, as_of)
 
 
 def _stale_dashboard_fallback(wallet: str, reason: str, message: str) -> dict:

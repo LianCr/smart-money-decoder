@@ -109,6 +109,12 @@ def assemble_briefing(wallet, outcome, slug=None, cid=None, as_of=BRIEFING_AS_OF
 CACHE_DIR = Path(".cache/briefing")
 
 
+# 🛡 P1-10：本缓存自注册进失效注册表（刷新清缓存不再依赖外部 import 私有 _cache_path）
+from core import cachepolicy
+
+cachepolicy.register("briefing", lambda ctx: _cache_path(ctx["wallet"], ctx["cid"], ctx["as_of"], "live"))
+
+
 def _cache_path(wallet, key, as_of, mode):
     sig = f"{wallet.lower()}|{key}|{as_of}|{mode}"
     CACHE_DIR.mkdir(parents=True, exist_ok=True)
