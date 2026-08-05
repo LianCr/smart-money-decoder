@@ -300,6 +300,8 @@ def build_dashboard(wallet: str, refresh: int = 0, fresh: int = 0) -> dict:
                 **reasoning,
                 "confidence": thesis["confidence"],                  # 单一信心，市场级
                 "confidence_source": "market_thesis",                # 降级可见：信心是哪套系统算的
+                "deterministic": False,                              # P1-7：LLM 直出裁决，非确定性（诚实标注）
+                "guard_flags": thesis.get("guard_flags", []),        # 🛡 T2.1 守卫留痕（旧缓存 thesis 无此 key→[]）
                 "market_lean": thesis["market_lean"],
                 "lean_strength": thesis["lean_strength"],
                 "pivotal_unknown": thesis["pivotal_unknown"],
@@ -312,7 +314,8 @@ def build_dashboard(wallet: str, refresh: int = 0, fresh: int = 0) -> dict:
         except Exception as e:
             _log(f"   ⚠ market_thesis 失败，⑥ 退回旧矩阵：{type(e).__name__}: {e}")
             # 降级不许静默（产品灵魂=诚实）：payload 里标明信心来自旧 pnl 锚定矩阵
-            reasoning = {**reasoning, "confidence_source": "fallback_v2_matrix"}
+            # （v2 矩阵是纯代码 → deterministic 如实标 True）
+            reasoning = {**reasoning, "confidence_source": "fallback_v2_matrix", "deterministic": True}
 
         # ① 画像 + PnL 曲线（best-effort，不阻塞）
         profile = get_wallet_profile(wallet)

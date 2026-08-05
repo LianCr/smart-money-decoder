@@ -29,9 +29,9 @@
 
 | 编号 | 问题 | 状态 | 备注 |
 |:--:|---|:--:|---|
-| P1-5 | 六道守卫覆盖 0 个用户可见路径 | ⬜ 未开始 | 审计最重要的发现；属 Phase 2 T2.1。2026-08-03 /analyze 下架后守卫唯一活调用方=backtest 重放（实现原封保留），T2.1 动机更强 |
-| P1-6 | 声称的"回验闭环"没有实现 | ⬜ 未开始 | `confidence_log.jsonl` 只写不读 |
-| P1-7 | 评分引擎不可复现 | ⬜ 未开始 | Phase 2 T2.2 |
+| P1-5 | 六道守卫覆盖 0 个用户可见路径 | ✅ 已修 | PR #21（T2.1：`analyzer/guards.py` 唯一正本，decoder 换调用行为等价；⑥ 接三道——DURATION(中英双正则,拦截换占位) · FABRICATED_CITATION(新写,查 bull/bear 引用 vs shared_pool) · 词表(仅标记)；`guard_flags` 进 payload 留痕。CONFIDENCE_TAMPERED 依红线 4 不移植；②what_bet 仍无守卫=已知边界） |
+| P1-6 | 声称的"回验闭环"没有实现 | ⬜ 未开始 | `confidence_log.jsonl` 只写不读。PR #21 起日志补齐 rationale+guard_flags（此前 docstring 声称记 rationale 实际没记），回验数据面已备好 |
+| P1-7 | 评分引擎不可复现 | 🟡 **部分完成** | PR #21：⑥ payload 标注 `deterministic:false`（LLM 直出路径）/`true`（v2 矩阵 fallback）——影响段唯一硬要求已落。🔴 API 事实：temperature=0 在 `claude-sonnet-5` 上返 400（新代模型移除采样参数），"固定 temperature"这条路已不存在。剩余部分见 T2.2 |
 | P1-8 | 核心判断逻辑零测试 | ⬜ 未开始 | Phase 2 T2.4，见「10 个测试点」 |
 | P1-9 | "最大政治仓"两套并行实现 | ✅ 已修 | PR #20（随 /analyze 链路下架自然归一：data-api 版删除，唯一实现 = `fetcher/positions.py` Heisenberg 版，near_settled 守卫全覆盖） |
 | P1-10 | 缓存失效是手写清单 | ⬜ 未开始 | Phase 2 T2.3 一并解决 |
@@ -172,6 +172,14 @@
 
 #### P1-5 · 六道守卫当前覆盖 0 个用户可见路径 ← 本次审计最重要的发现
 
+> **状态：✅ 已修（PR #21，即 T2.1）。** 实现收口 `analyzer/guards.py`（纯函数、零 IO、零 LLM、violations 列表契约）；
+> decoder 换调用**行为逐字等价**（reason/message 原文，`test_decoder_guards.py` 违规卡矩阵钉死——顺带补上六道守卫三年来的第一批测试）。
+> ⑥ 接入点在 `market_thesis` parse 之后、log/缓存之前（flags 随 (cid,as_of) 快照共享给同盘钱包），动作分级：
+> **拦截降级**=DURATION_COMPUTED（新增中文正则；「距结算 N 天」白名单防误伤代码喂的事实）与 FABRICATED_CITATION
+> （T2.1 点名但此前全仓不存在，检查面=bull/bear 的「引用：」列表 vs shared_pool）→ 叙事/该侧审计换占位符；
+> **仅标记**=FEAR/DIRECTIVE 词表（rationale 是判断性文本，删词=修改输出）。守卫只拦/降/标，**confidence/lean 一概不碰**
+> （CONFIDENCE_TAMPERED 依红线 4 明确不移植）。已知边界：②what_bet 仍无守卫、dual_catalyst 自身四道未搬（见 T2.4 #7）。
+
 > **2026-08-03 更新（PR #20）**：/analyze 链路已正式下架，`decode_position` 的唯一活调用方变为 `backtest/pipeline.py:126` 的历史重放
 > （下面"全仓唯一调用点在 /analyze 内"的证据行在首次审计时就漏了 backtest 这个调用方，特此修正）。
 > 六道守卫**实现原封保留在 `analyzer/decoder.py`**——它们现在离用户可见路径更远了，T2.1（抽 `guards.py` 给 ⑥ 复用）的动机因此更强、优先级应前移。
@@ -209,6 +217,12 @@
 ---
 
 #### P1-7 · 评分引擎不可复现
+
+> **状态：🟡 部分完成（PR #21）。** ⑥ payload 现标注 `deterministic: false`（market_thesis 直出路径）/ `true`
+> （fallback_v2_matrix 纯代码路径）——下面影响段点的"没有任何地方标注非确定性"已落。
+> 🔴 **API 事实（防后人再试）**：`temperature`/`top_p`/`top_k` 在 `claude-sonnet-5`（本项目默认模型）上已被移除，
+> 传非默认值直接 400——"加 temperature=0 固定采样"这条修复路径在现代模型上**不存在**。
+> 确定性现状 = (cid,as_of) 文件缓存 + 诚实标注；真正的收口（评分层重构）在 T2.2。
 
 **问题**：产品展示的信心是 LLM 三连调用的产物，没有 temperature/seed 固定；唯一的"确定性"来自 `(cid, as_of)` 文件缓存，而这个缓存会被强制刷新删掉。
 
@@ -520,7 +534,7 @@
 
 | # | 任务 | 依赖 | 量 |
 |:--:|---|:--:|:--:|
-| **T2.1** | **守卫覆盖到主界面**。新建 `analyzer/guards.py`，把六道守卫抽成纯函数（输入：文本 + 契约 → 输出：violations 列表），`decoder` 与 ⑥ 共用。给 ⑥ 至少补三道：`DURATION_COMPUTED`（复用 `decoder.py:335-339` 的正则）· `FABRICATED_CITATION`（rationale 里引用的标题必须在 `shared_pool` 内）· `FEAR_WORDS`（复用 `dual_catalyst.py:61`）。**明确不加"改信心"守卫——红线 4 保持不变** | T1.1 | M 2d |
+| **T2.1** | ✅ **已完成（PR #21，见 P1-5 详情）**。守卫覆盖到主界面：`analyzer/guards.py` 唯一正本，decoder 与 ⑥ 共用；⑥ 补齐 DURATION_COMPUTED（英文正则照搬+新增中文版）· FABRICATED_CITATION（点名时全仓不存在，从零写：检查面实为 bull/bear 引用列表）· FEAR_WORDS（仅标记）。"改信心"守卫未加——红线 4 保持不变 | T1.1 | M 2d |
 | **T2.2** | **确定性层收口**。新建 `scoring/` 包：`decoder` v2 矩阵 + `reasoner_v3` + `_code_follow_call`（已在 `services/dashboard_build.py`，PR #18 搬过去的）搬入，成为唯一确定性评分层；P2-18 的全部阈值收进 `scoring/constants.py`（带来源注释）。LLM 裁决保持独立模块，并在 payload 里显式标注 `deterministic: false`。（原计划还要搬 `_difficulty`——它已在 PR #20 作为验证过的死代码删除，不再搬） | T2.1 | M 2d |
 | **T2.3** | **拆 `api/main.py`**。→ `api/routes/{dashboard,recommend,scorecard,archive}.py` + `services/` + `core/cachepolicy.py`。缓存失效改为**注册表**：每层缓存注册自己的 key 模板，`purge` 遍历注册表而非手写清单（根治 P1-10）。启动副作用（seed/GitHub 恢复）移出模块顶层，改为 lifespan | T1.4 | L 3d |
 | **T2.4** | **补齐 10 个测试点**（明细见下） | T2.2 | L 3d |
@@ -532,13 +546,13 @@
 
 按"坏了最疼 × 现在最裸"排序：
 
-1. **decoder 六守卫各自的正/负样本** —— 尤其 `DURATION_COMPUTED` 的**豁免边界**：`decoder.py:332-334` 声称 `published_at`("2026-06-15") 与 `resolution_date_human`("December 31, 2026") 天然不触发正则，这个断言目前**没有任何测试**，而它是六道守卫里最容易误伤的一道
+1. ✅（PR #21）**decoder 六守卫各自的正/负样本** —— `tests/test_guards.py`（58 对，含 DURATION 豁免边界："2026-06-15"/"December 31, 2026" 放行实测）+ `tests/test_decoder_guards.py`（违规卡矩阵→reason 等价）落账
 2. **scorecard 数据完整性** —— 损坏 JSON 不得清零（P0-1）· 并发 `record_judgment` 不丢记录（`scorecard.py:23` 的 `_LOCK` 只防线程不防进程）· 已结算条的 `final_result` 不被覆盖（`scorecard.py:61`）
 3. **原子写** —— 写入中途抛异常，原文件必须保持完整可读
 4. **`/dashboard` 三态路由** —— 缓存命中 / 202 单飞 / 刷新失败回退 stale 且带 `refresh_error`。用 fake 依赖注入，零网络（`tests/test_dashboard_singleflight.py` 已测协调层，缺端点层）
 5. **`_purge_wallet_caches` 只删当天** —— `api/main.py:452` 的注释把"旧日期快照永不删 = 失败回退底"标为红线，但这条红线**零测试**。旧快照必须在刷新后幸存
 6. **`market_thesis._parse_json` 脏输出矩阵** —— 现有测试覆盖了部分场景，需补**截断 JSON**（`core/llm.py:43-46` 注释说的正是 thinking 挤占 max_tokens 导致截断，这是真实发生过的故障模式）
-7. **dual_catalyst 四道守卫** —— 相关性门(`:189-199`) · 类型校验(`:207-219`) · FEAR_WORDS · DIRECTIVE_WORDS。398 行零测试
+7. 🟡（部分，PR #21）**dual_catalyst 四道守卫** —— FEAR_WORDS/DIRECTIVE_WORDS 词表已收口 guards.py 且有测试；相关性门(`:189-199`) · 类型校验(`:207-219`) 仍零测试
 8. **`translate` 分批不错位** —— `MAX_TOTAL_CHARS` 截断后中英必须仍一一对应；`core/translate.py` 里"长度不齐整批丢弃"是一行判断，一旦失效就是**中英文错配**（比缺翻译危险一个量级）
 9. **`recommend.scan` 降级** —— 上游返空时旧榜必须保留（`api/main.py:742-744` 的空榜保护零测试）
 10. **`reasoner_v3` "只降不升"改属性测试** —— 现有 `tests/test_reasoner_v3.py` 是样例式；改成随机组合 R1–R4 输入，断言结果恒 ≤ 底座矩阵。这条是 v3 矩阵的**唯一不变量**，值得用属性测试钉死

@@ -111,6 +111,12 @@ try:
     # 4. 已挂 i18n_en 再收集 → 跳过自身（懒自愈幂等）
     p = {"reasoning": {"reasoning": "证据"}, "i18n_en": {"证据": "evidence"}}
     check("已挂映射不被再收集", tr.collect_cjk_strings(p), ["证据"])
+
+    # 5. 🛡 guard_flags 子树整体跳过（守卫留痕是内部审计数据，中文 message 不该进翻译预算）
+    p = {"reasoning": {"reasoning": "证据",
+                       "guard_flags": [{"code": "FEAR_WORDS", "field": "rationale",
+                                        "message": "rationale 含守卫词：致命"}]}}
+    check("guard_flags 子树不进翻译收集", tr.collect_cjk_strings(p), ["证据"])
 finally:
     tr.call_gateway = _real
 

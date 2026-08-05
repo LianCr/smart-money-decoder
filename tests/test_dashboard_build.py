@@ -106,7 +106,9 @@ def _success_patches(tmp, **extra):
         _reasoner_cached=lambda *a, **k: {"follow_call": "ROOM LEFT", "confidence": "中", "facts": {}},
         build_market_thesis=lambda *a, **k: {"confidence": "高", "market_lean": "YES",
                                              "lean_strength": "strong", "pivotal_unknown": None,
-                                             "rationale": "理由", "shared_pool": None},
+                                             "rationale": "理由", "shared_pool": None,
+                                             "guard_flags": [{"code": "FEAR_WORDS", "field": "rationale",
+                                                              "message": "命中"}]},
         map_wallet=lambda thesis, outcome: {"alignment": "顺 edge"},
         get_wallet_profile=lambda w: {"name": "tester"},
         get_wallet_pnl_history=lambda w: [],
@@ -202,11 +204,21 @@ with tempfile.TemporaryDirectory() as tmp:
         check("成功板是 dict 且无 error key", isinstance(out, dict) and "error" not in out, True)
         check("成功板 confidence 来自 market_thesis", out["reasoning"]["confidence"], "高")
         check("成功板 confidence_source 标注", out["reasoning"]["confidence_source"], "market_thesis")
+        check("🛡 guard_flags 从 thesis 透传进 ⑥", out["reasoning"]["guard_flags"][0]["code"], "FEAR_WORDS")
+        check("P1-7：LLM 裁决标 deterministic:false", out["reasoning"]["deterministic"], False)
         cache_file = Path(tmp) / "dashboard" / f"{w}_{db.BRIEFING_AS_OF}.json"
         check("成功板落盘缓存", cache_file.exists(), True)
         out2 = db.build_dashboard(w)                                 # 第二次 → 缓存命中
         check("缓存命中返回 dict 且无 error key", isinstance(out2, dict) and "error" not in out2, True)
         check("缓存命中 wallet 一致", out2.get("wallet"), w)
+
+    # market_thesis 挂 → 退回 v2 矩阵：deterministic 如实标 True（纯代码矩阵）
+    def _thesis_boom(*a, **k):
+        raise RuntimeError("thesis 炸了")
+    with patched(**_success_patches(tmp, build_market_thesis=_thesis_boom)):
+        out = db.build_dashboard("0x" + "f" * 40)
+        check("thesis 挂 → fallback_v2_matrix", out["reasoning"]["confidence_source"], "fallback_v2_matrix")
+        check("fallback 路径 deterministic:true（v2 矩阵纯代码）", out["reasoning"]["deterministic"], True)
 
 # ── 单飞包装层 get_dashboard ─────────────────────────────────────────────────
 print("单飞包装层")

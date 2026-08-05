@@ -23,7 +23,7 @@
 1. **绝不为让指标好看而调松 decoder 跟单门槛。** 它的保守是对的——正是"躲过 Starmer 亏损"和 lift 裁决成立的原因。保守反映的是证据的真实缺席，不是可调的阈值。
 2. **绝不篡改数字的真实含义。** "命中"≠"翻倍"，"测判断方向"≠"测能赚多少钱"。视觉/文案可以炫，数字含义一个字都不能为了好看而改。
 3. **凡涉及"胜率"，先问一句：赢家是不是已经赎回消失了？** 公开接口看不到已离场的赢家（96% 赢家赎回后链上记录消失），自算胜率必被幸存者偏差污染。要用胜率类信号，必须用可信第三方质量评分（如新数据 API 的 Falcon Score），不能用公开 positions 硬算。
-4. **信心 = 市场命题级、单一、不锚钱包盈亏。** （2026-06-25 重设计，推翻旧"信心由代码矩阵算"）旧矩阵锚在钱包 pnl → 出现"证据反对这一注、却因 +10% 浮盈给高信心"（实证见 `_market_thesis_probe`：同一 Iran 盘两个反向钱包，老矩阵给 HIGH/MEDIUM 自相矛盾）。**新**：`analyzer/market_thesis.py` 把参照系从钱包换成市场——同一文章池 bull 论证 YES ‖ bear 论证 NO → reasoner 中立裁决，**直出单一最终信心**（按产品决策撤掉代码兜底守卫，靠 prompt 铁律 + 结构去 pnl 锚 + 对抗平衡输入）。按 (cid,as_of) 缓存→两个反向钱包共享同一份市场观、信心一致，差异挪到"顺/逆 edge"。**不加守卫≠不可观测**：每次 confidence/lean/rationale 记进 `.data/confidence_log.jsonl`，待盘真结算由记分牌回验"高信心是否真命中"。社媒只作减分/背离，不许加信心。（旧 decoder v2 矩阵现仅回测重放在用、reasoner_v3 仍供 follow_call+代码 facts；dashboard ⑥ 的**信心**已切到 market_thesis。）
+4. **信心 = 市场命题级、单一、不锚钱包盈亏。** （2026-06-25 重设计，推翻旧"信心由代码矩阵算"）旧矩阵锚在钱包 pnl → 出现"证据反对这一注、却因 +10% 浮盈给高信心"（实证见 `_market_thesis_probe`：同一 Iran 盘两个反向钱包，老矩阵给 HIGH/MEDIUM 自相矛盾）。**新**：`analyzer/market_thesis.py` 把参照系从钱包换成市场——同一文章池 bull 论证 YES ‖ bear 论证 NO → reasoner 中立裁决，**直出单一最终信心**（按产品决策撤掉代码兜底守卫，靠 prompt 铁律 + 结构去 pnl 锚 + 对抗平衡输入）。按 (cid,as_of) 缓存→两个反向钱包共享同一份市场观、信心一致，差异挪到"顺/逆 edge"。**不加守卫≠不可观测**：每次 confidence/lean/rationale/guard_flags 记进 `.data/confidence_log.jsonl`，待盘真结算由记分牌回验"高信心是否真命中"。（"撤守卫"仅指**信心兜底**；T2.1 起叙事层有 DURATION/假引用/词表守卫——只拦叙事，信心/倾向仍不碰。）社媒只作减分/背离，不许加信心。（旧 decoder v2 矩阵现仅回测重放在用、reasoner_v3 仍供 follow_call+代码 facts；dashboard ⑥ 的**信心**已切到 market_thesis。）
 5. **数字/日期数学只能代码做，AI 不准算。** price_delta、空间、时长、日期全由代码预算好喂给 AI。
 6. **最大仓 ≠ 最值得看的仓。** 对冲/做市玩家的最大仓是对冲的一条腿，不代表方向信念（R2 已对此降级、`position_type` 已分类）。定位"最大政治仓"是**入口启发式**，不是"最强信念仓"的保证——看 `position_type` 和行为流，别被仓位金额骗。
 
@@ -135,7 +135,8 @@ fetcher/polymarket.py   →  fetch_events_by_ids + _is_political_event（gamma t
 fetcher/trades.py       →  get_wallet_profile / get_wallet_pnl_history（① 展示，best-effort；建仓时间查询已随 /analyze 下架）
 fetcher/activity.py     →  仅存 ActivityAPIError（backtest full_activity/resolution 的共享异常契约）
 fetcher/news.py         →  get_news_for_market(q, entry_time, as_of=None)  # 关键词+Tavily 时间窗+缓存；as_of 防回测泄漏（回测重放在用）
-analyzer/decoder.py     →  decode_position(assembled, as_of=None)  # sonnet-4.5 + 6 道守卫；唯一活调用方=backtest 重放；🔴 守卫实现待抽 guards.py 给 ⑥ 复用（T2.1）
+analyzer/guards.py      →  🔴 防幻觉守卫唯一正本（T2.1）：纯函数零 IO 零 LLM，返回 violations 列表、动作归调用方（decoder=raise / ⑥=占位降级或仅标记）。词表 FEAR/DIRECTIVE 正本也在这（dual_catalyst re-export）。🔴 守卫只拦截/降级/标记，永不回填/修复/抬升
+analyzer/decoder.py     →  decode_position(assembled, as_of=None)  # sonnet + 6 道守卫（实现在 guards.py，此处 raise 语义不变）；唯一活调用方=backtest 重放
 api/main.py             →  GET /backtest（静态）· /briefing（v3 完整简报）· /market-context（Context 一虚一实）· /dashboard（v3 统一看板①-⑥，构建在 services/ · 路由只做 reason→HTTP 状态映射）· /recommendations（扫榜推荐流）· /hot-traders（本周政治热门条）· /scorecard（诚实记分牌：增量抓 574 结算+冷数字）。（v2 /analyze 与 CLI 已于 2026-08-03 下架，代码在 git 历史）
 services/dashboard_build.py →  🔴 看板构建 service 层（P0-3 抽出）：build_dashboard(①-⑥ pipeline,按(钱包,AS_OF)硬缓存;**⑥ 信心由 market_thesis 直出、⑤ 用市场级共享池、reason_v3 瘦身只供 follow_call+facts**)+单飞入口 get_dashboard。**纯数据契约：只返 dict、预期失败不 raise、判别式="error" key**；api 路由和 recommend.ai_verify 进程内共用同一入口同一把锁；绝不 import api.main（后者 import 有副作用）
 fetcher/heisenberg.py   →  Heisenberg 共享客户端（参数真名表/limit≤200/🛡第七道守卫:返回钱包≠请求钱包→拦）
@@ -143,7 +144,7 @@ fetcher/profile.py·actions.py·price.py  →  简报数据层 A画像/B动作/C
 analyzer/dual_catalyst.py  →  双向催化剂辩证（材质标签+守卫；as_of_anchor=锚现在(live)/锚建仓(replay)）
 analyzer/price_reaction.py →  新闻↔价格反应=份量刻度+市场测谎仪（复用 price.price_at；归因只说"前后变动非导致"）
 analyzer/reasoner_v3.py    →  ⑥ 的代码层：v3 置信度矩阵(底座删 rule5+R1-R4 只降不升)+build_facts 数据契约。纯代码零网关（旧 B 段 reasoner prose 已删：follow_call 由 api 代码判、信心由 market_thesis 直出）
-analyzer/market_thesis.py  →  🔴 市场命题级对抗推理(取代钱包方向归因的信心)：共享池→bull(YES)‖bear(NO)→reasoner 直出单一信心+市场倾向+胜负手，按(cid,as_of)缓存(两反向钱包共享)，记 confidence_log.jsonl 待回验。map_wallet→顺/逆 edge
+analyzer/market_thesis.py  →  🔴 市场命题级对抗推理(取代钱包方向归因的信心)：共享池→bull(YES)‖bear(NO)→reasoner 直出单一信心+市场倾向+胜负手，按(cid,as_of)缓存(两反向钱包共享)，记 confidence_log.jsonl(含 rationale+guard_flags)待回验。map_wallet→顺/逆 edge。**T2.1 起接 guards**：DURATION(中英)/假引用→占位降级、词表→仅标记，flags 进 payload；⑥ 另标 deterministic:false(fallback v2 矩阵=true)——信心/倾向守卫一概不碰(红线4)
 recommend.py·hot_traders.py·fetcher/markets.py  →  扫榜推荐(方法 E 市场反向找大户:种子→热门政治盘→共持大户→质量门→打分→⑥验证+同盘分歧检测) · 本周政治热门滚动条(579 7d∪政治共持池→581 7d政治盈亏) · get_market_holders 反向原语。产物 .data/recommendations.json·hot_traders.json(gitignored)
 briefing/assemble.py·organize.py  →  A段编排(串数据层+催化剂+测谎)·B段第三个AI诚实整理(只整理不判断)
 briefing/market_context.py →  Context「一虚一实」：价格异动≤as-of × GDELT 三层洗催化剂 × 巨鲸 48h 行为流(get_behavior_flags)
@@ -177,7 +178,7 @@ news dict：`articles`(可空 `[]`) · `search_query` · `time_anchored`(bool，
 
 **置信度矩阵 v3**（`reasoner_v3.py`，⑥ 用，与 v2 并存、不替代）：v2 底座**删 rule5**(time_anchored=False→封中,实时场景不再因此降级) → 依次 `R1`(支持侧催化剂被市场反向定价:全背离→低/部分→封中)→`R2`(主仓 shares<另侧×3=对冲/做市→封中)→`R3`(48h 大额退出 clear_exit→封中)→`R4`(支持+威胁证据双空→低)，**逐条只降不升** + 输出**降级原因列表**(喂 ⑥ prompt) + 升级模块预留 no-op(现无升级路径)。`decoder.py` v2 矩阵原封不改。**R1 真实场景罕见**(市场否定钱包多由 R4 兜底,逻辑已零成本证明,不专门猎盘)。
 
-**六道防幻觉守卫**（prompt 引导 + 代码硬拦）：INVALID_FOLLOW_CALL · CONFIDENCE_TAMPERED · FABRICATED_CATALYST · ENTRY_PRICE_DENIED · IRRELEVANT_CATALYST · DURATION_COMPUTED。
+**六道防幻觉守卫**（prompt 引导 + 代码硬拦；🔴 实现正本已抽至 `analyzer/guards.py`，decoder 保持 raise 语义、⑥ 看板同一套实现走占位降级/标记）：INVALID_FOLLOW_CALL · CONFIDENCE_TAMPERED（仅 decoder，红线 4 不进 ⑥） · FABRICATED_CATALYST · ENTRY_PRICE_DENIED · IRRELEVANT_CATALYST · DURATION_COMPUTED（⑥ 另有 FABRICATED_CITATION + 词表标记）。
 **算术边界**：模型禁做任何涉及今天/日期的时长推算（无字段，必是自算，盲区系统性）；允许价格单位换算、契约内两真数的简单比例（edge 分析核心）。
 **Prompt 硬约束**：新闻为空时禁止编造催化剂，必须如实写"无新闻支撑"。
 

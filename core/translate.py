@@ -20,7 +20,8 @@ from core.llm import call_gateway, GatewayError
 CJK_RE = re.compile(r"[一-鿿]")
 # 这些 key 下的值绝不进翻译（标识符/链接/原始数据，不是显示文案）
 SKIP_KEYS = {"wallet", "url", "slug", "market_id", "cid", "source", "asset",
-             "token", "raw", "confidence", "market_lean", "follow_call", "i18n_en"}
+             "token", "raw", "confidence", "market_lean", "follow_call", "i18n_en",
+             "guard_flags"}   # 🛡 守卫留痕是内部审计数据，不进翻译（防挤占 12k 字符预算）
 MAX_STR_CHARS = 2000       # 单条超长（异常数据）不翻
 MAX_TOTAL_CHARS = 12000    # 整份 payload 翻译总量上限（防失控）
 CHUNK_CHARS = 3000         # 每次 LLM 调用的中文字符上限
