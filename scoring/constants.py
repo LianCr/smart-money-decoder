@@ -78,3 +78,6 @@ REC_PENALTY_EXIT = -40       # 主力撤退 = 别推
 FSCORE_LOW = 40              # 584 F-Score(实名 h_score) tier 带：Novice 20-39（官方 docs），<40 = 未及格线
 REC_PENALTY_LOW_FSCORE = -15 # 低 F-Score 降级（红线 3：用第三方质量分替代自算胜率；高分绝不加分）
 REC_PENALTY_ANOMALY = -25    # 581 反作弊旗标（sybil/timing/胜率异常/仓位波动/完美择时）任一为真 → 一次性降级
+ANOMALY_FLAG_KEYS = ("perfect_timing_flag", "position_size_volatility_flag",
+                     "suspicious_win_rate_flag", "sybil_risk_flag", "timing_anomaly_flag")
+                             # 581 五旗标真名（2026-08-07 探针逐一核实；quality 门与 self_check 共用）

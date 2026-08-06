@@ -200,5 +200,23 @@ c = build_credibility(raw(flags=["squeeze_risk_flag"]), 0.03, days_to_resolution
 check("days_to_resolution 透传", c["days_to_resolution"], 97)
 check("risk_flags 透传", c["risk_flags"], ["squeeze_risk_flag"])
 
+# T1：581 反作弊旗标进 self_check（info-only）
+c = build_credibility(raw(), 0.03, wallet_flags=["sybil_risk_flag", "perfect_timing_flag"])
+scw = sub(c, "self_check")
+check("wallet_anomaly_flags 进 self_check raw", scw["raw"]["wallet_anomaly_flags"],
+      ["sybil_risk_flag", "perfect_timing_flag"])
+check("钱包旗标不计分（delta 恒 0）", scw["delta"], 0)
+check("钱包旗标不影响总分", c["score"], 100)
+try:
+    build_credibility(raw(), 0.03, wallet_flags=["confidence"])
+    check("wallet_flags 含判断字段 → raise", "没抛", "ValueError")
+except ValueError:
+    check("wallet_flags 含判断字段 → raise", "ValueError", "ValueError")
+
+from scoring.credibility import wallet_anomaly_flags
+check("helper：只认布尔真值", wallet_anomaly_flags({"sybil_risk_flag": True, "timing_anomaly_flag": "false",
+                                                    "perfect_timing_flag": False}), ["sybil_risk_flag"])
+check("helper：quality 缺失 → 空", wallet_anomaly_flags(None), [])
+
 print(f"\n{passed} passed, {failed} failed")
 sys.exit(1 if failed else 0)

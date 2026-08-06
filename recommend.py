@@ -98,6 +98,15 @@ def _hscore_penalty(h):
     return REC_PENALTY_LOW_FSCORE if (h is not None and h < FSCORE_LOW) else 0
 
 
+# 581 反作弊旗标（正本 = scoring/credibility.wallet_anomaly_flags，质量门与 self_check 共用）
+from scoring.credibility import wallet_anomaly_flags as _anomaly_flags
+
+
+def _anomaly_penalty(flags):
+    """🔴 只降不升：任一旗标为真 → 一次性降级（首版保守不按旗标数叠加）；无旗标 → 0。"""
+    return REC_PENALTY_ANOMALY if flags else 0
+
+
 def _politics_cat(cats):
     for c in cats or []:
         if "politic" in str(c.get("category", "")).lower():
@@ -315,17 +324,18 @@ def scan(per_market=10, gate_pnl=REC_GATE_PNL, enrich_top=14, keep=8, ai_top=5, 
     graded = []
     for w in pool:
         res = _retry(_wallet360, w) or (None, [])
+        quality = res[0]                 # T1：581 quality 不再扔（反作弊旗标的原料，零新调用）
         pol = _politics_cat(res[1])
         pp = _f(pol.get("total_pnl")) if pol else None
         if pol and (pp or 0) >= gate_pnl:
-            graded.append((w, pol, pp))
+            graded.append((w, pol, pp, quality))
         time.sleep(0.22)
     graded.sort(key=lambda x: -(x[2] or 0))
     LOG.info(f"政治专家(pnl≥{gate_pnl:.0f}) {len(graded)} 个 → 富集顶仓+行为 top {enrich_top}")
 
     # 4) 只对 top enrich_top 跑昂贵的 顶仓(15页)+48h 行为，组装候选
     cands = []
-    for w, pol, pp in graded[:enrich_top]:
+    for w, pol, pp, quality in graded[:enrich_top]:
         time.sleep(0.4)
         pos = _retry(get_top_political_position_hz, w, as_of=as_of, max_pages=15)
         if not pos or pos.get("error"):
@@ -354,12 +364,15 @@ def scan(per_market=10, gate_pnl=REC_GATE_PNL, enrich_top=14, keep=8, ai_top=5, 
             score += REC_PENALTY_EXIT   # 主力撤退=别推（常量本身为负）
         hs = hmap.get(w.lower()) or {}
         score += _hscore_penalty(hs.get("h_score"))   # 🔴 只降不升（低 F-Score 降级、高分不加）
+        aflags = _anomaly_flags(quality)
+        score += _anomaly_penalty(aflags)             # 🔴 只降不升（581 反作弊旗标一次性降级）
         cands.append({
             "wallet": w, "market_question": pos["market_question"], "outcome": pos["outcome"],
             "politics_pnl": pp, "politics_win_rate": _f(pol.get("win_rate")),
             "politics_roi": pol.get("roi"), "politics_trades": pol.get("total_trades"),
             "source_market": pool_mkt.get(w), "cross_ref_579": in579,
             "h_score": hs.get("h_score"), "tier": hs.get("tier"),   # 584 榜内才有；缺席=不在 top-N，如实空
+            "anomaly_flags": aflags,                  # 581 反作弊旗标（诚实标注，降级不隐身）
             "behavior": beh, "behavior_fact": bf.get("fact"),
             "score": round(score, 1), "ai_pick": False,
         })

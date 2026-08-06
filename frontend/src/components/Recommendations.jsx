@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { useLang, registerAiTranslations } from "../i18n.jsx";
 import { API } from "../utils/config.js";
 import { money, abbrev } from "../utils/format.jsx";
-import { CONF_CN } from "../utils/labels.js";
+import { CONF_CN, FLAG_CN } from "../utils/labels.js";
 
 // 扫榜推荐（免费扫榜层）：点一个直接 decode
 const BEH_ICON = { ADD: "📈", EXIT: "📉", STATIC: "⏸" };
@@ -69,6 +69,9 @@ export function Recommendations({ onPick }) {
                 {c.tier && <span className="rec-tier">{c.tier}</span>}
                 {c.h_score != null && <span className="rec-h num">F{Math.round(c.h_score)}</span>}
               </div>
+              {c.anomaly_flags?.length > 0 && (
+                <div className="rec-pol">⚠ {t("风险标记: ")}{c.anomaly_flags.map((k) => t(FLAG_CN[k] || k)).join("、")}</div>
+              )}
               {c.politics_pnl != null && (
                 <div className="rec-pol">{t("政治盘")} <b className="num">{money(c.politics_pnl)}</b>{pwTxt && <span> · {t("胜率")} {pwTxt}</span>}{c.politics_trades && <span> · {c.politics_trades} {t("注")}</span>}</div>
               )}

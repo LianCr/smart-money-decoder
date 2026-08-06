@@ -29,10 +29,13 @@ function valText(s, t) {
     case "volume": return `${r.trend ?? "—"}${r.collapse ? " · " + t("⚠塌缩") : ""}`;
     case "volatility": return `${t("日波动 ")}${r.vol}`;
     case "age": return `${r.age_days}${t(" 天")}`;
-    case "self_check":
-      return r.insufficient
+    case "self_check": {
+      const base = r.insufficient
         ? `${t("本次守卫 ")}${r.guard_flags_n}${t(" 项 · 历史样本不足")}`
         : `${t("本次守卫 ")}${r.guard_flags_n}${t(" 项 · 守卫过 ")}${r.flagged ?? "—"}% vs ${t("干净 ")}${r.clean ?? "—"}%`;
+      const wf = r.wallet_anomaly_flags || [];
+      return wf.length ? `${base} · ⚠${t("钱包旗标 ")}${wf.length}${t(" 项")}` : base;
+    }
     default: return "";
   }
 }
