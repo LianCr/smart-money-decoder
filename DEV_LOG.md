@@ -6,6 +6,16 @@
 
 ---
 
+## 2026-08-06 · T2.2 确定性层收口（PR #26）+ README 换代（PR #27）
+
+> ⚠ 本段原为 2026-08-06 checkpoint 产出，但 docs commit（`347e8fd`）推到了**已被合并的** `docs/readme-v2` 分支、没进 master——与 P2-26 丢失事故同款，2026-08-06 第二场发现后重录。分支卫生第三课：**push 前先确认目标分支还没被合掉**。
+
+- **做了什么**：`scoring/` 包落地成为确定性评分层唯一归属——`constants.py`（P2-18 全量收编：矩阵带/CHASED 8%/市场反应 5%/可信度门与波动带/扣分表/回验分档/近结算线/社媒门/扫榜权重，每条带来源注释；infra 配置刻意不收并注明）+ matrix_v2（decoder 矩阵原文迁入、decoder 留别名 backtest 零感知）+ reasoner_v3/credibility 整体迁入 + follow_call 从 service 层抽出。三对"自首"的重复常量合一；两处"T2.2 迁走"的源码注释承诺兑现；CLAUDE.md 过期的 decoder 冻结令解除。另场：作者新写的 README 替换上线（signal-trust 定位），核对后修了三处不实（quickstart 新 clone 跑不通、36 非 37 个测试文件、硬化轨恰 17 个 PR）。
+- **验证了什么**：**纯搬运的机器证明**——test_reasoner_v3 只改 1 行 import、test_credibility 只改 3 处路径零断言改动，decoder_guards/market_thesis/dashboard_build/cachepolicy 一行未改全绿；Phase 2 DoD"同 facts JSON 100% 可复现"由 test_scoring_layer 逐字节钉死；v2 矩阵 7 规则首次直测，测出 pnl==60 落在规则 2/7 夹缝走末行 low——封板既有行为**照实钉死不修**（修=动回测口径）。零 key 干净环境全量绿含 `import backtest.pipeline`；残留字面量 grep 为空。P1-7/P2-18 随场收口（P2-18 陈旧清单按实测重写：5000 门槛已消亡、CHASED 已迁位）。
+- **留下的坑**：①IO/缓存/cachepolicy 注册刻意留在 dashboard_build（test_cachepolicy"import db=完成注册"与 monkeypatch 缝依赖它）——将来若真要挪，两套测试一起动；②F4 阈值二版标定=改判断行为，等真结算样本再动（常量已集中，改一处即可）；③Heisenberg key 仍 402，回验/重建依旧查不动。
+
+---
+
 ## 2026-08-05（第二场）· F4 可信度面板 MVP：硬指标终于不再算完就扔（PR #25）
 
 - **做了什么**：`analyzer/credibility.py`——575/568 硬指标（流动性/集中度/参与/量能/犹豫度）扣分制合成 0-100+A-F 可信度分，纯代码零 LLM 零 IO、每子指标带 delta 审计尾迹；payload 顶层 `credibility` key（deterministic:true，刻意与 reasoning 平级——LLM 降级时它照常在场，原料缺就诚实 score:null）；前端 CredibilityCard 挂 ③ 赔率旁（零新 CSS、文案全走 en.js 前端词典→旧缓存/数据层挂掉时 EN 照常）。guard×命中率交叉按场 6 落档的数据接成 self_check 子维度，样本全 pending → info-only 如实"样本不足"。零新数据源、零新网络调用、零新缓存目录（原料全在已缓存 thesis 里；`price_credibility.raw` 补齐了只活在文本里的 top10/liquidity_tier）。

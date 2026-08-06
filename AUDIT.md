@@ -53,6 +53,8 @@
 | P2-25 `backtest/pipeline.py` 结果落盘仍是裸 `write_text`（P0-1 唯一漏网） | | ✅ 已修 PR #19（接 `atomic_write_json`，格式字节不变，`tests/test_backtest_finalize.py` 钉死） |
 | P2-26 `/briefing`、`/market-context` 路由已无前端消费者（2026-08-03 归档后新增） | | ⬜ 待产品决定（删路由 or 留作 API），见详情。⚠ 本条曾在 2026-08-03 checkpoint 记入但 commit 推到已合并分支上丢失，2026-08-05 找回补录 |
 | P2-27 `confidence_log.jsonl` 无持久层：Render 冷启动被 seed 重置（2026-08-05 T2.5 时发现） | | ⬜ 未开始，见详情 |
+| P2-28 数据层故障链路全静默：402 无分类 · health 只查 key 在不在 · 扫层 _retry 按字符串匹配（2026-08-06 API 全量对照审计发现） | | ✅ 已修 PR #28（`INSUFFICIENT_CREDIT` 独立 reason + `/healthz` 注入式真探针·TTL 600s·区分"缺 key"/"额度尽" + `_retry` 按 reason 匹配），见详情 |
+| P2-29 `get_market_holders` 裸 call 静默截断在 200 条——共持大户发现池系统性缺人（同上审计发现） | | ✅ 已修 PR #28（接 `paginate` max_pages=15；>200 条尾部大户正样本测试钉死），见详情 |
 
 ### 阶段进度
 
@@ -60,7 +62,7 @@
 |---|---|:--:|
 | Phase 1 止血 | P0 全清 | ✅ **P0 全清**（PR #18 收掉最后的 P0-3；T1.5 日志/T1.6 npm audit 两个非 P0 尾巴仍在 P1/P2 表里） |
 | Phase 2 结构 | 敢重构（评分层收口 + 核心测试覆盖） | ⬜ 未开始 |
-| Phase 3 增值 | 见第三节 F1–F4 | 🟡 **F4 MVP ✅（PR #25）**：可信度分+看板卡片落地，F4.1 清单挂账；F1/F2 余项/F3 ⬜ |
+| Phase 3 增值 | 见第三节 F1–F5 | 🟡 **F4 MVP ✅（PR #25）**；F4.1 清单 2026-08-06 按官方文档修订（两条"拿不到"实为有源）；新增 F5 市场监控面（排期跟发布走）；F1/F2 余项/F3 ⬜ |
 
 ---
 
@@ -581,6 +583,29 @@
 
 ---
 
+#### P2-28 · 数据层故障链路全静默（2026-08-06 补充，Heisenberg 官方文档全量对照审计发现）
+
+> **状态：✅ 已修（PR #28）。** 2026-08-05 的 402 瘫痪完整复盘出四层静默：①`heisenberg.call` 无 402 分类
+> → 混进 UNEXPECTED；②recommend/hot_traders 的 `_retry` 用 `"429" in str(e)` 匹配 → 真因连日志都没有；
+> ③全 best-effort 层按设计吞掉；④`/healthz` 只查 key **在不在**、探不出"在但额度尽"——缓存钱包照常秒回，
+> 故障被完全掩盖。修复：402 → `INSUFFICIENT_CREDIT` 独立 reason（不重试不睡——重试烧不出额度）；
+> `core/health.health_report` 加注入式 `data_probe`（额度尽/AUTH/FORBIDDEN=key 级致命 → 503，与缺 key 同病同响；
+> 瞬时上游只警告防部署 flapping；key 缺失不打探针=两种病因分开报）；api 层供真探针（最便宜的一发 574，
+> TTL 600s 防 Render 高频探活自己变成额度杀手）；`_retry` 改按 `e.reason` 匹配 + 非限流失败记日志。
+> 官方错误契约里**没有** 402（文档只记 200/400/401/403/404/429/5xx）——CLAUDE.md 坑表继续是唯一正本。
+
+---
+
+#### P2-29 · 共持大户发现池静默截断在 200 条（2026-08-06 补充，同上审计发现）
+
+> **状态：✅ 已修（PR #28）。** `fetcher/markets.get_market_holders` docstring 写"按 cid 全量"，实现却用
+> 裸 `call()`（单页 ≤200 条）——热门政治盘 556 流轻松破 200，第 201 条起被静默丢弃：只在尾部成交的大买家
+> **整个从推荐宇宙消失**（它喂 recommend + hot_traders 的全部共持发现）。修复=接 `paginate(max_pages=15)`
+> （3000 条，与选仓器同档）；`tests/test_market_holders.py` 钉死"住在第 201-250 条的大户必须出现且按净额排第一"。
+> 影响面：修复后首次扫榜的大户池可能与历史产物不同（更全）——这是修复不是漂移。
+
+---
+
 ## 三、路线图
 
 ### Phase 1 · 止血
@@ -669,7 +694,21 @@
 - **缺的**：把它做成"**这个盘的价格值不值得信**"的独立展示，并作为确定性信号进 `scoring/` 层。
 - **价值**：这是少见的"代码能硬算、AI 不参与、且用户看得懂"的判断维度——完全符合红线 5（数字归代码），且能独立于 LLM 的非确定性存在。
 - **进展（PR #25，2026-08-05）**：`analyzer/credibility.py` 扣分制 0-100 + A-F 档（起点 100 只扣不加、每子指标带 delta 审计尾迹、缺数据 score:null 诚实态）；payload 顶层 `credibility` key（`deterministic:true`，LLM 降级时照常在场）；前端 CredibilityCard 挂 ③ 赔率旁（零新 CSS、文案全走 en.js）。**🔴 红线机器强制**：入参含 market_lean/confidence/rationale → raise，源码级零判断字段访问由测试钉死——可信度评价信号、永不修理判断。真样本标定：7 份缓存盘摊出 A(100/95/95)/B(85×3,75)，旧二元 trust 对它们全给 HIGH。self_check（guard×命中率交叉）本场 info-only 不计分（回验档案全 pending、样本不足如实标注）。**F4 余项**：~~进 `scoring/` 包~~ ✅ PR #26（T2.2 迁入 `scoring/credibility.py`、扣分表收编 constants）；阈值二版标定=改判断行为、等真结算样本再动（常量已集中，改一处即可）；self_check 升计分项（样本 ≥ REPLAY_MIN_BUCKET_N 后另场评审）。
-- **F4.1 清单（想要但现有 fetcher 拿不到，新数据源需另立项）**：市场开盘时间/年龄（575/574 均无 open date，无法算"价格发现进行了多久"）· 盘口深度/买卖价差（无 orderbook 源）· 真实持仓人数与持仓分布（575 无 holders_count；556 全量重建贵且只测净买入）· top 钱包身份质量（大户是做市商还是信念方——581 有单钱包画像但按盘反查全部大户成本高）· 结算源可靠性（UMA 争议史）· 跨平台同题价格一致性（无第二平台源）。
+- **F4.1 清单（2026-08-06 按官方文档全量对照修订——两条"拿不到"其实有源，一条已在手）**：
+  - ~~市场开盘时间/年龄（575/574 均无 open date）~~ → **错，575 返回 `created_at`**（我们每盘都在调 575，只是没读这个字段）——升级路线 T1 白捡项。
+  - ~~盘口深度/买卖价差（无 orderbook 源）~~ → **错，572 Orderbook 快照端点存在**（best_bid/ask、spread、bid/ask_depth；⚠ 唯一用毫秒时间戳的端点）——升级路线 T2。
+  - ~~真实持仓人数（575 无 holders_count）~~ → **半错：`unique_traders_7d` 已在消费**，缺的只是持仓**分布**（谁持多少）。
+  - 仍真拿不到：top 钱包身份质量（581 按盘反查全部大户成本高）· 结算源可靠性（UMA 争议史，无源）· 跨平台同题比价（Kalshi 已验无政治覆盖，KNOWN_ISSUES:266）。
+
+---
+
+#### F5 · 市场监控面：从"单盘可信度"到"全市场哪些盘不可信"（L，排期跟发布走）
+
+- **为什么（2026-08-06 官方文档全量审计产出）**：575 支持 `condition_id:"ALL"` + 鲸控/量能/流动性**过滤参数**（`min_top1_wallet_pct`/`volume_trend`/`max_unique_traders_7d`…），596 Price Jumps 做服务端跳变检测（带成交量佐证）——我们已有的 credibility 扣分表加上这两样 = "今天哪些政治盘被鲸控/在异动"的**全市场监控面**。170+ 工具没人做这条车道，而它与本项目"signal-trust 护城河"完全同向：别人报"谁在买"，我们报"这个价格值不值得信"的市场级版本。
+- **地基已有**：`scoring/credibility.py` 扣分表（单盘版已上线）· 575 全字段消费经验 · F4 卡片形制。
+- **缺的**：一次 575 ALL 扫描 + 按 credibility 评分排序的面板；596 接入做异动佐证。
+- **前置**：Heisenberg credit 结构确认（定价只在 dashboard 可见，文档零记载）；T1 白捡项先行。
+- **排期跟发布走**（用户 2026-08-06 拍板）：不占硬化轨排期，跟产品发布节奏定。
 
 ---
 

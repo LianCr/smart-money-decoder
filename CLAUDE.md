@@ -48,7 +48,11 @@
 | **[Heisenberg v3] `pagination.limit` 上限 200** | 传 >200（如 500）直接 404 `'max' tag` 校验失败、静默返空——别把它误判成"无数据" |
 | **[Heisenberg v3] 569 宽窗口只返回前若干天** | 宽时间窗（如 80 天）只回前 10 天左右，**结算日的亏损落在返回范围外→看着像 0**。要看某盘结算盈亏必须把 start/end **窄锚到结算期**附近分段查 |
 | **[Heisenberg v3] 584 H-Score 无按地址 lookup** | 是纯筛选榜，给不了"某钱包排名"。要定位具体钱包官方排名走 **579**（有 `wallet_address`） |
-| **[Heisenberg v3] key 余额耗尽返回 402 INSUFFICIENT_CREDIT** | 免费 key 有额度池（2026-08-05 实测耗尽）。`heisenberg.call` 无 402 专门分类 → 走 UNEXPECTED raise、上层 best-effort 全部静默降级——**整个数据层对未缓存请求都是坏的但看板不报错**（缓存钱包照常秒回，掩盖故障）。疑心数据层挂了先手打一条 575/574 看是不是 402 |
+| **[Heisenberg v3] key 余额耗尽返回 402 INSUFFICIENT_CREDIT** | 免费 key 有额度池（2026-08-05 实测耗尽）；402 **不在官方错误契约里**（文档只记 200/400/401/403/404/429/5xx）。P2-28 起 `heisenberg.call` 有独立分类（不重试）、`/healthz` 真探针能区分"缺 key"/"额度尽"（TTL 600s）——疑心数据层挂了先看 /healthz |
+| **[Heisenberg v3] 574 `winning_outcome` 是未文档化字段** | scorecard/回验 settle 都依赖它，但官方 574 字段表里**没有**（能用=实测，契约脆弱）。575 返回文档化的 `winning_side` 可做交叉/替补——574 这条断了先试 575 |
+| **[Heisenberg v3] 579 返回字段带 `_15d` 后缀、与传入 `leaderboard_period` 无关** | 文档字段是 `roi_pct_15d/win_rate_15d/...`，我们传 `"30d"` 也可能拿到 15 天窗数据（文档未解释）。**展示"官方胜率/排名"前先实测核对窗口真伪**——标错窗口=数字含义被篡（红线 2） |
+| **[Heisenberg v3] 572 Orderbook 是全 API 唯一用毫秒时间戳的端点** | 其余端点 Unix 秒、572 要毫秒（文档明写）。接 572（T2 升级路线）时别把秒喂进去静默拿空 |
+| **[Heisenberg v3] 593-602 sport 系端点无文档页** | 只在 composite workflow 页里被引用，参数契约未知——别当稳定接口用。另：composite 层有 **Batch Market Resolution（50 cid/次出结算）**，settle 场景比逐 cid 574 省一个量级 credit（T1 接入） |
 | **[Heisenberg v3] 569 含『持到归零』全损，但 per-cid 归因对超高频 bot 会丢尘埃仓** | 实测 569 完整记录输方归零亏损（23/24 干净单边输方精确到分，`size`=份额，输方=`−Σ(size×price)`、赢方=`Σ(size×(1−price))`，记在结算日）。**唯一边界**：单日结算上千仓的 bot，个别尘埃仓（实测 $0.10）cid-scoped 返 0、但钱包级仍可见。**路 B 算收益率用 `556 Trades + 574 结算结果` 自重建（确定性 payout−cost），569 只交叉校验** |
 
 ---
