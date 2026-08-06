@@ -53,7 +53,10 @@
 | **[Heisenberg v3] 579 文档字段表是虚构的（2026-08-07 实测裁决）** | live 字段=address/rank/roi/win_rate/total_pnl/total_invested/total_trades/markets_traded/avg_trade_size/sharpe_ratio，**无 f_score/tier/无 _15d 后缀**；窗口参数真生效（7d/30d 数字不同、_15d 疑云推翻）——但 **`"15d"` 是非法 period 值、静默返空**（合法疑似 1d/3d/7d/30d）。我们传 "30d" 无恙 |
 | **[Heisenberg v3] F-Score(实名 `h_score`)/tier 只在 584，且按钱包过滤结构性不可用** | 2026-08-07 实测：584 live 有 `wallet`/`h_score`/`tier`/`trajectory` 等 12 字段，但 wallet/wallet_address/proxy_wallet 三种过滤参数**全被静默忽略→返回全局榜**（返回是合法榜数据，第七道守卫救不了——过滤参数根本不存在）。可用路径=扫榜时 sweep 584 榜页按 wallet join（top-N 外的钱包如实无分） |
 | **[Heisenberg v3] 574 `condition_ids`（复数）被静默忽略** | 传 2 个 cid 返回 50 条全局盘（2026-08-07 实测）——**绝不能当批量查询用**；批量 composite（agent_id 0）在免费 key 上 403 plan-gated。结算只能逐 cid |
-| **[Heisenberg v3] 572 Orderbook 是全 API 唯一用毫秒时间戳的端点** | 其余端点 Unix 秒、572 要毫秒（文档明写）。接 572（T2 升级路线）时别把秒喂进去静默拿空 |
+| **[Heisenberg v3] 572 Orderbook：请求毫秒、响应 ISO、字段表又是虚构（2026-08-08 实测）** | 请求 start/end 要**毫秒**（喂秒→200 静默零条，实锤）；响应时间戳却是 ISO 串。文档的 best_bid/spread/depth 字段**不存在**——真身是全档口簿：`{bids, asks, timestamp, token_id}`，bids/asks 是 **JSON 字符串编码的梯子**（[{size,price},…]），best/spread/深度全要自己算。密度 ~8 快照/天，可按窗取 ≤as_of 最近一条 |
+| **[Heisenberg v3] 568 日 K 远比想象富：spread/bid·ask OHLC/trade_count 一直在响应里** | 2026-08-08 实测 keys 含 `spread`/`bid_close`/`ask_close`/`bid_open`/`ask_open`/`trade_count`/`mean`/`volume`（string）——我们只读 close 把其余全扔了。⚠ `spread` 可为 null（当日无 bid/ask K 时），要价差以 572 梯子为准、568 作免费交叉 |
+| **[Heisenberg v3] 596 Price Jumps 在免费 key 上 403 plan-gated** | 2026-08-08 实测三种参数形全 403（与 composite 同族）。「596 替换手扫跳变检测」在当前计划上**不可行**——升级付费计划时连同 batch 一起问 |
+| **[Heisenberg v3] 574 `min_volume` 疑似被静默忽略** | 传 min_volume=2000000 返回的全是零成交历史的新建电竞盘（568 对其 token 全部 0 条）。未定案（也可能 volume 口径不同），⚠ 用它过滤前先抽查返回值 |
 | **[Heisenberg v3] 593-602 sport 系端点无文档页** | 只在 composite workflow 页里被引用，参数契约未知——别当稳定接口用。另：composite 层的 **Batch Market Resolution** 2026-08-07 实测在免费 key 上 **403 plan-gated、不可用**（付费计划才有，见 KNOWN_ISSUES 第九节） |
 | **[Heisenberg v3] 569 含『持到归零』全损，但 per-cid 归因对超高频 bot 会丢尘埃仓** | 实测 569 完整记录输方归零亏损（23/24 干净单边输方精确到分，`size`=份额，输方=`−Σ(size×price)`、赢方=`Σ(size×(1−price))`，记在结算日）。**唯一边界**：单日结算上千仓的 bot，个别尘埃仓（实测 $0.10）cid-scoped 返 0、但钱包级仍可见。**路 B 算收益率用 `556 Trades + 574 结算结果` 自重建（确定性 payout−cost），569 只交叉校验** |
 
