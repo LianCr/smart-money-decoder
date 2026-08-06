@@ -1,16 +1,18 @@
 """
-analyzer/reasoner_v3.py — ⑥ Edge / Reasoning 的代码层：纯代码矩阵 + facts 契约（零网关调用）
+scoring/reasoner_v3.py — ⑥ Edge / Reasoning 的代码层：纯代码矩阵 + facts 契约（零网关调用）
 
   compute_confidence_v3 —— 代码算置信度（v2 底座删 rule5 + R1→R4 只降不升），附「降级原因」列表。
   build_facts           —— 把封板模块输出拼成 ⑥ 的数据契约（价格/时长/对冲/催化剂 + 矩阵结论）。
 
 （旧 B 段 run_reasoner_v3/reason_v3 网关 prose 已在瘦身后移除：follow_call 改由
- api 层代码判定、信心由 market_thesis 直出，本模块只剩纯代码、零 token。）
+ api 层代码判定、信心由 market_thesis 直出，本模块只剩纯代码、零 token。
+ T2.2 从 analyzer/ 迁入 scoring/：确定性评分层唯一归属地，阈值引 constants。）
 
-🔴 红线：不改任何封板模块（dual_catalyst / price_reaction / 六道守卫 / decoder v2 矩阵 / fetcher 数据层），
-   只读它们的输出。decoder._compute_confidence（v2，/analyze 在用）原封不动，这里是独立 v3 矩阵。
+🔴 红线：不改任何封板模块（dual_catalyst / price_reaction / 六道守卫 / v2 矩阵 / fetcher 数据层），
+   只读它们的输出。v2 矩阵（现 scoring/matrix_v2，唯一活调用方=backtest 重放）独立并存，这里是 v3。
 """
-CONF_ORDER = {"low": 0, "medium": 1, "high": 2}
+from scoring.constants import (CONF_ORDER, PNL_HIGH_MAX, PNL_LOW_MIN,
+                               R2_HEDGE_MULT, MM_TWO_SIDE_RATIO)
 
 
 def _min_conf(a: str, b: str) -> str:
@@ -22,7 +24,7 @@ def _base_confidence_v3(articles_nonempty: bool, pnl_pct, time_anchored: bool) -
     """v2 矩阵 **删掉 rule5**(time_anchored=False→medium)，其余 7 条不动。pnl_pct 是百分比数值。"""
     if not articles_nonempty:
         return "low"                                            # rule1: 证据为空→低
-    if pnl_pct is not None and pnl_pct > 60:
+    if pnl_pct is not None and pnl_pct > PNL_LOW_MIN:
         return "low"                                            # rule2: 涨幅吃透→低
     if pnl_pct is not None and pnl_pct < 0 and not time_anchored:
         return "low"                                            # rule3: 浮亏+未锚→低
@@ -31,9 +33,9 @@ def _base_confidence_v3(articles_nonempty: bool, pnl_pct, time_anchored: bool) -
     # rule5(未锚→封中) 已在 v3 删除：实时场景不再因新闻没锚建仓而降级
     if pnl_pct is None:
         return "medium"                                         # 缺失保守→中
-    if pnl_pct < 30:
+    if pnl_pct < PNL_HIGH_MAX:
         return "high"                                           # rule6
-    if pnl_pct < 60:
+    if pnl_pct < PNL_LOW_MIN:
         return "medium"                                         # rule7
     return "low"
 
@@ -61,7 +63,7 @@ def compute_confidence_v3(*, support, threat, pnl_pct, time_anchored,
     by = by_outcome or {}
     main = (by.get(held_outcome) or {}).get("shares", 0) or 0
     other = max((v.get("shares", 0) or 0 for k, v in by.items() if k != held_outcome), default=0)
-    if other > 0 and main < other * 3:
+    if other > 0 and main < other * R2_HEDGE_MULT:
         conf = _min_conf(conf, "medium")
         reasons.append("R2:两侧均衡(对冲/做市)→封medium")
 
@@ -119,7 +121,7 @@ def classify_position_type(two_side: dict, held_outcome: str) -> str:
         return "single_side_conviction"
     held = (by.get(held_outcome) or {}).get("shares", 0) or 0
     other = max((v.get("shares", 0) or 0 for k, v in by.items() if k != held_outcome), default=0)
-    if held and other and min(held, other) / max(held, other) >= 0.5:
+    if held and other and min(held, other) / max(held, other) >= MM_TWO_SIDE_RATIO:
         return "market_making"            # 两边接近 = 做市
     return "hedged"
 

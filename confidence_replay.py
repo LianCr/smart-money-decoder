@@ -28,7 +28,7 @@ import threading
 import time
 from pathlib import Path
 
-from core.config import REPLAY_MIN_BUCKET_N
+from scoring.constants import REPLAY_MIN_BUCKET_N
 from core.jsonstore import CORRUPT, OK, atomic_write_json, load_json, quarantine
 from core.log import get_logger
 

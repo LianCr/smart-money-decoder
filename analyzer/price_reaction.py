@@ -21,7 +21,7 @@ from datetime import datetime, timedelta, timezone
 
 from fetcher.price import price_at
 
-MEANINGFUL_MOVE_PCT = 5.0   # 低于此视为"市场反应微弱"，不触发矛盾旗标（避免噪音误报）
+from scoring.constants import MEANINGFUL_MOVE_PCT  # noqa: F401  T2.2 正本迁 constants，re-export 兼容旧引用
 _POLARITY = {"positive": +1, "negative": -1}   # 正向催化剂期望市场▲；负向期望▼
 
 

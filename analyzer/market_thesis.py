@@ -25,6 +25,8 @@ from analyzer.dual_catalyst import _call_gateway, _tavily_search, NEGATIVE_BOOST
 from fetcher.heisenberg import call, results
 from briefing.board_feed import held_token
 from core.jsonstore import atomic_write_json
+from scoring.constants import (PART_LOW, PART_MID, LIQ_PCT_MID, CONC_TOP1,
+                               VOLA_HIGH, VOLA_MID, MULTI_OUTCOME_MIN)
 
 CACHE = Path(".cache/market_thesis")
 LOG = Path(".data/confidence_log.jsonl")
@@ -93,9 +95,9 @@ def price_credibility(cid, as_of):
     flags = [k for k in ("liquidity_risk_flag", "whale_control_flag", "trade_concentration_flag",
                          "squeeze_risk_flag", "volume_collapse_risk_flag") if x.get(k)]
     bad = bool(x.get("liquidity_risk_flag") or x.get("whale_control_flag")
-               or x.get("trade_concentration_flag") or (uniq is not None and uniq < 30))
-    great = bool((liq_pct or 0) >= 85 and not x.get("whale_control_flag")
-                 and (uniq or 0) >= 80 and (top1 or 100) < 35)
+               or x.get("trade_concentration_flag") or (uniq is not None and uniq < PART_LOW))
+    great = bool((liq_pct or 0) >= LIQ_PCT_MID and not x.get("whale_control_flag")
+                 and (uniq or 0) >= PART_MID and (top1 or 100) < CONC_TOP1)
     trust = "low" if bad else ("high" if great else "med")
     line = (f"价格可信度={trust.upper()}：流动性 {x.get('liquidity_tier')}({liq_pct}百分位) · "
             f"头部集中 top1={top1}% top10={top10}% · 近7天 {uniq} 人参与 · 成交量 {vtrend}"
@@ -108,7 +110,7 @@ def price_credibility(cid, as_of):
         except Exception:
             pass
     return {"trust": trust, "line": line, "days_to_resolution": days,
-            # raw = F4 可信度分的结构化输入（analyzer/credibility.py）；此前 top10/tier 只活在
+            # raw = F4 可信度分的结构化输入（scoring/credibility.py）；此前 top10/tier 只活在
             # line 文本里，F4 起补进 raw——旧缓存缺这两个 key 时 credibility 按"子指标缺"降级
             "raw": {"liquidity_percentile": liq_pct, "top1_wallet_pct": top1,
                     "top10_wallet_pct": top10, "liquidity_tier": x.get("liquidity_tier"),
@@ -134,7 +136,7 @@ def realized_vol(token, as_of, days=14):
     rets = [math.log(closes[i] / closes[i - 1]) for i in range(1, len(closes))
             if closes[i - 1] > 0 and closes[i] > 0]
     vol = statistics.pstdev(rets) if len(rets) > 1 else 0.0
-    desc = "高(市场自己没拿定)" if vol >= 0.12 else ("低(共识已稳)" if vol < 0.06 else "中")
+    desc = "高(市场自己没拿定)" if vol >= VOLA_HIGH else ("低(共识已稳)" if vol < VOLA_MID else "中")
     line = f"市场自身犹豫度={desc}：近{len(closes)}日已实现波动 {round(vol, 3)}，收盘 {[round(c0, 2) for c0 in closes[-6:]]}"
     return {"vol": vol, "desc": desc, "line": line}
 
@@ -184,7 +186,7 @@ def event_structure(cid):
     m = _event_map()
     ev = (m.get("cid2ev") or {}).get(cid)
     n = (m.get("counts") or {}).get(ev, 1) if ev else 1
-    return {"multi": n >= 3, "n_candidates": n,
+    return {"multi": n >= MULTI_OUTCOME_MIN, "n_candidates": n,
             "baseline_pct": round(100.0 / n, 1) if n else None, "event_slug": ev}
 
 

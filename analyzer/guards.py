@@ -13,8 +13,10 @@ CONFIDENCE_TAMPERED 只供 decoder（红线 4：⑥ 的信心由 market_thesis �
 
 import re
 
-# ── 枚举与词表（正本）──────────────────────────────────────────────────────────
-FOLLOW_CALL_ENUM = {"ROOM LEFT", "CHASED", "NO BASIS"}
+# ── 枚举与词表 ─────────────────────────────────────────────────────────────────
+# FOLLOW_CALL_ENUM 正本 T2.2 起在 scoring/constants.py；此处 re-export 保旧 import 链
+# （decoder 等经 guards 引它，identity 测试钉死单一正本）。词表正本仍在本文件。
+from scoring.constants import FOLLOW_CALL_ENUM  # noqa: F401
 
 FEAR_WORDS   = ["致命", "扼杀", "毁灭", "黑天鹅", "灾难", "崩塌", "崩盘", "末日",
                 "彻底完蛋", "死刑", "覆灭", "万劫不复", "血洗", "屠杀"]

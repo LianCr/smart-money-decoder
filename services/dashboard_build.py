@@ -36,9 +36,10 @@ from briefing.assemble import load_or_build_briefing
 from briefing.market_context import load_or_build as build_market_context
 from briefing.market_context import get_behavior_flags
 from briefing import board_feed
-from analyzer.reasoner_v3 import build_facts
+from scoring.reasoner_v3 import build_facts
+from scoring.follow_call import code_follow_call as _follow_call
+from scoring.credibility import build_credibility
 from analyzer.market_thesis import build_market_thesis, map_wallet
-from analyzer.credibility import build_credibility
 import confidence_replay
 import scorecard
 
@@ -97,16 +98,8 @@ def entities_from_question(q: str) -> list[str]:
     return ents[:5] or ["politics"]
 
 
-def _code_follow_call(facts: dict) -> str:
-    """代码版跟单判定（瘦身：替掉 reason_v3 的网关 prose，省一次调用）。
-    判定本质是价格位移数学（应归代码，红线）：无证据→NO BASIS；价已大幅走过(入场后≥8%)→CHASED；否则 ROOM LEFT。
-    信心改由 market_thesis 直出，这里只出 follow_call + 透传代码 facts。"""
-    if not (facts.get("support_catalysts") or facts.get("threat_catalysts")):
-        return "NO BASIS"
-    moved = facts.get("price_already_moved")
-    if moved is not None and moved >= 8:
-        return "CHASED"
-    return "ROOM LEFT"
+# _code_follow_call 正本 T2.2 迁 scoring/follow_call（顶部以 _follow_call 引入）：
+# 判定本质是价格位移数学（红线 5），归确定性评分层；信心仍由 market_thesis 直出。
 
 
 def _reasoner_cached(briefing: dict, behavior: dict, wallet: str, as_of: str = BRIEFING_AS_OF) -> dict:
@@ -121,7 +114,7 @@ def _reasoner_cached(briefing: dict, behavior: dict, wallet: str, as_of: str = B
             pass
     try:
         facts = build_facts(briefing, behavior, as_of)
-        r = {"follow_call": _code_follow_call(facts), "confidence": facts.get("confidence"),
+        r = {"follow_call": _follow_call(facts), "confidence": facts.get("confidence"),
              "reasoning": None, "confidence_reasons": facts.get("confidence_reasons"), "facts": facts}
     except Exception as e:
         r = {"follow_call": None, "confidence": None, "reasoning": None,

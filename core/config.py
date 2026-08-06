@@ -22,8 +22,4 @@ BRIEFING_AS_OF = os.environ.get("BRIEFING_AS_OF") or date.today().isoformat()
 RATE_LIMIT_PER_IP         = int(os.environ.get("RATE_LIMIT_PER_IP", "30"))          # 每 IP 每窗口最多次数
 RATE_LIMIT_WINDOW_SECONDS = int(os.environ.get("RATE_LIMIT_WINDOW_SECONDS", "60"))  # 滑动窗口长（秒）
 RATE_LIMIT_DAILY_GLOBAL   = int(os.environ.get("RATE_LIMIT_DAILY_GLOBAL", "500"))   # 每日（UTC）全站总量
-
-# ── 信心分档回验（T2.5，confidence_replay.py 用）──
-# 🔴 样本数低于此阈值的信心档不显示命中率百分比（显示"样本不足"）——两三个样本算出的
-# 100%/0% 是误导，宁可不给数字。T2.2 落地 scoring/constants.py 时此常量一并迁走。
-REPLAY_MIN_BUCKET_N = int(os.environ.get("REPLAY_MIN_BUCKET_N", "5"))               # 每档最少样本数
+# （T2.5 曾放这里的信心回验分档阈值已按承诺迁往 scoring/constants.py——那是判断阈值，这里只留 infra 配置）
