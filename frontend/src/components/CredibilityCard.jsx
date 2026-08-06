@@ -6,7 +6,7 @@ import { useLang } from "../i18n.jsx";
 // 旧缓存板没有 credibility key → 整卡安静缺席（guard_flags 先例）；score:null → 诚实"暂缺"态。
 const LABEL = {
   liquidity: "流动性", concentration: "大户集中度", participants: "独立参与",
-  volume: "量能", volatility: "市场犹豫度", self_check: "判断层自检",
+  volume: "量能", volatility: "市场犹豫度", age: "市场年龄", self_check: "判断层自检",
 };
 const NOTE = {
   liquidity: "盘越深，价格越难被单笔砸出假信号",
@@ -14,6 +14,7 @@ const NOTE = {
   participants: "人太少，价格是几个人的赌局不是人群的判断",
   volume: "没人交易的价格是上次成交的遗迹",
   volatility: "市场自己没拿定主意，当下价位不值得当锚",
+  age: "新盘价格发现未完成，价位还没被人群消化",
   self_check: "本次触发守卫的情况 × 历史上守卫判断的命中率",
 };
 const MARK = { ok: ["✓", "pos"], warn: ["⚠", ""], bad: ["✗", "neg"], missing: ["—", ""], info: ["·", ""] };
@@ -27,10 +28,14 @@ function valText(s, t) {
     case "participants": return `${r.uniq}${t(" 人 / 近7天")}`;
     case "volume": return `${r.trend ?? "—"}${r.collapse ? " · " + t("⚠塌缩") : ""}`;
     case "volatility": return `${t("日波动 ")}${r.vol}`;
-    case "self_check":
-      return r.insufficient
+    case "age": return `${r.age_days}${t(" 天")}`;
+    case "self_check": {
+      const base = r.insufficient
         ? `${t("本次守卫 ")}${r.guard_flags_n}${t(" 项 · 历史样本不足")}`
         : `${t("本次守卫 ")}${r.guard_flags_n}${t(" 项 · 守卫过 ")}${r.flagged ?? "—"}% vs ${t("干净 ")}${r.clean ?? "—"}%`;
+      const wf = r.wallet_anomaly_flags || [];
+      return wf.length ? `${base} · ⚠${t("钱包旗标 ")}${wf.length}${t(" 项")}` : base;
+    }
     default: return "";
   }
 }

@@ -38,7 +38,7 @@ from briefing.market_context import get_behavior_flags
 from briefing import board_feed
 from scoring.reasoner_v3 import build_facts
 from scoring.follow_call import code_follow_call as _follow_call
-from scoring.credibility import build_credibility
+from scoring.credibility import build_credibility, wallet_anomaly_flags
 from analyzer.market_thesis import build_market_thesis, map_wallet
 import confidence_replay
 import scorecard
@@ -320,7 +320,9 @@ def build_dashboard(wallet: str, refresh: int = 0, fresh: int = 0) -> dict:
                 pc_t.get("raw"), rv_t.get("vol"),
                 guard_flags=(thesis or {}).get("guard_flags") or [],
                 guard_cross=guard_cross,
-                days_to_resolution=pc_t.get("days_to_resolution"))
+                days_to_resolution=pc_t.get("days_to_resolution"),
+                # T1：581 反作弊旗标进 self_check（info-only 不计分；正本 helper 在 scoring）
+                wallet_flags=wallet_anomaly_flags((b.get("who_trader_profile") or {}).get("quality")))
         except Exception as e:
             _log(f"   ⚠ 可信度分构建失败（不阻塞看板）：{type(e).__name__}: {e}")
             credibility = None

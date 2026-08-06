@@ -695,7 +695,7 @@
 - **价值**：这是少见的"代码能硬算、AI 不参与、且用户看得懂"的判断维度——完全符合红线 5（数字归代码），且能独立于 LLM 的非确定性存在。
 - **进展（PR #25，2026-08-05）**：`analyzer/credibility.py` 扣分制 0-100 + A-F 档（起点 100 只扣不加、每子指标带 delta 审计尾迹、缺数据 score:null 诚实态）；payload 顶层 `credibility` key（`deterministic:true`，LLM 降级时照常在场）；前端 CredibilityCard 挂 ③ 赔率旁（零新 CSS、文案全走 en.js）。**🔴 红线机器强制**：入参含 market_lean/confidence/rationale → raise，源码级零判断字段访问由测试钉死——可信度评价信号、永不修理判断。真样本标定：7 份缓存盘摊出 A(100/95/95)/B(85×3,75)，旧二元 trust 对它们全给 HIGH。self_check（guard×命中率交叉）本场 info-only 不计分（回验档案全 pending、样本不足如实标注）。**F4 余项**：~~进 `scoring/` 包~~ ✅ PR #26（T2.2 迁入 `scoring/credibility.py`、扣分表收编 constants）；阈值二版标定=改判断行为、等真结算样本再动（常量已集中，改一处即可）；self_check 升计分项（样本 ≥ REPLAY_MIN_BUCKET_N 后另场评审）。
 - **F4.1 清单（2026-08-06 按官方文档全量对照修订——两条"拿不到"其实有源，一条已在手）**：
-  - ~~市场开盘时间/年龄（575/574 均无 open date）~~ → **错，575 返回 `created_at`**（我们每盘都在调 575，只是没读这个字段）——升级路线 T1 白捡项。
+  - ~~市场开盘时间/年龄（575/574 均无 open date）~~ → **错，575 返回 `created_at`** —— ✅ **PR #29 已接**（实测 ISO 微秒+Z；credibility 第 6 子指标 `age`：<3 天新盘 −10）。
   - ~~盘口深度/买卖价差（无 orderbook 源）~~ → **错，572 Orderbook 快照端点存在**（best_bid/ask、spread、bid/ask_depth；⚠ 唯一用毫秒时间戳的端点）——升级路线 T2。
   - ~~真实持仓人数（575 无 holders_count）~~ → **半错：`unique_traders_7d` 已在消费**，缺的只是持仓**分布**（谁持多少）。
   - 仍真拿不到：top 钱包身份质量（581 按盘反查全部大户成本高）· 结算源可靠性（UMA 争议史，无源）· 跨平台同题比价（Kalshi 已验无政治覆盖，KNOWN_ISSUES:266）。
@@ -707,7 +707,8 @@
 - **为什么（2026-08-06 官方文档全量审计产出）**：575 支持 `condition_id:"ALL"` + 鲸控/量能/流动性**过滤参数**（`min_top1_wallet_pct`/`volume_trend`/`max_unique_traders_7d`…），596 Price Jumps 做服务端跳变检测（带成交量佐证）——我们已有的 credibility 扣分表加上这两样 = "今天哪些政治盘被鲸控/在异动"的**全市场监控面**。170+ 工具没人做这条车道，而它与本项目"signal-trust 护城河"完全同向：别人报"谁在买"，我们报"这个价格值不值得信"的市场级版本。
 - **地基已有**：`scoring/credibility.py` 扣分表（单盘版已上线）· 575 全字段消费经验 · F4 卡片形制。
 - **缺的**：一次 575 ALL 扫描 + 按 credibility 评分排序的面板；596 接入做异动佐证。
-- **前置**：Heisenberg credit 结构确认（定价只在 dashboard 可见，文档零记载）；T1 白捡项先行。
+- **前置**：Heisenberg credit 结构确认（定价只在 dashboard 可见，文档零记载）；~~T1 白捡项先行~~ ✅ PR #29（F-Score 经 584 sweep 进推荐质量门=红线 3 兑现、市场年龄进 credibility、581 五旗标降级+标注、574/575 结算交叉）。
+- **T1 探针修正（2026-08-07，PR #29）**：F-Score **不走 579**——579 文档字段表虚构（live 无 f_score/tier）、584 按钱包过滤三参数全被静默忽略；真路径=584 榜 sweep 按 wallet join（top-N 外如实缺席）。**身份卡的 F-Score 腿取消**（按地址查询结构性不存在，不装）。批量结算死刑：composite 403 plan-gated、574 condition_ids 静默忽略——付费计划才有批量，credit 确认时一并问。
 - **排期跟发布走**（用户 2026-08-06 拍板）：不占硬化轨排期，跟产品发布节奏定。
 
 ---

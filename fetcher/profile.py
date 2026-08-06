@@ -25,6 +25,10 @@ _W360_FIELDS = [
     "market_concentration_ratio", "annualized_return", "gain_to_pain_ratio",
     "equity_curve_pattern", "perfect_timing_flag", "flagged_metrics",
     "losing_trades", "best_market_pnl", "dominant_market_pnl",
+    # T1（2026-08-07 探针核实真名）：五旗标补齐（perfect_timing_flag 已在上面）——
+    # 质量门降级 + credibility self_check 的原料；"存在才取"使旧响应向后安全
+    "sybil_risk_flag", "timing_anomaly_flag", "suspicious_win_rate_flag",
+    "position_size_volatility_flag",
 ]
 
 

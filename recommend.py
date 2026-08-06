@@ -35,7 +35,8 @@ from core.log import get_logger, REQUEST_ID
 from core.config import BRIEFING_AS_OF as AS_OF
 from core.jsonstore import atomic_write_json
 from scoring.constants import (REC_GATE_PNL, REC_PNL_SCALE, REC_ROI_CAP, REC_MIN_TRADES,
-                               REC_WINRATE_COEF, REC_BONUS_579, REC_BONUS_ADD, REC_PENALTY_EXIT)
+                               REC_WINRATE_COEF, REC_BONUS_579, REC_BONUS_ADD, REC_PENALTY_EXIT,
+                               FSCORE_LOW, REC_PENALTY_LOW_FSCORE, REC_PENALTY_ANOMALY)
 # ⑥ 验证走进程内 service（P0-3：不再 HTTP 打自己耗尽线程池）；模块属性引用=测试 monkeypatch 缝
 from services.dashboard_build import get_dashboard
 OUT = Path(".data/recommendations.json")
@@ -73,6 +74,37 @@ def _f(x):
         return float(x)
     except (TypeError, ValueError):
         return None
+
+
+def _hscore_map(pages=2):
+    """584 F-Score 榜 sweep → {wallet: {"h_score","tier"}}。🔴 584 无按地址过滤（三种参数名
+    全被静默忽略，坑表 2026-08-07）——只能 sweep 榜页按 wallet join；top-N 外的钱包如实
+    缺席，**缺席≠低分、不惩罚**。免费、每页一次调用。"""
+    out = {}
+    for i in range(pages):
+        rs = _retry(lambda off=i * 200: results(call(584, {"sort_by": "pnl"}, limit=200, offset=off))) or []
+        for r in rs:
+            w = str(r.get("wallet", "")).lower()
+            if w.startswith("0x"):
+                out[w] = {"h_score": _f(r.get("h_score")), "tier": r.get("tier")}
+        if len(rs) < 200:
+            break
+        time.sleep(0.22)
+    return out
+
+
+def _hscore_penalty(h):
+    """🔴 只降不升（红线 3 的落点）：h_score < FSCORE_LOW → 降级；高分/缺席 → 0，绝无加分。"""
+    return REC_PENALTY_LOW_FSCORE if (h is not None and h < FSCORE_LOW) else 0
+
+
+# 581 反作弊旗标（正本 = scoring/credibility.wallet_anomaly_flags，质量门与 self_check 共用）
+from scoring.credibility import wallet_anomaly_flags as _anomaly_flags
+
+
+def _anomaly_penalty(flags):
+    """🔴 只降不升：任一旗标为真 → 一次性降级（首版保守不按旗标数叠加）；无旗标 → 0。"""
+    return REC_PENALTY_ANOMALY if flags else 0
 
 
 def _politics_cat(cats):
@@ -266,6 +298,9 @@ def scan(per_market=10, gate_pnl=REC_GATE_PNL, enrich_top=14, keep=8, ai_top=5, 
     b579 = _retry(lambda: results(call(AGENTS["leaderboard"][0],
                   {"wallet_address": "ALL", "leaderboard_period": "30d"}))) or []
     addrs579 = {str(r.get("address", "")).lower() for r in b579}
+    # 0b) 584 F-Score 榜 sweep（T1/红线 3：第三方质量分 join，只降不升）
+    hmap = _hscore_map()
+    LOG.info(f"584 F-Score 榜 sweep：{len(hmap)} 个钱包在册")
 
     # 1) 种子 → 热门政治盘 cid（去重）。🎨 多样性（2026-07-09）：每个种子取前 3 个
     #    政治盘（原来只取最大 1 个 → 4 个种子高度重叠、全部候选挤在同 2-3 个盘，榜面单调）
@@ -289,17 +324,18 @@ def scan(per_market=10, gate_pnl=REC_GATE_PNL, enrich_top=14, keep=8, ai_top=5, 
     graded = []
     for w in pool:
         res = _retry(_wallet360, w) or (None, [])
+        quality = res[0]                 # T1：581 quality 不再扔（反作弊旗标的原料，零新调用）
         pol = _politics_cat(res[1])
         pp = _f(pol.get("total_pnl")) if pol else None
         if pol and (pp or 0) >= gate_pnl:
-            graded.append((w, pol, pp))
+            graded.append((w, pol, pp, quality))
         time.sleep(0.22)
     graded.sort(key=lambda x: -(x[2] or 0))
     LOG.info(f"政治专家(pnl≥{gate_pnl:.0f}) {len(graded)} 个 → 富集顶仓+行为 top {enrich_top}")
 
     # 4) 只对 top enrich_top 跑昂贵的 顶仓(15页)+48h 行为，组装候选
     cands = []
-    for w, pol, pp in graded[:enrich_top]:
+    for w, pol, pp, quality in graded[:enrich_top]:
         time.sleep(0.4)
         pos = _retry(get_top_political_position_hz, w, as_of=as_of, max_pages=15)
         if not pos or pos.get("error"):
@@ -326,11 +362,17 @@ def scan(per_market=10, gate_pnl=REC_GATE_PNL, enrich_top=14, keep=8, ai_top=5, 
             score += REC_BONUS_ADD
         elif beh == "EXIT":
             score += REC_PENALTY_EXIT   # 主力撤退=别推（常量本身为负）
+        hs = hmap.get(w.lower()) or {}
+        score += _hscore_penalty(hs.get("h_score"))   # 🔴 只降不升（低 F-Score 降级、高分不加）
+        aflags = _anomaly_flags(quality)
+        score += _anomaly_penalty(aflags)             # 🔴 只降不升（581 反作弊旗标一次性降级）
         cands.append({
             "wallet": w, "market_question": pos["market_question"], "outcome": pos["outcome"],
             "politics_pnl": pp, "politics_win_rate": _f(pol.get("win_rate")),
             "politics_roi": pol.get("roi"), "politics_trades": pol.get("total_trades"),
             "source_market": pool_mkt.get(w), "cross_ref_579": in579,
+            "h_score": hs.get("h_score"), "tier": hs.get("tier"),   # 584 榜内才有；缺席=不在 top-N，如实空
+            "anomaly_flags": aflags,                  # 581 反作弊旗标（诚实标注，降级不隐身）
             "behavior": beh, "behavior_fact": bf.get("fact"),
             "score": round(score, 1), "ai_pick": False,
         })

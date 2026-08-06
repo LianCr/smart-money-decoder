@@ -29,19 +29,26 @@ from scoring.constants import (
     CONC_TOP1, CONC_TOP10, CONC_D_TOP1, CONC_D_TOP10, CONC_D_WHALE, CONC_D_TRADE,
     CONC_D_SQUEEZE, CONC_CAP, PART_LOW, PART_MID, PART_D_LOW, PART_D_MID,
     VOLU_D_COLLAPSE, VOLU_D_DECLINE, VOLA_HIGH, VOLA_MID, VOLA_D_HIGH, VOLA_D_MID,
-    TIERS, BAD_DELTA,
+    AGE_YOUNG_DAYS, AGE_D_YOUNG, TIERS, BAD_DELTA, ANOMALY_FLAG_KEYS,
 )
 
 _FORBIDDEN = ("market_lean", "confidence", "rationale")   # 判断字段，进不了本模块
 
 
-def _firewall(*dicts):
-    """入参防火墙：判断字段一露头就 raise——防手滑把上游整包判断塞进来。"""
-    for d in dicts:
-        if isinstance(d, dict):
+def _firewall(*items):
+    """入参防火墙：判断字段一露头就 raise——防手滑把上游整包判断塞进来（dict key 或 list 项同拦）。"""
+    for d in items:
+        if isinstance(d, (dict, list, tuple)):
             for k in _FORBIDDEN:
                 if k in d:
                     raise ValueError(f"判断字段 {k} 不得进入可信度计算——可信度评价信号，不修理判断")
+
+
+def wallet_anomaly_flags(quality) -> list:
+    """581 quality dict → 为真的反作弊旗标名列表（只认布尔真值，防 'false' 字符串诈胡）。
+    纯函数；recommend 质量门与 dashboard 的 self_check 共用同一正本。"""
+    q = quality or {}
+    return sorted(k for k in ANOMALY_FLAG_KEYS if isinstance(q.get(k), bool) and q.get(k))
 
 
 def _ff(x):
@@ -65,16 +72,17 @@ def _sub(key, delta, raw, missing=False, info=False):
 
 
 def build_credibility(price_raw, vol, guard_flags=None, guard_cross=None,
-                      days_to_resolution=None) -> dict:
+                      days_to_resolution=None, wallet_flags=None) -> dict:
     """硬指标 → 可信度分。price_raw=575 结构化数据（缺=None）、vol=近 14 日已实现
     日波动（缺=None）、guard_flags=本次构建触发的守卫、guard_cross=回验档案的
-    guard×命中率交叉（样本不足如实标注）。返回 payload 契约 dict（见测试）。"""
-    _firewall(price_raw, guard_cross)
+    guard×命中率交叉（样本不足如实标注）、wallet_flags=581 反作弊旗标名列表
+    （T1，只进 self_check info-only 不计分）。返回 payload 契约 dict（见测试）。"""
+    _firewall(price_raw, guard_cross, wallet_flags)
     flags = list((price_raw or {}).get("flags") or [])
     subs = []
 
     if price_raw is None:
-        for k in ("liquidity", "concentration", "participants", "volume", "volatility"):
+        for k in ("liquidity", "concentration", "participants", "volume", "volatility", "age"):
             subs.append(_sub(k, 0, None, missing=True))
     else:
         # 流动性：盘越深，价格越难被单笔砸出假信号
@@ -132,6 +140,13 @@ def build_credibility(price_raw, vol, guard_flags=None, guard_cross=None,
             d = VOLA_D_HIGH if v >= VOLA_HIGH else (VOLA_D_MID if v >= VOLA_MID else 0)
             subs.append(_sub("volatility", d, {"vol": round(v, 4)}))
 
+        # 年龄（T1，575 created_at）：新盘价格发现未完成，价位还没被人群消化
+        age = _ff(price_raw.get("market_age_days"))
+        if age is None:
+            subs.append(_sub("age", 0, None, missing=True))    # 旧缓存 thesis 无此字段 → 如实缺
+        else:
+            subs.append(_sub("age", AGE_D_YOUNG if age < AGE_YOUNG_DAYS else 0, {"age_days": age}))
+
     # 判断层自检（info-only 不计分，红线 5）：本次触发了几道守卫 + 历史上
     # 触发守卫的判断命中率是否更差——样本不足就如实说不足，绝不硬给百分比
     gc = guard_cross or {}
@@ -141,6 +156,7 @@ def build_credibility(price_raw, vol, guard_flags=None, guard_cross=None,
         "guard_flags_n": len(guard_flags or []),
         "flagged": fl.get("hit_rate_pct"), "clean": cl.get("hit_rate_pct"),
         "insufficient": insufficient,
+        "wallet_anomaly_flags": list(wallet_flags or []),   # T1：581 旗标（info-only，delta 恒 0）
     }, info=True))
 
     scored = [s for s in subs if s["key"] != "self_check"]

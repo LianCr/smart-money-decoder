@@ -109,12 +109,20 @@ def price_credibility(cid, as_of):
             days = (datetime.strptime(ed, "%Y-%m-%d") - datetime.strptime(as_of, "%Y-%m-%d")).days
         except Exception:
             pass
+    age_days = None
+    ca = str(x.get("created_at", ""))[:10]       # 实测 ISO 微秒+Z（2026-08-07 探针），切日期位安全
+    if ca:
+        try:
+            age_days = (datetime.strptime(as_of, "%Y-%m-%d") - datetime.strptime(ca, "%Y-%m-%d")).days
+        except Exception:
+            pass
     return {"trust": trust, "line": line, "days_to_resolution": days,
             # raw = F4 可信度分的结构化输入（scoring/credibility.py）；此前 top10/tier 只活在
             # line 文本里，F4 起补进 raw——旧缓存缺这两个 key 时 credibility 按"子指标缺"降级
             "raw": {"liquidity_percentile": liq_pct, "top1_wallet_pct": top1,
                     "top10_wallet_pct": top10, "liquidity_tier": x.get("liquidity_tier"),
-                    "unique_traders_7d": uniq, "volume_trend": vtrend, "flags": flags}}
+                    "unique_traders_7d": uniq, "volume_trend": vtrend, "flags": flags,
+                    "market_age_days": age_days}}   # T1：575 created_at → 年龄（旧缓存缺→子指标缺降级）
 
 
 def realized_vol(token, as_of, days=14):

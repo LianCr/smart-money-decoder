@@ -35,7 +35,8 @@ def _data_probe():
         return _probe_state["reason"]
     try:
         from fetcher.heisenberg import call as hz_call
-        hz_call(574, {"condition_id": "0x0"}, limit=1)   # 任何 200（含空结果）= 数据层通
+        # ⚠ limit 实测最小=3（≤2 → 404 body validation，文档"1-200"不实）；取 10 留余量
+        hz_call(574, {"condition_id": "0x0"}, limit=10)  # 任何 200（含空结果）= 数据层通
         reason = None
     except Exception as e:
         reason = getattr(e, "reason", None) or f"PROBE_ERROR:{type(e).__name__}"

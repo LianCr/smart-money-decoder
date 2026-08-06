@@ -35,9 +35,10 @@ def check(name, got, want):
         print(f"  ✗ {name}: got={got!r} want={want!r}")
 
 
-def raw(pct=99.0, top1=10.0, top10=40.0, uniq=1000, trend="Stable", flags=None, **kw):
+def raw(pct=99.0, top1=10.0, top10=40.0, uniq=1000, trend="Stable", flags=None, age=30, **kw):
     d = {"liquidity_percentile": pct, "top1_wallet_pct": top1, "top10_wallet_pct": top10,
-         "unique_traders_7d": uniq, "volume_trend": trend, "flags": flags or []}
+         "unique_traders_7d": uniq, "volume_trend": trend, "flags": flags or [],
+         "market_age_days": age}   # T1：默认 30 天成熟盘（三真样本分值不受新增子指标影响）
     d.update(kw)
     return d
 
@@ -50,9 +51,9 @@ def sub(c, key):
 print("子指标边界")
 c = build_credibility(raw(), 0.03)
 check("深盘全好 → 100 分 A 档零扣", (c["score"], c["tier"]), (100, "A"))
-check("全子指标 verdict=ok（self_check 除外）",
+check("全子指标 verdict=ok（self_check 除外，T1 起含 age 共 6 项）",
       [s["verdict"] for s in c["subs"] if s["key"] != "self_check"],
-      ["ok", "ok", "ok", "ok", "ok"])
+      ["ok", "ok", "ok", "ok", "ok", "ok"])
 check("deterministic 标注", c["deterministic"], True)
 check("partial=False", c["partial"], False)
 
@@ -84,6 +85,14 @@ check("参与 uniq=80 边界 → 0", sub(c, "participants")["delta"], 0)
 
 c = build_credibility(raw(trend="Significant Decline", flags=["volume_collapse_risk_flag"]), 0.03)
 check("量能：collapse flag −10 + Significant Decline −5", sub(c, "volume")["delta"], -15)
+
+c = build_credibility(raw(age=2.9), 0.03)
+check("年龄 <3 天 → −10（新盘价格发现未完成）", sub(c, "age")["delta"], -10)
+c = build_credibility(raw(age=3), 0.03)
+check("年龄 =3 天边界 → 0", sub(c, "age")["delta"], 0)
+c = build_credibility(raw(age=None), 0.03)
+check("年龄缺（旧缓存 thesis）→ missing 不扣分", sub(c, "age")["verdict"], "missing")
+check("年龄缺 → partial=True", c["partial"], True)
 
 c = build_credibility(raw(), 0.12)
 check("犹豫度 vol=0.12 边界 → −15", sub(c, "volatility")["delta"], -15)
@@ -190,6 +199,24 @@ check("即便样本充足本场仍不计分（MVP 契约）", sc2["delta"], 0)
 c = build_credibility(raw(flags=["squeeze_risk_flag"]), 0.03, days_to_resolution=97)
 check("days_to_resolution 透传", c["days_to_resolution"], 97)
 check("risk_flags 透传", c["risk_flags"], ["squeeze_risk_flag"])
+
+# T1：581 反作弊旗标进 self_check（info-only）
+c = build_credibility(raw(), 0.03, wallet_flags=["sybil_risk_flag", "perfect_timing_flag"])
+scw = sub(c, "self_check")
+check("wallet_anomaly_flags 进 self_check raw", scw["raw"]["wallet_anomaly_flags"],
+      ["sybil_risk_flag", "perfect_timing_flag"])
+check("钱包旗标不计分（delta 恒 0）", scw["delta"], 0)
+check("钱包旗标不影响总分", c["score"], 100)
+try:
+    build_credibility(raw(), 0.03, wallet_flags=["confidence"])
+    check("wallet_flags 含判断字段 → raise", "没抛", "ValueError")
+except ValueError:
+    check("wallet_flags 含判断字段 → raise", "ValueError", "ValueError")
+
+from scoring.credibility import wallet_anomaly_flags
+check("helper：只认布尔真值", wallet_anomaly_flags({"sybil_risk_flag": True, "timing_anomaly_flag": "false",
+                                                    "perfect_timing_flag": False}), ["sybil_risk_flag"])
+check("helper：quality 缺失 → 空", wallet_anomaly_flags(None), [])
 
 print(f"\n{passed} passed, {failed} failed")
 sys.exit(1 if failed else 0)

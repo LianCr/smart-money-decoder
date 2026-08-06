@@ -45,14 +45,16 @@
 | **decoder 缓存 key 含 current_price** | 盘中市价漂移会 miss → 单靠它省不了 token（现仅回测重放在用；正向流程靠 /dashboard 整份缓存兜底） |
 | 课堂网关模型（旧后端） | **只有 `claude-sonnet-4.5`（点号不是横杠）能用，haiku 返回 502**。maxTokens 上限 2048。官方 API 后端无此限制（模型 id 是横杠 `claude-sonnet-4-5`） |
 | **[Heisenberg v3] 参数真名因 endpoint 而异** | 官方 context 文档参数名不可靠，**实测真名**：569 PnL=`wallet`（传 proxy_wallet→400）· 556 Trades=`proxy_wallet`（文档写 `wallet_proxy` **被静默忽略→返回全局交易流**，错配比报错危险）· 581 Wallet360=`proxy_wallet` · 579 Leaderboard=`wallet_address`。打之前先核对真名 |
-| **[Heisenberg v3] `pagination.limit` 上限 200** | 传 >200（如 500）直接 404 `'max' tag` 校验失败、静默返空——别把它误判成"无数据" |
+| **[Heisenberg v3] `pagination.limit` 上限 200、下限 3** | >200 → 404 `'max' tag`；**≤2 → 404 body validation（2026-08-07 实测，文档"1-200"不实）**。探针/小查询最少传 3、稳妥传 10 |
 | **[Heisenberg v3] 569 宽窗口只返回前若干天** | 宽时间窗（如 80 天）只回前 10 天左右，**结算日的亏损落在返回范围外→看着像 0**。要看某盘结算盈亏必须把 start/end **窄锚到结算期**附近分段查 |
 | **[Heisenberg v3] 584 H-Score 无按地址 lookup** | 是纯筛选榜，给不了"某钱包排名"。要定位具体钱包官方排名走 **579**（有 `wallet_address`） |
 | **[Heisenberg v3] key 余额耗尽返回 402 INSUFFICIENT_CREDIT** | 免费 key 有额度池（2026-08-05 实测耗尽）；402 **不在官方错误契约里**（文档只记 200/400/401/403/404/429/5xx）。P2-28 起 `heisenberg.call` 有独立分类（不重试）、`/healthz` 真探针能区分"缺 key"/"额度尽"（TTL 600s）——疑心数据层挂了先看 /healthz |
 | **[Heisenberg v3] 574 `winning_outcome` 是未文档化字段** | scorecard/回验 settle 都依赖它，但官方 574 字段表里**没有**（能用=实测，契约脆弱）。575 返回文档化的 `winning_side` 可做交叉/替补——574 这条断了先试 575 |
-| **[Heisenberg v3] 579 返回字段带 `_15d` 后缀、与传入 `leaderboard_period` 无关** | 文档字段是 `roi_pct_15d/win_rate_15d/...`，我们传 `"30d"` 也可能拿到 15 天窗数据（文档未解释）。**展示"官方胜率/排名"前先实测核对窗口真伪**——标错窗口=数字含义被篡（红线 2） |
+| **[Heisenberg v3] 579 文档字段表是虚构的（2026-08-07 实测裁决）** | live 字段=address/rank/roi/win_rate/total_pnl/total_invested/total_trades/markets_traded/avg_trade_size/sharpe_ratio，**无 f_score/tier/无 _15d 后缀**；窗口参数真生效（7d/30d 数字不同、_15d 疑云推翻）——但 **`"15d"` 是非法 period 值、静默返空**（合法疑似 1d/3d/7d/30d）。我们传 "30d" 无恙 |
+| **[Heisenberg v3] F-Score(实名 `h_score`)/tier 只在 584，且按钱包过滤结构性不可用** | 2026-08-07 实测：584 live 有 `wallet`/`h_score`/`tier`/`trajectory` 等 12 字段，但 wallet/wallet_address/proxy_wallet 三种过滤参数**全被静默忽略→返回全局榜**（返回是合法榜数据，第七道守卫救不了——过滤参数根本不存在）。可用路径=扫榜时 sweep 584 榜页按 wallet join（top-N 外的钱包如实无分） |
+| **[Heisenberg v3] 574 `condition_ids`（复数）被静默忽略** | 传 2 个 cid 返回 50 条全局盘（2026-08-07 实测）——**绝不能当批量查询用**；批量 composite（agent_id 0）在免费 key 上 403 plan-gated。结算只能逐 cid |
 | **[Heisenberg v3] 572 Orderbook 是全 API 唯一用毫秒时间戳的端点** | 其余端点 Unix 秒、572 要毫秒（文档明写）。接 572（T2 升级路线）时别把秒喂进去静默拿空 |
-| **[Heisenberg v3] 593-602 sport 系端点无文档页** | 只在 composite workflow 页里被引用，参数契约未知——别当稳定接口用。另：composite 层有 **Batch Market Resolution（50 cid/次出结算）**，settle 场景比逐 cid 574 省一个量级 credit（T1 接入） |
+| **[Heisenberg v3] 593-602 sport 系端点无文档页** | 只在 composite workflow 页里被引用，参数契约未知——别当稳定接口用。另：composite 层的 **Batch Market Resolution** 2026-08-07 实测在免费 key 上 **403 plan-gated、不可用**（付费计划才有，见 KNOWN_ISSUES 第九节） |
 | **[Heisenberg v3] 569 含『持到归零』全损，但 per-cid 归因对超高频 bot 会丢尘埃仓** | 实测 569 完整记录输方归零亏损（23/24 干净单边输方精确到分，`size`=份额，输方=`−Σ(size×price)`、赢方=`Σ(size×(1−price))`，记在结算日）。**唯一边界**：单日结算上千仓的 bot，个别尘埃仓（实测 $0.10）cid-scoped 返 0、但钱包级仍可见。**路 B 算收益率用 `556 Trades + 574 结算结果` 自重建（确定性 payout−cost），569 只交叉校验** |
 
 ---

@@ -19,6 +19,10 @@ export const FLAG_CN = {
   sybil_risk: "疑似女巫账户", perfect_timing: "完美择时(可疑)", perfect_timing_flag: "完美择时(可疑)",
   bot_like: "类机器人模式", concentration_risk: "持仓过度集中", high_drawdown: "高回撤",
   wash_trading: "疑似刷量", low_market_diversity: "市场集中度高",
+  // T1：581 五旗标的 _flag 后缀真名 + 此前缺席的 timing_anomaly（漏了会裸英文外泄，违反本文件头注）
+  timing_anomaly: "择时异常", timing_anomaly_flag: "择时异常",
+  sybil_risk_flag: "疑似女巫账户", suspicious_win_rate_flag: "异常高胜率",
+  position_size_volatility_flag: "仓位波动大",
 };
 
 export function flagsCN(raw, t = (s) => s) {
