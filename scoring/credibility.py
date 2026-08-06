@@ -29,7 +29,8 @@ from scoring.constants import (
     CONC_TOP1, CONC_TOP10, CONC_D_TOP1, CONC_D_TOP10, CONC_D_WHALE, CONC_D_TRADE,
     CONC_D_SQUEEZE, CONC_CAP, PART_LOW, PART_MID, PART_D_LOW, PART_D_MID,
     VOLU_D_COLLAPSE, VOLU_D_DECLINE, VOLA_HIGH, VOLA_MID, VOLA_D_HIGH, VOLA_D_MID,
-    AGE_YOUNG_DAYS, AGE_D_YOUNG, TIERS, BAD_DELTA, ANOMALY_FLAG_KEYS,
+    AGE_YOUNG_DAYS, AGE_D_YOUNG, SPREAD_WIDE, SPREAD_D_WIDE, DEPTH_THIN, DEPTH_D_THIN,
+    BOOK_CAP, TIERS, BAD_DELTA, ANOMALY_FLAG_KEYS,
 )
 
 _FORBIDDEN = ("market_lean", "confidence", "rationale")   # 判断字段，进不了本模块
@@ -72,17 +73,18 @@ def _sub(key, delta, raw, missing=False, info=False):
 
 
 def build_credibility(price_raw, vol, guard_flags=None, guard_cross=None,
-                      days_to_resolution=None, wallet_flags=None) -> dict:
+                      days_to_resolution=None, wallet_flags=None, book=None) -> dict:
     """硬指标 → 可信度分。price_raw=575 结构化数据（缺=None）、vol=近 14 日已实现
     日波动（缺=None）、guard_flags=本次构建触发的守卫、guard_cross=回验档案的
     guard×命中率交叉（样本不足如实标注）、wallet_flags=581 反作弊旗标名列表
-    （T1，只进 self_check info-only 不计分）。返回 payload 契约 dict（见测试）。"""
-    _firewall(price_raw, guard_cross, wallet_flags)
+    （T1，只进 self_check info-only 不计分）、book=572 口簿快照 raw（T2，缺=None）。
+    返回 payload 契约 dict（见测试）。"""
+    _firewall(price_raw, guard_cross, wallet_flags, book)
     flags = list((price_raw or {}).get("flags") or [])
     subs = []
 
     if price_raw is None:
-        for k in ("liquidity", "concentration", "participants", "volume", "volatility", "age"):
+        for k in ("liquidity", "concentration", "participants", "volume", "volatility", "age", "book"):
             subs.append(_sub(k, 0, None, missing=True))
     else:
         # 流动性：盘越深，价格越难被单笔砸出假信号
@@ -146,6 +148,20 @@ def build_credibility(price_raw, vol, guard_flags=None, guard_cross=None,
             subs.append(_sub("age", 0, None, missing=True))    # 旧缓存 thesis 无此字段 → 如实缺
         else:
             subs.append(_sub("age", AGE_D_YOUNG if age < AGE_YOUNG_DAYS else 0, {"age_days": age}))
+
+        # 盘口（T2，572 口簿快照）：价差宽=定价粗糙；薄侧深度小=一笔就能砸动价格
+        spread = _ff((book or {}).get("spread"))
+        depth = _ff((book or {}).get("min_side_depth_usd"))
+        if book is None or (spread is None and depth is None):
+            subs.append(_sub("book", 0, None, missing=True))   # 旧缓存 thesis 无 book → 如实缺
+        else:
+            d = 0
+            if spread is not None and spread >= SPREAD_WIDE:
+                d += SPREAD_D_WIDE
+            if depth is not None and depth < DEPTH_THIN:
+                d += DEPTH_D_THIN
+            d = max(d, BOOK_CAP)
+            subs.append(_sub("book", d, {"spread": spread, "depth_usd": depth}))
 
     # 判断层自检（info-only 不计分，红线 5）：本次触发了几道守卫 + 历史上
     # 触发守卫的判断命中率是否更差——样本不足就如实说不足，绝不硬给百分比

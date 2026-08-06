@@ -322,7 +322,8 @@ def build_dashboard(wallet: str, refresh: int = 0, fresh: int = 0) -> dict:
                 guard_cross=guard_cross,
                 days_to_resolution=pc_t.get("days_to_resolution"),
                 # T1：581 反作弊旗标进 self_check（info-only 不计分；正本 helper 在 scoring）
-                wallet_flags=wallet_anomaly_flags((b.get("who_trader_profile") or {}).get("quality")))
+                wallet_flags=wallet_anomaly_flags((b.get("who_trader_profile") or {}).get("quality")),
+                book=(it.get("book") or {}).get("raw"))   # T2：572 口簿（旧缓存缺→missing）
         except Exception as e:
             _log(f"   ⚠ 可信度分构建失败（不阻塞看板）：{type(e).__name__}: {e}")
             credibility = None

@@ -46,6 +46,13 @@ VOLU_D_COLLAPSE, VOLU_D_DECLINE = -10, -5    # 量能：塌缩 flag / "Significa
 VOLA_D_HIGH, VOLA_D_MID = -15, -5
 AGE_YOUNG_DAYS = 3           # T1（2026-08-07）：开盘 <3 天=价格发现未完成（575 created_at，首版标定）
 AGE_D_YOUNG = -10
+# T2（2026-08-08，572 口簿实测标定：健康政治盘价差 0.3-1¢、单侧深度 $1.5k-$2.8M，
+# 实抓到一例薄 bid 侧 $1.5k）：价差宽=定价粗糙；薄侧深度小=一笔就能砸动价格
+SPREAD_WIDE = 0.04           # 价差 ≥4¢ = 宽（健康样本 ≤1¢，留 4 倍余量）
+SPREAD_D_WIDE = -10
+DEPTH_THIN = 2000.0          # 薄侧名义深度 < $2k = 一笔小单可击穿
+DEPTH_D_THIN = -10
+BOOK_CAP = -15               # 盘口子指标合计上限（防叠罚）
 TIERS = ((90, "A"), (75, "B"), (60, "C"), (45, "D"))   # 低于 45 → F
 BAD_DELTA = -15              # 单子指标扣到这个量级 → verdict=bad
 
