@@ -67,7 +67,6 @@ export function Recommendations({ onPick }) {
                 <span className="rec-addr num">{abbrev(c.wallet)}</span>
                 {c.cross_ref_579 && <span className="rec-cross">{t("∩月榜")}</span>}
                 {c.tier && <span className="rec-tier">{c.tier}</span>}
-                {c.h_score != null && <span className="rec-h num">H{Math.round(c.h_score)}</span>}
               </div>
               {c.politics_pnl != null && (
                 <div className="rec-pol">{t("政治盘")} <b className="num">{money(c.politics_pnl)}</b>{pwTxt && <span> · {t("胜率")} {pwTxt}</span>}{c.politics_trades && <span> · {c.politics_trades} {t("注")}</span>}</div>

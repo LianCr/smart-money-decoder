@@ -35,7 +35,7 @@ AGENTS = {
     "markets":     (574, None),              # 市场（winning_outcome/side_a,b token/closed_date）
     "candles":     (568, None),              # OHLCV K线（token_id）
     "wallet360":   (581, "proxy_wallet"),    # 60+ 指标（window_days 仅 1/3/7/15）
-    "hscore":      (584, None),              # H-Score 榜（无按地址查 → 用 579）
+    # （584 F-Score 筛选榜刻意不注册：无按地址查、唯一调用方已清除；按地址要 F-Score 走 579 的 f_score/tier 字段）
     "leaderboard": (579, "wallet_address"),  # 官方榜（可按地址直接定位）
     "social":      (585, None),              # Social Pulse（🔴 仅实时、不进回测）
 }
