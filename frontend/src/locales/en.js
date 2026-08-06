@@ -237,6 +237,7 @@ export default {
   "市场犹豫度": "Market hesitation",
   "市场年龄": "Market age",
   "盘口": "Order book",
+  "薄量": "thin vol",
   "价差宽=定价粗糙；薄侧深度小=一笔就能砸动价格": "A wide spread means sloppy pricing; a thin side means one order can move the price",
   "价差 ": "spread ",
   "薄侧 ": "thin side ",

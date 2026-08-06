@@ -30,6 +30,10 @@ CHASED_MOVED_PCT = 8         # 入场后价已走 ≥8% → CHASED（追高）�
 
 # ── 市场反应（price_reaction 收来；board_feed 曾有同口径重复常量 REACT_THRESHOLD，已消灭）──
 MEANINGFUL_MOVE_PCT = 5.0    # 新闻前后价格变动 <5% = 反应微弱，不触发矛盾旗标（防噪音误报）
+# T2（2026-08-08 实测标定：568 volume=字符串、share≈USD 量级，活跃政治盘日量 1k-68k、
+# 垂死盘日量 ~167）：反应窗（前一日~次日）合计成交量低于此 = 薄量——
+# 🔴 只降不升：薄量只把"↑印证"降为"·微弱"（没人交易的印证是遗迹），绝不削弱"↓不买账"警报
+VOLUME_THIN = 500.0
 
 # ── 输入可信度门（575/568 指标分档；market_thesis.price_credibility 与 scoring.credibility 共用——
 #    曾是两处重复字面量，T2.2 合并；F4 首版标定，对三份真实政治盘 sanity 过）──

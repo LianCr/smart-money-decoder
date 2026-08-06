@@ -26,6 +26,32 @@ def _f(x):
         return None
 
 
+def candles_range(token_id, start_date, end_date):
+    """568 日 K 段：[start_date−10 天回填, end_date] → [{date, close, volume}] 升序（T2）。
+    一次调用覆盖 price_reaction 的整个反应窗（原来两次 price_at 各拉 10 天，减半调用）；
+    volume 字段一直在响应里、此前全扔（坑表 2026-08-08）。拿不到 → []。"""
+    end = int(datetime.strptime(end_date, "%Y-%m-%d")
+              .replace(tzinfo=timezone.utc, hour=23, minute=59, second=59).timestamp())
+    start = int(datetime.strptime(start_date, "%Y-%m-%d")
+                .replace(tzinfo=timezone.utc).timestamp()) - 10 * 86400
+    agent, _ = AGENTS["candles"]
+    rs = results(call(agent, {"token_id": token_id, "interval": "1d",
+                              "start_time": str(start), "end_time": str(end)}))
+    out = [{"date": str(r.get("candle_time", ""))[:10],
+            "close": _f(r.get("close")), "volume": _f(r.get("volume"))}
+           for r in rs or [] if r.get("candle_time")]
+    return sorted((c for c in out if c["close"] is not None), key=lambda c: c["date"])
+
+
+def close_at(candles, date_str):
+    """从 candles_range 结果取 date 当日或之前最近的 close（price_at 同语义、零额外调用）。"""
+    best = None
+    for c in candles:
+        if c["date"] <= date_str:
+            best = c["close"]
+    return best
+
+
 def price_at(token_id, date_str):
     """568 取 date_str 当日（或之前最近）的 close。拿不到→None（如市场尚未创建）。"""
     end = int(datetime.strptime(date_str, "%Y-%m-%d")

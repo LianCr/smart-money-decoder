@@ -20,6 +20,7 @@ from fetcher.heisenberg import call as hz_call, results as hz_results, AGENTS as
 
 GAMMA = "https://gamma-api.polymarket.com"
 from scoring.constants import MEANINGFUL_MOVE_PCT as REACT_THRESHOLD  # T2.2：曾是同口径重复常量，正本合一
+from scoring.constants import VOLUME_THIN
 
 
 # ── 持有侧 token（市场反应符号统一以"钱包押的那一侧"价格涨跌为准）──────────────
@@ -86,7 +87,15 @@ def _reaction(tok, date, as_of):
         return {"available": False}
     mv = r["move_pct"]
     kind = "weak" if abs(mv) < REACT_THRESHOLD else ("confirm" if mv > 0 else "reject")
-    return {"available": True, "kind": kind, "move_pct": mv, "window": r.get("window")}
+    # T2 薄量加权（🔴只动本展示路径、只降不升；Path A 的 market_check/R1 矩阵零触碰）：
+    # 反应窗合计量 < VOLUME_THIN → "↑印证"降为"·微弱"（没人交易的印证是上次成交的遗迹）；
+    # "↓不买账"绝不降级、只带薄量标注（警报不因薄量打折）
+    wv = r.get("window_volume")
+    thin = wv is not None and wv < VOLUME_THIN
+    if thin and kind == "confirm":
+        kind = "weak"
+    return {"available": True, "kind": kind, "move_pct": mv, "window": r.get("window"),
+            "thin": thin, "window_volume": wv}
 
 
 def _domain(url):

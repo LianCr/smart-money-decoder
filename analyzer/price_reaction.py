@@ -19,7 +19,7 @@ analyzer/price_reaction.py — 新闻↔价格反应计算器（catalyst 份量�
 
 from datetime import datetime, timedelta, timezone
 
-from fetcher.price import price_at
+from fetcher.price import candles_range, close_at
 
 from scoring.constants import MEANINGFUL_MOVE_PCT  # noqa: F401  T2.2 正本迁 constants，re-export 兼容旧引用
 _POLARITY = {"positive": +1, "negative": -1}   # 正向催化剂期望市场▲；负向期望▼
@@ -44,12 +44,16 @@ def compute_reaction(token_id, news_date, as_of=None):
         return {"available": False, "reason": "as_of_leak_guard",
                 "note": "新闻后价格尚未发生(回测防泄漏)，反应不可知"}
 
-    p_before = price_at(token_id, before_date)
-    p_after = price_at(token_id, after_date)
+    # T2：一次取整个反应窗（原来两次 price_at 各拉 10 天 → 调用减半），volume 顺带白拿
+    candles = candles_range(token_id, before_date, after_date)
+    p_before = close_at(candles, before_date)
+    p_after = close_at(candles, after_date)
     if p_before is None or p_after is None or p_before == 0:
         return {"available": False, "reason": "no_price",
                 "note": "新闻时点拿不到价(市场未创建/无成交) → 反应不可知，不编造"}
 
+    vols = [c["volume"] for c in candles
+            if before_date <= c["date"] <= after_date and c["volume"] is not None]
     move = p_after - p_before
     move_pct = move / p_before * 100
     return {
@@ -58,6 +62,7 @@ def compute_reaction(token_id, news_date, as_of=None):
         "price_before": round(p_before, 4),
         "price_after": round(p_after, 4),
         "move_pct": round(move_pct, 2),
+        "window_volume": round(sum(vols), 2) if vols else None,   # T2：反应窗合计量（薄量判定用）
         "direction": "▲" if move > 0 else ("▼" if move < 0 else "—"),
         "caveat": "该新闻发布前后市场变动，时间相关非因果",
     }
