@@ -31,7 +31,7 @@
 |:--:|---|:--:|---|
 | P1-5 | 六道守卫覆盖 0 个用户可见路径 | ✅ 已修 | PR #21（T2.1：`analyzer/guards.py` 唯一正本，decoder 换调用行为等价；⑥ 接三道——DURATION(中英双正则,拦截换占位) · FABRICATED_CITATION(新写,查 bull/bear 引用 vs shared_pool) · 词表(仅标记)；`guard_flags` 进 payload 留痕。CONFIDENCE_TAMPERED 依红线 4 不移植；②what_bet 仍无守卫=已知边界） |
 | P1-6 | 声称的"回验闭环"没有实现 | ✅ 已修 | PR #24（`confidence_replay.py` 读取方 + `/confidence-replay` 端点 + 前端信心校准面板；高/中/低分档命中率 + guard_flags 交叉；绝不回填由测试钉死——含输入 log 字节哈希不变。回验**输入**的易失性另记 P2-27） |
-| P1-7 | 评分引擎不可复现 | 🟡 **部分完成** | PR #21：⑥ payload 标注 `deterministic:false`（LLM 直出路径）/`true`（v2 矩阵 fallback）——影响段唯一硬要求已落。🔴 API 事实：temperature=0 在 `claude-sonnet-5` 上返 400（新代模型移除采样参数），"固定 temperature"这条路已不存在。剩余部分见 T2.2 |
+| P1-7 | 评分引擎不可复现 | ✅ 已修 | PR #21 标注 `deterministic:false/true`（短期解）+ PR #26/T2.2 架构分离（长期解）：能代码算的全进 `scoring/` 包且"同 facts JSON 100% 可复现"被测试逐字节钉死，LLM 部分显式标注非确定性——"确定性"从此有可验证的指代对象。🔴 API 事实（防后人再试）：temperature=0 在 `claude-sonnet-5` 上返 400，中期"固定采样"路线不存在 |
 | P1-8 | 核心判断逻辑零测试 | ⬜ 未开始 | Phase 2 T2.4，见「10 个测试点」 |
 | P1-9 | "最大政治仓"两套并行实现 | ✅ 已修 | PR #20（随 /analyze 链路下架自然归一：data-api 版删除，唯一实现 = `fetcher/positions.py` Heisenberg 版，near_settled 守卫全覆盖） |
 | P1-10 | 缓存失效是手写清单 | ✅ 已修 | PR #23（`core/cachepolicy.py` 注册表：各缓存拥有者自注册 resolver、purge 遍历注册表；跨模块私有 `_cache_path` import 消灭；`tests/test_cachepolicy.py` 的忘登记 lint=新缓存不注册不豁免直接红 + T2.4 #5 旧快照幸存红线首次有测试） |
@@ -46,7 +46,7 @@
 
 | 编号 | 问题 | 状态 |
 |:--:|---|:--:|
-| P2-16 前端死代码进构建 · P2-17 异常吞噬 · P2-18 魔数散落 · P2-19 Bedrock 半成品 | | P2-16 ✅ 全清：PR #20 归档 + PR #22 尾巴销账（CSS 归档专属规则 -142 行、构建 CSS 66.5→58.1kB；en.js 删 54 个归档专属 key——翻后端 payload 的 key 与 build_ai_en 依赖的 7 个 key 保留；"措辞已换"的陈旧 key 属活代码债、另场处理）· 其余 ⬜ |
+| P2-16 前端死代码进构建 · P2-17 异常吞噬 · P2-18 魔数散落 · P2-19 Bedrock 半成品 | | P2-16 ✅ 全清：PR #20 归档 + PR #22 尾巴销账（CSS 归档专属规则 -142 行、构建 CSS 66.5→58.1kB；en.js 删 54 个归档专属 key——翻后端 payload 的 key 与 build_ai_en 依赖的 7 个 key 保留；"措辞已换"的陈旧 key 属活代码债、另场处理）· P2-18 ✅ PR #26（T2.2：判断阈值唯一正本 `scoring/constants.py`，源码扫描防回潮；陈旧清单已按实测重写）· P2-17/P2-19 ⬜ |
 | P2-20 默认分支不是真相 | | 🟡 已反转，见下 |
 | P2-21 seed 入库 · P2-23 记分牌读路径打外网 | | ⬜ 未开始 |
 | P2-22 前端轮询状态机脆弱 | | ✅ 已修 PR #22（`hooks/useDashboard.js` 显式状态机：预算=墙钟 10 分钟对齐单飞 TTL、刷新期旧板保留+刷新中徽章、202/429 按 retry_after 退避、构建中/超时永不显示"失败"、卸载作废在飞循环） |
@@ -236,6 +236,12 @@
 > 🔴 **API 事实（防后人再试）**：`temperature`/`top_p`/`top_k` 在 `claude-sonnet-5`（本项目默认模型）上已被移除，
 > 传非默认值直接 400——"加 temperature=0 固定采样"这条修复路径在现代模型上**不存在**。
 > 确定性现状 = (cid,as_of) 文件缓存 + 诚实标注；真正的收口（评分层重构）在 T2.2。
+>
+> **2026-08-06 收口（PR #26）**：T2.2 落地，本条 ✅——`scoring/` 包 = "能用代码算的部分"的唯一归属
+> （matrix_v2/reasoner_v3/follow_call/credibility/constants，零 IO 零 LLM 由源码扫描测试强制），
+> "同一份 facts JSON 两遍输出逐字节一致"被 `tests/test_scoring_layer.py` 钉死；LLM 裁决独立在
+> analyzer/market_thesis 并已标注 `deterministic:false`。下方"建议"三条：短期 ✅（PR #21）、
+> 中期已被上面的 API 事实作废（采样参数在新代模型上不存在）、长期 ✅（本次）。
 
 **问题**：产品展示的信心是 LLM 三连调用的产物，没有 temperature/seed 固定；唯一的"确定性"来自 `(cid, as_of)` 文件缓存，而这个缓存会被强制刷新删掉。
 
@@ -463,25 +469,31 @@
 
 #### P2-18 · 魔数散落 6+ 个文件，无中央常量层
 
-完整清单（这些数字共同定义了产品的判断行为，却没有任何一处能一览）：
+> **状态：✅ 已修（PR #26，T2.2）。** 判断阈值唯一正本 = `scoring/constants.py`（每条带来源注释）；
+> 曾"自首"的三对重复常量（board_feed↔price_reaction 的 5.0、credibility↔market_thesis 的
+> 0.12/0.06 与 85/80/35/30）identity 级合一。`tests/test_scoring_layer.py` 源码扫描钉死：
+> 原位再写同义字面量 → 红。**刻意不收**（infra 非判断，constants 头注明）：限流/超时/翻译预算/
+> `MAX_PRICE_CHECKS`(API 预算)/`CONF_VALUES`(解析清洗)。
+> 原清单已按 2026-08-06 实测重写（首审表有陈旧项：5000 USD 门槛已随 PR #20 的 data-api 链下架
+> 消亡、CHASED 阈值已随 T2.3 从 api/main 迁 dashboard_build、行号多处漂移）。
 
-| 常量 | 值 | 位置 |
+收编后的清单（值未变，位置=现状）：
+
+| 常量 | 值 | 现位置 |
 |---|---|---|
-| 最小仓位门槛 | `5000` USD | `fetcher/polymarket.py:19` |
-| 近结算价格线 | `0.95` | `fetcher/positions.py:35` |
-| 置信度矩阵阈值 | `30` / `60`（pnl_pct） | `analyzer/decoder.py:72,93,98` + `analyzer/reasoner_v3.py:25,34,36` |
-| R2 对冲判定倍数 | `×3` | `analyzer/reasoner_v3.py:64` |
-| 市场反应显著阈值 | `5.0` % | `briefing/board_feed.py:22` + `analyzer/price_reaction.py:24` |
-| CHASED 判定阈值 | `8` % | `api/main.py:371` |
-| 扫榜质量门 | `gate_pnl=2000` | `recommend.py:254` |
-| 扫榜打分权重 | `/20000` · `min(roi,40)` · `trades>=50` · `(win-0.5)*20` · `+15` · `+12` · `-40` | `recommend.py:312-320` |
-| 社媒有机门槛 | `20.0` % | `fetcher/social.py:13` |
-| 泛词剔除率 | `0.35` | `fetcher/social.py:26` |
-| 价格可信度 | `85` 百分位 / `80` 人 / `35` % / `30` 人 | `analyzer/market_thesis.py:88-92` |
-| 波动分档 | `0.12` / `0.06` | `analyzer/market_thesis.py:127` |
-| 多结局判定 | `n >= 3` | `analyzer/market_thesis.py:177` |
-| 新闻窗口 | 前 7 后 3 天 / `window_days=10` | `fetcher/news.py` / `analyzer/market_thesis.py:189` |
-| 翻译上限 | `2000` / `12000` / `3000` / `500` 条 | `core/translate.py:26-28` + `:第一处 [:500]` |
+| 置信度矩阵带 | `30` / `60`（pnl_pct）+ `CONF_ORDER` | `scoring/constants.py`（matrix_v2 与 reasoner_v3 共用） |
+| R2 对冲倍数 / 做市比 | `×3` / `0.5` | `scoring/constants.py` |
+| CHASED 阈值 / follow_call 枚举 | `8`% / 三值枚举 | `scoring/constants.py`（guards re-export 保旧链） |
+| 市场反应显著阈值 | `5.0`%（原两处重复→合一） | `scoring/constants.py` |
+| 价格可信度门 / 波动分档 | `85`/`80`/`35`/`30` · `0.12`/`0.06`（原两处重复→合一） | `scoring/constants.py` |
+| credibility 扣分表全套 | F4 首版标定 | `scoring/constants.py` |
+| 回验分档最小样本 | `5`（env 可覆盖） | `scoring/constants.py`（自 core/config 迁入，注释承诺兑现） |
+| 多结局判定 | `n >= 3` | `scoring/constants.py` |
+| 近结算价格线 | `0.95` | `scoring/constants.py` |
+| 社媒有机门槛 / 泛词剔除率 | `20.0`% / `0.35` | `scoring/constants.py` |
+| 扫榜质量门 + 打分权重 | `2000` · `/20000` · `min(roi,40)` · `≥50` · `×20` · `+15/+12/−40` | `scoring/constants.py` |
+| ~~最小仓位门槛 5000 USD~~ | — | 已随 PR #20 消亡（唯一残留=错误码字符串 ALL_BELOW_MIN_VALUE） |
+| ~~新闻窗口/翻译上限~~ | — | infra 配置，判定不收（fetcher/news、core/translate 本地） |
 
 #### P2-19 · Bedrock 迁移是绕开单一出口的半成品
 - `analyzer/dual_catalyst.py:45` — `LLM_BACKEND = os.environ.get("DUAL_CATALYST_BACKEND", "gateway")`
@@ -601,7 +613,7 @@
 | # | 任务 | 依赖 | 量 |
 |:--:|---|:--:|:--:|
 | **T2.1** | ✅ **已完成（PR #21，见 P1-5 详情）**。守卫覆盖到主界面：`analyzer/guards.py` 唯一正本，decoder 与 ⑥ 共用；⑥ 补齐 DURATION_COMPUTED（英文正则照搬+新增中文版）· FABRICATED_CITATION（点名时全仓不存在，从零写：检查面实为 bull/bear 引用列表）· FEAR_WORDS（仅标记）。"改信心"守卫未加——红线 4 保持不变 | T1.1 | M 2d |
-| **T2.2** | **确定性层收口**。新建 `scoring/` 包：`decoder` v2 矩阵 + `reasoner_v3` + `_code_follow_call`（已在 `services/dashboard_build.py`，PR #18 搬过去的）搬入，成为唯一确定性评分层；P2-18 的全部阈值收进 `scoring/constants.py`（带来源注释）。LLM 裁决保持独立模块，并在 payload 里显式标注 `deterministic: false`。（原计划还要搬 `_difficulty`——它已在 PR #20 作为验证过的死代码删除，不再搬） | T2.1 | M 2d |
+| **T2.2** | ✅ **已完成（PR #26，见 P1-7/P2-18 详情）**。`scoring/` 包落地：matrix_v2（decoder 矩阵原文迁入+7 规则首次直测，含 pnl==60 夹缝行为如实钉死不修）+ reasoner_v3 + follow_call + credibility + constants（P2-18 全量收编带来源注释）。纯搬运零行为改动：既有边界测试只改 import 行全绿；IO/缓存/注册刻意留在 dashboard_build（测试缝依赖）；`deterministic:false` 标注 PR #21 已先行。DoD"同 facts JSON 100% 可复现"由 test_scoring_layer 逐字节钉死 | T2.1 | M 2d |
 | **T2.3** | ✅ **已完成（PR #23，见 P1-10/P1-11 详情）**。副作用进 lifespan → 拆 `api/routes/{dashboard,recommend,scorecard,briefing,meta}`（原计划的 archive 按内容改名 meta，另补了计划没点名的 briefing）+ `api/shared.py` → `core/cachepolicy.py` 注册表根治 P1-10 | T1.4 | L 3d |
 | **T2.4** | **补齐 10 个测试点**（明细见下） | T2.2 | L 3d |
 | **T2.5** | ✅ **已完成（PR #24，见 P1-6 详情）**。读取方=`confidence_replay.py`；分档命中率走**独立端点** `/confidence-replay` 而非并进 /scorecard（按 2026-08-05 session brief 的读写分离要求：裸 GET 纯读、`?settle=1` 显式结算）。三条红线全守，另加"绝不回填/已结算冻结"由 `ReplayIntegrityError` + 字节哈希测试机器强制。依赖 T2.4 实际未卡（端点测试地基 T2.4 #4 已先行） | T2.4 | M 2d |
@@ -656,7 +668,7 @@
 - **为什么**：`analyzer/market_thesis.py` 的 `price_credibility`（575：流动性百分位/鲸控/参与人数，现 `:78-113`）和 `realized_vol`（568：市场自身犹豫度，现 `:115-136`）都是**纯代码算出来的硬指标**，但此前只被拼成文本喂给 prompt（`:262-267`），算完就扔——payload 带回的 `input_trust.lines`（现 `services/dashboard_build.py`，原 api/main.py 已随 T2.3 拆解）只是那几行文本，且前端埋在 VerdictHero 折叠区、thesis 一降级整块蒸发。
 - **缺的**：把它做成"**这个盘的价格值不值得信**"的独立展示，并作为确定性信号进 `scoring/` 层。
 - **价值**：这是少见的"代码能硬算、AI 不参与、且用户看得懂"的判断维度——完全符合红线 5（数字归代码），且能独立于 LLM 的非确定性存在。
-- **进展（PR #25，2026-08-05）**：`analyzer/credibility.py` 扣分制 0-100 + A-F 档（起点 100 只扣不加、每子指标带 delta 审计尾迹、缺数据 score:null 诚实态）；payload 顶层 `credibility` key（`deterministic:true`，LLM 降级时照常在场）；前端 CredibilityCard 挂 ③ 赔率旁（零新 CSS、文案全走 en.js）。**🔴 红线机器强制**：入参含 market_lean/confidence/rationale → raise，源码级零判断字段访问由测试钉死——可信度评价信号、永不修理判断。真样本标定：7 份缓存盘摊出 A(100/95/95)/B(85×3,75)，旧二元 trust 对它们全给 HIGH。self_check（guard×命中率交叉）本场 info-only 不计分（回验档案全 pending、样本不足如实标注）。**未做**（=F4 余项）：进 `scoring/` 包（T2.2 时随 reasoner_v3 一并迁）、阈值二版标定（首版对真样本 sanity 过、常量已集中待 T2.2 收编）、self_check 升计分项（样本 ≥ REPLAY_MIN_BUCKET_N 后另场评审）。
+- **进展（PR #25，2026-08-05）**：`analyzer/credibility.py` 扣分制 0-100 + A-F 档（起点 100 只扣不加、每子指标带 delta 审计尾迹、缺数据 score:null 诚实态）；payload 顶层 `credibility` key（`deterministic:true`，LLM 降级时照常在场）；前端 CredibilityCard 挂 ③ 赔率旁（零新 CSS、文案全走 en.js）。**🔴 红线机器强制**：入参含 market_lean/confidence/rationale → raise，源码级零判断字段访问由测试钉死——可信度评价信号、永不修理判断。真样本标定：7 份缓存盘摊出 A(100/95/95)/B(85×3,75)，旧二元 trust 对它们全给 HIGH。self_check（guard×命中率交叉）本场 info-only 不计分（回验档案全 pending、样本不足如实标注）。**F4 余项**：~~进 `scoring/` 包~~ ✅ PR #26（T2.2 迁入 `scoring/credibility.py`、扣分表收编 constants）；阈值二版标定=改判断行为、等真结算样本再动（常量已集中，改一处即可）；self_check 升计分项（样本 ≥ REPLAY_MIN_BUCKET_N 后另场评审）。
 - **F4.1 清单（想要但现有 fetcher 拿不到，新数据源需另立项）**：市场开盘时间/年龄（575/574 均无 open date，无法算"价格发现进行了多久"）· 盘口深度/买卖价差（无 orderbook 源）· 真实持仓人数与持仓分布（575 无 holders_count；556 全量重建贵且只测净买入）· top 钱包身份质量（大户是做市商还是信念方——581 有单钱包画像但按盘反查全部大户成本高）· 结算源可靠性（UMA 争议史）· 跨平台同题价格一致性（无第二平台源）。
 
 ---

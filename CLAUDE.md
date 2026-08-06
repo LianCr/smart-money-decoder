@@ -137,7 +137,7 @@ fetcher/trades.py       →  get_wallet_profile / get_wallet_pnl_history（① �
 fetcher/activity.py     →  仅存 ActivityAPIError（backtest full_activity/resolution 的共享异常契约）
 fetcher/news.py         →  get_news_for_market(q, entry_time, as_of=None)  # 关键词+Tavily 时间窗+缓存；as_of 防回测泄漏（回测重放在用）
 analyzer/guards.py      →  🔴 防幻觉守卫唯一正本（T2.1）：纯函数零 IO 零 LLM，返回 violations 列表、动作归调用方（decoder=raise / ⑥=占位降级或仅标记）。词表 FEAR/DIRECTIVE 正本也在这（dual_catalyst re-export）。🔴 守卫只拦截/降级/标记，永不回填/修复/抬升
-analyzer/decoder.py     →  decode_position(assembled, as_of=None)  # sonnet + 6 道守卫（实现在 guards.py，此处 raise 语义不变）；唯一活调用方=backtest 重放
+analyzer/decoder.py     →  decode_position(assembled, as_of=None)  # sonnet + 6 道守卫（实现在 guards.py，此处 raise 语义不变）+ v2 矩阵别名（正本 scoring/matrix_v2）；唯一活调用方=backtest 重放
 api/main.py             →  🔴 只剩装配（T2.3）：lifespan(seed/GitHub 恢复+线程池上限+uvicorn 日志)、中间件、include_router、静态挂载。**import 零副作用**（端点测试 TestClient 直测）；`api.main:app` 点路径=render.yaml 部署契约
 api/routes/·api/shared.py →  路由按摊拆分：dashboard(/dashboard /demo-wallets+状态映射)·recommend(/recommendations /hot-traders+扫榜线程)·scorecard·briefing(/briefing /market-context)·meta(/healthz /backtest)；shared=_err+限流单例（🔴 全仓一份）
 core/cachepolicy.py     →  🔴 缓存失效注册表（P1-10）：各缓存拥有者 import 时自注册 resolver，purge 遍历注册表（只删当天 as_of、旧快照=回退底不碰）。**新增缓存必须注册或进 test_cachepolicy 豁免表，否则测试红**
@@ -146,9 +146,13 @@ fetcher/heisenberg.py   →  Heisenberg 共享客户端（参数真名表/limit�
 fetcher/profile.py·actions.py·price.py  →  简报数据层 A画像/B动作/C价格（建在 heisenberg 上，全免费 key）
 analyzer/dual_catalyst.py  →  双向催化剂辩证（材质标签+守卫；as_of_anchor=锚现在(live)/锚建仓(replay)）
 analyzer/price_reaction.py →  新闻↔价格反应=份量刻度+市场测谎仪（复用 price.price_at；归因只说"前后变动非导致"）
-analyzer/reasoner_v3.py    →  ⑥ 的代码层：v3 置信度矩阵(底座删 rule5+R1-R4 只降不升)+build_facts 数据契约。纯代码零网关（旧 B 段 reasoner prose 已删：follow_call 由 api 代码判、信心由 market_thesis 直出）
+scoring/                →  🔴 确定性评分层唯一归属（T2.2）：纯代码零 IO 零 LLM，同输入永远同输出（测试逐字节钉死）。
+                           constants.py=判断阈值唯一正本(P2-18 收编,每条带来源注释;infra 配置刻意不收) ·
+                           matrix_v2.py(decoder v2 矩阵正本) · reasoner_v3.py(v3 矩阵+build_facts,自 analyzer/ 迁入) ·
+                           follow_call.py(代码跟单判定,自 dashboard_build 迁入) · credibility.py(F4 可信度分,自 analyzer/ 迁入)。
+                           🔴 新增判断阈值一律进 constants.py——原位写字面量会被 test_scoring_layer 源码扫描抓红
 analyzer/market_thesis.py  →  🔴 市场命题级对抗推理(取代钱包方向归因的信心)：共享池→bull(YES)‖bear(NO)→reasoner 直出单一信心+市场倾向+胜负手，按(cid,as_of)缓存(两反向钱包共享)，记 confidence_log.jsonl(含 rationale+guard_flags)供回验。map_wallet→顺/逆 edge。**T2.1 起接 guards**：DURATION(中英)/假引用→占位降级、词表→仅标记，flags 进 payload；⑥ 另标 deterministic:false(fallback v2 矩阵=true)——信心/倾向守卫一概不碰(红线4)
-analyzer/credibility.py    →  F4 可信度分(纯代码零 LLM 零 IO)：575/568 硬指标(流动性/集中度/参与/量能/犹豫度)扣分制合成 0-100+A-F,每子指标带 delta 审计尾迹,缺数据 score:null 诚实态。🔴评价信号永不修理判断：入参含 market_lean/confidence/rationale 即 raise,源码零判断字段访问由测试钉死。payload 顶层 credibility key(deterministic:true,LLM 降级照常在场);guard×命中率交叉=self_check 子维度(样本不足 info-only 不计分)。T2.2 时随常量迁 scoring/
+scoring/credibility.py     →  F4 可信度分(纯代码零 LLM 零 IO)：575/568 硬指标(流动性/集中度/参与/量能/犹豫度)扣分制合成 0-100+A-F,每子指标带 delta 审计尾迹,缺数据 score:null 诚实态。🔴评价信号永不修理判断：入参含 market_lean/confidence/rationale 即 raise,源码零判断字段访问由测试钉死。payload 顶层 credibility key(deterministic:true,LLM 降级照常在场);guard×命中率交叉=self_check 子维度(样本不足 info-only 不计分)。已随 T2.2 迁入 scoring/、扣分表正本在 constants.py
 recommend.py·hot_traders.py·fetcher/markets.py  →  扫榜推荐(方法 E 市场反向找大户:种子→热门政治盘→共持大户→质量门→打分→⑥验证+同盘分歧检测) · 本周政治热门滚动条(579 7d∪政治共持池→581 7d政治盈亏) · get_market_holders 反向原语。产物 .data/recommendations.json·hot_traders.json(gitignored)
 briefing/assemble.py·organize.py  →  A段编排(串数据层+催化剂+测谎)·B段第三个AI诚实整理(只整理不判断)
 briefing/market_context.py →  Context「一虚一实」：价格异动≤as-of × GDELT 三层洗催化剂 × 巨鲸 48h 行为流(get_behavior_flags)
@@ -170,7 +174,7 @@ backtest/               →  独立模块，诊断脚本带 _ 前缀；产物全
 ## 解码层契约（analyzer/decoder.py）
 
 **（2026-08-03 起）唯一活调用方 = `backtest/pipeline.py` 的历史重放**（v2 /analyze 与 CLI 已下架）。
-**🔴 实现原封未动**：六道守卫是下一场 T2.1 要抽进 `guards.py` 给 ⑥ 复用的正本，在那之前一行不许删改。
+**冻结令已到期解除**（原"实现原封未动"到 T2.1 抽守卫为止）：守卫正本已在 `guards.py`（T2.1/PR #21）、v2 矩阵正本已在 `scoring/matrix_v2.py`（T2.2/PR #26），decoder 保留 raise 语义与矩阵别名，行为等价均有测试钉死。
 
 **输入**：position dict（历史上来自 v2 选仓器、现由回测重建同构 dict）核心字段——
 `market_question`(str) · `outcome`("Yes"/"No") · `entry_price`(float, 可 None，**与 entry_time 独立**) · `current_price` · `position_value` · `cash_pnl` · `pnl_pct`(**百分比数值非小数**，0.58=0.58%，矩阵阈值直接用 30/60) · `resolution_criteria`(可 None，AI 写 what_bet 必读防胡编) · `resolution_date`(可 None) · `market_id`/`event_id`(内部 ID 不入卡)
@@ -179,9 +183,9 @@ news dict：`articles`(可空 `[]`) · `search_query` · `time_anchored`(bool，
 
 **输出卡片**：`what_bet`(AI 一句话) · `catalyst`(AI 从 articles 选 1-2 条带 title+url+date) · `price_info`(**代码直填防幻觉**) · `follow_advice`(AI：还有空间/太迟了/没依据 + 理由) · `confidence`(AI 按矩阵表达，**不准改**) · `warnings`(代码填降级原因)
 
-**置信度矩阵 v2**（`decoder.py`，现仅回测重放在用，代码算，优先级高→低）：articles 空→低(强制) · pnl_pct>60%→低 · pnl_pct<0% 且(无新闻或未锚定)→低 · pnl_pct<0%→中(封顶) · time_anchored=False→中(封顶) · 有新闻+anchored+0≤pnl<30%→高 · 有新闻+anchored+30≤pnl<60%→中
+**置信度矩阵 v2**（正本 `scoring/matrix_v2.py`，decoder 以别名引用；现仅回测重放在用，代码算，优先级高→低）：articles 空→低(强制) · pnl_pct>60%→低 · pnl_pct<0% 且(无新闻或未锚定)→低 · pnl_pct<0%→中(封顶) · time_anchored=False→中(封顶) · 有新闻+anchored+0≤pnl<30%→高 · 有新闻+anchored+30≤pnl<60%→中
 
-**置信度矩阵 v3**（`reasoner_v3.py`，⑥ 用，与 v2 并存、不替代）：v2 底座**删 rule5**(time_anchored=False→封中,实时场景不再因此降级) → 依次 `R1`(支持侧催化剂被市场反向定价:全背离→低/部分→封中)→`R2`(主仓 shares<另侧×3=对冲/做市→封中)→`R3`(48h 大额退出 clear_exit→封中)→`R4`(支持+威胁证据双空→低)，**逐条只降不升** + 输出**降级原因列表**(喂 ⑥ prompt) + 升级模块预留 no-op(现无升级路径)。`decoder.py` v2 矩阵原封不改。**R1 真实场景罕见**(市场否定钱包多由 R4 兜底,逻辑已零成本证明,不专门猎盘)。
+**置信度矩阵 v3**（`scoring/reasoner_v3.py`，⑥ 用，与 v2 并存、不替代）：v2 底座**删 rule5**(time_anchored=False→封中,实时场景不再因此降级) → 依次 `R1`(支持侧催化剂被市场反向定价:全背离→低/部分→封中)→`R2`(主仓 shares<另侧×3=对冲/做市→封中)→`R3`(48h 大额退出 clear_exit→封中)→`R4`(支持+威胁证据双空→低)，**逐条只降不升** + 输出**降级原因列表**(喂 ⑥ prompt) + 升级模块预留 no-op(现无升级路径)。v2 矩阵独立并存（正本 scoring/matrix_v2，边界含 pnl==60 夹缝行为由测试原样钉死=回测口径不动）。**R1 真实场景罕见**(市场否定钱包多由 R4 兜底,逻辑已零成本证明,不专门猎盘)。
 
 **六道防幻觉守卫**（prompt 引导 + 代码硬拦；🔴 实现正本已抽至 `analyzer/guards.py`，decoder 保持 raise 语义、⑥ 看板同一套实现走占位降级/标记）：INVALID_FOLLOW_CALL · CONFIDENCE_TAMPERED（仅 decoder，红线 4 不进 ⑥） · FABRICATED_CATALYST · ENTRY_PRICE_DENIED · IRRELEVANT_CATALYST · DURATION_COMPUTED（⑥ 另有 FABRICATED_CITATION + 词表标记）。
 **算术边界**：模型禁做任何涉及今天/日期的时长推算（无字段，必是自算，盲区系统性）；允许价格单位换算、契约内两真数的简单比例（edge 分析核心）。
