@@ -314,7 +314,19 @@
 | `585 Social Pulse` | X 情绪/动量/作者多样性（关键词 + hours_back） | 补"早时点搜不到新闻、NO BASIS 多"（#4）**仅实时** | 🟡 实时强、**回测❌（已验，见下）** |
 | `575 Market Insights` | 流动性分位/量趋势/巨鲸集中度/独立交易者数 | 过滤稀薄盘 + 难度系数（#23）+ 看动作质量门控 | 🟡 中 |
 | `565/573 Kalshi` | Kalshi 市场目录 + 历史成交 | 跨平台同事件对照/套利 alpha | 🟢 探索 |
-| `572 Orderbook` | 历史订单簿快照（深度/价差） | 进场前看深度，边际用 | ⚪ 低 |
+| `572 Orderbook` | 历史订单簿快照（深度/价差；⚠ 唯一毫秒时间戳端点） | **F4.1 修订（2026-08-06）：可信度分的价差/深度子指标有源了**（升级路线 T2） | 🟡 升 中 |
+| `596 Price Jumps` | 服务端价格跳变检测（幅度/方向/伴随成交量/笔数） | 替 market_context 手扫 close 序列；给 ⑤/测谎仪带量佐证；F5 异动面 | 🟡 中（2026-08-06 审计新发现） |
+| `586 Lifetime Performance` | 钱包全生涯汇总一次调用（total_pnl/roi_pct/avg_trade_size） | ① 身份比窗口化 581 便宜 | 🟢 探索 |
+| composite `Batch Market Resolution` | 50 个 cid 一次出结算结果（602+574 并行） | scorecard/回验 settle 从逐 cid 双 574 → 50/次，**省一个量级 credit** | 🔴 高（T1） |
+| composite `Batch Wallet Trades` | 50 钱包/次拉成交（错误按钱包隔离） | 扫榜/共持发现批量化省 credit | 🟡 中 |
+| WebSocket `polymarket.trade` | 实时成交流，可按 wallet/cid/slug/side 过滤（wss://ripple.heisenberg.so/ws） | **F1 早期哨兵/愿景 B 的正解**——不轮询，秒级巨鲸流 | 🔴 高（F1 落地时） |
+| Research Data（contact-based） | 市场全生命周期（创建→结算）· **point-in-time 钱包/F-Score 快照** · 历史社媒 | 免幸存者偏差回测的唯一底座（路 B 若复活） | 🟢 探索 |
+
+> **2026-08-06 官方文档全量对照审计补遗**（41 页全读，产出见 AUDIT P2-28/P2-29/F5 与升级路线）：
+> ① **F-Score 的正道 = 579 的 `f_score`/`tier` 字段**（有按地址查询）——584 是纯筛选榜且我们的查询恒失败已清除；红线 3 要的第三方质量分从此一读即得（T1）。
+> ② **575 有 `created_at`（市场创建时间）**——F4.1 曾判"无 open date"是错的；575 还支持 `condition_id:"ALL"`+鲸控/量能过滤=全市场扫描（F5 地基）。
+> ③ **581 有五个反作弊旗标**（sybil/timing/suspicious_win_rate/position_size_volatility/perfect_timing）=现成 bot 过滤器，推荐质量门该用（T1）。
+> ④ 定价/额度文档零记载（只在 api.polymarketanalytics.com dashboard 可见）；402 不在官方错误契约；574 `winning_outcome` 未文档化（575 `winning_side` 可交叉）——契约风险全录 CLAUDE.md 坑表。
 
 **"想另接的 3 类" → 金矿覆盖情况**：
 - ① **Polymarket CLOB 历史价 → `568` 已覆盖**（同一份 CLOB 数据）。**别另接。**⚠️ 但"短引信盘 T-7 拿不到价"是**数据本质**（那时市场没创建，任何 API 都给不出）——568 省掉单独接 CLOB 的活，不会变出市场存在前的价。

@@ -35,7 +35,7 @@ AGENTS = {
     "markets":     (574, None),              # 市场（winning_outcome/side_a,b token/closed_date）
     "candles":     (568, None),              # OHLCV K线（token_id）
     "wallet360":   (581, "proxy_wallet"),    # 60+ 指标（window_days 仅 1/3/7/15）
-    "hscore":      (584, None),              # H-Score 榜（无按地址查 → 用 579）
+    # （584 F-Score 筛选榜刻意不注册：无按地址查、唯一调用方已清除；按地址要 F-Score 走 579 的 f_score/tier 字段）
     "leaderboard": (579, "wallet_address"),  # 官方榜（可按地址直接定位）
     "social":      (585, None),              # Social Pulse（🔴 仅实时、不进回测）
 }
@@ -104,6 +104,11 @@ def call(agent_id: int, params: dict, limit: int = MAX_LIMIT, offset: int = 0) -
         raise HeisenbergError("BAD_PARAMS", f"400 参数错（字段名/取值）—— {resp.text[:200]}")
     if sc == 422:
         raise HeisenbergError("VALIDATION", f"422 参数校验失败 —— {resp.text[:200]}")
+    if sc == 402:
+        # P2-28：额度耗尽单独分类（不在官方错误契约里、实测存在）。混进 UNEXPECTED 的代价
+        # 2026-08-05 真吃过：全 best-effort 层静默降级、缓存掩盖故障、看板毫无提示。
+        raise HeisenbergError("INSUFFICIENT_CREDIT",
+                              "402 —— key 额度耗尽（充值/换 key 前，整个数据层对未缓存请求不可用）")
     if sc == 429:
         raise HeisenbergError("RATE_LIMITED", "429 限流 —— 放慢/重试")
     if sc >= 500:

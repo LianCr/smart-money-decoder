@@ -44,6 +44,11 @@ OPTIONAL_KEYS = {
 
 DEFAULT_WRITE_PATHS = (Path(".cache"), Path(".data"))
 
+# 数据层探针的 key 级致命原因（P2-28）：这些和"缺 key"是同一种病——任何未缓存请求
+# 都出不了板（P0-2 形态），必须 503 响出来。瞬时上游问题（TIMEOUT/RATE_LIMITED/
+# SERVER/NETWORK…）只警告不判死：实例仍能靠缓存服务，判死只会让部署 flapping。
+FATAL_PROBE_REASONS = {"INSUFFICIENT_CREDIT", "AUTH", "FORBIDDEN"}
+
 
 def _writable(path: Path) -> bool:
     """目录能不能真的写进去 —— 只判 os.access 不够（只读挂载/容器里会骗人），真写一个再删。"""
@@ -57,11 +62,16 @@ def _writable(path: Path) -> bool:
         return False
 
 
-def health_report(env=None, write_paths=None) -> dict:
+def health_report(env=None, write_paths=None, data_probe=None) -> dict:
     """返回 {ok, failures[], warnings[], checks{}}。纯函数：env 与路径都可注入，便于单测。
 
     ok=False → 调用方应返回 503（实例干不了正经活，让部署/负载均衡当场知道）。
     🔴 checks 里只放布尔，**绝不回显 key 的值** —— 健康检查是公开端点，回显等于泄漏。
+
+    data_probe（P2-28，可选注入）：() -> reason|None，真打一发数据层探活。None=通；
+    reason ∈ FATAL_PROBE_REASONS（额度尽/key 无效）→ 判死——"key 在但额度尽"从此
+    与"key 缺失"一样响；其余 reason（瞬时上游）→ 只警告。不注入=行为与从前一致
+    （零网络，测试/CI 路径）。key 缺失时不打探针（两种病因分开报）。
     """
     env = os.environ if env is None else env
     paths = [Path(p) for p in (write_paths if write_paths is not None else DEFAULT_WRITE_PATHS)]
@@ -84,6 +94,19 @@ def health_report(env=None, write_paths=None) -> dict:
         failures.append(f"tavily_key 缺失：需要 {REQUIRED_NEWS_KEY}，新闻检索不可用")
 
     warnings = []
+    if data_probe is not None and has_data:
+        try:
+            probe_reason = data_probe()
+        except Exception as e:                      # 探针自身炸=瞬时问题，绝不让探活端点 500
+            probe_reason = f"PROBE_ERROR:{type(e).__name__}"
+        checks["data_probe"] = probe_reason is None
+        if probe_reason in FATAL_PROBE_REASONS:
+            failures.append(f"数据层探针失败：{probe_reason} —— key 在但用不了"
+                            f"（额度耗尽/无效），任何未缓存钱包都出不了板，与缺 key 同等致命")
+        elif probe_reason is not None:
+            warnings.append(f"数据层探针未通（{probe_reason}）：疑似瞬时上游问题，"
+                            f"实例仍可靠缓存服务，持续出现再查")
+
     for key, consequence in OPTIONAL_KEYS.items():
         present = bool(env.get(key))
         checks[f"{key.lower()}_present"] = present

@@ -52,13 +52,16 @@ SEEDS = [
 
 
 def _retry(fn, *a, **k):
+    """P2-28：按 reason 匹配（老写法 `"429" in str(e)` 会把 402 额度尽静默吞成 None、
+    又会把 message 碰巧含 429 字样的错误误当限流白睡）。非限流失败记一行日志再放弃。"""
     for i in range(4):
         try:
             return fn(*a, **k)
         except HeisenbergError as e:
-            if "429" in str(e):
+            if e.reason == "RATE_LIMITED":
                 time.sleep(3 * (i + 1))
                 continue
+            LOG.info(f"  ⚠ 数据层调用失败({e.reason})，跳过：{e.message[:80]}")
             return None
         except Exception:
             return None

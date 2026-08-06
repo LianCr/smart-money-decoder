@@ -80,20 +80,9 @@ def _realized_pnl(wallet, start_date, end_date):
     return {"window": [start_date, end_date], "days_returned": len(rs), "realized_pnl_sum": round(total, 2)}
 
 
-def _hscore_besteffort(wallet):
-    """584 无按地址查 → 拉一页按 pnl 排序的榜，看该地址在不在（在=返回其 tier/分）。"""
-    agent, _ = AGENTS["hscore"]
-    try:
-        rs = results(call(agent, {"min_roi_15d": "0", "min_total_trades_15d": "10",
-                                  "max_total_trades_15d": "100000", "sort_by": "pnl"}, limit=100))
-    except HeisenbergError:
-        return {"available": False, "note": "584 拉取失败"}
-    w = wallet.lower()
-    for r in rs:
-        if str(r.get("wallet", "")).lower() == w:
-            return {"available": True, "h_score": r.get("h_score"), "tier": r.get("tier"),
-                    "leaderboard_rank": r.get("leaderboard_rank")}
-    return {"available": False, "note": "不在 H-Score 榜首页（584 无按地址查，官方排名见 official_rank/579）"}
+# （584 best-effort 查询已在 T0 清除：它按 `wallet` 字段匹配、而 584 实测字段里没有
+#   `wallet` → 结构性恒返 available:False，一次都没成功过。第三方质量分（F-Score）的
+#   正道 = 579 返回里的 f_score/tier（有按地址查询），T1 接入——见 AUDIT F5/T1。）
 
 
 def get_trader_profile(wallet, lb_period="30d", pnl_window=None):
@@ -124,11 +113,6 @@ def get_trader_profile(wallet, lb_period="30d", pnl_window=None):
     except HeisenbergError as e:
         profile["realized_pnl_recent"] = {"error": f"{e.reason}: {e.message}"}
 
-    try:
-        profile["h_score"] = _hscore_besteffort(wallet)
-    except HeisenbergError as e:
-        profile["h_score"] = {"available": False, "note": f"{e.reason}: {e.message}"}
-
     return profile
 
 
@@ -158,8 +142,5 @@ if __name__ == "__main__":
 
     print("\n【近窗已实现盈亏(569)】")
     print(" ", json.dumps(p["realized_pnl_recent"], ensure_ascii=False))
-
-    print("\n【H-Score(584 best-effort)】")
-    print(" ", json.dumps(p["h_score"], ensure_ascii=False))
 
     print("\n画像 fetcher 就绪。")
