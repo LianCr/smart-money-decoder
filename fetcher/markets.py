@@ -13,7 +13,7 @@ from collections import defaultdict
 from datetime import datetime, timedelta, timezone
 
 from core.config import BRIEFING_AS_OF
-from fetcher.heisenberg import AGENTS, HeisenbergError, call, results
+from fetcher.heisenberg import AGENTS, HeisenbergError, paginate
 
 
 def _f(x):
@@ -24,17 +24,20 @@ def _f(x):
 
 
 def get_market_holders(cid, as_of=BRIEFING_AS_OF, top_n=10, window_days=60):
-    """某盘当前净持仓最大的大户 → [(wallet, net_value), ...]（556 按 cid 全量、proxy_wallet=ALL、聚合净买入额）。
-    net = Σ(BUY size×price) − Σ(SELL size×price)；只留净>0（仍持有的多头侧）。空盘/已清仓自然返空。"""
+    """某盘当前净持仓最大的大户 → [(wallet, net_value), ...]（556 按 cid 翻页拉全、proxy_wallet=ALL、聚合净买入额）。
+    net = Σ(BUY size×price) − Σ(SELL size×price)；只留净>0（仍持有的多头侧）。空盘/已清仓自然返空。
+    🔴 P2-29：必须 paginate——曾用裸 call() 单页 ≤200 条，热门盘尾部的大买家被静默丢掉、
+    整个共持发现池系统性缺人。max_pages=15（3000 条）与选仓器同档，热门政治盘实测够覆盖。"""
     if not (cid and str(cid).startswith("0x")):
         return []
     end = datetime.strptime(as_of, "%Y-%m-%d").replace(tzinfo=timezone.utc)
     start = end - timedelta(days=window_days)
     try:
-        ts = results(call(AGENTS["trades"][0],
-                          {"proxy_wallet": "ALL", "condition_id": cid,
-                           "start_time": str(int(start.timestamp())),
-                           "end_time": str(int(end.timestamp()))}))
+        ts = paginate(AGENTS["trades"][0],
+                      {"proxy_wallet": "ALL", "condition_id": cid,
+                       "start_time": str(int(start.timestamp())),
+                       "end_time": str(int(end.timestamp()))},
+                      max_pages=15)
     except HeisenbergError:
         return []
     net = defaultdict(float)
