@@ -314,8 +314,8 @@
 | `585 Social Pulse` | X 情绪/动量/作者多样性（关键词 + hours_back） | 补"早时点搜不到新闻、NO BASIS 多"（#4）**仅实时** | 🟡 实时强、**回测❌（已验，见下）** |
 | `575 Market Insights` | 流动性分位/量趋势/巨鲸集中度/独立交易者数 | 过滤稀薄盘 + 难度系数（#23）+ 看动作质量门控 | 🟡 中 |
 | `565/573 Kalshi` | Kalshi 市场目录 + 历史成交 | 跨平台同事件对照/套利 alpha | 🟢 探索 |
-| `572 Orderbook` | 历史订单簿快照（深度/价差；⚠ 唯一毫秒时间戳端点） | **F4.1 修订（2026-08-06）：可信度分的价差/深度子指标有源了**（升级路线 T2） | 🟡 升 中 |
-| `596 Price Jumps` | 服务端价格跳变检测（幅度/方向/伴随成交量/笔数） | 替 market_context 手扫 close 序列；给 ⑤/测谎仪带量佐证；F5 异动面 | 🟡 中（2026-08-06 审计新发现） |
+| `572 Orderbook` | 全档口簿快照（真身=bids/asks JSON 串梯子；请求毫秒/响应 ISO） | ✅ PR #30 已接：credibility `book` 子指标（价差/薄侧深度，只降不升） | ✅ 在用 |
+| `596 Price Jumps` | 服务端价格跳变检测 | ~~替手扫~~ **2026-08-08 实测 403 plan-gated（免费 key 不可用，三种参数形全拒）**——手扫保留为唯一引擎；升级付费计划时连同 batch 一起问 | ⛔ 当前计划不可用 |
 | `586 Lifetime Performance` | 钱包全生涯汇总一次调用（total_pnl/roi_pct/avg_trade_size） | ① 身份比窗口化 581 便宜 | 🟢 探索 |
 | composite `Batch Market Resolution` | 50 个 cid 一次出结算结果（602+574 并行） | scorecard/回验 settle 从逐 cid 双 574 → 50/次，**省一个量级 credit** | 🔴 高（T1） |
 | composite `Batch Wallet Trades` | 50 钱包/次拉成交（错误按钱包隔离） | 扫榜/共持发现批量化省 credit | 🟡 中 |
