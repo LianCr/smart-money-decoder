@@ -71,3 +71,8 @@ REC_WINRATE_COEF = 20        # (win_rate - 0.5) × 20
 REC_BONUS_579 = 15           # 官方月榜在榜交叉信号
 REC_BONUS_ADD = 12           # 48h 行为流 = 加仓
 REC_PENALTY_EXIT = -40       # 主力撤退 = 别推
+
+# ── T1 质量门增强（2026-08-07；🔴 只降不升——第三方质量分/反作弊信号只许降级候选）──
+FSCORE_LOW = 40              # 584 F-Score(实名 h_score) tier 带：Novice 20-39（官方 docs），<40 = 未及格线
+REC_PENALTY_LOW_FSCORE = -15 # 低 F-Score 降级（红线 3：用第三方质量分替代自算胜率；高分绝不加分）
+REC_PENALTY_ANOMALY = -25    # 581 反作弊旗标（sybil/timing/胜率异常/仓位波动/完美择时）任一为真 → 一次性降级
