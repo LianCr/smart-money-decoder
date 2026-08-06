@@ -1,157 +1,85 @@
 # Smart Money Decoder
 
-### 🌐 Live app → **[smart-money-decoder.onrender.com](https://smart-money-decoder.onrender.com)**
+> Reads what proven smart money is doing on Polymarket — and tells you whether the signal itself can be trusted.
 
-> No setup needed — open it in your browser. Hosted on Render's free tier, so the first visit may take ~1 minute to cold-start; cached demo wallets load instantly after that.
+[![CI](https://github.com/LianCr/smart-money-decoder/actions/workflows/check.yml/badge.svg)](https://github.com/LianCr/smart-money-decoder/actions)
 
-Decode the political bets of [Polymarket](https://polymarket.com) "smart money" — and put the decoder's judgment on trial against history.
+Most Polymarket tools answer one of two questions. *"Who is buying what?"* — answered for free by a dozen whale trackers. *"Should I copy them?"* — structurally broken: copiers pay detection lag, worse fills, and routinely become exit liquidity for the very wallets they follow.
 
-Paste a wallet address; the tool finds the trader's largest political position, reconstructs the news around when they entered, and generates an AI **interpretation card** that answers one question: *should you follow this bet?* A second view, **Track Record**, replays that same decoder at historical points in time and scores its calls against how the markets actually resolved.
+Smart Money Decoder answers the two harder questions:
 
-Read-only public APIs throughout — **no trading, no private keys.**
+1. **What does this move actually mean?**
+2. **Can this signal — this price, this position — even be trusted?**
 
----
-
-## What it does now (v3)
-
-The product has grown from "paste a wallet" into a **recommendation-first political-bets dashboard**:
-
-- **🏠 Recommendation homepage** — instead of waiting for you to find a wallet, the system **works backwards from hot political markets to their biggest co-holders** (a known political trader → the markets they're actually in → the whales on the other side), quality-gates them as genuine political specialists, and surfaces a feed of wallets worth watching. A scrolling ticker shows **this week's top political-profit traders**. (`recommend.py`, `hot_traders.py`, `fetcher/markets.py`)
-- **📊 Unified board (①–⑥)** — one screen per wallet: identity & size · the bet (what it is) · live odds · whale 48h behavior flow · three-source catalysts (news × social, *fact vs. emotion* kept visually distinct) · **Edge/Reasoning**.
-- **🎯 Market-level confidence, not wallet-anchored** — the key redesign. Confidence used to be driven by the wallet's P&L, which produced contradictions (two wallets betting opposite sides of the *same* market got opposite confidence). Now a **market-level adversarial pass** (one agent argues YES, one argues NO, a neutral reasoner adjudicates) yields **a single shared confidence per market**; each wallet is then mapped onto it as *with-edge* or *against-edge*. Confidence is **discounted by how trustworthy its inputs are** — price depth & whale-concentration (575 Market Insights), the outcome token's realized volatility (568), and time-to-resolution — on the principle *"confidence is capped by your most trustworthy anchor; two weak signals agreeing isn't confidence."* When two smart-money wallets disagree on a market, the board says so rather than endorsing both. (`analyzer/market_thesis.py`)
-- **🧾 Honest scorecard** — every call is logged and, once markets resolve, checked for **direction hit/miss** (never copy-trade ROI — that would re-import survivorship bias).
-
-The two views below (**Decode card** + **Track Record backtest**) are the original v2 experience, now the archival/secondary tabs.
+And it does something almost no tool in this space does: **it keeps score on itself, in public, with backfilling made impossible by code.**
 
 ---
 
-## 🎬 Demo video (v1)
+## What it does
 
-> **Note:** this walkthrough was recorded on the original **v1 experience** (Decode card + Track Record). The product has since evolved into the v3 recommendation-first unified board — try the latest version live at [smart-money-decoder.onrender.com](https://smart-money-decoder.onrender.com). The video is kept as a record of the project's starting point.
+**🔍 Decode a wallet.** Paste any Polymarket address. SMD finds its largest political position and runs an adversarial adjudication — a bull case, a bear case, and a reasoner that rules between them — over a deterministic fact sheet (entry price, PnL, market reaction, catalyst timeline). Output: `market_lean` + `confidence` + a sourced rationale.
 
-Watch the walkthrough: paste a wallet, watch the pipeline decode a live political bet, then see the decoder's track record put on trial against history. Click the thumbnail to play on YouTube.
+**🛡 Score the signal itself.** A deterministic credibility panel — pure code, zero LLM — rates whether the price can be trusted: liquidity tier, holder concentration, participation breadth, realized volatility. Prediction-market research keeps finding wash trading and settlement manipulation in the wild; most tools relay whale signals anyway. SMD treats *"is this bait?"* as a first-class question.
 
-[![Smart Money Decoder — demo walkthrough](https://img.youtube.com/vi/egFu1kzgWrs/maxresdefault.jpg)](https://youtu.be/egFu1kzgWrs)
-
----
-
-## Two views
-
-### 1. Decode — real-time interpretation
-Given a wallet, the pipeline runs end-to-end:
-
-1. **Largest political position** — scans all holdings, filters to politics markets (tag-based) with value > $5,000 USDC.
-2. **Entry time** — queries the wallet's trades for that specific market to find the first buy (with a full-activity fallback).
-3. **Time-windowed news** — AI extracts search keywords from the market title, then pulls articles from the ±7/3-day window around the entry date (Tavily).
-4. **AI decode** — `claude-sonnet-4.5` produces a card: *what the bet is*, the *catalyst* (sourced news), *edge analysis*, a **follow call** (`ROOM LEFT` / `CHASED` / `NO BASIS`), confidence, and warnings.
-
-The card header also shows the wallet's avatar/nickname and an all-time **cumulative PnL chart**, both best-effort (never block the analysis).
-
-### 2. Track Record — historical backtest
-For each *resolved* political market the wallet held, the decoder is **replayed at T-7 and T-1** (seven days and one day before resolution) using the price and entry context as of that moment. Its verdict (follow / avoid) is compared to the **real settlement outcome** → ✓ hit / ✗ miss. Results aggregate across multiple wallets sourced from the Polymarket volume leaderboard.
-
-Each sample carries a **difficulty score** (`1 − |entry_price − 0.5| × 2`): a bet entered near 0.5 is a *Coin-Flip*, one entered near 0/1 is *Near-Settled* — so an easy call isn't mistaken for a brilliant one.
-
-> **Honest framing:** a wallet's *true win rate* is **not reliably computable** from public APIs — losing positions leave no on-chain signal and vanish from the positions endpoint, so any win rate would be inflated. The backtest therefore measures **the decoder's accuracy** (its call vs. reality), not the wallet's P&L. See `backtest/final_samples.md` for the curated case studies (e.g., two "Starmer out" bets the wallet lost, where the decoder correctly read the news and declined to follow).
+**📊 Keep an honest track record.** Every judgment is archived *before* the outcome is known. When markets settle, a replay loop grades direction only and publishes hit rates by confidence bucket. Where the sample is too small, the panel says **"insufficient sample"** — it will not show you a flattering percentage it can't defend.
 
 ---
 
-## Architecture
+## The honesty rules
 
-```
-fetcher/                          data layer (read-only HTTP)
-  positions.py    →  get_top_political_position_hz(address)     largest unsettled political position (Heisenberg)
-  heisenberg.py · profile.py · actions.py · price.py            briefing data layer (who / actions / price)
-  polymarket.py   →  fetch_events_by_ids / _is_political_event  gamma tags politics check (backtest)
-  trades.py       →  get_wallet_profile / get_wallet_pnl_history  display-only, best-effort
-  news.py         →  get_news_for_market(question, entry_time)  keywords + Tavily + cache (backtest replay)
-                              ↓
-analyzer/decoder.py →  decode_position(assembled, as_of=None)   sonnet + guards (backtest replay only)
-services/dashboard_build.py →  the v3 dashboard pipeline (pure-data contract, single-flight)
-api/main.py         →  FastAPI: /dashboard /recommendations /scorecard /backtest /briefing …
-frontend/           →  Vite + React single page (Unified Board / Track Record;
-                       retired v2 views archived in frontend/archive/)
+These are enforced by code and tests, not by promises:
 
-backtest/                         offline backtest pipeline (sealed)
-  full_activity.py →  fetch_full_activity(wallet, start, end)   independent pagination
-  resolution.py   →  get_market_resolution(condition_id)        conditionId → real outcome
-  snapshot.py     →  get_price_at(token_id, ts)                 historical price (CLOB)
-  pipeline.py     →  run_backtest / run_backtest_multi          replay decoder, aggregate
-```
+| Rule | Enforcement |
+|---|---|
+| **No backfill, ever** | Settled archives are frozen; any mutation path raises `ReplayIntegrityError`. Tests assert the judgment log is byte-identical before and after replay. |
+| **Direction only** | Hits are graded on direction, never PnL. No cherry-picking winners by size. |
+| **NO BASIS is an answer** | When the evidence doesn't support a call, that verdict is recorded and reported separately — not silently dropped. |
+| **Guards on the live path** | Deterministic guards intercept LLM narrative before users see it: fabricated citations, hallucinated date math, fear-mongering language. Triggers are logged as `guard_flags` and cross-tabulated against hit rates. |
+| **Determinism is labeled** | The scoring matrix and credibility scorer are pure code (`deterministic: true`). LLM output is labeled `deterministic: false`. The payload never pretends otherwise. |
 
-**Stack:** Python 3.10+ · FastAPI · React + Vite · `claude-sonnet-4.5` (via a gateway) · Tavily.
-
-**Optional Redis coordination:** set `REDIS_URL` to make recommendation scans and
-per-wallet dashboard builds single-flight across workers/instances. Redis holds
-only expiring locks and job status; dashboard/recommendation results remain in
-the existing file + GitHub persistence layer. If Redis is absent or unavailable,
-the app automatically falls back to process-local coordination.
-
-**External data sources:** `data-api.polymarket.com` (positions / activity / trades), `gamma-api.polymarket.com` (events, resolution), `clob.polymarket.com` (historical prices), `user-pnl-api.polymarket.com` (PnL curve), `lb-api.polymarket.com/volume` (leaderboard), Tavily (news).
+The audit that shaped this codebase — 24 findings, severity-ranked, with a live progress board — is public in [`AUDIT.md`](./AUDIT.md). The project practices the auditability it preaches.
 
 ---
 
-## Setup
+## Why it exists
+
+The Polymarket tooling ecosystem has 170+ products crowded into three lanes: whale alerts (commoditized), copy-trading bots (adversely selected by design), and AI predictors advertising accuracy numbers nobody can check. SMD's bets are the gaps between the lanes: **interpretation over alerts, auditability over claims, and signal-trust as a feature** — the one lane research validates and almost nobody builds.
+
+Backtest on 94 settled political markets showed roughly a 10-point directional lift over coin-flip baseline; methodology and samples live in [`backtest/`](./backtest/). Treat it as promising, not proven — the public calibration panel is the ongoing, un-fakeable version of that claim.
+
+---
+
+## Engineering
+
+This project started as an AI-assisted prototype — and then was rebuilt into something maintainable, deliberately and on the record:
+
+- **A full audit first** (24 findings), then a phased hardening campaign across 17 PRs: atomic writes everywhere, CI that passes on a keyless clean clone, request-scoped logging, a router split that killed import side effects, registry-driven cache invalidation, and a single-source constants module where re-introducing a magic number turns a test red.
+- **36 test files**, including endpoint three-state tests, guard positive/negative pairs, and byte-hash immutability checks on the judgment log.
+- **Honest failure modes**: missing keys fail loud at `/healthz` instead of half-working; the frontend never shows "failed" while the backend is still building.
+
+Stack: FastAPI · React/Vite · Claude (adversarial adjudication) · Polymarket data via Heisenberg · deterministic scoring core.
+
+---
+
+## Quickstart
 
 ```bash
 git clone https://github.com/LianCr/smart-money-decoder.git
 cd smart-money-decoder
-python -m venv .venv
-source .venv/bin/activate
-pip install -r requirements.txt
-cp .env.example .env        # then fill in your keys
+python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
+(cd frontend && npm install)
+bash scripts/check.sh       # full test suite + frontend build — passes with zero keys
+cp .env.example .env        # fill in the required keys (the server needs them; the tests don't)
+(cd frontend && npm run build)                 # dist/ is rebuilt per deploy, not committed
+.venv/bin/uvicorn api.main:app --port 8000     # open http://localhost:8000
 ```
 
-**Required keys** (in `.env`):
-
-| Key | Where to get it |
-|-----|-----------------|
-| `TAVILY_API_KEY` | [app.tavily.com](https://app.tavily.com) |
-| `CLASSROOM_API_KEY` | AI gateway (instructor-provided) |
-
----
-
-## Run
-
-```bash
-# Web — backend + frontend
-uvicorn api.main:app --port 8000          # http://localhost:8000
-cd frontend && npm install && npm run dev # http://localhost:5173
-
-# Backtest pipeline (offline; writes .cache/backtest/result.json, served by /backtest)
-python -m backtest.pipeline <wallet> <n>                          # single wallet
-python -m backtest.pipeline multi <per_wallet> <total_cap> <w1> <w2> ...   # aggregate
-
-# Unit tests (no network; the full gate is `bash scripts/check.sh`)
-python tests/test_position.py      # gamma-tags political filter
-python tests/test_full_activity.py # backtest pagination
-python tests/test_resolution.py    # conditionId → outcome parsing
-```
-
----
-
-## Design principles
-
-- **Anti-fabrication is enforced in code, not just prompts.** The decoder runs a confidence matrix *before* the model, then rejects any output that tampers with the verdict, invents a catalyst when no news was found, or computes durations/dates the contract never provided (`DURATION_COMPUTED`, `FABRICATED_CATALYST`, `CONFIDENCE_TAMPERED`, …).
-- **Prices are filled by code, never by the AI** — the model interprets, it never reports numbers.
-- **Graceful degradation over wrong answers.** A missing entry time returns `None` (and `time_anchored=False`) rather than a fabricated match; auxiliary data (avatar, PnL curve) is best-effort and never blocks the core analysis.
-
-## Verified API gotchas
-
-Hard-won lessons baked into the code (full table in `CLAUDE.md`):
-
-| Gotcha | Resolution |
-|--------|------------|
-| `activity` server-side `conditionId` filter | broken — pull all and filter locally |
-| `gamma` won't return resolved markets | must pass `closed=true` |
-| `gamma` `outcomes`/`outcomePrices` | JSON-encoded strings — `json.loads` them |
-| Backtest replay of historical dates | decoder needs `as_of` so its "today" matches the snapshot, else it computes bogus durations |
-| Tavily `published_date` | RFC 2822 — parse with `email.utils` |
+Deployment contract (Render blueprint, required keys, health checks) is documented in [`DEPLOY.md`](./DEPLOY.md). Without keys the service starts, serves cached boards, and reports exactly what's missing — it does not pretend to work.
 
 ---
 
 ## Status
 
-Both views are fully working on real data. The backtest pipeline is sealed; the Track Record view is served from a precomputed result (multi-wallet aggregate). Known limits: short-fuse markets are filtered out (no T-7 price history), and high-conviction wallets tend to enter at extreme prices, so samples skew toward *Near-Settled* difficulty — surfaced honestly rather than hidden.
+MVP live. The calibration panel is honestly `pending` while early judgments await market settlement — numbers accrue as reality grades them. Next up: verified-wallet disagreement panels (F3) and the credibility wishlist (F4.1), tracked openly on the audit board.
 
-*This project analyzes public data for educational purposes. Nothing here is investment advice.*
+**This is not financial advice.** SMD interprets public on-chain data and grades its own interpretations. It does not execute trades, recommend positions, or promise edge.
