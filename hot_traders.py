@@ -19,17 +19,21 @@ from recommend import SEEDS
 
 from core.config import BRIEFING_AS_OF as AS_OF
 from core.jsonstore import atomic_write_json
+from core.log import get_logger
 OUT = Path(".data/hot_traders.json")
+LOG = get_logger("hot_traders")
 
 
 def _retry(fn, *a, **k):
+    """P2-28：按 reason 匹配（同 recommend._retry——字符串匹配会吞掉 402 真因、误判限流）。"""
     for i in range(4):
         try:
             return fn(*a, **k)
         except HeisenbergError as e:
-            if "429" in str(e):
+            if e.reason == "RATE_LIMITED":
                 time.sleep(3 * (i + 1))
                 continue
+            LOG.info(f"  ⚠ 数据层调用失败({e.reason})，跳过：{e.message[:80]}")
             return None
         except Exception:
             return None

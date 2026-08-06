@@ -91,6 +91,18 @@ try:
     check("重试耗尽共发 4 次", post.n, 4)
     check("退避节奏 [2,4,6]", sleeps, [2, 4, 6])
 
+    # 3b. 402 额度耗尽（P2-28）：独立分类、不重试不睡——重试烧不出额度，尽快让上层知道真因
+    post = _FakePost([_FakeResp(402)])
+    hz.requests = _FakeRequestsModule(post)
+    sleeps.clear()
+    try:
+        hz.call(574, {"condition_id": "0xcid"})
+        check("402 → 抛 INSUFFICIENT_CREDIT", "no-raise", "HeisenbergError")
+    except hz.HeisenbergError as e:
+        check("402 → 抛 INSUFFICIENT_CREDIT（不再混进 UNEXPECTED）", e.reason, "INSUFFICIENT_CREDIT")
+    check("402 只发 1 次、不重试", post.n, 1)
+    check("402 不睡", sleeps, [])
+
     # 4. 重试恢复后第七道守卫照常工作（返回钱包 ≠ 请求钱包 → 拦）
     w_req = "0x" + "a" * 40
     bad_payload = {"data": [{"proxy_wallet": "0x" + "b" * 40}]}

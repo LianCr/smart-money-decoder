@@ -132,5 +132,39 @@ with tempfile.TemporaryDirectory() as td:
 r = health_report()
 check("默认参数调用不炸", isinstance(r.get("ok"), bool), True)
 
+
+# ── 7. 真探针（P2-28）：区分"key 缺失"与"key 在但额度尽"────────────────────────
+# 探针由调用方注入（api 层带 TTL 缓存的真 574 探针），纯函数层只做判定：
+#   reason=None → 数据层真通；INSUFFICIENT_CREDIT/AUTH/FORBIDDEN = key 级致命 → 503
+#   （额度尽和缺 key 是同一种病：任何未缓存请求都出不了板——P0-2 形态，必须响）；
+#   瞬时上游问题（TIMEOUT/RATE_LIMITED/SERVER…）→ 只警告不判死（防部署 flapping）。
+with tempfile.TemporaryDirectory() as td:
+    paths = [Path(td) / ".cache"]
+
+    r = health_report(env=FULL_ENV, write_paths=paths, data_probe=lambda: None)
+    check("探针通过 → 健康", r["ok"], True)
+    check("探针结果进 checks", r["checks"].get("data_probe"), True)
+
+    r = health_report(env=FULL_ENV, write_paths=paths, data_probe=lambda: "INSUFFICIENT_CREDIT")
+    check("🔴 key 在但额度尽 → ok=False（与缺 key 同等致命）", r["ok"], False)
+    check("额度尽 failures 指名道姓", any("INSUFFICIENT_CREDIT" in f for f in r["failures"]), True)
+
+    r = health_report(env=FULL_ENV, write_paths=paths, data_probe=lambda: "AUTH")
+    check("key 无效(AUTH) → ok=False", r["ok"], False)
+
+    r = health_report(env=FULL_ENV, write_paths=paths, data_probe=lambda: "TIMEOUT")
+    check("瞬时上游问题 → 仍健康（防 flapping）", r["ok"], True)
+    check("瞬时问题进 warnings", any("TIMEOUT" in w for w in r["warnings"]), True)
+
+    probe_called = []
+    e = dict(FULL_ENV); e.pop("HEISENBERG_API_KEY")
+    r = health_report(env=e, write_paths=paths,
+                      data_probe=lambda: probe_called.append(1) or None)
+    check("key 缺失时不打探针（缺失与额度尽的报因区分开）", probe_called, [])
+    check("key 缺失照旧 failures", r["ok"], False)
+
+    r = health_report(env=FULL_ENV, write_paths=paths)
+    check("不注入探针 → 行为与从前一致（纯函数零网络）", r["ok"], True)
+
 print(f"\n{passed} passed, {failed} failed")
 sys.exit(1 if failed else 0)
