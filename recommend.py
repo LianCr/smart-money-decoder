@@ -34,6 +34,8 @@ from briefing.market_context import get_behavior_flags
 from core.log import get_logger, REQUEST_ID
 from core.config import BRIEFING_AS_OF as AS_OF
 from core.jsonstore import atomic_write_json
+from scoring.constants import (REC_GATE_PNL, REC_PNL_SCALE, REC_ROI_CAP, REC_MIN_TRADES,
+                               REC_WINRATE_COEF, REC_BONUS_579, REC_BONUS_ADD, REC_PENALTY_EXIT)
 # ⑥ 验证走进程内 service（P0-3：不再 HTTP 打自己耗尽线程池）；模块属性引用=测试 monkeypatch 缝
 from services.dashboard_build import get_dashboard
 OUT = Path(".data/recommendations.json")
@@ -253,7 +255,7 @@ def verify_targets(cands, top):
     return (first + rest)[:top]
 
 
-def scan(per_market=10, gate_pnl=2000.0, enrich_top=14, keep=8, ai_top=5, as_of=None):
+def scan(per_market=10, gate_pnl=REC_GATE_PNL, enrich_top=14, keep=8, ai_top=5, as_of=None):
     """as_of=None → BRIEFING_AS_OF（现默认=今天，全实时）。
     ai_verify 恒 fresh=1：⑥ 验证永远锚当天（当天已有缓存不重复烧）。"""
     as_of = as_of or AS_OF
@@ -308,18 +310,19 @@ def scan(per_market=10, gate_pnl=2000.0, enrich_top=14, keep=8, ai_top=5, as_of=
         beh = bf.get("flag")
         in579 = w.lower() in addrs579
         # 🔴 打分：被验证的体量+胜率为主，ROI 封顶防小样本高方差盖过真鲸鱼（实测 21 注/306% ROI 曾压过 $1.26M 鲸鱼）。
+        # 权重正本在 scoring/constants.py（T2.2）
         roi = _f(pol.get("roi")) or 0
         trades = _f(pol.get("total_trades")) or 0
         win = _f(pol.get("win_rate")) or 0
-        score = (pp or 0) / 20000.0 + min(roi, 40.0)
-        if trades >= 50:                # 胜率只在注数够、不是运气时才加分
-            score += (win - 0.5) * 20
+        score = (pp or 0) / REC_PNL_SCALE + min(roi, REC_ROI_CAP)
+        if trades >= REC_MIN_TRADES:    # 胜率只在注数够、不是运气时才加分
+            score += (win - 0.5) * REC_WINRATE_COEF
         if in579:
-            score += 15
+            score += REC_BONUS_579
         if beh == "ADD":
-            score += 12
+            score += REC_BONUS_ADD
         elif beh == "EXIT":
-            score -= 40                 # 主力撤退=别推
+            score += REC_PENALTY_EXIT   # 主力撤退=别推（常量本身为负）
         cands.append({
             "wallet": w, "market_question": pos["market_question"], "outcome": pos["outcome"],
             "politics_pnl": pp, "politics_win_rate": _f(pol.get("win_rate")),

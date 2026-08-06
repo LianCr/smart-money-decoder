@@ -32,8 +32,8 @@ SPORT_KW = ("fifa", "world-cup", "nba", "nfl", "nhl", "ufc", "mlb", "soccer", "t
 # difficulty 的 Near-Settled 档）没有任何解读/跟单价值，跳过找下一个有悬念的仓。
 # 若整本仓位全是近结算（"卖彩票"型 NO 农场钱包），诚实回退最大那个并打 near_settled 标
 # （绝不硬凑、绝不报错隐瞒——他确实重仓在那，只是没悬念）。
-NEAR_SETTLED_PRICE = 0.95
-MAX_PRICE_CHECKS = 12          # 每次查找最多对多少个候选盘打 568 查价（防 NO 农场钱包扫穿全本）
+from scoring.constants import NEAR_SETTLED_PRICE  # T2.2：判断阈值正本迁 constants（守卫语义见上注释）
+MAX_PRICE_CHECKS = 12          # 每次查找最多对多少个候选盘打 568 查价（防 NO 农场钱包扫穿全本；API 预算非判断阈值，留本地）
 
 
 def _held_price(m, outcome, as_of):

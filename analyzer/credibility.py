@@ -23,18 +23,14 @@ analyzer/credibility.py — F4 可信度分：这个盘的价格值不值得信�
 T2.2 落地 scoring/ 包时本模块（连同全部常量）一并迁走。
 """
 
-# ── 扣分表（起点 100，只扣不加；来源见模块尾注）─────────────────────────────
-LIQ_PCT_LOW, LIQ_PCT_MID = 50, 85            # 流动性百分位分档
-LIQ_D_LOW, LIQ_D_MID, LIQ_D_FLAG, LIQ_CAP = -25, -10, -10, -25
-CONC_TOP1, CONC_TOP10 = 35, 70               # 头部集中度阈值（%）
-CONC_D_TOP1, CONC_D_TOP10, CONC_D_WHALE, CONC_D_TRADE, CONC_D_SQUEEZE, CONC_CAP = -15, -10, -15, -10, -5, -30
-PART_LOW, PART_MID = 30, 80                  # 近 7 天独立参与人数
-PART_D_LOW, PART_D_MID = -20, -10
-VOLU_D_COLLAPSE, VOLU_D_DECLINE = -10, -5    # 量能：塌缩 flag / "Significant Decline"
-VOLA_HIGH, VOLA_MID = 0.12, 0.06             # 已实现日波动（沿用上游既有阈值）
-VOLA_D_HIGH, VOLA_D_MID = -15, -5
-TIERS = ((90, "A"), (75, "B"), (60, "C"), (45, "D"))   # 低于 45 → F
-BAD_DELTA = -15                              # 单子指标扣到这个量级 → verdict=bad
+# ── 扣分表：T2.2 起唯一正本在 scoring/constants.py（与上游 575/568 采集层共用的门在那里合并）──
+from scoring.constants import (
+    LIQ_PCT_LOW, LIQ_PCT_MID, LIQ_D_LOW, LIQ_D_MID, LIQ_D_FLAG, LIQ_CAP,
+    CONC_TOP1, CONC_TOP10, CONC_D_TOP1, CONC_D_TOP10, CONC_D_WHALE, CONC_D_TRADE,
+    CONC_D_SQUEEZE, CONC_CAP, PART_LOW, PART_MID, PART_D_LOW, PART_D_MID,
+    VOLU_D_COLLAPSE, VOLU_D_DECLINE, VOLA_HIGH, VOLA_MID, VOLA_D_HIGH, VOLA_D_MID,
+    TIERS, BAD_DELTA,
+)
 
 _FORBIDDEN = ("market_lean", "confidence", "rationale")   # 判断字段，进不了本模块
 

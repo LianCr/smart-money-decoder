@@ -10,7 +10,7 @@ fetcher/social.py — 585 Social Pulse（社媒情绪动量）
 """
 from fetcher.heisenberg import AGENTS, call, results
 
-ORGANIC_MIN = 20.0          # author_diversity_pct ≥ 20% 视为有机，否则疑似刷量（文档定义）
+from scoring.constants import ORGANIC_MIN, GENERIC_HIT_FRAC  # T2.2：判断阈值正本迁 constants
 # 🔴 通用词会让 585 的 OR 匹配跑偏（"deal/final" 匹配到足球转会"here we go"高互动帖）→ 从关键词里剔除
 SOCIAL_STOP = {"final", "deal", "deals", "agreement", "pact", "accord", "treaty", "talks", "talk",
                "win", "wins", "control", "ban", "next", "new", "plan", "vote", "poll", "race",
@@ -23,7 +23,7 @@ GEO_COMMON = {"south", "north", "east", "west", "korea", "korean", "china", "chi
               "france", "french", "germany", "german", "india", "indian", "usa", "president", "presidential",
               "election", "elections", "government", "minister", "senate", "congress", "house", "court",
               "party", "country", "city", "state", "nation", "national"}
-GENERIC_HIT_FRAC = 0.35     # 在返回帖里命中率 > 35% 的关键词 = OR 拉进来的泛词，剔出相关性门
+# （GENERIC_HIT_FRAC 同上迁 constants：返回帖命中率超限的关键词 = OR 拉进来的泛词，剔出相关性门）
 
 
 def _f(x):

@@ -19,7 +19,7 @@ from briefing.market_context import _gateway, DIRECTIVE_WORDS, FEAR_WORDS
 from fetcher.heisenberg import call as hz_call, results as hz_results, AGENTS as HZ_AGENTS
 
 GAMMA = "https://gamma-api.polymarket.com"
-REACT_THRESHOLD = 5.0           # 与 price_reaction.MEANINGFUL_MOVE_PCT 同口径
+from scoring.constants import MEANINGFUL_MOVE_PCT as REACT_THRESHOLD  # T2.2：曾是同口径重复常量，正本合一
 
 
 # ── 持有侧 token（市场反应符号统一以"钱包押的那一侧"价格涨跌为准）──────────────
