@@ -323,9 +323,9 @@
 | Research Data（contact-based） | 市场全生命周期（创建→结算）· **point-in-time 钱包/F-Score 快照** · 历史社媒 | 免幸存者偏差回测的唯一底座（路 B 若复活） | 🟢 探索 |
 
 > **2026-08-06 官方文档全量对照审计补遗**（41 页全读，产出见 AUDIT P2-28/P2-29/F5 与升级路线）：
-> ① **F-Score 的正道 = 579 的 `f_score`/`tier` 字段**（有按地址查询）——584 是纯筛选榜且我们的查询恒失败已清除；红线 3 要的第三方质量分从此一读即得（T1）。
-> ② **575 有 `created_at`（市场创建时间）**——F4.1 曾判"无 open date"是错的；575 还支持 `condition_id:"ALL"`+鲸控/量能过滤=全市场扫描（F5 地基）。
-> ③ **581 有五个反作弊旗标**（sybil/timing/suspicious_win_rate/position_size_volatility/perfect_timing）=现成 bot 过滤器，推荐质量门该用（T1）。
+> ① ~~F-Score 的正道 = 579 的 f_score/tier~~ **2026-08-07 探针推翻：579 文档字段表是虚构的（live 无 f_score/tier）**。真路径 = **584 榜 sweep 按 `wallet` join**（live 584 有 wallet/h_score/tier 十二字段、但按钱包过滤三种参数名全被静默忽略）——✅ PR #29 已接进推荐质量门（低分只降不升、top-N 外如实缺席；红线 3 在"用胜率打分"的那一层兑现）。按地址实时查询（身份卡）结构性不可用，如实不做。
+> ② **575 有 `created_at`**（实测 ISO 微秒+Z）——✅ PR #29 已接（市场年龄→credibility）；575 还支持 `condition_id:"ALL"`+鲸控/量能过滤=全市场扫描（F5 地基）。
+> ③ **581 五个反作弊旗标**（真名 2026-08-07 逐一核实）——✅ PR #29 已接（质量门一次性降级 −25 + 候选卡诚实标注 + credibility self_check info-only）。
 > ④ 定价/额度文档零记载（只在 api.polymarketanalytics.com dashboard 可见）；402 不在官方错误契约；574 `winning_outcome` 未文档化（575 `winning_side` 可交叉）——契约风险全录 CLAUDE.md 坑表。
 
 **"想另接的 3 类" → 金矿覆盖情况**：
