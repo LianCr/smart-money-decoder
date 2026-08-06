@@ -57,52 +57,9 @@ class DecoderError(Exception):
 
 
 # ── 函数1（内部）：置信度矩阵 ─────────────────────────────────────────────────
-def _compute_confidence(assembled: dict) -> str:
-    """
-    按 CLAUDE.md 定稿置信度矩阵，优先级从高到低判定 high/medium/low。
-
-    重要：pnl_pct 是百分比数值（0.5813 表示 0.5813%），阈值直接用 30 / 60。
-    """
-    articles      = assembled.get("articles") or []
-    time_anchored = bool(assembled.get("time_anchored", False))
-    pnl_pct       = assembled.get("pnl_pct")
-
-    # 规则1：articles 为空 → 低（强制，最高优先级）
-    if not articles:
-        return "low"
-
-    # 规则2：pnl_pct > 60% → 低（涨幅已被吃透）
-    if pnl_pct is not None and pnl_pct > 60:
-        return "low"
-
-    # 规则3：浮亏 + 时间未锚定 → 低（articles 为空已被规则1截走）
-    if pnl_pct is not None and pnl_pct < 0 and not time_anchored:
-        return "low"
-
-    # 规则4：浮亏（封顶在中）
-    if pnl_pct is not None and pnl_pct < 0:
-        return "medium"
-
-    # 规则5：time_anchored=False（封顶在中）
-    if not time_anchored:
-        return "medium"
-
-    # 此处已满足：articles 非空 + time_anchored=True + pnl_pct ≥ 0 或 None
-
-    # pnl_pct 缺失时不给"高"，保守降到"中"
-    if pnl_pct is None:
-        return "medium"
-
-    # 规则6：0 ≤ pnl_pct < 30 → 高
-    if pnl_pct < 30:
-        return "high"
-
-    # 规则7：30 ≤ pnl_pct < 60 → 中
-    if pnl_pct < 60:
-        return "medium"
-
-    # > 60 已被规则2截走，理论不可达
-    return "low"
+# 🔴 正本 T2.2 迁 scoring/matrix_v2（原文搬入、阈值引 constants）；此处别名保持
+# 调用点与测试路径不变，行为等价由 7 规则直测 + test_decoder_guards 钉死。
+from scoring.matrix_v2 import compute_confidence_v2 as _compute_confidence  # noqa: E402
 
 
 # ── 函数2（内部）：代码生成 warnings ───────────────────────────────────────────

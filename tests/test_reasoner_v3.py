@@ -14,7 +14,7 @@ tests/test_reasoner_v3.py — v3 置信度矩阵纯逻辑测试（无网络）
 import sys
 sys.path.insert(0, ".")
 
-from analyzer.reasoner_v3 import (
+from scoring.reasoner_v3 import (
     compute_confidence_v3, classify_position_type, classify_recent_action, CONF_ORDER,
 )
 

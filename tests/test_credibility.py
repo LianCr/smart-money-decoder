@@ -1,7 +1,7 @@
 """
 tests/test_credibility.py — F4 可信度分契约（纯代码零 LLM 零网络）
 
-钉死的契约（对应 analyzer/credibility.py 红线头）：
+钉死的契约（对应 scoring/credibility.py 红线头；T2.2 从 analyzer/ 迁入）：
   1. 扣分制只扣不加：起点 100，每子指标按表扣、各设上限防重复计罪，floor 0。
   2. 缺数据诚实：575 整体缺 → score/tier 双 null（绝不装 100 也不装 0）；
      单子指标缺 → verdict="missing"、不扣分、partial=true。
@@ -19,7 +19,7 @@ from pathlib import Path
 
 sys.path.insert(0, ".")
 
-from analyzer.credibility import build_credibility
+from scoring.credibility import build_credibility
 
 passed = 0
 failed = 0
@@ -154,7 +154,7 @@ try:
 except ValueError:
     check("guard_cross 含判断字段 → raise", "ValueError", "ValueError")
 
-src = Path("analyzer/credibility.py").read_text(encoding="utf-8")
+src = Path("scoring/credibility.py").read_text(encoding="utf-8")
 for tok in ("market_lean", "confidence", "rationale"):
     check(f"源码零判断字段访问（.get/[] {tok}）",
           (f'.get("{tok}"' in src) or (f"['{tok}']" in src) or (f'["{tok}"]' in src), False)

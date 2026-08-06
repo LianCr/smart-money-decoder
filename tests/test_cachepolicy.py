@@ -107,7 +107,7 @@ EXEMPT = {
     "backtest":              "离线回测产物，正向流程只读 git 跟踪的静态正本",
     "event_structure.json":  "市场全集扫描的单文件缓存（非按盘/钱包 key），刷新不清它是既有语义",
 }
-SCAN_DIRS = ("api", "services", "core", "analyzer", "briefing", "fetcher", "backtest", "tools")
+SCAN_DIRS = ("api", "services", "core", "analyzer", "scoring", "briefing", "fetcher", "backtest", "tools")
 SCAN_FILES = [Path(f"{m}.py") for m in ("recommend", "hot_traders", "scorecard")]
 pat = re.compile(r"\.cache/([\w][\w.-]*)")   # 首字符不许是点：排除注释里 ".cache/.data" 这类并列写法
 found = set()

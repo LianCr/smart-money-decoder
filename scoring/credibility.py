@@ -1,5 +1,5 @@
 """
-analyzer/credibility.py — F4 可信度分：这个盘的价格值不值得信（纯代码零 LLM）
+scoring/credibility.py — F4 可信度分：这个盘的价格值不值得信（纯代码零 LLM）
 
 上游 575 Market Insights / 568 K线 早就按盘算好了硬指标（流动性/集中度/参与度/
 量能/波动），但此前只被拼成文本喂 prompt、算完就扔。本模块把它们合成一个
@@ -19,8 +19,8 @@ analyzer/credibility.py — F4 可信度分：这个盘的价格值不值得信�
      样本 < 阈值时给它计分资格就是拿噪声当信号；升为计分项须另场评审。
 
 阈值注：扣分表是首版标定（对三份真实政治盘缓存样本 sanity：100/A、85/B、75/B，
-旧二元 trust 逻辑对同样三盘全给 HIGH）。犹豫度 0.12/0.06 沿用上游既有阈值。
-T2.2 落地 scoring/ 包时本模块（连同全部常量）一并迁走。
+旧二元 trust 逻辑对同样三盘全给 HIGH）。犹豫度带沿用上游既有阈值。
+T2.2 已兑现迁入 scoring/：扣分表正本在 scoring/constants.py。
 """
 
 # ── 扣分表：T2.2 起唯一正本在 scoring/constants.py（与上游 575/568 采集层共用的门在那里合并）──
