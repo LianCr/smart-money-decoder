@@ -29,7 +29,7 @@ from scoring.constants import (
     CONC_TOP1, CONC_TOP10, CONC_D_TOP1, CONC_D_TOP10, CONC_D_WHALE, CONC_D_TRADE,
     CONC_D_SQUEEZE, CONC_CAP, PART_LOW, PART_MID, PART_D_LOW, PART_D_MID,
     VOLU_D_COLLAPSE, VOLU_D_DECLINE, VOLA_HIGH, VOLA_MID, VOLA_D_HIGH, VOLA_D_MID,
-    TIERS, BAD_DELTA,
+    AGE_YOUNG_DAYS, AGE_D_YOUNG, TIERS, BAD_DELTA,
 )
 
 _FORBIDDEN = ("market_lean", "confidence", "rationale")   # 判断字段，进不了本模块
@@ -74,7 +74,7 @@ def build_credibility(price_raw, vol, guard_flags=None, guard_cross=None,
     subs = []
 
     if price_raw is None:
-        for k in ("liquidity", "concentration", "participants", "volume", "volatility"):
+        for k in ("liquidity", "concentration", "participants", "volume", "volatility", "age"):
             subs.append(_sub(k, 0, None, missing=True))
     else:
         # 流动性：盘越深，价格越难被单笔砸出假信号
@@ -131,6 +131,13 @@ def build_credibility(price_raw, vol, guard_flags=None, guard_cross=None,
         else:
             d = VOLA_D_HIGH if v >= VOLA_HIGH else (VOLA_D_MID if v >= VOLA_MID else 0)
             subs.append(_sub("volatility", d, {"vol": round(v, 4)}))
+
+        # 年龄（T1，575 created_at）：新盘价格发现未完成，价位还没被人群消化
+        age = _ff(price_raw.get("market_age_days"))
+        if age is None:
+            subs.append(_sub("age", 0, None, missing=True))    # 旧缓存 thesis 无此字段 → 如实缺
+        else:
+            subs.append(_sub("age", AGE_D_YOUNG if age < AGE_YOUNG_DAYS else 0, {"age_days": age}))
 
     # 判断层自检（info-only 不计分，红线 5）：本次触发了几道守卫 + 历史上
     # 触发守卫的判断命中率是否更差——样本不足就如实说不足，绝不硬给百分比

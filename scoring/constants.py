@@ -44,6 +44,8 @@ CONC_D_TOP1, CONC_D_TOP10, CONC_D_WHALE, CONC_D_TRADE, CONC_D_SQUEEZE, CONC_CAP 
 PART_D_LOW, PART_D_MID = -20, -10
 VOLU_D_COLLAPSE, VOLU_D_DECLINE = -10, -5    # 量能：塌缩 flag / "Significant Decline"
 VOLA_D_HIGH, VOLA_D_MID = -15, -5
+AGE_YOUNG_DAYS = 3           # T1（2026-08-07）：开盘 <3 天=价格发现未完成（575 created_at，首版标定）
+AGE_D_YOUNG = -10
 TIERS = ((90, "A"), (75, "B"), (60, "C"), (45, "D"))   # 低于 45 → F
 BAD_DELTA = -15              # 单子指标扣到这个量级 → verdict=bad
 
