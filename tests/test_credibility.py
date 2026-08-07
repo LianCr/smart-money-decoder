@@ -19,7 +19,16 @@ from pathlib import Path
 
 sys.path.insert(0, ".")
 
-from scoring.credibility import build_credibility
+from scoring.credibility import build_credibility as _build_credibility
+
+# T2：book 是独立注入通道（572 口簿）。测试默认给健康盘口，使既有断言不因新增子指标
+# 而漂移；显式传 book=None/异常值的用例照常生效（setdefault 只填缺席 key）。
+BOOK_OK = {"spread": 0.01, "min_side_depth_usd": 50000.0}
+
+
+def build_credibility(*a, **kw):
+    kw.setdefault("book", dict(BOOK_OK))
+    return _build_credibility(*a, **kw)
 
 passed = 0
 failed = 0
@@ -51,9 +60,9 @@ def sub(c, key):
 print("子指标边界")
 c = build_credibility(raw(), 0.03)
 check("深盘全好 → 100 分 A 档零扣", (c["score"], c["tier"]), (100, "A"))
-check("全子指标 verdict=ok（self_check 除外，T1 起含 age 共 6 项）",
+check("全子指标 verdict=ok（self_check 除外，T2 起含 age+book 共 7 项）",
       [s["verdict"] for s in c["subs"] if s["key"] != "self_check"],
-      ["ok", "ok", "ok", "ok", "ok", "ok"])
+      ["ok", "ok", "ok", "ok", "ok", "ok", "ok"])
 check("deterministic 标注", c["deterministic"], True)
 check("partial=False", c["partial"], False)
 
@@ -93,6 +102,20 @@ check("年龄 =3 天边界 → 0", sub(c, "age")["delta"], 0)
 c = build_credibility(raw(age=None), 0.03)
 check("年龄缺（旧缓存 thesis）→ missing 不扣分", sub(c, "age")["verdict"], "missing")
 check("年龄缺 → partial=True", c["partial"], True)
+
+c = build_credibility(raw(), 0.03, book={"spread": 0.04, "min_side_depth_usd": 50000.0})
+check("盘口 价差=4¢ 边界 → −10", sub(c, "book")["delta"], -10)
+c = build_credibility(raw(), 0.03, book={"spread": 0.039, "min_side_depth_usd": 50000.0})
+check("盘口 价差<4¢ → 0", sub(c, "book")["delta"], 0)
+c = build_credibility(raw(), 0.03, book={"spread": 0.01, "min_side_depth_usd": 1999.0})
+check("盘口 薄侧深度<$2k → −10", sub(c, "book")["delta"], -10)
+c = build_credibility(raw(), 0.03, book={"spread": 0.05, "min_side_depth_usd": 500.0})
+check("盘口 双罚封顶 BOOK_CAP=−15", sub(c, "book")["delta"], -15)
+c = build_credibility(raw(), 0.03, book=None)
+check("盘口缺（旧缓存 thesis）→ missing 不扣分", sub(c, "book")["verdict"], "missing")
+check("盘口缺 → partial=True", c["partial"], True)
+c = build_credibility(raw(), 0.03, book={"spread": None, "min_side_depth_usd": None})
+check("盘口双值皆 None → missing（不装 ok）", sub(c, "book")["verdict"], "missing")
 
 c = build_credibility(raw(), 0.12)
 check("犹豫度 vol=0.12 边界 → −15", sub(c, "volatility")["delta"], -15)

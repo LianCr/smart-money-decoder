@@ -696,7 +696,7 @@
 - **进展（PR #25，2026-08-05）**：`analyzer/credibility.py` 扣分制 0-100 + A-F 档（起点 100 只扣不加、每子指标带 delta 审计尾迹、缺数据 score:null 诚实态）；payload 顶层 `credibility` key（`deterministic:true`，LLM 降级时照常在场）；前端 CredibilityCard 挂 ③ 赔率旁（零新 CSS、文案全走 en.js）。**🔴 红线机器强制**：入参含 market_lean/confidence/rationale → raise，源码级零判断字段访问由测试钉死——可信度评价信号、永不修理判断。真样本标定：7 份缓存盘摊出 A(100/95/95)/B(85×3,75)，旧二元 trust 对它们全给 HIGH。self_check（guard×命中率交叉）本场 info-only 不计分（回验档案全 pending、样本不足如实标注）。**F4 余项**：~~进 `scoring/` 包~~ ✅ PR #26（T2.2 迁入 `scoring/credibility.py`、扣分表收编 constants）；阈值二版标定=改判断行为、等真结算样本再动（常量已集中，改一处即可）；self_check 升计分项（样本 ≥ REPLAY_MIN_BUCKET_N 后另场评审）。
 - **F4.1 清单（2026-08-06 按官方文档全量对照修订——两条"拿不到"其实有源，一条已在手）**：
   - ~~市场开盘时间/年龄（575/574 均无 open date）~~ → **错，575 返回 `created_at`** —— ✅ **PR #29 已接**（实测 ISO 微秒+Z；credibility 第 6 子指标 `age`：<3 天新盘 −10）。
-  - ~~盘口深度/买卖价差（无 orderbook 源）~~ → **错，572 Orderbook 快照端点存在**（best_bid/ask、spread、bid/ask_depth；⚠ 唯一用毫秒时间戳的端点）——升级路线 T2。
+  - ~~盘口深度/买卖价差（无 orderbook 源）~~ → **错，572 存在** —— ✅ **PR #30 已接**（实测真身=全档口簿梯子、请求毫秒/响应 ISO，best/spread/深度自算；credibility 第 7 子指标 `book`：价差≥4¢ 或薄侧<$2k 各 −10 封 −15，live 冒烟当场抓到一例 $1.5k 薄 bid 侧）。
   - ~~真实持仓人数（575 无 holders_count）~~ → **半错：`unique_traders_7d` 已在消费**，缺的只是持仓**分布**（谁持多少）。
   - 仍真拿不到：top 钱包身份质量（581 按盘反查全部大户成本高）· 结算源可靠性（UMA 争议史，无源）· 跨平台同题比价（Kalshi 已验无政治覆盖，KNOWN_ISSUES:266）。
 

@@ -149,6 +149,47 @@ def realized_vol(token, as_of, days=14):
     return {"vol": vol, "desc": desc, "line": line}
 
 
+def orderbook_snapshot(token, as_of):
+    """572 历史口簿 → ≤as_of 最近快照的价差/深度（T2）。
+    🔴 坑表 2026-08-08：请求 start/end 要**毫秒**（喂秒静默零条）、响应时间戳是 ISO 串、
+    bids/asks 是 JSON 字符串编码的梯子——best/spread/深度全部自己算。
+    返回 {line, raw:{spread, bid/ask/min_side_depth_usd, best_bid/ask, snapshot_ts}} 或 None。"""
+    if not token:
+        return None
+    end = int(datetime.strptime(as_of, "%Y-%m-%d").replace(tzinfo=timezone.utc,
+                                                           hour=23, minute=59).timestamp())
+    start = end - 3 * 86400
+    try:
+        rs = results(call(572, {"token_id": token,
+                                "start_time": str(start * 1000), "end_time": str(end * 1000)}))
+    except Exception:
+        return None
+    snaps = sorted((r for r in rs or [] if str(r.get("timestamp", ""))[:10] <= as_of),
+                   key=lambda r: str(r.get("timestamp", "")))
+    if not snaps:
+        return None
+    ob = snaps[-1]
+    try:
+        bids = json.loads(ob.get("bids") or "[]")
+        asks = json.loads(ob.get("asks") or "[]")
+    except ValueError:
+        return None
+    bb = max((_ff(b.get("price")) for b in bids if _ff(b.get("price")) is not None), default=None)
+    ba = min((_ff(a.get("price")) for a in asks if _ff(a.get("price")) is not None), default=None)
+    bd = sum((_ff(b.get("size")) or 0) * (_ff(b.get("price")) or 0) for b in bids)
+    ad = sum((_ff(a.get("size")) or 0) * (_ff(a.get("price")) or 0) for a in asks)
+    if bb is None and ba is None and not bids and not asks:
+        return None
+    spread = round(ba - bb, 4) if bb is not None and ba is not None else None
+    line = (f"盘口：价差 {spread if spread is not None else '?'} · "
+            f"深度 bid ${bd:,.0f} / ask ${ad:,.0f}（{len(bids)}/{len(asks)} 档）")
+    return {"line": line,
+            "raw": {"spread": spread, "best_bid": bb, "best_ask": ba,
+                    "bid_depth_usd": round(bd, 2), "ask_depth_usd": round(ad, 2),
+                    "min_side_depth_usd": round(min(bd, ad), 2),
+                    "snapshot_ts": ob.get("timestamp")}}
+
+
 _EVENT_MAP = {}
 EVENT_CACHE = Path(".cache/event_structure.json")
 
@@ -272,10 +313,12 @@ def build_market_thesis(market_title, cid, as_of, implied_prob_yes,
         price_line = f"市场价：Yes 隐含 {implied_prob_yes}%（→ 市场倾向 NO {100-implied_prob_yes}%）"
     market_blob = f"市场：{market_title}\n{price_line}\n\n文章池（只许用这些）：\n{pool_txt}"
 
-    # Phase 1 可信度修正（575 价格可信度 + 568 已实现波动 + 距结算）——代码算、喂 reasoner 给价格/证据打折
+    # Phase 1 可信度修正（575 价格可信度 + 568 已实现波动 + 572 盘口 + 距结算）——代码算、喂 reasoner 给价格/证据打折
     pc = price_credibility(cid, as_of)
-    rv = realized_vol(held_token(cid, a), as_of)
-    cred_lines = [s for s in [pc and pc["line"], rv and rv["line"],
+    tok_h = held_token(cid, a)
+    rv = realized_vol(tok_h, as_of)
+    ob = orderbook_snapshot(tok_h, as_of)          # T2：随 thesis 缓存冻结，每 (cid,as_of) 只打一次
+    cred_lines = [s for s in [pc and pc["line"], rv and rv["line"], ob and ob["line"],
                               pc and pc.get("days_to_resolution") is not None and f"距结算 {pc['days_to_resolution']} 天"] if s]
     cred_block = "\n".join(cred_lines) or "（可信度信号暂缺）"
 
@@ -326,7 +369,7 @@ def build_market_thesis(market_title, cid, as_of, implied_prob_yes,
         "rationale": rj.get("rationale"),
         "implied_prob_yes": implied_prob_yes,
         "shared_pool": pool,                          # ⑤ 市场级共享新闻池（两个反向钱包共用同一批）
-        "input_trust": {"price": pc, "vol": rv, "lines": cred_lines},   # Phase 1 可信度修正信号
+        "input_trust": {"price": pc, "vol": rv, "book": ob, "lines": cred_lines},   # Phase 1+T2 可信度修正信号
         "event_structure": es,                                          # Phase 2 多结局结构
         "guard_flags": guard_flags,                   # 🛡 T2.1 留痕（干净=[]；旧缓存无此 key，消费方容忍缺失）
         "_audit": {"bull": bull, "bear": bear, "n_articles": len(pool), "as_of": as_of,
