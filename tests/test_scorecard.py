@@ -150,5 +150,46 @@ scorecard.record_judgment(wallet="0xZ", cid="z1", market_question="q", outcome="
 check("结构异常档案也走隔离（备份增至 2 份）",
       len(list(Path(_tmp2).glob("scorecard.json.corrupt-*"))), 2)
 
+# ── 8. 市场价基准：命中率要和"只信市场价"比，否则押热门也能刷出漂亮数字 ──────────
+# market_price = 判断那一刻钱包所押那一边的现价 = 市场给的胜率。
+# 期望命中数 = Σ 价格（已结算 + 背书 + 有合法价格的条）；NO BASIS / pending 不进。
+_tmp3 = tempfile.mkdtemp()
+scorecard.ARCHIVE = Path(_tmp3) / "scorecard.json"
+check("空档案 price_baseline=None（无样本不出基准）",
+      scorecard.compute_scorecard()["price_baseline"], None)
+
+def _rec(w, cid, price, fc="ROOM LEFT", outcome="Yes"):
+    scorecard.record_judgment(wallet=w, cid=cid, market_question=cid, outcome=outcome,
+                              market_price=price, follow_call=fc, confidence="med",
+                              source="board")
+
+_rec("0xP1", "p1", 0.9)                     # 热门，中
+_rec("0xP2", "p2", 0.6)                     # 中
+_rec("0xP3", "p3", 0.3)                     # 冷门，没中
+_rec("0xP4", "p4", None)                    # 没价格，中 → 进命中率但不进基准
+_rec("0xP5", "p5", 0.5, fc="NO BASIS")      # NO BASIS 不进基准
+_rec("0xP6", "p6", 0.7)                     # 未结算不进基准
+_rec("0xP7", "p7", 1.5)                     # 脏价格（>1）→ 当没价格
+scorecard.fetch_settlements(lambda cid: {"p1": "Yes", "p2": "Yes", "p3": "No",
+                                         "p4": "Yes", "p5": "Yes", "p7": "Yes"}.get(cid))
+sc = scorecard.compute_scorecard()
+pb = sc["price_baseline"]
+check("命中率口径不变：5 条背书已结算中 4", (sc["direction_consistent"], sc["settled_endorsed"]), (4, 5))
+check("基准只算有合法价格的 3 条", pb["n"], 3)
+check("基准子集实际中 2（p1/p2）", pb["hits"], 2)
+check("期望命中 = 0.9+0.6+0.3 = 1.8", pb["expected_hits"], 1.8)
+check("市场隐含命中率 = 60.0%", pb["expected_rate_pct"], 60.0)
+check("实际命中率（同一子集）= 66.7%", pb["hit_rate_pct"], 66.7)
+check("超出市场价 = +0.2 个", pb["excess_hits"], 0.2)
+check("没价格的背书条单列计数（p4/p7）", pb["unpriced"], 2)
+check("行表带出判断时价格", {r["market_question"]: r["market_price"] for r in sc["rows"]}["p1"], 0.9)
+
+# 全部没价格 → 基准 None（不拿 0 冒充基准）
+_tmp4 = tempfile.mkdtemp()
+scorecard.ARCHIVE = Path(_tmp4) / "scorecard.json"
+_rec("0xQ1", "q1", None)
+scorecard.fetch_settlements(lambda cid: "Yes")
+check("全无价格 → price_baseline=None", scorecard.compute_scorecard()["price_baseline"], None)
+
 print(f"\n{passed} passed, {failed} failed")
 sys.exit(1 if failed else 0)

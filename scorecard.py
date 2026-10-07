@@ -8,6 +8,9 @@ scorecard.py — 诚实记分牌（decode / board 判断的自我验证）
   2. NO BASIS **不计入命中率**分子分母，单独统计。
   3. compute_scorecard() **纯代码冷数字**，不调任何 AI、不让 AI 评价自己的成绩。
 
+市场价基准（price_baseline）：命中率旁边必须摆"只信市场价本该中几个"。判断时所押那边的
+现价 = 市场给的胜率，Σ 价格 = 期望命中数；押 0.98 的热门赢了不算本事，超出期望的部分才算。
+
 从装上这一刻往后累积：第一天空、之前的判断已丢不可重现（**绝不造假回填**）。
 存档=代码、抓结算由调用方注入 resolver(cid)（api 层用 574，免费）→ ~0 token。
 不碰封板模块：record 钩子在 api 层调；结算用注入的 resolver，本模块不直接依赖 heisenberg。
@@ -26,6 +29,12 @@ ARCHIVE = Path(".data/scorecard.json")
 # "读档→改→写档"没有锁会互相覆盖丢记录（判断存档是记分牌的地基，丢一条就是假账）
 _LOCK = threading.Lock()
 ENDORSED = {"ROOM LEFT", "CHASED"}     # 这两个 = AI 背书该方向；NO BASIS = 不背书（单列）
+
+
+def _usable_price(p):
+    """判断时钱包所押那一边的现价 = 市场给的胜率。只认 (0,1) 开区间的数；
+    None / 脏值 / 边界值一律当"没价格"——不能拿它冒充市场概率。"""
+    return isinstance(p, (int, float)) and not isinstance(p, bool) and 0 < p < 1
 
 
 def _load() -> dict:
@@ -114,6 +123,9 @@ def compute_scorecard() -> dict:
     d = _load()
     rows, settled_endorsed, hits = [], 0, 0
     nobasis_total, nobasis_clear = 0, 0
+    # 市场价基准：同一批"已结算 + 背书 + 有价格"的条，实际命中 vs 按价格本该命中多少。
+    # 押 0.98 的热门赢了不算本事——这一栏让"命中率高"必须和"只信市场价"比过才算数。
+    pb_n, pb_hits, pb_expected, pb_unpriced = 0, 0, 0.0, 0
     for r in d.values():
         fc = r.get("follow_call")
         outcome = r.get("outcome")
@@ -133,10 +145,18 @@ def compute_scorecard() -> dict:
             status = "hit" if wallet_won else "miss"
             if wallet_won:
                 hits += 1
+            price = r.get("market_price")
+            if _usable_price(price):
+                pb_n += 1
+                pb_expected += price
+                pb_hits += 1 if wallet_won else 0
+            else:
+                pb_unpriced += 1
         rows.append({
             "wallet": r.get("wallet"), "market_question": r.get("market_question"),
             "outcome": outcome, "follow_call": fc, "confidence": r.get("confidence"),
             "source": r.get("source"), "winner": winner, "status": status,
+            "market_price": r.get("market_price"),
         })
     # 已结算(hit/miss)排前，其次 nobasis，最后 pending
     _order = {"hit": 0, "miss": 0, "nobasis": 1, "pending": 2}
@@ -149,6 +169,15 @@ def compute_scorecard() -> dict:
         "hit_rate_pct": round(hits / settled_endorsed * 100, 1) if settled_endorsed else None,
         "nobasis_total": nobasis_total,
         "nobasis_clear_in_hindsight": nobasis_clear,
+        "price_baseline": {
+            "n": pb_n,
+            "hits": pb_hits,
+            "expected_hits": round(pb_expected, 2),
+            "expected_rate_pct": round(pb_expected / pb_n * 100, 1),
+            "hit_rate_pct": round(pb_hits / pb_n * 100, 1),
+            "excess_hits": round(pb_hits - pb_expected, 2),
+            "unpriced": pb_unpriced,
+        } if pb_n else None,
         "rows": rows,
         "note": "命中率=判断方向命中、非跟单收益；NO BASIS 不计入命中率，单列。冷数字纯代码算，不经 AI。",
     }

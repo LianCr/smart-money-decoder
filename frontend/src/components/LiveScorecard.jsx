@@ -15,6 +15,7 @@ export function LiveScorecard({ sc }) {
   const rate = sc.hit_rate_pct;
   const settledRows = (sc.rows || []).filter((r) => r.status !== "nobasis");
   const nbRows = (sc.rows || []).filter((r) => r.status === "nobasis");
+  const pb = sc.price_baseline;
   return (
     <div className="sc">
       <div className="sc-head">
@@ -28,6 +29,13 @@ export function LiveScorecard({ sc }) {
         <div className="sc-num big"><b className="num">{rate == null ? "—" : rate + "%"}</b><span>{t("命中率")}</span></div>
         <div className="sc-num"><b className="num">{sc.nobasis_total}</b><span>NO BASIS</span></div>
       </div>
+      {pb && (
+        <div className="sc-baseline">
+          {t("市场价基准 ·")} {pb.n} {t("个已结算背书判断：按判断时市场价预期中")} <b className="num">{pb.expected_hits}</b> {t("个，实际中")} <b className="num">{pb.hits}</b> {t("个 · 超出市场价")}{" "}
+          <b className={`num ${pb.excess_hits > 0 ? "up" : pb.excess_hits < 0 ? "down" : ""}`}>{pb.excess_hits > 0 ? "+" : ""}{pb.excess_hits}</b> {t("个（只有这部分算判断本身的贡献）")}
+          {pb.unpriced > 0 && <span className="sc-baseline-note"> · {pb.unpriced} {t("个没有判断时价格，不进基准")}</span>}
+        </div>
+      )}
       <div className="sc-discipline">{t("命中率 = ")}<b>{t("判断方向命中")}</b>{t("，不是跟单收益率 · NO BASIS 不计入命中率 · 顶上冷数字纯代码算，不经 AI")}</div>
 
       {sc.tested === 0 ? (

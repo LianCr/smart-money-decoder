@@ -102,6 +102,10 @@
 .sc-num.big b { color: var(--bf-accent); text-shadow: 0 0 12px var(--accent-glow); }
 .sc-num b.up { color: var(--pos); } .sc-num b.down { color: var(--neg); }
 .sc-num span { font-size: 10.5px; color: var(--fg-3); }
+.sc-baseline { font-size: 12px; color: var(--fg-2); margin: 11px 0 0; line-height: 1.6; }
+.sc-baseline b { font-family: var(--mono); color: var(--fg-1); }
+.sc-baseline b.up { color: var(--pos); } .sc-baseline b.down { color: var(--neg); }
+.sc-baseline-note { color: var(--fg-3); }
 .sc-discipline { font-size: 11px; color: var(--fg-3); margin: 11px 0 4px; line-height: 1.5; font-style: italic; }
 .sc-discipline b { color: var(--fg-2); font-style: normal; }
 .sc-empty { font-size: 12.5px; color: var(--fg-3); line-height: 1.6; padding: 18px; text-align: center; border: 1px dashed var(--line-1); border-radius: 3px; margin-top: 12px; }
