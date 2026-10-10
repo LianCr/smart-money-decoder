@@ -102,7 +102,7 @@ if rc != 0:
 import fetcher.news as news
 
 class _FakeTavily:
-    def search(self, keywords, topic=None, days=None, max_results=None):
+    def search(self, keywords, **kw):
         return {"results": [
             {"title": "Real headline", "url": "https://example.com/a",
              "content": "body text", "published_date": "Mon, 15 Jun 2026 10:00:00 +0000"},

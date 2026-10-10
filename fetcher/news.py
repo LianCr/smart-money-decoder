@@ -38,6 +38,8 @@ FAKE_MODE = os.environ.get("USE_FAKE_KEYWORDS", "false").lower() == "true"
 CACHE_DIR         = Path(".cache/news")
 MAX_RESULTS       = 5
 MAX_DAYS_BACK     = 180   # Tavily 实测支持的最大天数
+# 检索方式版本：进缓存 key。换了检索方式，旧方式缓存下的结果（尤其是空结果）不许再被命中
+RETRIEVAL_VERSION = "window-v2"
 REQUEST_TIMEOUT   = 15    # 秒
 
 _tavily = TavilyClient(api_key=TAVILY_API_KEY) if TAVILY_API_KEY else None
@@ -121,8 +123,10 @@ def _get_cache_path(
     旧实现只按 market_question 做 key，导致：先以 entry_time=None 跑出
     time_anchored=False 并缓存，之后 trades v2 拿到真 entry_time 再跑，仍命中旧缓存
     返回过期的 anchored=False —— 正是这个 bug 让 Netanyahu 钱包一度显示未锚定。
+
+    key 还带 RETRIEVAL_VERSION：检索方式变了（如 2026-10 改为按窗搜），旧方式的缓存作废。
     """
-    sig = f"{market_question}|{start_date}|{end_date}"
+    sig = f"{RETRIEVAL_VERSION}|{market_question}|{start_date}|{end_date}"
     key = hashlib.md5(sig.encode("utf-8")).hexdigest()
     CACHE_DIR.mkdir(parents=True, exist_ok=True)
     return CACHE_DIR / f"{key}.json"
@@ -178,19 +182,25 @@ def _fetch_from_tavily(
         raise NewsError("NO_TAVILY_KEY",
                         "缺少 TAVILY_API_KEY，无法检索新闻——请在 .env 或部署环境变量里配置")
 
-    if start_date is not None:
+    # 窗两端都在 → 让 Tavily 直接在窗内搜（2026-10 修正）。
+    # 旧做法是 days=窗起点→今天、取 top-N 再在客户端按窗过滤：窗越老，top-N 越被窗之后的
+    # 新文章占满，过滤完剩 0 —— edge_lift_v1 里 63% 的样本因此"零新闻"、被强制 NO BASIS。
+    # 🔴 days 必须显式 None：SDK 0.5.0 默认带 days=3，与 start_date 同发 API 返 400（实测）。
+    if start_date is not None and end_date is not None:
+        window = {"days": None, "start_date": start_date, "end_date": end_date}
+    elif start_date is not None:
         today     = datetime.now(tz=timezone.utc).date()
         start     = datetime.strptime(start_date, "%Y-%m-%d").date()
-        days_back = (today - start).days + 1  # +1 确保覆盖 start 当天
+        window    = {"days": (today - start).days + 1}  # +1 确保覆盖 start 当天
     else:
-        days_back = 30
+        window    = {"days": 30}
 
     try:
         resp = _tavily.search(
             keywords,
             topic="news",
-            days=days_back,
             max_results=MAX_RESULTS,
+            **window,
         )
     except Exception as e:
         msg = str(e).lower()
@@ -209,7 +219,7 @@ def _fetch_from_tavily(
         except Exception:
             continue
 
-        # 客户端过滤时间窗口（Tavily days 是"最近 N 天"，可能包含窗口外的文章）
+        # 客户端过滤时间窗口（防御：days 路径本就会带窗外文章；窗路径 API 若越界也丢）
         if end_date   and published_at > end_date:
             continue
         if start_date and published_at < start_date:
