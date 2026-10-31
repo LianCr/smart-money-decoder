@@ -157,6 +157,12 @@ button { font-family: inherit; }
 
 .num { font-family: var(--mono); font-variant-numeric: tabular-nums; }
 
+/* 仅读屏可见 */
+.sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+
 /* 跳到正文（键盘用户） */
 .skip-link {
   position: absolute; left: var(--sp-4); top: -48px; z-index: var(--z-top);

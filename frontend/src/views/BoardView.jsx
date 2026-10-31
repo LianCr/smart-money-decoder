@@ -4,6 +4,7 @@ import { API, EXAMPLES, TRADERS_URL, LEADERBOARD_URL, STAGES_BOARD } from "../ut
 import { abbrev } from "../utils/format.jsx";
 import { useDashboard } from "../hooks/useDashboard.js";
 import { BoardBody } from "../components/BoardBody.jsx";
+import { ElectionBanner } from "../components/ElectionBanner.jsx";
 import { ErrorBox } from "../components/ErrorBox.jsx";
 import { Fold } from "../components/Fold.jsx";
 import { HotTraders } from "../components/HotTraders.jsx";
@@ -38,6 +39,7 @@ export function BoardView() {
   const showStages = (status === "loading" || status === "polling") && !board;
   return (
     <>
+      {showHome && <ElectionBanner />}
       <HotTraders onPick={(w) => { setWallet(w); run(w); }} />
       {(showHome || showStages) && (
         <div className="console-sub">{t("输入聪明钱钱包,生成 v3 统一看板:身份体量 → 这一注 → 实时盘面 → 行为×催化剂 → Edge 判断,一屏看全")}</div>

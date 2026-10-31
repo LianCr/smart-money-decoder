@@ -11,6 +11,17 @@ export default {
   "跳到正文": "Skip to content",
   "主导航": "Main navigation",
 
+  // ── 选举横幅 / 科技移民 ──
+  "2026 美国中期选举": "2026 US midterms",
+  "Polymarket 此刻的定价 · 概率 = 市场隐含价格，不是预测": "What Polymarket is pricing right now · odds are market-implied prices, not forecasts",
+  "天后选举日": "days to Election Day",
+  "今天是选举日": "Election Day is today",
+  "选举日已过": "Election Day has passed",
+  "投票进行中 · 盘口实时变动": "Polls are open · odds move live",
+  "结果待定 · 以市场结算为准": "Results pending · markets settle on the official call",
+  "数据截至": "As of",
+  "24h 成交": "24h vol",
+
   // ── 加载流水线 ──
   "AI 推演中": "AI working",
   "定位 → 追溯 → 检索 → 判断": "Locate → Trace → Search → Judge",
