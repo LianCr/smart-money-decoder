@@ -1,6 +1,6 @@
 /* ══ v3 统一看板 ════════════════════════════════════════════════════════════ */
 .navbtn.primary { color: var(--fg-1); border-color: var(--bf-accent); background: var(--accent-bg); }
-.navbtn.primary:hover, .navbtn.primary.active { background: rgba(0,229,255,0.16); box-shadow: 0 0 12px var(--accent-glow); }
+.navbtn.primary:hover, .navbtn.primary.active { background: color-mix(in srgb, var(--accent) 16%, transparent); box-shadow: 0 0 12px var(--accent-glow); }
 
 .card.bf.db { max-width: 920px; }
 .db-sec-tag { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.1em; text-transform: uppercase;
@@ -47,7 +47,7 @@
 .db-reason-top { display: flex; align-items: center; gap: 14px; margin-bottom: 10px; }
 .db-call { font-family: var(--mono); font-size: 13px; font-weight: 700; letter-spacing: 0.04em; padding: 4px 12px; border-radius: 3px; border: 1px solid currentColor; }
 .db-call.green { color: var(--pos); background: var(--pos-bg); }
-.db-call.amber { color: var(--amber); background: rgba(243,168,42,0.10); }
+.db-call.amber { color: var(--amber); background: color-mix(in srgb, var(--amber) 10%, transparent); }
 .db-call.red { color: var(--neg); background: var(--neg-bg); }
 .db-call.gray { color: var(--fg-3); }
 .db-conf { font-size: 12px; color: var(--fg-3); }

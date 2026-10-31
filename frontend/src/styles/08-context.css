@@ -8,7 +8,7 @@
 .ctx-flag.static { border-left-color: var(--fg-4); }
 .ctx-flag-h { display: flex; align-items: center; gap: 7px; font-size: 13px; font-weight: 700; color: var(--fg-1); }
 .ctx-flag-ico { font-size: 14px; }
-.ctx-flag-src { margin-left: auto; font-family: var(--mono); font-size: 9.5px; letter-spacing: 0.05em; color: var(--fg-4); text-transform: uppercase; }
+.ctx-flag-src { margin-left: auto; font-family: var(--mono); font-size: var(--fs-micro); letter-spacing: 0.05em; color: var(--fg-4); text-transform: uppercase; }
 .ctx-flag.add .ctx-flag-h { color: var(--pos); text-shadow: 0 0 10px var(--pos-glow); }
 .ctx-flag.exit .ctx-flag-h { color: var(--neg); text-shadow: 0 0 10px var(--neg-glow); }
 .ctx-flag-fact { font-size: 12.5px; color: var(--fg-2); line-height: 1.55; margin: 9px 0 11px; }

@@ -4,8 +4,8 @@
    ============================================================ */
 .mocktag {
   font-family: var(--mono); font-size: 11px; letter-spacing: 0.05em;
-  color: var(--amber); background: rgba(243,168,42,0.06);
-  border: 1px solid rgba(243,168,42,0.25); border-radius: 7px;
+  color: var(--amber); background: color-mix(in srgb, var(--amber) 6%, transparent);
+  border: 1px solid color-mix(in srgb, var(--amber) 25%, transparent); border-radius: 7px;
   padding: 7px 12px; margin-bottom: 20px;
 }
 
@@ -42,7 +42,7 @@
 .l2-big {
   font-size: 60px; font-weight: 800; line-height: 1; letter-spacing: -0.03em;
   color: var(--accent);
-  text-shadow: 0 0 16px rgba(76, 196, 224, 0.28);   /* 极微弱青晕，宁可不发光也不过 */
+  text-shadow: 0 0 16px color-mix(in srgb, var(--accent) 28%, transparent);   /* 极微弱青晕，宁可不发光也不过 */
 }
 .l2-sub { font-size: 12px; line-height: 1.6; color: var(--text-3); }
 .l2-sub b { color: var(--green); font-weight: 700; font-family: var(--mono); }
@@ -126,7 +126,7 @@
   font-family: var(--mono); font-size: 10px; letter-spacing: 0.02em; font-weight: 600;
   padding: 3px 9px; border-radius: 6px; white-space: nowrap; border: 1px solid transparent;
 }
-.difftag.diff-hard { color: var(--accent); background: var(--accent-dim); border-color: rgba(76,196,224,0.25); }
+.difftag.diff-hard { color: var(--accent); background: var(--accent-dim); border-color: color-mix(in srgb, var(--accent) 25%, transparent); }
 .difftag.diff-mid  { color: var(--text-2); background: var(--panel-2); border-color: var(--line); }
 .difftag.diff-easy { color: var(--text-4); background: var(--panel-2); }
 .difftag.diff-na   { color: var(--text-4); background: var(--panel-2); }
@@ -134,7 +134,7 @@
 /* T-7 → T-1 判断演变（已移入抽屉顶部） */
 .bt-evo { display: flex; align-items: center; justify-content: center; padding: 14px 0 4px; }
 .tp { display: flex; flex-direction: column; align-items: center; gap: 5px; }
-.tp-lab { font-family: var(--mono); font-size: 9.5px; letter-spacing: 0.08em; color: var(--text-4); }
+.tp-lab { font-family: var(--mono); font-size: var(--fs-micro); letter-spacing: 0.08em; color: var(--text-4); }
 /* T-7 → T-1 演变线：本页唯一叙事性视觉，渐亮 + 箭头指向 T-1 */
 .evo { position: relative; width: 32px; height: 2px; border-radius: 2px;
   background: linear-gradient(90deg, var(--line), var(--accent)); margin: 0 12px 14px; }
@@ -151,7 +151,7 @@
 .mini-follow.amber { color: var(--amber); background: var(--amber-2); }
 .mini-follow.red   { color: var(--red);   background: var(--red-2); }
 .mini-follow.gray  { color: var(--text-3); background: var(--panel-2); }
-.mini-conf { font-size: 8.5px; opacity: 0.65; letter-spacing: 0.05em; }
+.mini-conf { font-size: var(--fs-micro); opacity: 0.65; letter-spacing: 0.05em; }
 
 /* 右侧：命中/失手，冷静的 ✓/✗，失手不弱化；下方 chevron 提示可展开 */
 .bt-right { flex-shrink: 0; width: 30px; display: flex; flex-direction: column;
@@ -205,4 +205,4 @@
 .case-cat { margin: 0 0 9px; padding-left: 16px; }
 .case-cat li { font-size: 12px; line-height: 1.55; color: var(--text-2); margin-bottom: 3px; }
 .case-reason { font-size: 11.5px; line-height: 1.6; color: var(--text-4); }
-.case-reason-lab { font-family: var(--mono); font-size: 9.5px; letter-spacing: 0.05em; color: var(--accent); background: var(--accent-dim); padding: 1px 6px; border-radius: 4px; margin-right: 7px; }
+.case-reason-lab { font-family: var(--mono); font-size: var(--fs-micro); letter-spacing: 0.05em; color: var(--accent); background: var(--accent-dim); padding: 1px 6px; border-radius: 4px; margin-right: 7px; }
