@@ -34,7 +34,7 @@ from core.log import get_logger, new_request_id, unify_uvicorn_logging, REQUEST_
 
 LOG = get_logger("api")
 
-from api.routes import briefing, dashboard, meta, recommend, scorecard
+from api.routes import briefing, dashboard, meta, recommend, scorecard, themes
 
 
 def _restore_state_on_startup() -> None:
@@ -110,6 +110,7 @@ app.include_router(dashboard.router)
 app.include_router(recommend.router)
 app.include_router(scorecard.router)
 app.include_router(briefing.router)
+app.include_router(themes.router)
 
 # ── 生产托管：前端构建产物同源挂载（放在所有 API 路由之后，未匹配的路径落到 SPA）──
 _FRONTEND_DIST = Path("frontend/dist")
