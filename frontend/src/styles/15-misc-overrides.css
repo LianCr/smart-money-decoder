@@ -9,9 +9,7 @@
 .db-stale-warn { font-size: 11px; color: var(--amber); background: color-mix(in srgb, var(--amber) 8%, transparent); border: 1px solid color-mix(in srgb, var(--amber) 30%, transparent); border-radius: 4px; padding: 6px 10px; margin: 6px 0; line-height: 1.5; overflow-wrap: anywhere; }
 .mon-q { font-size: 10px; color: var(--fg-4); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 40%; margin-left: auto; }
 /* cmdbar 强刷按钮 */
-.cmd-refresh { background: none; border: 1px solid var(--border); border-left: none; color: var(--fg-3); font-size: 15px; padding: 0 14px; cursor: pointer; align-self: stretch; }
-.cmd-refresh:hover:not(:disabled) { color: var(--amber); border-color: var(--amber); }
-.cmd-refresh:disabled { opacity: 0.35; cursor: default; }
+
 /* 加载诚实化：计时器 + 预期文案 */
 .pipe-timer { margin-left: 10px; font-size: 11px; color: var(--fg-3); border: 1px solid var(--border); border-radius: 3px; padding: 1px 6px; }
 .pipe-note { text-align: center; font-size: 11px; color: var(--fg-3); margin: 6px auto 0; max-width: 520px; line-height: 1.6; }
@@ -118,9 +116,7 @@
 @media (max-width: 680px) {
   .bf-grid { grid-template-columns: 1fr; }
   .db-grid { grid-template-columns: 1fr; }
-  .db-dual { grid-template-columns: 1fr; }
 }
-
 
 /* ── 全局 footer ─────────────────────────────────────────────────────── */
 .site-footer { margin-top: 56px; border-top: 1px solid var(--border); padding: 22px 0 30px; }
@@ -161,4 +157,3 @@
 .recs-refresh:disabled { color: var(--accent); opacity: 0.75; cursor: default; }
 .recs-h { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; }
 .recs-err { font-size: 10.5px; color: var(--amber); margin: 4px 0 6px; }
-/* 撤掉 cmd-refresh 后无引用，样式保留无害 */

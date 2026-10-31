@@ -24,7 +24,7 @@
 @keyframes draw { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
 .pc-line { stroke-dasharray: 1; }
 .pc-dot {
-  position: absolute; width: 8px; height: 8px; border-radius: 50%;
+  position: absolute; left: calc(100% - 4px); width: 8px; height: 8px; border-radius: 50%;
   box-shadow: 0 0 0 3px var(--bg), 0 0 10px -1px currentColor; pointer-events: none;
 }
 .pc-peak {

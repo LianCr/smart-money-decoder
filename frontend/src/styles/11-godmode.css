@@ -22,9 +22,7 @@
 .gmt-h-delta.pos { color: var(--pos); } .gmt-h-delta.neg { color: var(--neg); }
 .gmt-h-deltalab { font-family: var(--sans); font-size: 11px; font-weight: 400; color: var(--fg-4); }
 .gmt-warn { color: var(--neg); font-style: normal; }
-.gmt-foot { margin-top: 14px; font-size: 10.5px; color: var(--fg-4); display: flex; align-items: center; gap: 7px; line-height: 1.5; }
 .gmt-foot-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--pos); box-shadow: 0 0 5px var(--pos-glow); flex-shrink: 0; }
-.gmt-h-settle { font-family: var(--mono); font-size: 12px; color: var(--fg-4); }
 /* 催化剂读出条：固定在图下方、永不遮挡价格线 */
 .gmt-readout { margin-top: 13px; min-height: 52px; padding: 10px 13px; border: 1px solid var(--line-1); border-left: 3px solid var(--line-2); border-radius: 5px; background: color-mix(in srgb, var(--text) 1.8%, transparent); transition: border-left-color 0.15s, background 0.15s; }
 .gmt-readout.on { background: color-mix(in srgb, var(--text) 3.5%, transparent); }
@@ -67,21 +65,7 @@
 .gmt-cross-tip.pos { color: var(--pos); } .gmt-cross-tip.neg { color: var(--neg); }
 .gmt-lbl { position: absolute; font-family: var(--mono); font-size: 10px; font-weight: 700; white-space: nowrap; pointer-events: none; padding: 1px 5px; border-radius: 2px; }
 .gmt-lbl.entry { transform: translate(-50%, -185%); color: var(--fg-2); background: var(--bg-2); border: 1px solid var(--line-1); }
-.gmt-tip { position: absolute; width: 260px; max-width: 80vw; z-index: 5; pointer-events: none;
-  background: var(--bg-0); border: 1px solid var(--bf-accent); border-radius: 4px; padding: 10px 12px; box-shadow: var(--shadow-pop); }
-/* 水平锚定：ac 居中 / al 贴左 / ar 贴右；below = 节点靠顶时翻到下方 */
-.gmt-tip.ac { transform: translate(-50%, calc(-100% - 14px)); }
-.gmt-tip.al { transform: translate(-10px, calc(-100% - 14px)); }
-.gmt-tip.ar { transform: translate(calc(-100% + 10px), calc(-100% - 14px)); }
-.gmt-tip.below.ac { transform: translate(-50%, 16px); }
-.gmt-tip.below.al { transform: translate(-10px, 16px); }
-.gmt-tip.below.ar { transform: translate(calc(-100% + 10px), 16px); }
-.gmt-tip-top { display: flex; align-items: center; gap: 7px; flex-wrap: wrap; margin-bottom: 6px; }
-.gmt-tip-date { font-size: 10.5px; color: var(--fg-3); }
-.gmt-tip-title { font-size: 12px; font-weight: 600; color: var(--fg-1); line-height: 1.4; }
-.gmt-tip-sum { font-size: 11px; color: var(--fg-2); line-height: 1.5; margin-top: 4px; }
-.gmt-tip-foot { font-size: var(--fs-micro); color: var(--fg-4); margin-top: 6px; font-style: italic; }
-.gmt-xaxis { display: flex; justify-content: space-between; font-family: var(--mono); font-size: var(--fs-micro); color: var(--fg-4); margin-top: 4px; padding: 0 2px; }
+
 .gmt-summary { margin-top: 16px; }
 
 /* ── 窄屏：大号概率不拆行；读出条标题不再强占 200px ─────────────── */
@@ -90,5 +74,4 @@
 @media (max-width: 560px) {
   .gmt-h-pct { font-size: 36px; }
   .gmt-ro-title { min-width: 0; flex-basis: 100%; }
-  .gmt-tip { width: 220px; }
 }
