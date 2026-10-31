@@ -26,6 +26,7 @@ export default {
   "最大持有人": "Top holder",
   "最大持有人 · 点击生成该钱包的统一看板": "Top holder · click to build this wallet's dashboard",
   "持仓": "position",
+  "份": "shares",
 
   // ── 加载流水线 ──
   "AI 推演中": "AI working",
