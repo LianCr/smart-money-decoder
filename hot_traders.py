@@ -16,6 +16,7 @@ from fetcher.heisenberg import call, results, AGENTS, HeisenbergError
 from fetcher.positions import get_top_political_position_hz
 from fetcher.markets import get_market_holders
 from recommend import SEEDS
+from fetcher.theme_markets import election_condition_ids
 
 from core.config import BRIEFING_AS_OF as AS_OF
 from core.jsonstore import atomic_write_json
@@ -76,8 +77,8 @@ def _politics_7d(wallet):
 def _political_pool():
     """从种子的热门政治盘共持人扩展出一批政治钱包——补 579 全品类周榜「政治稀薄」（top100 里仅 ~6 个政治赢家）。
     复用方法 E 的发现路：种子 → 热门政治盘 → 共持大户（天生政治），与 579 宇宙并集后再算 7d 政治盈亏。"""
-    cids, pool = set(), set()
-    for w in SEEDS:
+    cids, pool = {c for c, _q in election_condition_ids(limit=6)}, set()   # 2026-10-30：大选主题入口
+    for w in ([] if cids else SEEDS):                                          # 选举盘拿不到才回落种子
         pos = _retry(get_top_political_position_hz, w, as_of=AS_OF, max_pages=15)
         if pos and not pos.get("error") and pos.get("market_id"):
             cids.add(pos["market_id"])
