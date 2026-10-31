@@ -46,7 +46,7 @@ export function Recommendations({ onPick }) {
   if (!cands.length && !refreshing) return null;
   return (
     <div className="recs">
-      <div className="recs-h">{t("值得看的聪明钱 ·")} <b>{t("政治盘专家")}</b>{t("（从热门政治盘反向找的共持大户 · 政治专长筛 · ∩月榜）")}<span className="recs-sub">{t("点一个直接 decode")}</span>
+      <div className="recs-h">{t("值得看的聪明钱 ·")} <b>{t("政治盘专家")}</b><span className="recs-note">{t("（从热门政治盘反向找的共持大户 · 政治专长筛 · ∩月榜）")}</span><span className="recs-sub">{t("点一个直接 decode")}</span>
         {data.generated_at && !refreshing && (
           <span className="recs-updated num">{t("更新于")} {new Date(data.generated_at * 1000).toLocaleString(lang === "en" ? "en-US" : "zh-CN", { month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit" })}</span>
         )}

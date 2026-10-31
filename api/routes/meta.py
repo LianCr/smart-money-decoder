@@ -4,11 +4,13 @@ import json
 import time
 from pathlib import Path
 
-from fastapi import APIRouter
-from fastapi.responses import JSONResponse
+from fastapi import APIRouter, Request
+from fastapi.responses import JSONResponse, Response
 
+from api.shared import _client_ip
 from core.health import health_report
 from core.log import get_logger
+from core.ratelimit import RateLimiter
 
 router = APIRouter()
 LOG = get_logger("api.meta")
@@ -36,7 +38,7 @@ def _data_probe():
     try:
         from fetcher.heisenberg import call as hz_call
         # ⚠ limit 实测最小=3（≤2 → 404 body validation，文档"1-200"不实）；取 10 留余量
-        hz_call(574, {"condition_id": "0x0"}, limit=10)  # 任何 200（含空结果）= 数据层通
+        hz_call(574, {"closed": "False"}, limit=3)  # 列 3 个未结算盘：任何 200（含空结果）= 数据层通
         reason = None
     except Exception as e:
         reason = getattr(e, "reason", None) or f"PROBE_ERROR:{type(e).__name__}"
@@ -55,6 +57,35 @@ def healthz():
     本端点只做转发，逻辑全在 core/health（纯函数、可单测，与 api 装配解耦）。"""
     r = health_report(data_probe=_data_probe)
     return JSONResponse(status_code=200 if r["ok"] else 503, content=r)
+
+
+# ── 来源统计（2026-10-30）：Render 应用日志只记 IP/路径，看不出访客从哪来、点了什么。
+# 前端 sendBeacon 打这里，一行结构化日志写进 Render Logs（搜 "[visit]"）。不落盘、不进
+# 任何第三方；独立限流器，不吃 /dashboard 的分析额度。
+_VISIT_EVENTS = {"load", "wallet", "track", "refresh", "lang"}
+_VISIT_LIMITER = RateLimiter(per_ip_max=60, window_seconds=60, daily_max=20000)
+
+
+def _clip(v, n=160):
+    return str(v or "")[:n].replace("\n", " ")
+
+
+@router.post("/visit")
+async def visit(request: Request):
+    if _VISIT_LIMITER.check(_client_ip(request)) is not None:
+        return Response(status_code=204)
+    try:
+        body = json.loads((await request.body()) or b"{}")
+        if not isinstance(body, dict):
+            body = {}
+    except Exception:
+        body = {}
+    event = body.get("event") if body.get("event") in _VISIT_EVENTS else "load"
+    rec = {"event": event, "src": _clip(body.get("src"), 40), "ref": _clip(body.get("ref")),
+           "path": _clip(body.get("path"), 80), "detail": _clip(body.get("detail"), 80),
+           "lang": _clip(body.get("lang"), 8), "ua": _clip(request.headers.get("user-agent"))}
+    LOG.info("[visit] " + json.dumps(rec, ensure_ascii=False))
+    return Response(status_code=204)
 
 
 @router.get("/backtest")

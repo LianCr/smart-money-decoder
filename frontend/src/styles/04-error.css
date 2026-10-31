@@ -1,7 +1,7 @@
 /* ── 错误态 ───────────────────────────────────────────── */
 .error {
-  background: var(--red-2); border: 1px solid #5a2226; border-radius: 10px;
-  padding: 15px 17px; color: #ffb9bb;
+  background: var(--red-2); border: 1px solid var(--red-a30); border-radius: 10px;
+  padding: 15px 17px; color: color-mix(in srgb, var(--red) 35%, var(--text));
 }
 .error .r { font-family: var(--mono); font-size: 12px; letter-spacing: 0.05em;
   color: var(--red); margin-bottom: 5px; }

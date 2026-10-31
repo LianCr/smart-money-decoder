@@ -14,6 +14,7 @@ from datetime import datetime, timedelta, timezone
 
 from core.config import BRIEFING_AS_OF
 from fetcher.heisenberg import AGENTS, HeisenbergError, paginate
+from fetcher.pm_backend import is_protocol_address
 
 
 def _f(x):
@@ -43,7 +44,7 @@ def get_market_holders(cid, as_of=BRIEFING_AS_OF, top_n=10, window_days=60):
     net = defaultdict(float)
     for t in ts:
         w = str(t.get("proxy_wallet", "")).lower()
-        if not w.startswith("0x"):
+        if not w.startswith("0x") or is_protocol_address(w):     # 协议合约不是交易者
             continue
         v = (_f(t.get("size")) or 0) * (_f(t.get("price")) or 0)
         net[w] += v if str(t.get("side", "")).upper() == "BUY" else -v

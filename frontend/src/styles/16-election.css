@@ -1,0 +1,123 @@
+/* ══ 2026 中期选举：倒计时 + 头条赔率（首页顶部）═══════════════════════════════
+   党派色只用 --dem / --gop（与盈亏 --green / --red 是两组令牌，互不借用）。
+   非党派 outcome（组合盘、候选人名）一律中性灰阶，绝不硬套蓝红。 */
+.eb {
+  margin: 0 0 var(--sp-6); padding: var(--sp-5);
+  background: var(--panel); border: 1px solid var(--line); border-radius: var(--r-lg);
+}
+.eb-head {
+  display: flex; align-items: flex-start; justify-content: space-between; gap: var(--sp-4);
+  margin-bottom: var(--sp-5);
+}
+.eb-title-wrap { min-width: 0; }
+.eb-title {
+  margin: 0; font-size: var(--fs-xl); font-weight: 600; line-height: 1.2; letter-spacing: -0.01em;
+  color: var(--text); text-wrap: balance;
+}
+.eb-sub { margin: var(--sp-2) 0 0; font-size: var(--fs-sm); line-height: 1.5; color: var(--text-3); max-width: 52ch; }
+
+/* 倒计时：本块唯一的大字 */
+.eb-count { display: flex; align-items: center; gap: var(--sp-3); flex-shrink: 0; }
+.eb-count-n {
+  font-size: var(--fs-3xl); font-weight: 600; line-height: 0.9; letter-spacing: -0.04em; color: var(--text);
+}
+.eb-count-l { font-size: var(--fs-sm); line-height: 1.45; color: var(--text-2); }
+.eb-count-l b { color: var(--text); font-weight: 600; }
+.eb-date { color: var(--text-3); }
+.eb-count.live { padding: var(--sp-2) var(--sp-3); border: 1px solid var(--line); border-radius: var(--r-md); }
+.eb-live-dot {
+  width: 8px; height: 8px; border-radius: 50%; background: var(--accent); flex-shrink: 0;
+  box-shadow: 0 0 0 3px var(--accent-a16); animation: eb-live 1.8s ease-in-out infinite;
+}
+.eb-count.after .eb-live-dot { background: var(--text-3); box-shadow: none; animation: none; }
+@keyframes eb-live { 50% { box-shadow: 0 0 0 6px transparent; } }
+
+/* 盘口列表：宽屏两列，窄屏一列 */
+.eb-list {
+  list-style: none; margin: 0; padding: 0;
+  display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--sp-5) var(--sp-6);
+}
+.eb-row { min-width: 0; }
+.eb-row-top { display: flex; align-items: baseline; justify-content: space-between; gap: var(--sp-3); margin-bottom: var(--sp-2); }
+.eb-q {
+  min-width: 0; font-size: var(--fs-base); font-weight: 500; line-height: 1.4; color: var(--text);
+  text-decoration: none;
+}
+a.eb-q:hover { color: var(--accent); text-decoration: underline; }
+.eb-vol { flex-shrink: 0; font-size: var(--fs-xs); color: var(--text-3); white-space: nowrap; }
+.eb-vol span { font-family: var(--sans); color: var(--text-4); }
+
+/* 两段概率条：段间 2px 缝，宽度 = 概率（动态宽度留在 inline style） */
+.eb-bar {
+  display: flex; gap: 2px; height: 8px; border-radius: var(--r-xs); overflow: hidden;
+  background: var(--panel-3);
+}
+.eb-seg { height: 100%; min-width: 2px; transition: width var(--dur-med) var(--ease-out); }
+.eb-seg.dem { background: var(--dem); }
+.eb-seg.gop { background: var(--gop); }
+.eb-seg.n1 { background: color-mix(in srgb, var(--text-2) 70%, var(--panel)); }
+.eb-seg.n2 { background: var(--text-4); }
+.eb-seg.rest { background: var(--panel-3); }
+
+.eb-legend { display: flex; justify-content: space-between; gap: var(--sp-3); margin-top: var(--sp-2); }
+.eb-out { display: inline-flex; align-items: center; gap: 6px; min-width: 0; font-size: var(--fs-sm); color: var(--text-2); }
+.eb-out.right { text-align: right; justify-content: flex-end; }
+.eb-out i { width: 8px; height: 8px; border-radius: var(--r-xs); flex-shrink: 0; background: var(--text-4); }
+.eb-out b { font-size: var(--fs-md); font-weight: 600; color: var(--text); }
+.eb-out.dem i { background: var(--dem); }
+.eb-out.gop i { background: var(--gop); }
+.eb-out.dem b { color: color-mix(in srgb, var(--dem) 75%, var(--text)); }
+.eb-out.gop b { color: color-mix(in srgb, var(--gop) 75%, var(--text)); }
+.eb-out.n1 i { background: color-mix(in srgb, var(--text-2) 70%, var(--panel)); }
+
+.eb-foot { margin-top: var(--sp-5); font-size: var(--fs-xs); color: var(--text-4); }
+
+@media (max-width: 720px) {
+  .eb-list { grid-template-columns: 1fr; gap: var(--sp-4); }
+}
+@media (max-width: 560px) {
+  .eb { padding: var(--sp-4); }
+  .eb-head { flex-direction: column; gap: var(--sp-3); margin-bottom: var(--sp-4); }
+  .eb-title { font-size: 18px; }
+  .eb-count-n { font-size: 36px; }
+}
+
+/* ══ 科技与移民（H-1B / F-1 / OPT 相关实盘）════════════════════════════════════
+   安静的次级面板：紧凑卡片，概率用中性色（既非党派也非盈亏）。 */
+.ti { margin: 0 0 var(--sp-5); }
+.ti-head { display: flex; align-items: baseline; flex-wrap: wrap; gap: var(--sp-1) var(--sp-3); margin-bottom: var(--sp-2); }
+.ti-title { margin: 0; font-size: var(--fs-lg); font-weight: 600; color: var(--text); }
+.ti-sub { margin: 0; font-size: var(--fs-sm); color: var(--text-3); }
+.ti-note {
+  margin: 0 0 var(--sp-3); font-size: var(--fs-xs); line-height: 1.5; color: var(--text-3);
+  max-width: 72ch;
+}
+.ti-list {
+  list-style: none; margin: 0; padding: 0;
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: var(--sp-2);
+}
+.ti-card {
+  display: flex; flex-direction: column; gap: var(--sp-2); min-width: 0;
+  padding: var(--sp-3) var(--sp-4); background: var(--panel); border: 1px solid var(--line-soft);
+  border-radius: var(--r-md);
+}
+.ti-q { font-size: var(--fs-base); font-weight: 500; line-height: 1.4; color: var(--text); text-decoration: none; text-wrap: pretty; }
+a.ti-q:hover { color: var(--accent); text-decoration: underline; }
+.ti-odds { display: flex; align-items: baseline; gap: var(--sp-2); margin-top: auto; }
+.ti-out { font-size: var(--fs-sm); color: var(--text-2); min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ti-pct { font-size: var(--fs-md); font-weight: 600; color: var(--text); }
+.ti-vol { margin-left: auto; font-size: var(--fs-xs); color: var(--text-3); white-space: nowrap; }
+.ti-vol span { font-family: var(--sans); color: var(--text-4); }
+.ti-holder {
+  display: flex; align-items: baseline; gap: 6px; width: 100%; min-width: 0;
+  padding: var(--sp-2) 0 0; border: none; border-top: 1px solid var(--line-soft); background: none;
+  cursor: pointer; text-align: left; font-size: var(--fs-xs); color: var(--text-3);
+}
+.ti-holder-lab { flex-shrink: 0; }
+.ti-holder-name { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--text-2); font-weight: 600; }
+.ti-holder-amt { margin-left: auto; flex-shrink: 0; color: var(--text-3); }
+.ti-holder:hover .ti-holder-name { color: var(--accent); }
+
+@media (max-width: 560px) {
+  .ti-list { grid-template-columns: 1fr; }
+}
