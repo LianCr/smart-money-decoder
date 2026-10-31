@@ -80,8 +80,8 @@
   padding-left: 12px; border-left: 1px solid var(--line-soft); margin-bottom: 8px;
 }
 .audit-cav.snap {
-  color: var(--amber); border-left: 2px solid var(--amber);
-  background: var(--amber-2); border-radius: 0 6px 6px 0; padding: 8px 12px;
+  color: var(--amber); border: 1px solid var(--amber-a30);
+  background: var(--amber-2); border-radius: var(--r-sm); padding: 8px 12px;
 }
 
 /* ── 逐场复盘列表 ─────────────────────────────────────── */

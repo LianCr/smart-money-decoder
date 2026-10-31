@@ -36,7 +36,7 @@
 
 /* ⑤ 结构化简报正文 → AWS 技术白皮书：H2 左侧青粗边，强调词锐青 */
 .bf-narr { font-family: var(--sans); font-size: 13px; line-height: 1.8; letter-spacing: 0.01em; color: var(--fg-2); max-width: 640px; margin: 0 auto; }
-.bf-narr .bf-h { font-family: var(--sans); font-size: 14px; font-weight: 700; letter-spacing: 0.02em; color: var(--text); border-left: 4px solid var(--bf-accent); padding-left: 12px; margin: 28px 0 14px; }
+.bf-narr .bf-h { font-family: var(--sans); font-size: 14px; font-weight: 700; letter-spacing: 0.02em; color: var(--text); margin: 28px 0 10px; text-wrap: balance; }
 .bf-narr .bf-l { margin-bottom: 16px; }
 .bf-narr .bf-l.bullet { padding-left: 16px; position: relative; }
 .bf-narr .bf-l.bullet::before { content: "›"; position: absolute; left: 2px; color: var(--bf-accent); }

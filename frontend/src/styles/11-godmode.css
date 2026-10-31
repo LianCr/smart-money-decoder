@@ -24,7 +24,8 @@
 .gmt-warn { color: var(--neg); font-style: normal; }
 .gmt-foot-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--pos); box-shadow: 0 0 5px var(--pos-glow); flex-shrink: 0; }
 /* 催化剂读出条：固定在图下方、永不遮挡价格线 */
-.gmt-readout { margin-top: 13px; min-height: 52px; padding: 10px 13px; border: 1px solid var(--line-1); border-left: 3px solid var(--line-2); border-radius: 5px; background: color-mix(in srgb, var(--text) 1.8%, transparent); transition: border-left-color 0.15s, background 0.15s; }
+.gmt-readout { margin-top: 13px; min-height: 52px; padding: 10px 13px; border: 1px solid var(--line-1); border-radius: var(--r-md); background: var(--wash-1); transition: border-color var(--dur-fast), background var(--dur-fast); }
+.gmt-readout.on { border-color: color-mix(in srgb, var(--ro-c, var(--accent)) 55%, var(--line)); }
 .gmt-readout.on { background: color-mix(in srgb, var(--text) 3.5%, transparent); }
 .gmt-ro-line { display: flex; align-items: center; gap: 9px; flex-wrap: wrap; }
 .gmt-ro-date { font-family: var(--mono); font-size: 11px; color: var(--fg-3); }

@@ -276,7 +276,7 @@ export function GodModeTimeline({ d }) {
 
       {/* 🔴 催化剂读出条：固定图下方、永不遮挡价格线；点击彩点可钉住（演示时不会因移开鼠标丢失） */}
       <div className={`gmt-readout ${activeGroup ? "on" : ""}`}
-        style={activeGroup ? { borderLeftColor: groupColor(activeGroup) } : null}>
+        style={activeGroup ? { "--ro-c": groupColor(activeGroup) } : null}>
         {activeGroup ? (
           <>
             {activeGroup.items.slice(0, 3).map((n, i) => {
