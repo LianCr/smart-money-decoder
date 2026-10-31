@@ -44,6 +44,7 @@
 | CLOB 历史价 | `clob.polymarket.com/prices-history?market=<tokenId>&...`；token=记录里的 `asset` 字段；短命市场 T-7 未创建返回 None |
 | **decoder 缓存 key 含 current_price** | 盘中市价漂移会 miss → 单靠它省不了 token（现仅回测重放在用；正向流程靠 /dashboard 整份缓存兜底） |
 | 课堂网关模型（旧后端） | **只有 `claude-sonnet-4.5`（点号不是横杠）能用，haiku 返回 502**。maxTokens 上限 2048。官方 API 后端无此限制（模型 id 是横杠 `claude-sonnet-4-5`） |
+| **[Polymarket v2] 2026-10-30 实测** | `data-api.polymarket.com/v2/*` 全免 key：trades(user/condition/start/end+cursor,≤1000/页)·holders·leaderboard(`time_period`∈day/week/month/all,`category=politics` 真生效,`user=` 单查返回 dict 非 list)·prices-history(**`interval` 与 start/end 互斥**,日K用 `bucket_seconds=86400`,末点是"现在"非整点)·user-pnl(`interval`∈max/all/1m/1w/1d/12h/6h,累计已实现序列)·oi·resolutions。Gamma `/markets?condition_ids=` 也要 `closed=true` 才给已结算 |
 | **[Heisenberg v3] 参数真名因 endpoint 而异** | 官方 context 文档参数名不可靠，**实测真名**：569 PnL=`wallet`（传 proxy_wallet→400）· 556 Trades=`proxy_wallet`（文档写 `wallet_proxy` **被静默忽略→返回全局交易流**，错配比报错危险）· 581 Wallet360=`proxy_wallet` · 579 Leaderboard=`wallet_address`。打之前先核对真名 |
 | **[Heisenberg v3] `pagination.limit` 上限 200、下限 3** | >200 → 404 `'max' tag`；**≤2 → 404 body validation（2026-08-07 实测，文档"1-200"不实）**。探针/小查询最少传 3、稳妥传 10 |
 | **[Heisenberg v3] 569 宽窗口只返回前若干天** | 宽时间窗（如 80 天）只回前 10 天左右，**结算日的亏损落在返回范围外→看着像 0**。要看某盘结算盈亏必须把 start/end **窄锚到结算期**附近分段查 |
@@ -114,8 +115,9 @@ cd frontend && npm install && npm run dev       # 前端 → http://localhost:51
 python -m backtest._market_lift                 # 路 A lift 取样器（~24min，会烧 token，非必要别跑）
 ```
 
-**`.env` 必填三项**（与 `render.yaml`、`.env.example`、`core/health.py` 三处严格一致，**契约只有一份，改一处要改四处**）：
-`ANTHROPIC_API_KEY`（官方 API，console.anthropic.com，自己的 key）· `TAVILY_API_KEY`（app.tavily.com）· `HEISENBERG_API_KEY`（免费，整个数据层靠它）。
+**`.env` 必填两项**（与 `render.yaml`、`.env.example`、`core/health.py` 三处严格一致，**契约只有一份，改一处要改四处**）：
+`ANTHROPIC_API_KEY`（官方 API，console.anthropic.com，自己的 key）· `TAVILY_API_KEY`（app.tavily.com）。
+**数据层（2026-10-30 起）默认 = Polymarket 免费公开 API**（`fetcher/pm_backend.py`，Data API v2 / Gamma / CLOB，免 key），经 `fetcher/heisenberg.call/paginate` 的 `DATA_BACKEND` 开关接入、记录形状与 Heisenberg 同构 → 上层零改动。Heisenberg 免费 key 于 2026-10 失效（401，官网改为申请制）；`DATA_BACKEND=heisenberg`+`HEISENBERG_API_KEY` 可切回。诚实边界：胜率/注数/sharpe/反作弊旗标/社媒(585)/F-Score(584) 无公开来源 → None 或缺席，绝不硬算（红线 3）。
 **可选**：`GITHUB_TOKEN`（状态持久层，不填则刷新的榜冷启动后退回 seed）· `REDIS_URL`（跨实例协调，不填自动回退进程内单飞）。
 `CLASSROOM_API_KEY` 为旧课堂网关回落位（**2026-07-08 起域名 NXDOMAIN 已失效**，有 ANTHROPIC_API_KEY 就无需填）。
 **自检**：`GET /healthz` —— 必填 key 齐不齐 + 缓存目录写不写得动，缺必填项返回 **503**（判定口径在 `core/health.py`，改口径记得同步 render.yaml 注释；render.yaml 的 `healthCheckPath` 已指向它）。
