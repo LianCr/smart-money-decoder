@@ -86,6 +86,7 @@ def _base(tmp, **extra):
         attach_i18n_en=lambda d: False,
         _purge_wallet_caches=lambda *a, **k: 0,
         _market_slug=lambda cid: "some-slug",
+        get_top_political_positions_hz=lambda *a, **k: [],   # 大选优先的备选列表：默认无（零网络）
     )
     kw.update(extra)
     return kw
@@ -283,6 +284,23 @@ with tempfile.TemporaryDirectory() as tmp:
         except RuntimeError:
             pass
         check("build 意外 raise 也释放锁(finally)", released2, [1])
+
+# ── 大选主题（2026-10-30）：看板优先展示选举盘，与推荐卡同一注 ───────────────────
+print("大选优先选仓 _pick_position")
+POS_ELEC = {"market_id": "0xhouse", "outcome": "Yes",
+            "market_question": "Will the Democratic Party control the House after the 2026 Midterm elections?"}
+with patched(get_top_political_position_hz=lambda w, as_of=None: dict(POS_OK),
+             get_top_political_positions_hz=lambda w, as_of=None, n=5: [dict(POS_OK), dict(POS_ELEC)]):
+    check("最大仓非选举 → 换成前 5 里的选举盘", db._pick_position("0x" + "9" * 40, "2026-10-30")["market_id"], "0xhouse")
+with patched(get_top_political_position_hz=lambda w, as_of=None: dict(POS_OK),
+             get_top_political_positions_hz=lambda w, as_of=None, n=5: [dict(POS_OK)]):
+    check("没有选举盘 → 照旧最大政治仓（看板不 404）", db._pick_position("0x" + "9" * 40, "2026-10-30")["market_id"], "0xcid")
+with patched(get_top_political_position_hz=lambda w, as_of=None: dict(POS_ELEC),
+             get_top_political_positions_hz=lambda *a, **k: (_ for _ in ()).throw(AssertionError("不该调"))):
+    check("最大仓已是选举盘 → 不多打一次", db._pick_position("0x" + "9" * 40, "2026-10-30")["market_id"], "0xhouse")
+with patched(get_top_political_position_hz=lambda w, as_of=None: pos_err("API_TIMEOUT"),
+             get_top_political_positions_hz=lambda *a, **k: (_ for _ in ()).throw(AssertionError("不该调"))):
+    check("出错原样返回（错误契约不变）", db._pick_position("0x" + "9" * 40, "2026-10-30")["reason"], "API_TIMEOUT")
 
 print(f"\n{passed} passed, {failed} failed")
 sys.exit(1 if failed else 0)
