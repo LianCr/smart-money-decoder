@@ -8,6 +8,7 @@ import { createContext, useContext, useState } from "react";
 import EN from "./locales/en.js";
 import AI_MAP from "./locales/ai_en.js";
 import { patternTranslate } from "./locales/ai_patterns.js";
+import { track } from "./utils/analytics.js";
 
 const CJK_RE = /[一-鿿]/;
 const RUNTIME_AI = new Map();          // 后端随 payload 下发的 {中文: 英文}，会话内累积
@@ -32,6 +33,7 @@ export function LangProvider({ children }) {
   const setLang = (l) => {
     setLangState(l);
     try { localStorage.setItem("smd_lang", l); } catch { /* 隐身模式等 */ }
+    track("lang", l);
   };
   return <LangContext.Provider value={{ lang, t, setLang }}>{children}</LangContext.Provider>;
 }

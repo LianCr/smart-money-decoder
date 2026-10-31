@@ -18,6 +18,7 @@
 import { useEffect, useRef, useState } from "react";
 import { registerAiTranslations } from "../i18n.jsx";
 import { API, POLL_BUDGET_MS } from "../utils/config.js";
+import { track } from "../utils/analytics.js";
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
@@ -38,6 +39,7 @@ export function useDashboard() {
     const alive = () => seqRef.current === seq;
     const startedAt = Date.now();
     let sendRefresh = wantRefresh;
+    track(wantRefresh ? "refresh" : "wallet", wallet);
 
     // 入口态：刷新且有旧板 → refreshing（板不动）；否则 loading（无板可垫）
     if (wantRefresh && boardRef.current) setStatus("refreshing");

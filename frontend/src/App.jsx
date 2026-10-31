@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useLang, LangToggle } from "./i18n.jsx";
 import { API } from "./utils/config.js";
+import { track } from "./utils/analytics.js";
 import { SiteFooter } from "./components/SiteFooter.jsx";
 import { BoardView } from "./views/BoardView.jsx";
 import { TrackRecordView } from "./views/TrackRecordView.jsx";
@@ -35,7 +36,7 @@ export default function App() {
           </button>
           <button
             className={`medal ${tab === "track" ? "active" : ""}`}
-            onClick={() => setTab(tab === "track" ? "board" : "track")}
+            onClick={() => { if (tab !== "track") track("track"); setTab(tab === "track" ? "board" : "track"); }}
             title={tab === "track" ? t("返回统一看板") : t("查看历史战绩")}
           >
             [ TRACK RECORD:&nbsp;<span className="m-w">{wl.w}W</span> · <span className="m-l">{wl.l}L</span>&nbsp;]
