@@ -6,6 +6,26 @@ export default {
   "v3 统一看板：身份+这一注+实时盘面+行为×催化剂+Edge 一屏看全": "v3 unified dashboard: identity + the bet + live market + behavior × catalysts + edge, one screen",
   "完整聪明钱简报（v3）": "Full smart-money briefing (v3)",
   "查看历史战绩": "View track record",
+  "回到统一看板": "Back to the dashboard",
+  "返回统一看板": "Return to the dashboard",
+  "跳到正文": "Skip to content",
+  "主导航": "Main navigation",
+
+  // ── 选举横幅 / 科技移民 ──
+  "2026 美国中期选举": "2026 US midterms",
+  "Polymarket 此刻的定价 · 概率 = 市场隐含价格，不是预测": "What Polymarket is pricing right now · odds are market-implied prices, not forecasts",
+  "天后选举日": "days to Election Day",
+  "今天是选举日": "Election Day is today",
+  "选举日已过": "Election Day has passed",
+  "投票进行中 · 盘口实时变动": "Polls are open · odds move live",
+  "结果待定 · 以市场结算为准": "Results pending · markets settle on the official call",
+  "数据截至": "As of",
+  "24h 成交": "24h vol",
+  "科技与移民": "Tech & Immigration",
+  "H-1B、F-1、OPT 等签证与科技人才政策相关的实盘": "Live markets tied to H-1B, F-1, OPT and tech-talent policy",
+  "最大持有人": "Top holder",
+  "最大持有人 · 点击生成该钱包的统一看板": "Top holder · click to build this wallet's dashboard",
+  "持仓": "position",
 
   // ── 加载流水线 ──
   "AI 推演中": "AI working",

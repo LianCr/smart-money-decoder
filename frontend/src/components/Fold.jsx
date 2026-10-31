@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { disclosureProps } from "../utils/a11y.js";
 
 export function Fold({ title, sub, children }) {
   const [open, setOpen] = useState(false);
@@ -7,8 +8,8 @@ export function Fold({ title, sub, children }) {
   useEffect(() => { setH(open && ref.current ? ref.current.scrollHeight : 0); }, [open]);
   return (
     <div className={`db-fold ${open ? "open" : ""}`}>
-      <div className="db-fold-h" onClick={() => setOpen(!open)}>
-        <span className="db-fold-arrow">{open ? "▾" : "▸"}</span>
+      <div className="db-fold-h" {...disclosureProps(open, () => setOpen(!open))}>
+        <span className="db-fold-arrow" aria-hidden="true">{open ? "▾" : "▸"}</span>
         <span className="db-fold-t">{title}</span>
         {sub && <span className="db-fold-sub">{sub}</span>}
       </div>

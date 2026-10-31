@@ -4,7 +4,7 @@
 // 批量翻好、随 payload 下发 i18n_en 映射，前端 fetch 后 registerAiTranslations() 注册进来——
 // 所有既有 t() 渲染点零改动自动翻译。离线词典 ai_en.js 降级为历史兜底（6-25 冻结世界的内容）；
 // 极端情况（翻译调用失败）才回退中文 + ZhNote 诚实标注。
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import EN from "./locales/en.js";
 import AI_MAP from "./locales/ai_en.js";
 import { patternTranslate } from "./locales/ai_patterns.js";
@@ -20,12 +20,14 @@ export function registerAiTranslations(map) {
 }
 const toEN = (s) => EN[s] ?? RUNTIME_AI.get(s) ?? AI_MAP.get(s) ?? patternTranslate(s) ?? s;
 
-const LangContext = createContext({ lang: "zh", t: (s) => s, setLang: () => {} });
+const LangContext = createContext({ lang: "en", t: (s) => s, setLang: () => {} });
 
 export function LangProvider({ children }) {
   const [lang, setLangState] = useState(() => {
-    try { return localStorage.getItem("smd_lang") || "zh"; } catch { return "zh"; }
+    try { return localStorage.getItem("smd_lang") || "en"; } catch { return "en"; }
   });
+  // <html lang> 跟随当前语言（读屏/断字/字体回退都看它）
+  useEffect(() => { document.documentElement.lang = lang === "zh" ? "zh-CN" : "en"; }, [lang]);
   const t = (s) => {
     if (lang !== "en" || s == null) return s;
     return typeof s === "string" ? toEN(s) : s;

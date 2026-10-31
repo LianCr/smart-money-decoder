@@ -4,11 +4,13 @@ import { API, EXAMPLES, TRADERS_URL, LEADERBOARD_URL, STAGES_BOARD } from "../ut
 import { abbrev } from "../utils/format.jsx";
 import { useDashboard } from "../hooks/useDashboard.js";
 import { BoardBody } from "../components/BoardBody.jsx";
+import { ElectionBanner } from "../components/ElectionBanner.jsx";
 import { ErrorBox } from "../components/ErrorBox.jsx";
 import { Fold } from "../components/Fold.jsx";
 import { HotTraders } from "../components/HotTraders.jsx";
 import { LoadingStages } from "../components/LoadingStages.jsx";
 import { Recommendations } from "../components/Recommendations.jsx";
+import { TechImmigration } from "../components/TechImmigration.jsx";
 
 export function BoardView() {
   const { t } = useLang();
@@ -38,15 +40,18 @@ export function BoardView() {
   const showStages = (status === "loading" || status === "polling") && !board;
   return (
     <>
+      {(showHome || showStages) && <ElectionBanner />}
+      {(showHome || showStages) && <TechImmigration onPick={(w) => { setWallet(w); run(w); }} />}
       <HotTraders onPick={(w) => { setWallet(w); run(w); }} />
       {(showHome || showStages) && (
         <div className="console-sub">{t("输入聪明钱钱包,生成 v3 统一看板:身份体量 → 这一注 → 实时盘面 → 行为×催化剂 → Edge 判断,一屏看全")}</div>
       )}
       <div className={`cmdbar ${busy ? "busy" : ""}`}>
-        <span className="cmd-prompt">&gt;</span>
+        <span className="cmd-prompt" aria-hidden="true">&gt;</span>
         {showHome && !wallet && <span className="cmd-caret" />}
         <input className="cmd-input num" value={wallet} onChange={(e) => setWallet(e.target.value)}
-          onKeyDown={(e) => e.key === "Enter" && run()} placeholder={t("输入 Polymarket 钱包地址")} spellCheck={false} />
+          onKeyDown={(e) => e.key === "Enter" && run()} placeholder={t("输入 Polymarket 钱包地址")} spellCheck={false}
+          name="wallet" autoComplete="off" autoCapitalize="off" aria-label={t("输入 Polymarket 钱包地址")} />
         <button className="cmd-trigger" onClick={() => run()} disabled={busy || !wallet.trim()}>
           {busy ? t("生成中") : t("生成看板")}
         </button>

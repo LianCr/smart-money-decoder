@@ -63,7 +63,7 @@ export function PnlChart({ points }) {
               stroke={s.neg ? "var(--red)" : "var(--green)"} strokeWidth="2" vectorEffect="non-scaling-stroke" />
           ))}
         </svg>
-        <span className="pc-dot" style={{ left: "calc(100% - 4px)", top: `calc(${lastTop}% - 4px)`, background: color }} />
+        <span className="pc-dot" style={{ top: `calc(${lastTop}% - 4px)`, background: color }} />
         <span className="pc-peak" style={{ left: `${peakLeft}%`, top: `${peakTop}%` }}>peak {fmtPnlCompact(max)}</span>
       </div>
       <div className="pc-axis">
