@@ -40,6 +40,13 @@ export function BoardView() {
   const showStages = (status === "loading" || status === "polling") && !board;
   return (
     <>
+      {showHome && (
+        <header className="hero">
+          <p className="eyebrow">{t("2026 中期选举 · 聪明钱追踪")}</p>
+          <h1 className="hero-title">{t("看清谁在押注")} <em>{t("中期选举")}</em>{t("。")}</h1>
+          <p className="hero-sub">{t("输入任何 Polymarket 钱包：它押了什么、什么时候进场、新闻和价格站在哪一边——代码算数字，AI 只做解读。")}</p>
+        </header>
+      )}
       {(showHome || showStages) && <ElectionBanner />}
       {(showHome || showStages) && <TechImmigration onPick={(w) => { setWallet(w); run(w); }} />}
       <HotTraders onPick={(w) => { setWallet(w); run(w); }} />

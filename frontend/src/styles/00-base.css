@@ -1,46 +1,48 @@
 /* ============================================================
-   Smart Money Decoder — 视觉语言
-   彭博终端的克制 × 交易 App 的紧张感
-   调色板 = 一族冷灰 + 单一中性强调色(cyan) + follow_call/盈亏语义色(绿/琥珀/红)
+   Smart Money Decoder — 视觉语言（2026-10-30 浅色"研究报告"皮）
+   参照 heisenberg.so 的视觉语言（笔记：docs/design/heisenberg-reference.md）：
+   冷灰白底 + 墨色字 + 一抹钢蓝强调 + 海军蓝实心按钮；数字/地址/标签用等宽字；几乎不用阴影与发光。
    党派色(--dem/--gop)是独立的一组令牌：只给选举盘赔率用，绝不复用盈亏绿/红。
-   多巴胺只投在三处：价格区、follow_call 徽章、loading 进度
    ============================================================ */
 
 :root {
-  color-scheme: dark;
+  color-scheme: light;
 
-  /* ── 灰阶（同一冷色相，近黑非纯黑）──────────────────────── */
-  --bg:        #0a0c10;
-  --panel:     #10131a;
-  --panel-2:   #151a22;
-  --panel-3:   #1c222c;
-  --line:      #252b35;
-  --line-soft: #1a1f27;
+  /* ── 灰阶（同一冷色相）──────────────────────────────── */
+  --bg:        #f8fafc;
+  --panel:     #ffffff;
+  --panel-2:   #f8fafc;
+  --panel-3:   #f1f4f8;
+  --line:      #e4e8ee;
+  --line-soft: #edf0f4;
 
-  /* 文字层级：拉开亮度梯度；最弱一级仍 ≥3:1（小号说明字也读得到） */
-  --text:      #eceff4;
-  --text-2:    #aab2c0;
-  --text-3:    #7c8596;   /* 次级/标签 */
-  --text-4:    #5f6878;   /* 最弱（仅装饰/时间戳） */
+  /* 文字层级：--text-3 在白底仍 ≥4.5:1；--text-4 仅装饰/时间戳 */
+  --text:      #10161c;
+  --text-2:    #4e5a67;
+  --text-3:    #657080;
+  --text-4:    #8b95a1;
 
-  /* ── 单一中性强调色 ───────────────────────────────────── */
-  --accent:     #4cc4e0;
-  --accent-dim: #1a3640;
-  --on-accent:  #051519;  /* 实心强调底上的字 */
+  /* ── 强调：钢蓝（链接/关键词/焦点）+ 海军蓝（实心按钮/深色带）── */
+  --accent:     #2e5c8a;
+  --accent-dim: #eef3f9;
+  --on-accent:  #ffffff;
+  --navy:       #17293b;
+  --navy-2:     #223a52;
+  --on-navy:    #ffffff;
 
-  /* ── 语义色（仅价格盈亏 + follow_call 使用）─────────────── */
-  --green:     #29d07a;
-  --green-2:   #0f3a25;
-  --amber:     #f3a82a;
-  --amber-2:   #3d2c0c;
-  --red:       #ef4d52;
-  --red-2:     #3d1518;
+  /* ── 语义色（仅价格盈亏 + follow_call 使用）：沉稳不刺眼 ── */
+  --green:     #2f7a55;
+  --green-2:   #e9f6ef;
+  --amber:     #a2630d;
+  --amber-2:   #fbf2e2;
+  --red:       #b23a32;
+  --red-2:     #fbeceb;
 
-  /* ── 党派色（选举盘专用，和盈亏语义刻意分开：更冷的蓝 / 砖红）── */
-  --dem:       #5f8ff0;
-  --dem-2:     #16223d;
-  --gop:       #d4685c;
-  --gop-2:     #3a1a17;
+  /* ── 党派色（选举盘专用，和盈亏语义刻意分开：钴蓝 / 砖红）── */
+  --dem:       #3466c2;
+  --dem-2:     #e9effa;
+  --gop:       #c4553f;
+  --gop-2:     #faebe7;
 
   /* ── 透明叠色：统一由令牌 color-mix，不再散写 rgba ────────── */
   --accent-a08: color-mix(in srgb, var(--accent) 8%, transparent);
@@ -57,18 +59,19 @@
   --wash-2:     color-mix(in srgb, var(--text) 4%, transparent);
   --wash-3:     color-mix(in srgb, var(--text) 7%, transparent);
 
-  /* 发光：极克制（只给核心数字一点空气感，不做霓虹） */
-  --glow-accent: color-mix(in srgb, var(--accent) 22%, transparent);
-  --glow-green:  color-mix(in srgb, var(--green) 22%, transparent);
-  --glow-red:    color-mix(in srgb, var(--red) 22%, transparent);
-  --glow-amber:  color-mix(in srgb, var(--amber) 22%, transparent);
+  /* 发光：浅色皮不发光（令牌保留，值置透明，旧规则零改动即失效） */
+  --glow-accent: transparent;
+  --glow-green:  transparent;
+  --glow-red:    transparent;
+  --glow-amber:  transparent;
 
   /* 阴影：带偏移 + 软模糊，色相随底色 */
-  --shadow-pop: 0 8px 28px -6px color-mix(in srgb, #000 70%, var(--bg));
+  --shadow-pop: 0 24px 60px rgba(16, 32, 56, 0.13);
+  --shadow-btn: 0 2px 8px rgba(16, 32, 56, 0.16);
 
   /* ── 字体 ────────────────────────────────────────────── */
-  --mono: "IBM Plex Mono", ui-monospace, "SF Mono", SFMono-Regular, Menlo, Monaco, monospace;
-  --sans: "IBM Plex Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+  --mono: "Spline Sans Mono", ui-monospace, "SF Mono", SFMono-Regular, Menlo, Monaco, monospace;
+  --sans: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
           "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
 
   /* 字号阶（10 起步，<10px 一律提到 --fs-micro） */
@@ -95,8 +98,9 @@
   /* 圆角：内层紧、容器松 */
   --r-xs: 2px;
   --r-sm: 4px;
-  --r-md: 6px;
-  --r-lg: 10px;
+  --r-md: 8px;
+  --r-lg: 13px;
+  --r-xl: 14px;
   --r-pill: 999px;
 
   /* 层级 */
