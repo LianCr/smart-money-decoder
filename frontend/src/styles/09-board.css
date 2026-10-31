@@ -34,3 +34,6 @@
   .card.bf.db { padding: var(--sp-4) var(--sp-3); }
   .db-fold-sub { display: none; }
 }
+/* 卡片已有内边距：内部原本为零内距卡片设计的块去掉自带的水平缩进 */
+.card.bf.db .c-head { padding-left: 0; padding-right: 0; }
+.card.bf.db .pnlchart { padding-left: 0; padding-right: 0; }

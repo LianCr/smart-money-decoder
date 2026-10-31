@@ -40,8 +40,8 @@ export function BoardView() {
   const showStages = (status === "loading" || status === "polling") && !board;
   return (
     <>
-      {showHome && <ElectionBanner />}
-      {showHome && <TechImmigration onPick={(w) => { setWallet(w); run(w); }} />}
+      {(showHome || showStages) && <ElectionBanner />}
+      {(showHome || showStages) && <TechImmigration onPick={(w) => { setWallet(w); run(w); }} />}
       <HotTraders onPick={(w) => { setWallet(w); run(w); }} />
       {(showHome || showStages) && (
         <div className="console-sub">{t("输入聪明钱钱包,生成 v3 统一看板:身份体量 → 这一注 → 实时盘面 → 行为×催化剂 → Edge 判断,一屏看全")}</div>

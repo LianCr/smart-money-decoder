@@ -21,7 +21,7 @@ export function TechImmigration({ onPick }) {
       </div>
       {data.note && <p className="ti-note">{t(data.note)}</p>}
       <ul className="ti-list">
-        {markets.map((m) => <TiCard key={m.url || m.title} m={m} t={t} onPick={onPick} />)}
+        {markets.map((m) => <TiCard key={m.title} m={m} t={t} onPick={onPick} />)}
       </ul>
     </section>
   );
@@ -48,7 +48,7 @@ function TiCard({ m, t, onPick }) {
           title={t("最大持有人 · 点击生成该钱包的统一看板")}>
           <span className="ti-holder-lab">{t("最大持有人")}</span>
           <span className="ti-holder-name">{h.name || <span className="num">{abbrev(h.wallet)}</span>}</span>
-          {typeof h.amount === "number" && <span className="ti-holder-amt num">{compactUsd(h.amount).replace("$", "")} {t("份")}</span>}
+          {typeof h.amount === "number" && <span className="ti-holder-amt num">{t("持仓")} {compactUsd(h.amount).replace("$", "")}</span>}
         </button>
       )}
     </li>
