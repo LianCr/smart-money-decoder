@@ -22,30 +22,35 @@ export default function App() {
   const { t } = useLang();
   return (
     <div className="shell">
-      <div className="topbar">
-        <div className="brand" onClick={() => setTab("board")} title={t("回到统一看板")}>
-          <span className="dot" />SMART MONEY DECODER
-        </div>
-        <div className="topnav">
+      <a className="skip-link" href="#main">{t("跳到正文")}</a>
+      <header className="topbar">
+        <button type="button" className="brand" onClick={() => setTab("board")} title={t("回到统一看板")}>
+          <span className="dot" aria-hidden="true" />SMART MONEY DECODER
+        </button>
+        <nav className="topnav" aria-label={t("主导航")}>
           <button
             className={`navbtn primary ${tab === "board" ? "active" : ""}`}
+            aria-current={tab === "board" ? "page" : undefined}
             onClick={() => setTab("board")}
             title={t("v3 统一看板：身份+这一注+实时盘面+行为×催化剂+Edge 一屏看全")}
           >
-            ★ {t("统一看板")}<span className="navbtn-tag">v3</span>
+            {t("统一看板")}<span className="navbtn-tag">v3</span>
           </button>
           <button
             className={`medal ${tab === "track" ? "active" : ""}`}
+            aria-current={tab === "track" ? "page" : undefined}
             onClick={() => { if (tab !== "track") track("track"); setTab(tab === "track" ? "board" : "track"); }}
             title={tab === "track" ? t("返回统一看板") : t("查看历史战绩")}
           >
-            [ TRACK RECORD:&nbsp;<span className="m-w">{wl.w}W</span> · <span className="m-l">{wl.l}L</span>&nbsp;]
-            <span className="m-arrow">↗</span>
+            <span className="m-label">TRACK RECORD</span>
+            <span className="m-w">{wl.w}W</span><span className="m-dot" aria-hidden="true">·</span><span className="m-l">{wl.l}L</span>
           </button>
           <LangToggle />
-        </div>
-      </div>
-      {tab === "track" ? <TrackRecordView /> : <BoardView />}
+        </nav>
+      </header>
+      <main id="main">
+        {tab === "track" ? <TrackRecordView /> : <BoardView />}
+      </main>
       <SiteFooter />
     </div>
   );

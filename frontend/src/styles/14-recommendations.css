@@ -24,3 +24,7 @@
 .rec-disagree .with { color: var(--pos); }
 .rec-disagree .against { color: var(--amber); }
 .rec-consensus { font-size: 10px; color: var(--accent); margin: 4px 0 6px; }
+
+@media (max-width: 560px) {
+  .recs-list { grid-template-columns: 1fr; }
+}

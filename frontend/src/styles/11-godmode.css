@@ -83,3 +83,12 @@
 .gmt-tip-foot { font-size: var(--fs-micro); color: var(--fg-4); margin-top: 6px; font-style: italic; }
 .gmt-xaxis { display: flex; justify-content: space-between; font-family: var(--mono); font-size: var(--fs-micro); color: var(--fg-4); margin-top: 4px; padding: 0 2px; }
 .gmt-summary { margin-top: 16px; }
+
+/* ── 窄屏：大号概率不拆行；读出条标题不再强占 200px ─────────────── */
+.gmt-h-row { flex-wrap: wrap; }
+.gmt-h-pct { white-space: nowrap; }
+@media (max-width: 560px) {
+  .gmt-h-pct { font-size: 36px; }
+  .gmt-ro-title { min-width: 0; flex-basis: 100%; }
+  .gmt-tip { width: 220px; }
+}

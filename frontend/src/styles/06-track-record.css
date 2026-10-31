@@ -206,3 +206,13 @@
 .case-cat li { font-size: 12px; line-height: 1.55; color: var(--text-2); margin-bottom: 3px; }
 .case-reason { font-size: 11.5px; line-height: 1.6; color: var(--text-4); }
 .case-reason-lab { font-family: var(--mono); font-size: var(--fs-micro); letter-spacing: 0.05em; color: var(--accent); background: var(--accent-dim); padding: 1px 6px; border-radius: 4px; margin-right: 7px; }
+
+/* ── 窄屏：成绩单英雄区上下叠放，巨字收一号 ─────────────────────── */
+@media (max-width: 560px) {
+  .tr-hero { flex-direction: column; align-items: flex-start; gap: var(--sp-3); padding: var(--sp-4); }
+  .tr-hero-num { font-size: 36px; }
+  .l2-thesis { font-size: var(--fs-lg); }
+  .l2-big { font-size: 40px; }
+  .l2-cell { padding: var(--sp-4); }
+  .bt-row { padding: var(--sp-3) var(--sp-4); gap: var(--sp-3); }
+}

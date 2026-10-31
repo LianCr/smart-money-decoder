@@ -6,6 +6,10 @@ export default {
   "v3 统一看板：身份+这一注+实时盘面+行为×催化剂+Edge 一屏看全": "v3 unified dashboard: identity + the bet + live market + behavior × catalysts + edge, one screen",
   "完整聪明钱简报（v3）": "Full smart-money briefing (v3)",
   "查看历史战绩": "View track record",
+  "回到统一看板": "Back to the dashboard",
+  "返回统一看板": "Return to the dashboard",
+  "跳到正文": "Skip to content",
+  "主导航": "Main navigation",
 
   // ── 加载流水线 ──
   "AI 推演中": "AI working",

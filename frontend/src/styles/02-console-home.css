@@ -96,3 +96,15 @@
   letter-spacing: 0.01em; transition: color 0.15s;
 }
 .sys-source:hover { color: var(--text-3); }
+
+/* ── 窄屏：输入条按钮收窄、示例行地址让位 ───────────────────────── */
+@media (max-width: 560px) {
+  .console-sub { margin: var(--sp-6) 0 var(--sp-5); font-size: var(--fs-md); }
+  .cmdbar { margin-bottom: var(--sp-6); }
+  .cmd-prompt { padding-left: var(--sp-3); }
+  .cmd-input { padding: 13px var(--sp-2); font-size: var(--fs-base); }
+  .cmd-trigger { padding: 0 var(--sp-4); }
+  .mon-row { gap: var(--sp-3); flex-wrap: wrap; }
+  .mon-nick { min-width: 0; }
+  .mon-addr { display: none; }
+}

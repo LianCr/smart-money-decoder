@@ -5,17 +5,6 @@
 @keyframes bf-pulse { 0%,100%{opacity:1} 50%{opacity:0.5} }
 .animate-blink { animation: blink 1s step-end infinite; }
 
-/* 顶栏 Briefing tab（强调色 --bf-accent，不碰 track 勋章）*/
-.topnav { margin-left: auto; display: flex; align-items: center; gap: 10px; }
-.topnav .medal { margin-left: 0; }
-.navbtn {
-  font-family: var(--mono); font-size: 11.5px; font-weight: 600; letter-spacing: 0.03em;
-  color: var(--fg-3); padding: 6px 12px; border: 1px solid var(--line-1); border-radius: 3px;
-  background: transparent; cursor: pointer; white-space: nowrap; display: flex; align-items: center; gap: 6px;
-  transition: border-color 0.15s, color 0.15s;
-}
-.navbtn:hover, .navbtn.active { border-color: var(--bf-accent); color: var(--fg-1); }
-.navbtn-tag { font-size: var(--fs-micro); color: var(--bf-accent); background: var(--accent-bg); padding: 1px 5px; border-radius: 2px; }
 
 .card.bf { max-width: 760px; background: var(--bg-1); border: 1px solid var(--line-1); border-radius: 3px; box-shadow: none; }
 .card.bf .q { color: var(--fg-1); }

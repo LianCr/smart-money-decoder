@@ -89,3 +89,13 @@ a.db-news-t:hover { color: var(--bf-accent); text-decoration: underline; }
 .db-news-foot { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-top: 5px; }
 .db-news-src { font-family: var(--mono); font-size: 10px; color: var(--fg-4); }
 .db-news-sw { font-size: 10px; color: var(--fg-3); font-style: italic; }
+
+/* ── 窄屏：问题标题独占一行、身份名片换到下面；精华数字收一号 ───── */
+@media (max-width: 560px) {
+  .vh-top { flex-direction: column; gap: var(--sp-3); }
+  .vh-badge { align-self: stretch; }
+  .vh-essence { gap: var(--sp-3) var(--sp-4); padding: var(--sp-3) var(--sp-4); }
+  .vh-now { font-size: 36px; }
+  .vh-light { padding: var(--sp-3) var(--sp-4); flex-wrap: wrap; }
+  .vh-call { font-size: 18px; }
+}
