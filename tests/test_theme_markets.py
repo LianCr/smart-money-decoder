@@ -81,7 +81,8 @@ def fake_get(url, params=None):
                                 "markets": [mk("Google?", "0xao", '["0.992","0.008"]', 9e5, "Google")]}]}
         return {"events": []}
     if "/v2/holders" in url:
-        return {"data": [{"holders": [{"proxy_wallet": "0x" + "1" * 40, "name": "whale", "amount": 5000.0},
+        return {"data": [{"holders": [{"proxy_wallet": "0xa5ef39c3d3e10d0b270233af41cac69796b12966", "name": "", "amount": 9e9},
+                                      {"proxy_wallet": "0x" + "1" * 40, "name": "whale", "amount": 5000.0},
                                       {"proxy_wallet": "0x" + "2" * 40, "name": "", "amount": 10.0}]}]}
     raise AssertionError(url)
 
@@ -133,7 +134,7 @@ check("移民组在前、组内按量；去重/去已结算/去误匹配(Deporti
 check("分组标注", [m["group"] for m in t["markets"]], ["immigration", "immigration", "tech"])
 gold = t["markets"][1]
 check("top_outcome = 最高价选项", (gold["top_outcome"]["name"], gold["top_outcome"]["price"]), ("<100", 0.42))
-check("top_holder", (gold["top_holder"]["name"], gold["top_holder"]["amount"]), ("whale", 5000.0))
+check("top_holder 跳过协议合约", (gold["top_holder"]["name"], gold["top_holder"]["amount"]), ("whale", 5000.0))
 
 print("关键词相关性")
 for title, kw, want in [("How many people will Trump deport in 2026?", "deport", True),

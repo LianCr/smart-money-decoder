@@ -168,6 +168,17 @@ f = use([("/v2/leaderboard", lambda p: (200, {"data": [{"user_id": W, "rank": 1,
 r = pm.dispatch(579, {"wallet_address": "ALL", "leaderboard_period": "7d"}, limit=100)
 check("ALL 榜", (len(r["data"]), f.calls[-1][1].get("time_period"), f.calls[-1][1].get("limit")), (1, "week", 100))
 
+print("575 集中度剔除协议合约")
+CONTRACT = "0xa5ef39c3d3e10d0b270233af41cac69796b12966"
+check("已知协议合约", pm.is_protocol_address(CONTRACT.upper().replace("0X", "0x")), True)
+check("普通钱包", pm.is_protocol_address(W), False)
+f = use([("gamma-api.polymarket.com/markets", lambda p: (200, [open_m] if p.get("closed") == "false" else [])),
+         ("/v2/oi", lambda p: (200, {"data": [{"value": 1000.0}]})),
+         ("/v2/holders", lambda p: (200, {"data": [{"holders": [{"proxy_wallet": CONTRACT, "amount": 900.0},
+                                                                {"proxy_wallet": W, "amount": 100.0}]}]}))])
+ins = pm.dispatch(575, {"condition_id": CID})["data"][0]
+check("top1 不算合约", ins["top1_wallet_pct"], 10.0)
+
 print("不支持的 agent")
 for a in (585, 584, 596):
     try:

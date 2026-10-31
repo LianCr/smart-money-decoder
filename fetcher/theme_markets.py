@@ -127,8 +127,10 @@ def election_condition_ids(limit=8):
 
 def _top_holder(cid):
     try:
-        toks = (_get(f"{DATA}/v2/holders", {"condition": cid, "limit": 5}) or {}).get("data") or []
-        hs = sorted((h for t in toks for h in t.get("holders") or []), key=lambda h: -(_f(h.get("amount")) or 0))
+        toks = (_get(f"{DATA}/v2/holders", {"condition": cid, "limit": 8}) or {}).get("data") or []
+        hs = sorted((h for t in toks for h in t.get("holders") or []
+                     if not pm_backend.is_protocol_address(h.get("proxy_wallet"))),
+                    key=lambda h: -(_f(h.get("amount")) or 0))
     except Exception:
         return None
     if not hs:

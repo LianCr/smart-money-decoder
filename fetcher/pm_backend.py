@@ -34,6 +34,22 @@ GAMMA = "https://gamma-api.polymarket.com"
 CLOB = "https://clob.polymarket.com"
 TIMEOUT = 20
 _MAX_429_RETRIES = 3
+# Polymarket 协议合约（不是交易者）：holders 里会以巨额仓位出现（实测 0xa5ef… 在 Balance of Power
+# No 侧挂 610 万份、在几乎每个多选项盘都是"第一大持有人"），不剔除会把集中度/头号大户算成合约。
+# /v2/leaderboard?user=<它> 返回 "user is a protocol contract address" 可用来核实新地址。
+PROTOCOL_ADDRESSES = {
+    "0xa5ef39c3d3e10d0b270233af41cac69796b12966",   # 2026-10-30 实测（leaderboard 判定为 protocol contract）
+    "0xd91e80cf2e7be2e162c6513ced06f1dd0da35296",   # NegRiskAdapter
+    "0x4bfb41d5b3570defd03c39a9a4d8de6bd8b8982e",   # CTF Exchange
+    "0xc5d563a36ae78145c45a50134d48a1215220f80a",   # NegRisk CTF Exchange
+    "0x4d97dcd97ec945f40cf65f87097ace5ea0476045",   # ConditionalTokens
+}
+
+
+def is_protocol_address(addr):
+    return str(addr or "").lower() in PROTOCOL_ADDRESSES
+
+
 _HTTP = requests          # 测试缝：替换成带 .get(url, params, timeout) 的 fake
 _SLEEP = time.sleep       # 测试缝
 
@@ -295,7 +311,8 @@ def _insights(params):
         oi = (_data(_get(f"{DATA}/v2/oi", {"condition": cid})) or [{}])[0].get("value")
         amounts = sorted((_f(h.get("amount")) or 0
                           for tok in (_data(_get(f"{DATA}/v2/holders", {"condition": cid, "limit": 20})) or [])
-                          for h in (tok.get("holders") or [])), reverse=True)
+                          for h in (tok.get("holders") or [])
+                          if not is_protocol_address(h.get("proxy_wallet"))), reverse=True)
         oi = _f(oi)
         if oi and amounts:
             top1 = round(min(1.0, amounts[0] / oi) * 100, 2)
