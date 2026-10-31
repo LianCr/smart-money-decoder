@@ -2,7 +2,7 @@
    党派色只用 --dem / --gop（与盈亏 --green / --red 是两组令牌，互不借用）。
    非党派 outcome（组合盘、候选人名）一律中性灰阶，绝不硬套蓝红。 */
 .eb {
-  margin: 0 0 var(--sp-4); padding: var(--sp-5);
+  margin: 0 0 var(--sp-6); padding: var(--sp-5);
   background: var(--panel); border: 1px solid var(--line); border-radius: var(--r-lg);
 }
 .eb-head {
@@ -80,4 +80,44 @@ a.eb-q:hover { color: var(--accent); text-decoration: underline; }
   .eb-head { flex-direction: column; gap: var(--sp-3); margin-bottom: var(--sp-4); }
   .eb-title { font-size: 18px; }
   .eb-count-n { font-size: 36px; }
+}
+
+/* ══ 科技与移民（H-1B / F-1 / OPT 相关实盘）════════════════════════════════════
+   安静的次级面板：紧凑卡片，概率用中性色（既非党派也非盈亏）。 */
+.ti { margin: 0 0 var(--sp-5); }
+.ti-head { display: flex; align-items: baseline; flex-wrap: wrap; gap: var(--sp-1) var(--sp-3); margin-bottom: var(--sp-2); }
+.ti-title { margin: 0; font-size: var(--fs-lg); font-weight: 600; color: var(--text); }
+.ti-sub { margin: 0; font-size: var(--fs-sm); color: var(--text-3); }
+.ti-note {
+  margin: 0 0 var(--sp-3); font-size: var(--fs-xs); line-height: 1.5; color: var(--text-3);
+  max-width: 72ch;
+}
+.ti-list {
+  list-style: none; margin: 0; padding: 0;
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: var(--sp-2);
+}
+.ti-card {
+  display: flex; flex-direction: column; gap: var(--sp-2); min-width: 0;
+  padding: var(--sp-3) var(--sp-4); background: var(--panel); border: 1px solid var(--line-soft);
+  border-radius: var(--r-md);
+}
+.ti-q { font-size: var(--fs-base); font-weight: 500; line-height: 1.4; color: var(--text); text-decoration: none; text-wrap: pretty; }
+a.ti-q:hover { color: var(--accent); text-decoration: underline; }
+.ti-odds { display: flex; align-items: baseline; gap: var(--sp-2); margin-top: auto; }
+.ti-out { font-size: var(--fs-sm); color: var(--text-2); min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ti-pct { font-size: var(--fs-md); font-weight: 600; color: var(--text); }
+.ti-vol { margin-left: auto; font-size: var(--fs-xs); color: var(--text-3); white-space: nowrap; }
+.ti-vol span { font-family: var(--sans); color: var(--text-4); }
+.ti-holder {
+  display: flex; align-items: baseline; gap: 6px; width: 100%; min-width: 0;
+  padding: var(--sp-2) 0 0; border: none; border-top: 1px solid var(--line-soft); background: none;
+  cursor: pointer; text-align: left; font-size: var(--fs-xs); color: var(--text-3);
+}
+.ti-holder-lab { flex-shrink: 0; }
+.ti-holder-name { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--text-2); font-weight: 600; }
+.ti-holder-amt { margin-left: auto; flex-shrink: 0; color: var(--text-3); }
+.ti-holder:hover .ti-holder-name { color: var(--accent); }
+
+@media (max-width: 560px) {
+  .ti-list { grid-template-columns: 1fr; }
 }

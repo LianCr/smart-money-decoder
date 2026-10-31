@@ -21,6 +21,11 @@ export default {
   "结果待定 · 以市场结算为准": "Results pending · markets settle on the official call",
   "数据截至": "As of",
   "24h 成交": "24h vol",
+  "科技与移民": "Tech & Immigration",
+  "H-1B、F-1、OPT 等签证与科技人才政策相关的实盘": "Live markets tied to H-1B, F-1, OPT and tech-talent policy",
+  "最大持有人": "Top holder",
+  "最大持有人 · 点击生成该钱包的统一看板": "Top holder · click to build this wallet's dashboard",
+  "份": "shares",
 
   // ── 加载流水线 ──
   "AI 推演中": "AI working",
