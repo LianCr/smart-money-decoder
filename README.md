@@ -56,7 +56,7 @@ Backtest on 94 settled political markets showed roughly a 10-point directional l
 This project started as an AI-assisted prototype — and then was rebuilt into something maintainable, deliberately and on the record:
 
 - **A full audit first** (24 findings), then a phased hardening campaign across 17 PRs: atomic writes everywhere, CI that passes on a keyless clean clone, request-scoped logging, a router split that killed import side effects, registry-driven cache invalidation, and a single-source constants module where re-introducing a magic number turns a test red.
-- **45 test files** (947 assertions on the last run, all keyless), including endpoint three-state tests, guard positive/negative pairs, and byte-hash immutability checks on the judgment log.
+- **46 test files** (996 assertions on the last run, all keyless), including endpoint three-state tests, guard positive/negative pairs, and byte-hash immutability checks on the judgment log.
 - **Honest failure modes**: missing keys fail loud at `/healthz` instead of half-working; the frontend never shows "failed" while the backend is still building.
 - **SQL analytics over the judgment archive**: [`analytics/schema.sql`](./analytics/schema.sql) models the JSON archives as 4 relational tables; [`analytics/views.sql`](./analytics/views.sql) defines 6 views (row-level hit/miss status, scorecard summary, hit rate by confidence and by call, wallet activity, market lean drift with window functions). Served read-only at `GET /analytics` and shown on the Track Record page. Tests assert the SQL scorecard equals the Python `compute_scorecard()` on the real archive, and CI runs the same SQL on SQLite and PostgreSQL 16.
 - **Docs**: [`docs/ARCHITECTURE.md`](./docs/ARCHITECTURE.md) (mermaid system + request diagrams), [`docs/RUNBOOK.md`](./docs/RUNBOOK.md) (failure modes this project actually hit, with check / fix / verify).
@@ -100,7 +100,7 @@ The Polymarket adapter ([`fetcher/pm_backend.py`](./fetcher/pm_backend.py)) tran
 
 ### What SMD exposes (inbound)
 
-FastAPI, auto-generated **OpenAPI 3.1**: interactive docs at [`/docs`](https://smart-money-decoder.onrender.com/docs), schema at [`/openapi.json`](https://smart-money-decoder.onrender.com/openapi.json). 13 routes:
+FastAPI, auto-generated **OpenAPI 3.1**: interactive docs at [`/docs`](https://smart-money-decoder.onrender.com/docs), schema at [`/openapi.json`](https://smart-money-decoder.onrender.com/openapi.json). 15 routes:
 
 | Route | What it returns | Cost |
 |---|---|---|
@@ -117,6 +117,8 @@ FastAPI, auto-generated **OpenAPI 3.1**: interactive docs at [`/docs`](https://s
 | `GET /election-pulse` | 2026 midterms market banner | 0 (TTL cache) |
 | `GET /tech-immigration` | tech & immigration market panel | 0 (TTL cache) |
 | `POST /visit` | first-party visit/event beacon, logged as one structured line; nothing stored, no third party | 0 |
+| `GET /analytics` | every SQL analytics view over the judgment archive (see Engineering) | 0 (in-memory SQLite, rebuilt per request) |
+| `GET /analytics/{view}` | one view, e.g. `v_hit_rate_by_confidence`; unknown name → `404 UNKNOWN_VIEW` | 0 |
 
 Errors share one shape, `{"error": "<REASON>", "message": "…"}`, with layered status codes: `400` bad address, `404` no qualifying position, `429` rate limited, `502` upstream failure, `202` board still building.
 
@@ -129,6 +131,7 @@ BASE=https://smart-money-decoder.onrender.com   # free tier: first request after
 
 curl -s $BASE/healthz            # {"ok": ..., "failures": [...], "warnings": [...], "checks": {...}}
 curl -s $BASE/scorecard          # {"tested": ..., "settled": ..., "hit_rate_pct": ..., "rows": [...]}
+curl -s $BASE/analytics/v_hit_rate_by_confidence
 curl -s $BASE/backtest | head -c 400
 curl -s "$BASE/dashboard?wallet=0xabc"   # -> 400 {"error": "INVALID_ADDRESS", ...} before any network call
 ```
