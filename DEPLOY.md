@@ -1,6 +1,8 @@
 # Render 上线操作说明书
 
-从零到公网可访问约 15 分钟。前置条件已全部就绪：代码在 GitHub `LianCr/smart-money-decoder` 的 `v3-briefing` 分支，`render.yaml` 已钉住该分支，`seed/` 缓存快照随仓库发布。
+从零到公网可访问约 15 分钟。代码在 GitHub `LianCr/smart-money-decoder` 的 **`master`** 分支，`render.yaml` 钉住 `branch: master`（合了 PR 就是上线），`seed/` 缓存快照随仓库发布。
+
+> **2026-11-17 校正**：本文早期版本写的是 `v3-briefing` 分支 + 课堂网关 / Heisenberg 三把 key。`v3-briefing` 已于 PR #7 合进 master 并退役；数据层在 PR #32 切到 Polymarket 免费公开 API（免 key）。现行必填项以 `render.yaml` 为准：**`ANTHROPIC_API_KEY` + `TAVILY_API_KEY`**；`HEISENBERG_API_KEY` 只在 `DATA_BACKEND=heisenberg` 时需要；`CLASSROOM_API_KEY` 是回落位（默认网关域名已 NXDOMAIN）。下文第 0/2 步的 key 表已按此更新，其余历史操作步骤保留原样。故障处理见 [`docs/RUNBOOK.md`](./docs/RUNBOOK.md)（若已合并）。
 
 ---
 
@@ -9,12 +11,12 @@
 打开本地项目的 `.env` 文件，把这三个 key 复制到一个临时记事本里（马上要填）：
 
 ```
-CLASSROOM_API_KEY=...     # 老师的课堂网关 key
-TAVILY_API_KEY=...        # app.tavily.com 的 key
-HEISENBERG_API_KEY=...    # Heisenberg 免费 key
+ANTHROPIC_API_KEY=...     # 全部 AI 调用（core/llm.py 首选后端）
+TAVILY_API_KEY=...        # app.tavily.com 的 key（新闻检索）
+# 可选：GITHUB_TOKEN（跨部署状态持久化）、REDIS_URL（跨实例协调）、HEISENBERG_API_KEY（仅 DATA_BACKEND=heisenberg）
 ```
 
-🔴 **这三个 key 只填在 Render 控制台，永远不进 git。**
+🔴 **key 只填在 Render 控制台，永远不进 git。**
 
 可选但推荐再准备 `REDIS_URL`（Render Key Value 或 Upstash 的 Redis 连接串）。
 它只用于跨实例防重复刷新和共享刷新状态，不保存看板业务数据；没配或临时故障时应用会自动回退，不影响已缓存看板。
@@ -31,13 +33,13 @@ HEISENBERG_API_KEY=...    # Heisenberg 免费 key
 2. 在仓库列表里找到 `LianCr/smart-money-decoder` → **Connect**
 3. Render 会自动读取仓库里的 `render.yaml`，显示将要创建的服务：
    `smart-money-decoder`（Web Service · Python · Free）
-   - 分支已在 yaml 里钉死为 `v3-briefing`，不用改
-4. 页面会提示填 3 个环境变量（yaml 里标了 `sync: false` 的）：
+   - 分支已在 yaml 里钉死为 `master`，不用改
+4. 页面会提示填环境变量（yaml 里标了 `sync: false` 的）：
    | 变量名 | 填什么 |
    |---|---|
-   | `CLASSROOM_API_KEY` | 第 0 步记事本里的值 |
-   | `TAVILY_API_KEY` | 同上 |
-   | `HEISENBERG_API_KEY` | 同上 |
+   | `ANTHROPIC_API_KEY` | 第 0 步记事本里的值（必填） |
+   | `TAVILY_API_KEY` | 同上（必填） |
+   | 其余（`GITHUB_TOKEN` / `REDIS_URL` / `HEISENBERG_API_KEY` / `CLASSROOM_API_KEY`） | 可选，留空不影响启动 |
 5. 点 **Apply / Deploy Blueprint**
 
 ## 第 3 步：看构建日志（3-6 分钟，等就行）
@@ -69,7 +71,7 @@ HEISENBERG_API_KEY=...    # Heisenberg 免费 key
 罕见但有后手：把本地构建产物直接提交——
 ```bash
 cd frontend && npm run build && cd ..
-git add -f frontend/dist && git commit -m "chore: commit dist for render" && git push origin v3-briefing
+git add -f frontend/dist && git commit -m "chore: commit dist for render" && git push origin master
 ```
 然后把 Render 服务设置里的 Build Command 改成只剩 `pip install -r requirements.txt`，Manual Deploy 重跑。
 
@@ -86,7 +88,7 @@ git add -f frontend/dist && git commit -m "chore: commit dist for render" && git
 免费档闲置 15 分钟后休眠，冷启动约 1 分钟，正常。demo 前 10 分钟先自己打开一次热身即可。想彻底消除可用 UptimeRobot 每 10 分钟 ping 一次你的 URL（免费）。
 
 **Q6：以后改了代码怎么更新线上？**
-什么都不用做——`git push origin v3-briefing` 后 Render 自动重新部署（Blueprint 默认 auto-deploy）。
+PR 合进 `master` 后 Render 自动重新部署（Blueprint 默认 auto-deploy）。
 
 ## Demo 日操作流程（2026-07-09）
 
@@ -97,7 +99,7 @@ git add -f frontend/dist && git commit -m "chore: commit dist for render" && git
    .venv/bin/uvicorn api.main:app --port 8000   # 本地起服务
    # 浏览器 localhost:5173（或直接 curl）对目标钱包 refresh=1，跑完后：
    rm -rf seed/cache seed/data && cp -r .cache seed/cache && cp -r .data seed/data
-   git add seed && git commit -m "chore: refresh seed cache for demo" && git push origin v3-briefing
+   git add seed && git commit -m "chore: refresh seed cache for demo" && git push origin master   # 或走 PR
    # push 自动触发线上重新部署，线上冷启动即用新快照
    ```
 3. **demo 前 10 分钟**：打开公网 URL 热身（消除冷启动），顺手点一遍要演示的钱包确认秒回
