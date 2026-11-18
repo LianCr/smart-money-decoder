@@ -59,6 +59,7 @@ This project started as an AI-assisted prototype — and then was rebuilt into s
 - **36 test files**, including endpoint three-state tests, guard positive/negative pairs, and byte-hash immutability checks on the judgment log.
 - **Honest failure modes**: missing keys fail loud at `/healthz` instead of half-working; the frontend never shows "failed" while the backend is still building.
 - **SQL analytics over the judgment archive**: [`analytics/schema.sql`](./analytics/schema.sql) models the JSON archives as 4 relational tables; [`analytics/views.sql`](./analytics/views.sql) defines 6 views (row-level hit/miss status, scorecard summary, hit rate by confidence and by call, wallet activity, market lean drift with window functions). Served read-only at `GET /analytics` and shown on the Track Record page. Tests assert the SQL scorecard equals the Python `compute_scorecard()` on the real archive, and CI runs the same SQL on SQLite and PostgreSQL 16.
+- **Docs**: [`docs/ARCHITECTURE.md`](./docs/ARCHITECTURE.md) (mermaid system + request diagrams), [`docs/RUNBOOK.md`](./docs/RUNBOOK.md) (failure modes this project actually hit, with check / fix / verify).
 
 Stack: FastAPI · React/Vite · Claude (adversarial adjudication) · Polymarket public Data API v2 / Gamma / CLOB (no key) · deterministic scoring core.
 
