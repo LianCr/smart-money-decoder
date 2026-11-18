@@ -55,9 +55,10 @@ class _FakeRequestsModule:
         self.exceptions = hz.requests.exceptions
 
 
-_real_requests, _real_sleep, _real_key = hz.requests, hz._SLEEP, hz.KEY
+_real_requests, _real_sleep, _real_key, _real_backend = hz.requests, hz._SLEEP, hz.KEY, hz.BACKEND
 sleeps = []
 try:
+    hz.BACKEND = "heisenberg"                # 本文件测的是 Heisenberg HTTP 路径（默认后端已切 Polymarket）
     hz.KEY = "test-key"                      # 绕过 NO_KEY（不打真网络）
     hz._SLEEP = lambda s: sleeps.append(s)   # 不真睡，只记录
 
@@ -115,7 +116,7 @@ try:
     except hz.HeisenbergError as e:
         check("恢复后守卫照拦串号", e.reason, "WALLET_MISMATCH")
 finally:
-    hz.requests, hz._SLEEP, hz.KEY = _real_requests, _real_sleep, _real_key
+    hz.requests, hz._SLEEP, hz.KEY, hz.BACKEND = _real_requests, _real_sleep, _real_key, _real_backend
 
 print(f"\n{passed} passed, {failed} failed")
 sys.exit(1 if failed else 0)

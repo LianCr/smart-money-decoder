@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useLang, ZhNote } from "../i18n.jsx";
 import { CONF_LABEL } from "../utils/labels.js";
+import { disclosureProps } from "../utils/a11y.js";
 
 // ── Track Record 回测页 ─────────────────────────────────────────────────────
 const CALL_PLAIN = { "NO BASIS": "别跟", CHASED: "可跟·已追高", "ROOM LEFT": "可跟·有空间" };
@@ -20,7 +21,7 @@ export function CaseRow({ c }) {
 
   return (
     <div className={`bt-item ${open ? "open" : ""} ${c.hero ? "hero" : ""}`}>
-      <div className="bt-row" onClick={() => setOpen(!open)}>
+      <div className="bt-row" {...disclosureProps(open, () => setOpen(!open))}>
         <div className="bt-left">
           <div className="bt-q">{c.hero && <span className="hero-star">★ </span>}{c.market}</div>
           <div className="bt-tags">

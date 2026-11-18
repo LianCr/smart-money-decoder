@@ -29,6 +29,7 @@ from fetcher.heisenberg import call, results, AGENTS, HeisenbergError
 from fetcher.positions import get_top_political_position_hz, get_top_political_positions_hz
 from fetcher.markets import get_market_holders
 from fetcher.profile import _wallet360
+from fetcher.theme_markets import election_condition_ids, is_election_question
 from briefing.market_context import get_behavior_flags
 
 from core.log import get_logger, REQUEST_ID
@@ -290,6 +291,33 @@ def verify_targets(cands, top):
     return (first + rest)[:top]
 
 
+def _discovery_markets(as_of):
+    """发现入口（2026-10-30 大选主题）：中期选举成交量最大的子盘 → {cid: question}。
+    选举盘拿不到（上游挂）→ 回落旧的 SEEDS 种子扩展（每个种子前 3 个政治盘），扫榜不空转。"""
+    markets = dict(election_condition_ids(limit=10))
+    if markets:
+        LOG.info(f"中期选举盘 {len(markets)} 个作发现入口")
+        return markets
+    for w in SEEDS:
+        for pos in _retry(get_top_political_positions_hz, w, as_of=as_of, n=3, max_pages=15) or []:
+            markets.setdefault(pos["market_id"], pos["market_question"])
+        time.sleep(0.5)
+    LOG.info(f"选举盘不可用 → 回落种子 {len(SEEDS)} → 热门政治盘 {len(markets)} 个")
+    return markets
+
+
+def _election_position(w, as_of):
+    """候选展示的仓位必须是选举盘：最大政治仓是选举盘就用它（保留 near_settled 等单盘字段）；
+    否则在前 5 个政治仓里找第一个选举盘；都不是 → None（该钱包不进大选推荐）。"""
+    pos = _retry(get_top_political_position_hz, w, as_of=as_of, max_pages=15)
+    if pos and not pos.get("error") and is_election_question(pos.get("market_question")):
+        return pos
+    for p in _retry(get_top_political_positions_hz, w, as_of=as_of, n=5, max_pages=15) or []:
+        if is_election_question(p.get("market_question")):
+            return p
+    return None
+
+
 def scan(per_market=10, gate_pnl=REC_GATE_PNL, enrich_top=14, keep=8, ai_top=5, as_of=None):
     """as_of=None → BRIEFING_AS_OF（现默认=今天，全实时）。
     ai_verify 恒 fresh=1：⑥ 验证永远锚当天（当天已有缓存不重复烧）。"""
@@ -302,14 +330,8 @@ def scan(per_market=10, gate_pnl=REC_GATE_PNL, enrich_top=14, keep=8, ai_top=5, 
     hmap = _hscore_map()
     LOG.info(f"584 F-Score 榜 sweep：{len(hmap)} 个钱包在册")
 
-    # 1) 种子 → 热门政治盘 cid（去重）。🎨 多样性（2026-07-09）：每个种子取前 3 个
-    #    政治盘（原来只取最大 1 个 → 4 个种子高度重叠、全部候选挤在同 2-3 个盘，榜面单调）
-    markets = {}
-    for w in SEEDS:
-        for pos in _retry(get_top_political_positions_hz, w, as_of=as_of, n=3, max_pages=15) or []:
-            markets.setdefault(pos["market_id"], pos["market_question"])
-        time.sleep(0.5)
-    LOG.info(f"种子 {len(SEEDS)} → 热门政治盘 {len(markets)} 个")
+    # 1) 发现入口：中期选举热门子盘（2026-10-30 大选主题；拿不到回落 SEEDS 种子扩展）
+    markets = _discovery_markets(as_of)
 
     # 2) 每盘 → 共持大户 → 钱包池（去重，记最大净持仓 + 来源盘）
     pool, pool_mkt = {}, {}
@@ -337,9 +359,9 @@ def scan(per_market=10, gate_pnl=REC_GATE_PNL, enrich_top=14, keep=8, ai_top=5, 
     cands = []
     for w, pol, pp, quality in graded[:enrich_top]:
         time.sleep(0.4)
-        pos = _retry(get_top_political_position_hz, w, as_of=as_of, max_pages=15)
-        if not pos or pos.get("error"):
-            LOG.info(f"  · {w[:12]}… 政治 pnl={pp:.0f} 但无未结算政治顶仓(跳)")
+        pos = _election_position(w, as_of)
+        if not pos:
+            LOG.info(f"  · {w[:12]}… 政治 pnl={pp:.0f} 但无未结算选举盘仓位(跳)")
             continue
         if pos.get("near_settled"):               # 🔴 整本仓位全是 ≥95¢ 近结算盘 → 不值得推荐
             LOG.info(f"  · {w[:12]}… 全仓近结算(持有侧 {pos.get('held_price')})——无悬念不推")
@@ -391,7 +413,7 @@ def scan(per_market=10, gate_pnl=REC_GATE_PNL, enrich_top=14, keep=8, ai_top=5, 
     _mark_consensus(cands)            # 同侧专家共识（弱信号，与分歧对称）
 
     OUT.parent.mkdir(parents=True, exist_ok=True)
-    method = "E_market_reverse_ai_verified" if ai_top else "E_market_reverse"
+    method = "E_election_reverse_ai_verified" if ai_top else "E_election_reverse"
     i18n_en = {}                                  # 🌐 汇总各候选的翻译 → 顶层，前端一次注册
     for c in cands:
         i18n_en.update(c.pop("i18n_en", {}) or {})

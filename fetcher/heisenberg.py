@@ -24,6 +24,9 @@ load_dotenv()
 
 URL = "https://narrative.agent.heisenberg.so/api/v2/semantic/retrieve/parameterized"
 KEY = os.environ.get("HEISENBERG_API_KEY")
+# 数据后端开关（2026-10-30）：Heisenberg 免费 key 失效 → 默认走 Polymarket 免费公开 API
+# （fetcher/pm_backend.py，同形记录、免 key）。DATA_BACKEND=heisenberg 可切回（有付费 key 时）。
+BACKEND = os.environ.get("DATA_BACKEND", "polymarket").strip().lower()
 MAX_LIMIT = 200
 REQUEST_TIMEOUT = 30
 
@@ -69,6 +72,12 @@ def call(agent_id: int, params: dict, limit: int = MAX_LIMIT, offset: int = 0) -
     🛡 429 内建退避重试（2s/4s/6s）：扫榜线程和看板重建**并发**打限流时，之前一个 429 就把
     整条 dashboard pipeline 炸成 DASHBOARD_PIPELINE_FAILED——数据层自己扛住瞬时限流，重试耗尽才抛。
     """
+    if BACKEND != "heisenberg":
+        from fetcher import pm_backend
+        payload = pm_backend.dispatch(agent_id, params, limit=min(limit, MAX_LIMIT), offset=offset)
+        _verify_wallet_match(agent_id, params, payload)   # 🛡 第七道守卫对新后端照样生效
+        return payload
+
     if not KEY:
         raise HeisenbergError("NO_KEY", "缺少 HEISENBERG_API_KEY，请在 .env 配置（免费 key）")
 
@@ -164,6 +173,12 @@ def results(payload: dict) -> list:
 
 def paginate(agent_id: int, params: dict, max_pages: int = 30, sleep: float = 0.15) -> list:
     """翻页拉全量（每页 200，返回不足 200 即停；max_pages 防爆量）。"""
+    if BACKEND != "heisenberg" and agent_id == 556:
+        # Polymarket v2 trades 是 cursor 翻页（单页 ≤1000），一次拉到同样的行数上限
+        from fetcher import pm_backend
+        rows = pm_backend.trades_all(params, max_rows=max_pages * MAX_LIMIT)
+        _verify_wallet_match(agent_id, params, {"data": rows})
+        return rows
     out = []
     for i in range(max_pages):
         page = results(call(agent_id, params, limit=MAX_LIMIT, offset=i * MAX_LIMIT))

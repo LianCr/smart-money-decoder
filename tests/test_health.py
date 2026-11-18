@@ -79,7 +79,7 @@ with tempfile.TemporaryDirectory() as td:
     e2 = dict(e); e2["CLASSROOM_API_KEY"] = "classroom-x"
     check("CLASSROOM_API_KEY 也算 LLM key（二选一）", report(e2, paths)["ok"], True)
 
-    e = dict(FULL_ENV); e.pop("HEISENBERG_API_KEY")
+    e = dict(FULL_ENV, DATA_BACKEND="heisenberg"); e.pop("HEISENBERG_API_KEY")
     r = report(e, paths)
     check("缺 Heisenberg key → ok=False", r["ok"], False)
     check("缺 Heisenberg key → failures 指名道姓", any("heisenberg" in f for f in r["failures"]), True)
@@ -88,8 +88,10 @@ with tempfile.TemporaryDirectory() as td:
     r = report(e, paths)
     check("缺 Tavily key → ok=False", r["ok"], False)
 
-    r = report({}, paths)
+    r = report({"DATA_BACKEND": "heisenberg"}, paths)
     check("一个 key 都没有 → 三条 failures 全列出", len(r["failures"]), 3)
+    r = report({}, paths)
+    check("一个 key 都没有（Polymarket 后端）→ 两条（数据层免 key）", len(r["failures"]), 2)
 
 
 # ── 3. 可选 key 缺失 → 仍健康，但带警告（不该把实例判死）──────────────────────
@@ -157,7 +159,7 @@ with tempfile.TemporaryDirectory() as td:
     check("瞬时问题进 warnings", any("TIMEOUT" in w for w in r["warnings"]), True)
 
     probe_called = []
-    e = dict(FULL_ENV); e.pop("HEISENBERG_API_KEY")
+    e = dict(FULL_ENV, DATA_BACKEND="heisenberg"); e.pop("HEISENBERG_API_KEY")
     r = health_report(env=e, write_paths=paths,
                       data_probe=lambda: probe_called.append(1) or None)
     check("key 缺失时不打探针（缺失与额度尽的报因区分开）", probe_called, [])
@@ -165,6 +167,16 @@ with tempfile.TemporaryDirectory() as td:
 
     r = health_report(env=FULL_ENV, write_paths=paths)
     check("不注入探针 → 行为与从前一致（纯函数零网络）", r["ok"], True)
+
+    # 2026-10-30：默认数据后端 = Polymarket 免费公开 API，不需要 Heisenberg key
+    e = dict(FULL_ENV); e.pop("HEISENBERG_API_KEY")
+    probe_called = []
+    r = health_report(env=e, write_paths=paths, data_probe=lambda: probe_called.append(1) or None)
+    check("Polymarket 后端无 Heisenberg key → 健康", r["ok"], True)
+    check("Polymarket 后端照样打探针", probe_called, [1])
+    check("checks 标出后端（布尔）", r["checks"].get("polymarket_backend"), True)
+    r = health_report(env=e, write_paths=paths, data_probe=lambda: "SERVER")
+    check("Polymarket 瞬时故障 → 仍健康（只警告）", r["ok"], True)
 
 print(f"\n{passed} passed, {failed} failed")
 sys.exit(1 if failed else 0)

@@ -4,6 +4,8 @@
 
 [![CI](https://github.com/LianCr/smart-money-decoder/actions/workflows/check.yml/badge.svg)](https://github.com/LianCr/smart-money-decoder/actions)
 
+**Live demo — 2026 Midterms edition:** https://smart-money-decoder.onrender.com/?src=gh
+
 Most Polymarket tools answer one of two questions. *"Who is buying what?"* — answered for free by a dozen whale trackers. *"Should I copy them?"* — structurally broken: copiers pay detection lag, worse fills, and routinely become exit liquidity for the very wallets they follow.
 
 Smart Money Decoder answers the two harder questions:
@@ -57,7 +59,7 @@ This project started as an AI-assisted prototype — and then was rebuilt into s
 - **36 test files**, including endpoint three-state tests, guard positive/negative pairs, and byte-hash immutability checks on the judgment log.
 - **Honest failure modes**: missing keys fail loud at `/healthz` instead of half-working; the frontend never shows "failed" while the backend is still building.
 
-Stack: FastAPI · React/Vite · Claude (adversarial adjudication) · Polymarket data via Heisenberg · deterministic scoring core.
+Stack: FastAPI · React/Vite · Claude (adversarial adjudication) · Polymarket public Data API v2 / Gamma / CLOB (no key) · deterministic scoring core.
 
 ---
 

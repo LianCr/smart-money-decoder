@@ -1,53 +1,192 @@
 /* ============================================================
-   Smart Money Decoder — 视觉语言
-   彭博终端的克制 × 交易 App 的紧张感
-   调色板 = 灰阶 + 单一中性强调色(cyan) + follow_call 语义色(绿/琥珀/红)
-   多巴胺只投在三处：价格区、follow_call 徽章、loading 进度
+   Smart Money Decoder — 视觉语言（2026-10-30 浅色"研究报告"皮）
+   参照 heisenberg.so 的视觉语言（笔记：docs/design/heisenberg-reference.md）：
+   冷灰白底 + 墨色字 + 一抹钢蓝强调 + 海军蓝实心按钮；数字/地址/标签用等宽字；几乎不用阴影与发光。
+   党派色(--dem/--gop)是独立的一组令牌：只给选举盘赔率用，绝不复用盈亏绿/红。
    ============================================================ */
 
 :root {
-  /* 灰阶（近黑深灰，非纯黑） */
-  --bg:        #0a0c10;
-  --panel:     #111419;
-  --panel-2:   #161a21;
-  --line:      #232830;
-  --line-soft: #1b1f26;
+  color-scheme: light;
 
-  /* 文字层级：拉开亮度梯度，辅助信息安静下去 */
-  --text:      #eef1f6;
-  --text-2:    #aab2c0;
-  --text-3:    #6b7382;   /* 次级/标签 */
-  --text-4:    #474e5b;   /* 最弱 */
+  /* ── 灰阶（同一冷色相）──────────────────────────────── */
+  --bg:        #f8fafc;
+  --panel:     #ffffff;
+  --panel-2:   #f8fafc;
+  --panel-3:   #f1f4f8;
+  --line:      #e4e8ee;
+  --line-soft: #edf0f4;
 
-  /* 单一中性强调色 */
-  --accent:    #4cc4e0;
-  --accent-dim:#1d3a44;
+  /* 文字层级：--text-3 在白底仍 ≥4.5:1；--text-4 仅装饰/时间戳 */
+  --text:      #10161c;
+  --text-2:    #4e5a67;
+  --text-3:    #657080;
+  --text-4:    #8b95a1;
 
-  /* 语义色（仅价格盈亏 + follow_call 使用） */
-  --green:     #29d07a;
-  --green-2:   #0f3a25;
-  --amber:     #f3a82a;
-  --amber-2:   #3d2c0c;
-  --red:       #ef4d52;
-  --red-2:     #3d1518;
+  /* ── 强调：钢蓝（链接/关键词/焦点）+ 海军蓝（实心按钮/深色带）── */
+  --accent:     #2e5c8a;
+  --accent-dim: #eef3f9;
+  --on-accent:  #ffffff;
+  --navy:       #17293b;
+  --navy-2:     #223a52;
+  --on-navy:    #ffffff;
 
-  --mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Monaco, "Roboto Mono", monospace;
-  --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC",
-          "Microsoft YaHei", sans-serif;
+  /* ── 语义色（仅价格盈亏 + follow_call 使用）：沉稳不刺眼 ── */
+  --green:     #2f7a55;
+  --green-2:   #e9f6ef;
+  --amber:     #a2630d;
+  --amber-2:   #fbf2e2;
+  --red:       #b23a32;
+  --red-2:     #fbeceb;
+
+  /* ── 党派色（选举盘专用，和盈亏语义刻意分开：钴蓝 / 砖红）── */
+  --dem:       #3466c2;
+  --dem-2:     #e9effa;
+  --gop:       #c4553f;
+  --gop-2:     #faebe7;
+
+  /* ── 透明叠色：统一由令牌 color-mix，不再散写 rgba ────────── */
+  --accent-a08: color-mix(in srgb, var(--accent) 8%, transparent);
+  --accent-a16: color-mix(in srgb, var(--accent) 16%, transparent);
+  --accent-a30: color-mix(in srgb, var(--accent) 30%, transparent);
+  --green-a10:  color-mix(in srgb, var(--green) 10%, transparent);
+  --green-a30:  color-mix(in srgb, var(--green) 30%, transparent);
+  --amber-a08:  color-mix(in srgb, var(--amber) 8%, transparent);
+  --amber-a12:  color-mix(in srgb, var(--amber) 12%, transparent);
+  --amber-a30:  color-mix(in srgb, var(--amber) 30%, transparent);
+  --red-a10:    color-mix(in srgb, var(--red) 10%, transparent);
+  --red-a30:    color-mix(in srgb, var(--red) 30%, transparent);
+  --wash-1:     color-mix(in srgb, var(--text) 2%, transparent);
+  --wash-2:     color-mix(in srgb, var(--text) 4%, transparent);
+  --wash-3:     color-mix(in srgb, var(--text) 7%, transparent);
+
+  /* 发光：浅色皮不发光（令牌保留，值置透明，旧规则零改动即失效） */
+  --glow-accent: transparent;
+  --glow-green:  transparent;
+  --glow-red:    transparent;
+  --glow-amber:  transparent;
+
+  /* 阴影：带偏移 + 软模糊，色相随底色 */
+  --shadow-pop: 0 24px 60px rgba(16, 32, 56, 0.13);
+  --shadow-btn: 0 2px 8px rgba(16, 32, 56, 0.16);
+
+  /* ── 字体 ────────────────────────────────────────────── */
+  --mono: "Spline Sans Mono", ui-monospace, "SF Mono", SFMono-Regular, Menlo, Monaco, monospace;
+  --sans: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+          "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+
+  /* 字号阶（10 起步，<10px 一律提到 --fs-micro） */
+  --fs-micro: 10px;
+  --fs-xs:    11px;
+  --fs-sm:    12px;
+  --fs-base:  13px;
+  --fs-md:    14px;
+  --fs-lg:    16px;
+  --fs-xl:    20px;
+  --fs-2xl:   28px;
+  --fs-3xl:   42px;
+
+  /* 间距（4px 栅格） */
+  --sp-1: 4px;
+  --sp-2: 8px;
+  --sp-3: 12px;
+  --sp-4: 16px;
+  --sp-5: 24px;
+  --sp-6: 32px;
+  --sp-7: 48px;
+  --sp-8: 64px;
+
+  /* 圆角：内层紧、容器松 */
+  --r-xs: 2px;
+  --r-sm: 4px;
+  --r-md: 8px;
+  --r-lg: 13px;
+  --r-xl: 14px;
+  --r-pill: 999px;
+
+  /* 层级 */
+  --z-raised: 1;
+  --z-tip: 5;
+  --z-top: 10;
+
+  /* 动效 */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --dur-fast: 0.15s;
+  --dur-med: 0.28s;
+
+  /* ── 兼容别名：旧 Briefing 令牌名统一指回同一套色板 ─────────
+     （曾是第二套调色板 #00E5FF/#00E676/#FF3D00，导致两种青、两种绿并存） */
+  --bg-0: var(--bg);
+  --bg-1: var(--panel);
+  --bg-2: var(--panel-2);
+  --bg-3: var(--panel-3);
+  --line-1: var(--line);
+  --line-2: var(--line-soft);
+  --line-3: var(--accent);
+  --border: var(--line);
+  --fg-1: var(--text);
+  --fg-2: var(--text-2);
+  --fg-3: var(--text-3);
+  --fg-4: var(--text-4);
+  --bf-accent: var(--accent);
+  --accent-glow: var(--glow-accent);
+  --accent-bg: var(--accent-a08);
+  --pos: var(--green);
+  --pos-glow: var(--glow-green);
+  --pos-bg: var(--green-a10);
+  --neg: var(--red);
+  --neg-glow: var(--glow-red);
+  --neg-bg: var(--red-a10);
 }
 
 * { box-sizing: border-box; }
 
 html, body { margin: 0; background: var(--bg); }
+html { -webkit-text-size-adjust: 100%; scrollbar-color: var(--line) var(--bg); }
 
 body {
   color: var(--text);
   font-family: var(--sans);
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
+
+::selection { background: var(--accent-a30); color: var(--text); }
+a { text-underline-offset: 3px; }
+button { font-family: inherit; }
+
+/* 键盘焦点：统一青色描边（鼠标点击不出现） */
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: var(--r-xs); }
 
 .num { font-family: var(--mono); font-variant-numeric: tabular-nums; }
 
+/* 仅读屏可见 */
+.sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+
+/* 跳到正文（键盘用户） */
+.skip-link {
+  position: absolute; left: var(--sp-4); top: -48px; z-index: var(--z-top);
+  padding: var(--sp-2) var(--sp-3); border-radius: var(--r-sm);
+  background: var(--accent); color: var(--on-accent); font-size: var(--fs-sm); font-weight: 600;
+  text-decoration: none; transition: top var(--dur-fast);
+}
+.skip-link:focus { top: var(--sp-2); }
+
 /* ── 外壳 ─────────────────────────────────────────────── */
-.shell { max-width: 760px; margin: 0 auto; padding: 0 24px 100px; }
+.shell { max-width: 760px; margin: 0 auto; padding: 0 var(--sp-5) 100px; }
+@media (max-width: 520px) {
+  .shell { padding: 0 var(--sp-4) var(--sp-7); }
+}
+
+/* 尊重"减少动态效果"：关掉循环呼吸/跑马灯/描线，保留即时状态变化 */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}

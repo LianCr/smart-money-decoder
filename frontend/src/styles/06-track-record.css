@@ -2,12 +2,6 @@
    Track Record 回测页 — 审计报告气质，冷静不营销
    叙事性视觉仅保留 T-7→T-1 演变线一处
    ============================================================ */
-.mocktag {
-  font-family: var(--mono); font-size: 11px; letter-spacing: 0.05em;
-  color: var(--amber); background: rgba(243,168,42,0.06);
-  border: 1px solid rgba(243,168,42,0.25); border-radius: 7px;
-  padding: 7px 12px; margin-bottom: 20px;
-}
 
 /* 方法论说明：弱化小字，老实交代测的是什么 */
 .method {
@@ -42,7 +36,7 @@
 .l2-big {
   font-size: 60px; font-weight: 800; line-height: 1; letter-spacing: -0.03em;
   color: var(--accent);
-  text-shadow: 0 0 16px rgba(76, 196, 224, 0.28);   /* 极微弱青晕，宁可不发光也不过 */
+  text-shadow: 0 0 16px color-mix(in srgb, var(--accent) 28%, transparent);   /* 极微弱青晕，宁可不发光也不过 */
 }
 .l2-sub { font-size: 12px; line-height: 1.6; color: var(--text-3); }
 .l2-sub b { color: var(--green); font-weight: 700; font-family: var(--mono); }
@@ -86,8 +80,8 @@
   padding-left: 12px; border-left: 1px solid var(--line-soft); margin-bottom: 8px;
 }
 .audit-cav.snap {
-  color: var(--amber); border-left: 2px solid var(--amber);
-  background: var(--amber-2); border-radius: 0 6px 6px 0; padding: 8px 12px;
+  color: var(--amber); border: 1px solid var(--amber-a30);
+  background: var(--amber-2); border-radius: var(--r-sm); padding: 8px 12px;
 }
 
 /* ── 逐场复盘列表 ─────────────────────────────────────── */
@@ -121,28 +115,7 @@
 .stance b { font-size: 12px; font-weight: 800; }
 /* 结算真相放大权重（"后来真相"要显眼） */
 .resolved.big { font-size: 11px; font-weight: 700; color: var(--text-2); padding: 3px 10px; }
-/* 难度系数三档：迷雾=强调色、倾斜=中性、近明牌=暗调（主动示弱） */
-.difftag {
-  font-family: var(--mono); font-size: 10px; letter-spacing: 0.02em; font-weight: 600;
-  padding: 3px 9px; border-radius: 6px; white-space: nowrap; border: 1px solid transparent;
-}
-.difftag.diff-hard { color: var(--accent); background: var(--accent-dim); border-color: rgba(76,196,224,0.25); }
-.difftag.diff-mid  { color: var(--text-2); background: var(--panel-2); border-color: var(--line); }
-.difftag.diff-easy { color: var(--text-4); background: var(--panel-2); }
-.difftag.diff-na   { color: var(--text-4); background: var(--panel-2); }
 
-/* T-7 → T-1 判断演变（已移入抽屉顶部） */
-.bt-evo { display: flex; align-items: center; justify-content: center; padding: 14px 0 4px; }
-.tp { display: flex; flex-direction: column; align-items: center; gap: 5px; }
-.tp-lab { font-family: var(--mono); font-size: 9.5px; letter-spacing: 0.08em; color: var(--text-4); }
-/* T-7 → T-1 演变线：本页唯一叙事性视觉，渐亮 + 箭头指向 T-1 */
-.evo { position: relative; width: 32px; height: 2px; border-radius: 2px;
-  background: linear-gradient(90deg, var(--line), var(--accent)); margin: 0 12px 14px; }
-.evo::after {
-  content: ""; position: absolute; right: -3px; top: 50%; transform: translateY(-50%);
-  border-left: 6px solid var(--accent);
-  border-top: 4px solid transparent; border-bottom: 4px solid transparent;
-}
 .mini-follow {
   font-family: var(--mono); font-size: 10px; font-weight: 700; letter-spacing: 0.03em;
   padding: 4px 8px; border-radius: 6px; display: flex; align-items: center; gap: 6px; white-space: nowrap;
@@ -151,7 +124,6 @@
 .mini-follow.amber { color: var(--amber); background: var(--amber-2); }
 .mini-follow.red   { color: var(--red);   background: var(--red-2); }
 .mini-follow.gray  { color: var(--text-3); background: var(--panel-2); }
-.mini-conf { font-size: 8.5px; opacity: 0.65; letter-spacing: 0.05em; }
 
 /* 右侧：命中/失手，冷静的 ✓/✗，失手不弱化；下方 chevron 提示可展开 */
 .bt-right { flex-shrink: 0; width: 30px; display: flex; flex-direction: column;
@@ -170,13 +142,6 @@
 }
 .bt-item.open .bt-drawer { opacity: 1; }
 .bt-drawer-inner { padding: 0 14px 16px; border-top: 1px solid var(--line-soft); }
-.tp-toggle { display: flex; gap: 8px; padding: 14px 4px; }
-.tp-toggle button {
-  font-family: var(--mono); font-size: 11px; letter-spacing: 0.02em; cursor: pointer;
-  padding: 6px 12px; border-radius: 7px; border: 1px solid var(--line);
-  background: var(--panel); color: var(--text-3);
-}
-.tp-toggle button.on { color: var(--text); border-color: var(--accent); }
 
 /* ── Track Record：案例故事卡版（5 秒看懂）────────────────────────── */
 .tr-hero {
@@ -205,4 +170,14 @@
 .case-cat { margin: 0 0 9px; padding-left: 16px; }
 .case-cat li { font-size: 12px; line-height: 1.55; color: var(--text-2); margin-bottom: 3px; }
 .case-reason { font-size: 11.5px; line-height: 1.6; color: var(--text-4); }
-.case-reason-lab { font-family: var(--mono); font-size: 9.5px; letter-spacing: 0.05em; color: var(--accent); background: var(--accent-dim); padding: 1px 6px; border-radius: 4px; margin-right: 7px; }
+.case-reason-lab { font-family: var(--mono); font-size: var(--fs-micro); letter-spacing: 0.05em; color: var(--accent); background: var(--accent-dim); padding: 1px 6px; border-radius: 4px; margin-right: 7px; }
+
+/* ── 窄屏：成绩单英雄区上下叠放，巨字收一号 ─────────────────────── */
+@media (max-width: 560px) {
+  .tr-hero { flex-direction: column; align-items: flex-start; gap: var(--sp-3); padding: var(--sp-4); }
+  .tr-hero-num { font-size: 36px; }
+  .l2-thesis { font-size: var(--fs-lg); }
+  .l2-big { font-size: 40px; }
+  .l2-cell { padding: var(--sp-4); }
+  .bt-row { padding: var(--sp-3) var(--sp-4); gap: var(--sp-3); }
+}

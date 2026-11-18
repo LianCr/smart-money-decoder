@@ -28,7 +28,8 @@ from core.jsonstore import atomic_write_json
 from core.redis_coord import coordinator
 from core.dashboard_jobs import DashboardSingleFlight, stale_while_building, resolve_contention
 from core.translate import attach_i18n_en
-from fetcher.positions import get_top_political_position_hz
+from fetcher.positions import get_top_political_position_hz, get_top_political_positions_hz
+from fetcher.theme_markets import is_election_question
 from fetcher.trades import get_wallet_profile, get_wallet_pnl_history
 from fetcher.heisenberg import call as hz_call, results as hz_results, AGENTS as HZ_AGENTS
 from fetcher.social import social_pulse
@@ -183,6 +184,19 @@ def _stale_dashboard_fallback(wallet: str, reason: str, message: str) -> dict:
     return _fail(reason, message)
 
 
+def _pick_position(wallet, as_of):
+    """① 入口选仓（2026-10-30 大选主题）：最大政治仓是选举盘 / 出错 → 原样返回（错误契约不变）；
+    否则在前 5 个政治仓里找第一个选举盘——让看板和推荐卡讲同一注；一个都没有 → 照旧最大政治仓。
+    🔴 红线 6 照旧：入口启发式 ≠ 最强信念仓，position_type/行为流仍是判读依据。"""
+    position = get_top_political_position_hz(wallet, as_of=as_of)
+    if position.get("error") or is_election_question(position.get("market_question")):
+        return position
+    for p in get_top_political_positions_hz(wallet, as_of=as_of, n=5) or []:
+        if is_election_question(p.get("market_question")):
+            return p
+    return position
+
+
 def build_dashboard(wallet: str, refresh: int = 0, fresh: int = 0) -> dict:
     """v3 统一看板：①身份 ②这一注 ③实时盘面 ④行为流 ⑤世界催化剂 ⑥Edge/Reasoning。
     复用已封板模块输出（briefing + behavioral_flag + reasoner ⑥ + pnl 曲线），整份按(钱包,as_of)硬缓存。
@@ -219,8 +233,8 @@ def build_dashboard(wallet: str, refresh: int = 0, fresh: int = 0) -> dict:
     cache_key  = f"{wallet.lower()}_{as_of}"
     cache_path = DASHBOARD_CACHE / f"{cache_key}.json"
 
-    # ① 顶仓
-    position = get_top_political_position_hz(wallet, as_of=as_of)
+    # ① 顶仓（2026-10-30 大选主题：优先选举盘，与推荐卡同一注）
+    position = _pick_position(wallet, as_of)
     if position.get("error"):
         reason = position["reason"]
         if reason in BAD_REQUEST_REASONS or reason in NO_POSITION_REASONS:

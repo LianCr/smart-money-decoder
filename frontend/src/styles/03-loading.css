@@ -32,8 +32,8 @@
 }
 .pstep.todo { color: var(--text-4); }
 /* 已完成：节点实心暗青、文字暗青，静止 */
-.pstep.done { color: #3a7d8a; }
-.pstep.done .pstep-node { background: #2f6b78; border-color: #2f6b78; }
+.pstep.done { color: color-mix(in srgb, var(--accent) 60%, var(--bg)); }
+.pstep.done .pstep-node { background: color-mix(in srgb, var(--accent) 50%, var(--bg)); border-color: color-mix(in srgb, var(--accent) 50%, var(--bg)); }
 /* 进行中：节点亮青加脉冲，文字亮青加粗 —— 全局唯一呼吸，其余死寂 */
 .pstep.active { color: var(--accent); font-weight: 700; }
 .pstep.active .pstep-node {

@@ -6,6 +6,15 @@
 
 ---
 
+## 2026-10-30 · 部署复活 + 数据层换 Polymarket 免费 API + 中期选举主题 + UI 换皮
+
+- **发现**：Render 服务手动建、从没读 render.yaml——一直部署 `v3-briefing`（7/30 的 5f8a020），master 87 个提交从未上线；构建命令只有 `pip install`（master 已不入库 dist）。Heisenberg 免费 key 本地与线上都 401，官网改申请制 → 未缓存钱包全挂。近 7 天约 2 个真人访客、只看首页。
+- **做了什么**：①Render：Build 补 `npm ci && npm run build`、分支切 master、Health Check 暂设 `/backtest`（待本 PR 上线后改回 `/healthz`）；合 PR #31。②`fetcher/pm_backend.py`：Polymarket Data API v2/Gamma/CLOB 翻成 Heisenberg 同形记录，`DATA_BACKEND` 开关（默认 polymarket），上层与测试缝零改动；胜率/注数/sharpe/反作弊旗标/社媒/F-Score 无诚实来源 → None/缺席（红线 3）。③主题：`/election-pulse`（midterms 事件按 24h 量）、`/tech-immigration`（移民组优先、整词相关性、去近结算，如实声明无 H-1B/OPT 盘）；扫榜/热门/看板入口全改选举盘优先；示例钱包换中期选举大户。④`POST /visit` 来源统计（Render 日志搜 `[visit]`）。⑤UI 换皮（token 统一、IBM Plex、390px 无横滚、英文默认、OG/favicon、选举横幅 + Tech & Immigration 卡）。⑥协议合约 0xa5ef… 从 holders 统计剔除（曾是每个 Tech 卡"头号大户"、抬高集中度）。
+- **验证**：44+ 测试文件全绿；真数据免费扫榜 73 池→20 专家→8 候选全为选举盘；本地完整构建选举钱包看板 72s 跑通；Playwright 真后端截图桌面/390px、中英，横向溢出 0。
+- **留下的坑**：①推荐榜在 Render 上需跑一次 ↻（AI 精选烧少量 token）才从 7/13 旧榜换成选举榜；②roi 口径=pnl/成交额，非投入资本回报，偏保守；③581 的 15 天窗口用 month 近似；④Google Fonts 为运行时第三方请求。
+
+---
+
 ## 2026-08-06 · T2.2 确定性层收口（PR #26）+ README 换代（PR #27）
 
 > ⚠ 本段原为 2026-08-06 checkpoint 产出，但 docs commit（`347e8fd`）推到了**已被合并的** `docs/readme-v2` 分支、没进 master——与 P2-26 丢失事故同款，2026-08-06 第二场发现后重录。分支卫生第三课：**push 前先确认目标分支还没被合掉**。

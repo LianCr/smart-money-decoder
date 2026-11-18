@@ -12,15 +12,14 @@ export const POLL_BUDGET_MS = 10 * 60 * 1000;
 export const STAGES = ["定位最大政治仓位", "追溯链上建仓时间", "检索时间窗新闻", "AI 解读 / 置信度矩阵"];
 export const STAGES_BOARD = ["身份+体量画像", "这一注+现状", "实时盘面嵌入", "行为流 × 世界催化剂", "Edge 矩阵 + 局势判断"];
 
-// 首页示例钱包：地址经旧 v2 解读链路验证、能产出精彩政治盘卡（2026-06-15 实测）。
-// 置信度全谱：ImJustKen=高(Netanyahu) / debased=中(Vance 2028) / denizz=低(+555% 美伊)。
-// pnl = 我方系统算的「历史累计盈亏」(pnl_history 末值) 的粗粒度快照，作"聪明钱"身份背书、非实时行情。
-// 🔴 DEMO 前必预热体检（CLAUDE.md 已记）：①denizz 的盘 by June 15 当日结算，若 demo 在 6/15 之后已消失，
-//    换 aenews2(0x44c1…ebc1) 或退回 Annica(0x689ae…779e)；②顺手核对 pnl 粗粒度是否还对，漂太多就更新。
+// 首页示例钱包（2026-10-30 换大选主题）：取自中期选举盘扫榜（Polymarket 免费 API，AI_TOP=0）。
+// pnl = Polymarket 官方 politics 全时盈亏榜（/v2/leaderboard?category=politics&time_period=all）粗粒度快照，
+// 作"聪明钱"身份背书、非实时行情。无用户名的钱包如实用缩写地址，不编昵称。
+// 🔴 DEMO 前必预热：这三个钱包的看板首次点开要现场构建（~1-2 分钟、烧少量 token），之后走缓存秒回。
 export const EXAMPLES = [
-  { nick: "ImJustKen", addr: "0x9d84ce0306f8551e02efef1680475fc0f1dc1344", pnl: "+$3.1M" },
-  { nick: "debased", addr: "0x24c8cf69a0e0a17eee21f69d29752bfa32e823e1", pnl: "+$1.7M" },
-  { nick: "denizz", addr: "0xbaa2bcb5439e985ce4ccf815b4700027d1b92c73", pnl: "+$2.6M" },
+  { nick: "0x4488…e319", addr: "0x448861155279dbf833d041b963e3ac854599e319", pnl: "+$1.1M" },   // Michigan Senate · No
+  { nick: "Contestable-Parfait", addr: "0xc301c1e034e71e1a6ce9684f029c4674a00466aa", pnl: "+$170K" }, // Balance of Power · adding
+  { nick: "wagwanshawty", addr: "0xe5714557d7e870942af0eaed188f1620fa33f17b", pnl: "+$74K" },         // House: Democrats · Yes
 ];
 export const TRADERS_URL = "https://polymarketanalytics.com/traders?tab=Politics&category=Politics";
 // 示例大户 + 累计盈利数字的权威来源：Polymarket 官方政治盈利榜

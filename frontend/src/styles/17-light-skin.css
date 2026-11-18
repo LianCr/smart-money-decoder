@@ -1,0 +1,143 @@
+/* ══ 浅色"研究报告"皮：结构层覆盖（2026-10-30）══════════════════════════════════
+   颜色已全部在 00-base.css 令牌里切换；这里只放"形"的改动：页面渐变底、粘性顶栏、
+   海军蓝实心按钮、白底细边大圆角卡片、等宽全大写 eyebrow、细体大标题。
+   参照笔记：docs/design/heisenberg-reference.md。放在清单最末 = 刻意后置覆盖。 */
+
+/* ── 页面底：顶部一层淡钢蓝，向下褪成冷白 ─────────────────── */
+body {
+  background:
+    linear-gradient(180deg, #e8eef6 0, color-mix(in srgb, #e8eef6 40%, var(--bg)) 360px, var(--bg) 640px) no-repeat,
+    var(--bg);
+}
+.shell { max-width: 980px; padding-bottom: 0; }
+
+/* ── 顶栏：粘性、半透明白、细分隔线 ─────────────────────────── */
+.topbar {
+  position: sticky; top: 0; z-index: var(--z-top);
+  margin: 0 calc(-1 * var(--sp-5)) var(--sp-6); padding: var(--sp-4) var(--sp-5);
+  background: color-mix(in srgb, var(--panel) 82%, transparent);
+  -webkit-backdrop-filter: saturate(1.4) blur(10px); backdrop-filter: saturate(1.4) blur(10px);
+  border-bottom: 1px solid var(--line);
+}
+.brand {
+  font-family: var(--sans); font-size: var(--fs-lg); font-weight: 650; letter-spacing: -0.015em;
+}
+.brand .dot, .sf-mark .dot {
+  width: 10px; height: 10px; border-radius: 3px; background: var(--navy); box-shadow: none;
+}
+.navbtn, .medal {
+  min-height: 36px; padding: 0 var(--sp-4); border-radius: 12px;
+  border-color: var(--line); background: var(--panel); color: var(--text-2);
+  font-weight: 500; letter-spacing: 0;
+}
+.navbtn:hover, .medal:hover { color: var(--text); border-color: color-mix(in srgb, var(--navy) 30%, var(--line)); }
+.navbtn.active, .medal.active { color: var(--on-navy); background: var(--navy); border-color: var(--navy); }
+.navbtn.active .navbtn-tag { color: var(--on-navy); background: color-mix(in srgb, var(--on-navy) 16%, transparent); }
+.lang-pill { background: var(--panel); border-color: var(--line); }
+.lang-pill button.on { color: var(--on-navy); background: var(--navy); }
+
+/* ── 首页 hero：eyebrow → 细体大标题 → 灰色副标题 ─────────────── */
+.eyebrow {
+  margin: 0 0 var(--sp-4); font-family: var(--mono); font-size: 11.5px; font-weight: 400;
+  letter-spacing: 0.16em; text-transform: uppercase; color: color-mix(in srgb, var(--accent) 80%, var(--text-3));
+}
+.hero { text-align: center; padding: var(--sp-7) 0 var(--sp-7); }
+.hero-title {
+  margin: 0 auto; max-width: 16ch; font-size: clamp(40px, 7vw, 68px); font-weight: 300; line-height: 1.04;
+  letter-spacing: -0.035em; color: var(--text); text-wrap: balance;
+}
+.hero-title em { font-style: normal; color: var(--accent); }
+.hero-sub {
+  margin: var(--sp-5) auto 0; max-width: 46ch; font-size: var(--fs-xl); line-height: 1.5; color: var(--text-2);
+  text-wrap: pretty;
+}
+
+/* ── 区块标题：等宽全大写 eyebrow 风 ──────────────────────────── */
+.mon-head, .pc-lab, .hot-label {
+  font-family: var(--mono); font-size: 10.5px; font-weight: 400; letter-spacing: 0.16em;
+  text-transform: uppercase; color: var(--text-4);
+}
+.recs-h { font-size: var(--fs-lg); font-weight: 500; color: var(--text); }
+.hot-label { color: var(--accent); }
+
+/* ── 卡片：白底、1px 冷灰边、13px 圆角、无阴影 ─────────────────── */
+.card, .eb, .rec, .ti-card, .hot-wrap {
+  background: var(--panel); border: 1px solid var(--line); border-radius: var(--r-lg); box-shadow: none;
+}
+.rec { padding: var(--sp-4) var(--sp-5); }
+.rec:hover { border-color: color-mix(in srgb, var(--navy) 35%, var(--line)); background: var(--panel); }
+.rec.pick { border-color: color-mix(in srgb, var(--accent) 35%, var(--line)); box-shadow: none; }
+.rec-aibadge, .rec-tier, .rec-cross, .rec-conf, .zh-note, .sc-src, .gmt-chip {
+  border: none; border-radius: var(--r-sm); padding: 2px 8px;
+}
+.rec-aibadge { color: var(--accent); background: var(--accent-dim); }
+.rec-tier { color: var(--amber); background: var(--amber-2); }
+.rec-cross, .rec-conf.high { color: var(--green); background: var(--green-2); }
+
+/* 选举横幅 = 主演示窗：大圆角 + 唯一一处深投影 */
+.eb { border-radius: var(--r-xl); padding: var(--sp-6); box-shadow: var(--shadow-pop); }
+.eb-title { font-size: var(--fs-2xl); font-weight: 300; letter-spacing: -0.03em; }
+.eb-count-n { font-family: var(--mono); font-weight: 400; letter-spacing: -0.02em; }
+.eb-bar { height: 6px; border-radius: var(--r-pill); }
+.ti-title { font-size: var(--fs-2xl); font-weight: 300; letter-spacing: -0.03em; }
+.ti-card { padding: var(--sp-4) var(--sp-5); }
+
+/* ── 输入条：白底大圆角 + 海军蓝实心按钮 ─────────────────────── */
+.console-sub { margin: var(--sp-7) 0 var(--sp-4); font-size: var(--fs-lg); color: var(--text-2); }
+.cmdbar {
+  padding: 6px; gap: 6px; background: var(--panel); border-color: var(--line);
+  border-radius: var(--r-xl); box-shadow: 0 1px 2px rgba(16, 32, 56, 0.04);
+}
+.cmdbar:focus-within { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-dim); }
+.cmd-prompt { color: var(--text-4); font-weight: 400; }
+.cmd-caret { background: var(--accent); width: 2px; }
+.cmd-trigger {
+  border: none; border-radius: 10px; padding: 0 22px;
+  background: var(--navy); color: var(--on-navy); font-weight: 500; letter-spacing: 0;
+  box-shadow: var(--shadow-btn);
+}
+.cmd-trigger:hover:not(:disabled) { background: var(--navy-2); color: var(--on-navy); }
+
+/* ── 示例钱包列表：表格感，行分隔 ──────────────────────────── */
+.monitor { border-top: none; padding-top: var(--sp-5); }
+.mon-list { background: var(--panel); border: 1px solid var(--line); border-radius: var(--r-lg); overflow: hidden; }
+.mon-row { padding: var(--sp-4) var(--sp-5); border-top-color: var(--line-soft); }
+.mon-row:hover { background: var(--panel-2); padding-left: var(--sp-5); }
+.mon-row:hover::before { display: none; }
+.mon-dot { animation: none; box-shadow: none; }
+.mon-nick { font-weight: 500; }
+.mon-addr { color: var(--text-3); }
+.mon-pnl-val { font-weight: 500; }
+
+/* ── 数字：等宽、常规字重（参照站的大数字都是 w400）────────────── */
+.pc-val, .vh-now, .gmt-h-pct { font-weight: 400; }
+
+/* ── 深色带：页脚整块海军蓝 ──────────────────────────────── */
+.site-footer {
+  margin: var(--sp-8) calc(-1 * var(--sp-5)) 0; padding: var(--sp-6) var(--sp-5);
+  border-top: none; border-radius: var(--r-xl) var(--r-xl) 0 0;
+  background: var(--navy); color: color-mix(in srgb, var(--on-navy) 75%, transparent);
+}
+.site-footer .sf-mark { color: var(--on-navy); }
+.site-footer .sf-mark .dot { background: var(--on-navy); }
+.site-footer .sf-tag, .site-footer .sf-meta, .site-footer .sf-sep { color: color-mix(in srgb, var(--on-navy) 55%, transparent); }
+.site-footer .sf-links a { color: color-mix(in srgb, var(--on-navy) 80%, transparent); }
+.site-footer .sf-links a:hover { color: var(--on-navy); }
+
+@media (max-width: 520px) {
+  .topbar { margin: 0 calc(-1 * var(--sp-4)) var(--sp-5); padding: var(--sp-3) var(--sp-4); }
+  .site-footer { margin: var(--sp-7) calc(-1 * var(--sp-4)) 0; padding: var(--sp-5) var(--sp-4); }
+  .hero { padding: var(--sp-6) 0; }
+  .hero-sub { font-size: var(--fs-lg); }
+  .eb { padding: var(--sp-4); }
+  .rec, .ti-card, .mon-row { padding: var(--sp-3) var(--sp-4); }
+}
+
+/* 社媒列：原琥珀是半透明叠在灰色网格缝上 → 浅底下发灰；改成叠在白卡上 */
+.ns-split { border-radius: var(--r-lg); }
+.ns-col.social { background: color-mix(in srgb, var(--amber) 4.5%, var(--panel)); }
+
+@media (max-width: 520px) {
+  .cmd-trigger { padding: 0 var(--sp-3); font-size: var(--fs-base); }
+  .cmd-prompt { display: none; }
+}

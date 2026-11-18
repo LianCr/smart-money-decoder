@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { useLang } from "../i18n.jsx";
+import { disclosureProps } from "../utils/a11y.js";
 
 // 第四层「量化审计日志」法定译文 —— 死字面输出，不准改字
 const AUDIT_LOG = [
@@ -64,7 +65,7 @@ export function LiftSummary({ lift }) {
 
       {/* 第四层 · 量化审计日志（默认折叠）*/}
       <div className="l2-audit">
-        <div className="l2-audit-bar" onClick={() => setOpen(!open)}>
+        <div className="l2-audit-bar" {...disclosureProps(open, () => setOpen(!open))}>
           <span className="l2-audit-tag">[SYSTEM AUDIT]</span> {t("展开底层统计与方法论验证")}
           <span className={`l2-arrow ${open ? "on" : ""}`}>→</span>
         </div>

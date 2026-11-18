@@ -30,8 +30,8 @@ import 时复制 seed、打 GitHub；T2.3 已治好，但纯函数分层照旧�
 import os
 from pathlib import Path
 
-# 与 render.yaml 的「🔴 必填三项」一一对应
-REQUIRED_DATA_KEY = "HEISENBERG_API_KEY"      # 持仓/成交/PnL/K线/榜单，整个数据层
+# 与 render.yaml 的必填项一一对应
+REQUIRED_DATA_KEY = "HEISENBERG_API_KEY"      # 仅 DATA_BACKEND=heisenberg 时必填（默认 Polymarket 免 key）
 REQUIRED_NEWS_KEY = "TAVILY_API_KEY"          # 新闻检索
 # LLM 是二选一：官方 API 优先，课堂网关是回落位（见 core/llm.py）
 LLM_KEYS = ("ANTHROPIC_API_KEY", "CLASSROOM_API_KEY")
@@ -77,12 +77,16 @@ def health_report(env=None, write_paths=None, data_probe=None) -> dict:
     paths = [Path(p) for p in (write_paths if write_paths is not None else DEFAULT_WRITE_PATHS)]
 
     has_llm = any(env.get(k) for k in LLM_KEYS)
-    has_data = bool(env.get(REQUIRED_DATA_KEY))
+    # 2026-10-30：数据后端默认 Polymarket 免费公开 API（免 key，见 fetcher/pm_backend.py）；
+    # 只有显式 DATA_BACKEND=heisenberg 时 HEISENBERG_API_KEY 才是必填。
+    backend = str(env.get("DATA_BACKEND", "polymarket")).strip().lower()
+    has_data = bool(env.get(REQUIRED_DATA_KEY)) if backend == "heisenberg" else True
     has_news = bool(env.get(REQUIRED_NEWS_KEY))
 
     checks = {
         "llm_key": has_llm,
-        "heisenberg_key": has_data,
+        "polymarket_backend": backend != "heisenberg",
+        "heisenberg_key": bool(env.get(REQUIRED_DATA_KEY)),
         "tavily_key": has_news,
     }
     failures = []
