@@ -5,6 +5,7 @@ import { CaseRow } from "../components/CaseRow.jsx";
 import { LiftSummary } from "../components/LiftSummary.jsx";
 import { LiveScorecard } from "../components/LiveScorecard.jsx";
 import { ConfidenceCalibration } from "../components/ConfidenceCalibration.jsx";
+import { SqlBreakdown } from "../components/SqlBreakdown.jsx";
 
 export function TrackRecordView() {
   const { t } = useLang();
@@ -24,6 +25,8 @@ export function TrackRecordView() {
   return (
     <>
       <LiveScorecard sc={sc} />
+
+      <SqlBreakdown />
 
       <ConfidenceCalibration cr={crp} />
 

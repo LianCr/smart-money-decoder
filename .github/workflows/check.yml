@@ -33,3 +33,34 @@ jobs:
 
       # 全部测试 + 前端构建校验（和本地 `bash scripts/check.sh` 完全一致）
       - run: bash scripts/check.sh
+
+  # analytics/*.sql must stay portable: the app runs the views on in-process SQLite,
+  # this job applies the same schema + views to a real PostgreSQL 16 and runs the same
+  # checks (SQL scorecard == Python compute_scorecard). Throwaway service container,
+  # no secrets: the password below only exists inside this job.
+  sql-postgres:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: smd
+          POSTGRES_PASSWORD: smd
+          POSTGRES_DB: smd_analytics
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U smd -d smd_analytics"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      DATABASE_URL: postgresql://smd:smd@localhost:5432/smd_analytics
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: pip
+      # psycopg is CI-only: production never talks to Postgres, so it stays out of requirements.txt
+      - run: pip install -r requirements.txt "psycopg[binary]==3.2.3"
+      - run: python tests/test_analytics_sql.py
