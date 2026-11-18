@@ -77,7 +77,7 @@ cp .env.example .env        # fill in the required keys (the server needs them; 
 .venv/bin/uvicorn api.main:app --port 8000     # open http://localhost:8000
 ```
 
-Deployment contract (Render blueprint, required keys, health checks) is documented in [`DEPLOY.md`](./DEPLOY.md). Without keys the service starts, serves cached boards, and reports exactly what's missing — it does not pretend to work.
+Deployment contract (Render blueprint, required keys, health checks) is documented in [`DEPLOY.md`](./DEPLOY.md). Architecture diagrams: [`docs/ARCHITECTURE.md`](./docs/ARCHITECTURE.md). Failure modes and fixes: [`docs/RUNBOOK.md`](./docs/RUNBOOK.md). Without keys the service starts, serves cached boards, and reports exactly what's missing — it does not pretend to work.
 
 ---
 
