@@ -1,6 +1,6 @@
 # Demo script (~3 minutes, voice over screen recording)
 
-Spoken English, about 420 words at a normal pace. Brackets are what is on screen; they are
+Spoken English, about 380 words at a normal pace. Brackets are what is on screen; they are
 not read aloud. Numbers in `{braces}` are read off the screen on the day, never memorised,
 because the live archive keeps growing.
 
