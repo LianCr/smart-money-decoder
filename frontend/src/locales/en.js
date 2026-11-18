@@ -456,4 +456,14 @@ export default {
   "94 个信号仅放行 17 个；真五五开的难盘 30 个只放行 3 个。\n高度克制，不做盲目跟单的橡皮图章。": "Of 94 signals only 17 passed; of 30 genuine coin-flip markets only 3 passed.\nHighly restrained — not a rubber stamp for blind copy-trading.",
   "难盘只放行 3 个、中 2 个 —— 样本太小（2/3 翻 1/3 就反号），统计上说不了话。\n它躲掉的盘赢输各半（52% ≈ 基线 53%）：在难盘上，它的“躲”几乎不带方向信息。\n结论：不是 AI 没本事，是这个静态结算口径在难盘上信号太稀、喂不饱指标。": "Only 3 hard markets passed, 2 hit — sample too small (2/3 flipping to 1/3 changes the sign), statistically silent.\nMarkets it avoided split ~50/50 (52% ≈ 53% baseline): on hard markets its avoidance carries almost no directional info.\nConclusion: not that the AI lacks skill — this static-settlement metric is too signal-starved on hard markets.",
   "当前为“静态结算口径”，对提前离场的聪明钱采样存在滞后。\nv3 任务已锁定切换至“动态追踪离场盈亏”口径，从【测判断力】升级为【测真实跟单收益】。": "Current metric is “static settlement”, which lags smart money that exits early.\nv3 is locked on switching to “dynamic exit-PnL tracking” — upgrading from measuring judgment to measuring real copy-trade returns.",
+  // ── SQL 拆解面板（SqlBreakdown.jsx）──
+  "SQL 拆解 · 按信心档和判断类型": "SQL breakdown · by confidence and by call",
+  "同一份判断档案载入关系表，由 SQL 视图计算；口径与上方记分牌一致（测试逐项比对）。样本小时命中率不说明问题。": "The same judgment archive loaded into relational tables and computed by SQL views; definitions match the scorecard above (tests compare them field by field). With a sample this small, the hit rate proves nothing yet.",
+  "按信心档": "By confidence",
+  "按判断类型": "By call",
+  "判断": "Call",
+  "判断数": "Judgments",
+  "已结算(背书)": "Settled (endorsed)",
+  "命中": "Hits",
+  "数据源": "Source",
 };

@@ -3,7 +3,7 @@ api/main.py — smart-money-decoder 的 FastAPI 装配层（T2.3 起只剩装配
 
 端点分布：routes/dashboard（/dashboard /demo-wallets）· routes/recommend（/recommendations
 /hot-traders）· routes/scorecard · routes/briefing（/briefing /market-context）·
-routes/meta（/healthz /backtest）。共享件（_err/限流单例）在 api/shared.py。
+routes/meta（/healthz /backtest）· routes/analytics（/analytics SQL 视图）。共享件（_err/限流单例）在 api/shared.py。
 
 错误统一返回 {"error": <reason>, "message": <中文人读>}，HTTP 状态码分层：
   - 钱包无合格仓位（NO_POSITION_REASONS 四种）   → 404
@@ -34,7 +34,7 @@ from core.log import get_logger, new_request_id, unify_uvicorn_logging, REQUEST_
 
 LOG = get_logger("api")
 
-from api.routes import briefing, dashboard, meta, recommend, scorecard, themes
+from api.routes import analytics, briefing, dashboard, meta, recommend, scorecard, themes
 
 
 def _restore_state_on_startup() -> None:
@@ -111,6 +111,7 @@ app.include_router(recommend.router)
 app.include_router(scorecard.router)
 app.include_router(briefing.router)
 app.include_router(themes.router)
+app.include_router(analytics.router)
 
 # ── 生产托管：前端构建产物同源挂载（放在所有 API 路由之后，未匹配的路径落到 SPA）──
 _FRONTEND_DIST = Path("frontend/dist")
